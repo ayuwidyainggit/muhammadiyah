@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Transaksi &amp; Invoice -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item active" data-rbac="transaksi" href="transaksi.html" id="nav-self"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Transaksi &amp; Invoice</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-transaksi">
+        <div class="page-title">
+          <h1>Transaksi &amp; Invoice</h1>
+          <p>Buat tagihan, pantau riwayat pembayaran, dan kelola pengajuan write-off.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card"><div class="lbl">Total Tagihan Aktif</div><div class="val" id="stat-total-invoice">--</div><div class="sub">bulan berjalan</div></div>
+          <div class="stat-card"><div class="lbl">Sudah Lunas</div><div class="val" id="stat-paid">--</div><div class="sub">status: paid</div></div>
+          <div class="stat-card"><div class="lbl">Menunggak</div><div class="val" id="stat-overdue">--</div><div class="sub">overdue / escalated</div></div>
+          <div class="stat-card"><div class="lbl">Pengajuan Hapus Buku</div><div class="val" id="stat-writeoff">--</div><div class="sub">menunggu approval</div></div>
+        </div>
+
+        <div class="page-tabs">
+          <div class="page-tab active" data-ptab="tagihan" onclick="switchPageTab('tagihan')">Tagihan (Invoice)</div>
+          <div class="page-tab" data-ptab="pembayaran" onclick="switchPageTab('pembayaran')">Riwayat Pembayaran</div>
+          <div class="page-tab" data-ptab="writeoff" onclick="switchPageTab('writeoff')">Write-off (Hapus Buku)</div>
+          <div class="page-tab" data-ptab="manual" onclick="switchPageTab('manual')">Pembayaran Manual <span id="ptab-manual-badge"></span></div>
+        </div>
+
+        <!-- TAB: TAGIHAN -->
+        <div class="page-tab-panel active" data-ptabpanel="tagihan">
+          <div class="card">
+            <h3>Master Periode Tahun Ajaran</h3>
+            <p class="card-desc">Daftar periode tahun ajaran sekolah ini -- hanya <b>satu periode yang bisa aktif</b> dalam satu waktu. Periode aktif menjadi pilihan default saat membuat tagihan baru di bawah.</p>
+            <table class="dtab" id="master-periode-table">
+              <thead>
+                <tr><th style="width:30%">Tahun Ajaran</th><th style="width:24%">Tanggal Mulai</th><th style="width:24%">Tanggal Selesai</th><th style="width:12%">Aktif</th><th style="width:10%">Aksi</th></tr>
+              </thead>
+              <tbody id="master-periode-body"></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addPeriodeRow()">+ Tambah Periode Tahun Ajaran</button>
+            <div class="hint" style="margin-top:8px;">Pilih salah satu radio di kolom Aktif lalu klik Simpan -- otomatis menonaktifkan periode lainnya.</div>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-success" onclick="savePeriodeTahunAjaran()">Simpan Periode Tahun Ajaran</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Master Data Tagihan</h3>
+            <p class="card-desc">Kategori tagihan yang bisa dipakai berulang kali saat membuat tagihan -- baik yang sifatnya tetap dalam periode tertentu (mis. SPP bulanan, kegiatan per 6 bulan) maupun sekali bayar (mis. uang gedung, uang pangkal, uang pendaftaran).</p>
+            <table class="dtab" id="master-tagihan-table">
+              <thead>
+                <tr><th style="width:22%">Nama Kategori</th><th style="width:16%">Periode Tagihan</th><th style="width:34%">Nominal per Kategori Kelas (Rp)</th><th style="width:12%">Aktif</th><th style="width:8%">Aksi</th></tr>
+              </thead>
+              <tbody id="master-tagihan-body"></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addMasterTagihanRow()">+ Tambah Kategori Tagihan</button>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-success" onclick="saveMasterTagihan()">Simpan Master Data Tagihan</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Buat Tagihan Baru</h3>
+            <div class="radio-row" onclick="setInvoiceMode('individual')">
+              <input type="radio" name="inv-mode" id="inv-mode-individual" checked>
+              <div class="txt"><b>Individual</b><span>Pilih kelas dulu, lalu pilih satu atau beberapa siswa -- tiap siswa bisa punya jenis tagihan &amp; nominal sendiri-sendiri</span></div>
+            </div>
+            <div class="sub-panel open" id="inv-sub-individual">
+              <div class="field" style="margin-bottom:12px;max-width:320px;">
+                <label>Pilih Kelas</label>
+                <select id="inv-ind-kelas" onchange="onIndividualKelasChange()">
+                  <option value="">-- pilih kelas --</option>
+                </select>
+              </div>
+              <table class="dtab" id="inv-individual-table">
+                <thead>
+                  <tr><th style="width:18%">Siswa</th><th style="width:22%">Jenis Tagihan</th><th style="width:14%">Nominal (Rp)</th><th style="width:14%">Periode</th><th style="width:16%">Jatuh Tempo</th><th style="width:8%">Aksi</th></tr>
+                </thead>
+                <tbody id="inv-individual-body"></tbody>
+              </table>
+              <div class="empty-hint" id="inv-individual-hint">Pilih kelas terlebih dahulu untuk menambahkan siswa.</div>
+              <button class="btn-add-row" type="button" onclick="addIndividualInvoiceRow()">+ Tambah Baris Siswa</button>
+              <div class="hint" style="margin-top:8px;">Setiap siswa punya periode &amp; jatuh tempo sendiri -- berguna kalau tanggal masuknya beda-beda (mis. siswa pindahan di tengah bulan).</div>
+            </div>
+
+            <div class="radio-row" onclick="setInvoiceMode('massal')">
+              <input type="radio" name="inv-mode" id="inv-mode-massal">
+              <div class="txt"><b>Massal</b><span>Buat tagihan yang sama untuk satu kelas atau lebih sekaligus</span></div>
+            </div>
+            <div class="sub-panel" id="inv-sub-massal">
+              <div class="field">
+                <label>Target Kelas (bisa pilih lebih dari satu)</label>
+                <div id="inv-massal-kelas-chips"></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>Jenis Tagihan</label><select id="inv-massal-jenis" onchange="onMassalJenisChange()"></select></div>
+                <div class="field"><label>Nominal (Rp)</label><div id="inv-massal-nominal-wrap"></div><div class="hint">Nominal otomatis mengikuti Kategori Kelas dari kelas yang dipilih -- bisa diedit manual per kategori.</div></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>Periode</label><select id="inv-periode"></select></div>
+                <div class="field"><label>Jatuh Tempo</label><input type="date" id="inv-jatuh-tempo" value="2026-08-10"></div>
+              </div>
+              <div class="hint">Default periode yang aktif -- ganti dropdown jika ingin menagih untuk periode tahun ajaran lain. Berlaku sama untuk seluruh siswa di kelas yang dipilih; kalau butuh beda per anak, pakai mode Individual.</div>
+            </div>
+
+            <div class="radio-row" onclick="setInvoiceMode('import')">
+              <input type="radio" name="inv-mode" id="inv-mode-import">
+              <div class="txt"><b>Import dari File</b><span>Unggah file CSV/Excel rekap tagihan (mis. data lama dari luar sistem) untuk membuat banyak draft tagihan sekaligus</span></div>
+            </div>
+            <div class="sub-panel" id="inv-sub-import">
+              <div class="note-box info">Kolom wajib: <code>NIS</code>, <code>Jenis Tagihan</code>, <code>Nominal</code>, <code>Periode</code> (format <code>YYYY-MM</code>), <code>Jatuh Tempo</code> (format <code>YYYY-MM-DD</code>). Baris dengan NIS yang tidak ditemukan/tidak aktif di Manajemen Murid akan ditandai error dan tidak ikut diimpor.</div>
+              <div class="btn-row" style="margin-top:10px;justify-content:flex-start;gap:10px;">
+                <button class="btn btn-ghost btn-sm" type="button" onclick="downloadImportTemplate()">⬇ Unduh Template (.csv)</button>
+              </div>
+              <div class="upload-box" style="margin-top:12px;" onclick="document.getElementById('inv-import-file').click()">
+                <div class="ic">📎</div>
+                <div class="t">Klik untuk pilih file CSV / Excel (.csv, .xlsx)</div>
+                <div class="d">Sesuaikan dengan format template di atas -- maks. 2MB</div>
+              </div>
+              <input type="file" id="inv-import-file" accept=".csv,.xlsx,.xls" style="display:none;" onchange="onImportFileSelected(event)">
+
+              <div id="inv-import-preview-wrap" style="display:none;margin-top:18px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                  <h3 style="margin:0;font-size:13.5px;">Pratinjau Import -- <span id="inv-import-filename" style="color:var(--muted);font-weight:600;"></span></h3>
+                  <span class="badge-status" id="inv-import-summary-badge"></span>
+                </div>
+                <table class="dtab">
+                  <thead>
+                    <tr><th style="width:12%">NIS</th><th style="width:20%">Siswa Terdeteksi</th><th style="width:16%">Jenis Tagihan</th><th style="width:14%">Nominal</th><th style="width:10%">Periode</th><th style="width:12%">Jatuh Tempo</th><th style="width:16%">Validasi</th></tr>
+                  </thead>
+                  <tbody id="inv-import-preview-body"></tbody>
+                </table>
+                <div class="btn-row">
+                  <button class="btn btn-ghost" onclick="cancelImport()">Batalkan</button>
+                  <button class="btn btn-primary" id="btn-confirm-import" onclick="confirmImportTagihan()">Import Tagihan yang Valid</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row" style="justify-content:flex-end;" id="inv-create-btn-row">
+              <button class="btn btn-primary" onclick="createInvoice()">+ Buat Draft Tagihan</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Daftar Tagihan</h3>
+            <div class="filter-bar">
+              <select id="inv-filter-status" onchange="renderInvoiceList()">
+                <option value="">Semua Status</option>
+                <option>draft</option><option>published</option><option>sent</option><option>partially_paid</option>
+                <option>paid</option><option>overdue</option><option>escalated</option><option>restructured</option>
+                <option>written_off</option><option>closed</option>
+              </select>
+              <select id="inv-filter-kelas" onchange="renderInvoiceList()">
+                <option value="">Semua Kelas</option>
+              </select>
+            </div>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:20%">Siswa</th><th style="width:8%">Kelas</th><th style="width:12%">Jenis</th><th style="width:10%">Periode</th><th style="width:14%">Nominal</th><th style="width:12%">Jatuh Tempo</th><th style="width:14%">Status</th><th style="width:10%">Aksi</th></tr>
+              </thead>
+              <tbody id="invoice-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB: RIWAYAT PEMBAYARAN -->
+        <div class="page-tab-panel" data-ptabpanel="pembayaran">
+          <div class="card">
+            <h3>Riwayat Pembayaran</h3>
+            <div class="filter-bar">
+              <select id="pay-filter-status" onchange="renderPaymentList()">
+                <option value="">Semua Status</option>
+                <option>success</option><option>pending</option><option>failed</option><option>expired</option><option>refunded</option>
+              </select>
+              <select id="pay-filter-range" onchange="renderPaymentList()">
+                <option value="all">Semua Waktu</option>
+                <option value="7">7 Hari Terakhir</option>
+                <option value="30">30 Hari Terakhir</option>
+              </select>
+            </div>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:18%">Siswa</th><th style="width:14%">Invoice</th><th style="width:12%">Metode</th><th style="width:10%">Provider</th><th style="width:12%">Nominal</th><th style="width:10%">Status</th><th style="width:14%">Waktu Bayar</th><th style="width:10%">Kuitansi</th></tr>
+              </thead>
+              <tbody id="payment-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB: WRITE-OFF -->
+        <div class="page-tab-panel" data-ptabpanel="writeoff">
+          <div class="card">
+            <h3>Ajukan Hapus Buku <span class="tag-pill info">SISWA PINDAH SEKOLAH</span></h3>
+            <p class="card-desc">Untuk saat ini, pengajuan write-off hanya dipakai pada kasus siswa pindah sekolah -- tagihan lama yang tidak akan pernah tertagih dihapuskan dari pembukuan (hapus buku). Ubah status siswa menjadi <b>pindah</b> di menu Manajemen Murid terlebih dahulu agar tagihannya muncul di daftar pilihan berikut.</p>
+            <div class="grid2">
+              <div class="field">
+                <label>Invoice (Siswa Berstatus Pindah)</label>
+                <select id="wo-invoice"></select>
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" style="width:100%;" onclick="submitWriteoff()">Ajukan Hapus Buku</button>
+              </div>
+            </div>
+            <div class="field"><label>Alasan</label><textarea id="wo-alasan" placeholder="mis. Siswa pindah ke SD Muhammadiyah lain di kota X per Agustus 2026, tagihan SPP tertunggak diajukan hapus buku."></textarea></div>
+            <div class="note-box warn">Sebagai Bendahara, Anda hanya bisa <b>mengajukan</b> hapus buku. Persetujuan hanya bisa dilakukan oleh <b>Kepala Sekolah</b> (segregation of duties) -- tidak ada tombol approve di panel ini.</div>
+          </div>
+
+          <div class="card">
+            <h3>Riwayat Pengajuan</h3>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:20%">Invoice</th><th style="width:16%">Tipe</th><th style="width:28%">Alasan</th><th style="width:18%">Status</th><th style="width:18%">Diajukan</th></tr>
+              </thead>
+              <tbody id="writeoff-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB: PEMBAYARAN MANUAL -->
+        <div class="page-tab-panel" data-ptabpanel="manual">
+          <div class="card">
+            <h3>Konfirmasi Transfer Manual dari Wali Murid <span class="tag-pill" style="background:var(--amber-light);color:var(--amber);">PERLU VERIFIKASI</span></h3>
+            <p class="card-desc">Wali murid yang transfer manual di luar QRIS/VA mengunggah bukti lewat aplikasi (tabel <code>billing.manual_payment_confirmation</code>). Cocokkan bukti dengan mutasi rekening sekolah sebelum <b>Verifikasi</b> -- begitu diverifikasi, tagihan terkait otomatis ditandai Lunas. <b>Tolak</b> jika bukti tidak cocok/tidak valid; wali murid akan diminta mengunggah ulang.</p>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:16%">Siswa</th><th style="width:14%">Invoice</th><th style="width:11%">Tgl Transfer</th><th style="width:12%">Nominal</th><th style="width:17%">Bank Pengirim</th><th style="width:10%">Bukti</th><th style="width:12%">Status</th><th style="width:18%">Aksi</th></tr>
+              </thead>
+              <tbody id="manualconf-table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>Catat Pembayaran Manual Baru</h3>
+            <p class="card-desc">Untuk pembayaran yang diterima langsung oleh sekolah -- mis. tunai di kantor Admin/Bendahara, atau transfer yang sudah dicek &amp; dicocokkan sendiri lewat mutasi rekening di luar aplikasi (bukan dari pengajuan wali murid di atas). Tagihan langsung ditandai Lunas begitu dicatat, tanpa melalui Payment Gateway.</p>
+            <div class="grid3">
+              <div class="field">
+                <label>Invoice</label>
+                <select id="mp-invoice" onchange="syncManualPaymentNominal()"></select>
+              </div>
+              <div class="field">
+                <label>Tanggal Bayar</label>
+                <input type="date" id="mp-tanggal" value="2026-08-13">
+              </div>
+              <div class="field">
+                <label>Metode</label>
+                <select id="mp-metode">
+                  <option>Tunai</option>
+                  <option>Transfer Manual (sudah dicek mutasi)</option>
+                  <option>Lainnya</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Nominal Diterima (Rp)</label>
+                <input type="number" id="mp-nominal" placeholder="350000">
+              </div>
+              <div class="field">
+                <label>Catatan (opsional)</label>
+                <input type="text" id="mp-catatan" placeholder="mis. dibayar oleh kakek/nenek, dsb.">
+              </div>
+            </div>
+            <div class="note-box warn">Pembayaran manual ditandai Lunas seketika, tanpa lewat Payment Gateway atau lapis konfirmasi otomatis -- pastikan dana benar-benar sudah diterima sekolah sebelum mencatat.</div>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-primary" onclick="recordManualPayment()">Catat Pembayaran &amp; Tandai Lunas</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Riwayat Pembayaran Manual</h3>
+            <p class="card-desc">Gabungan dari konfirmasi wali murid yang terverifikasi &amp; pencatatan langsung oleh Bendahara -- juga tampil di tab Riwayat Pembayaran dengan provider "Bendahara (Manual)".</p>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:20%">Siswa</th><th style="width:16%">Invoice</th><th style="width:16%">Metode</th><th style="width:14%">Nominal</th><th style="width:16%">Waktu</th><th style="width:18%">Kuitansi</th></tr>
+              </thead>
+              <tbody id="manualpayhist-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    refreshKelasDropdowns();
+    renderPeriodeTahunAjaran();
+    renderMasterTagihan();
+    refreshJenisTagihanDropdowns();
+    refreshPeriodeDropdowns();
+    renderInvoiceList();
+    fillWriteoffInvoiceSelect();
+    renderWriteoffList();
+    renderPaymentList();
+    renderManualConfirmationList();
+    fillManualPaymentInvoiceSelect();
+    renderManualPaymentHistory();
+    updateStats();
+    const __tab = new URLSearchParams(location.search).get('tab');
+    if (__tab) switchPageTab(__tab);
+  }
+</script>
+</body>
+</html>

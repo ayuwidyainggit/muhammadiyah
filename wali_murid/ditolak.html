@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran Ditolak -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-content" id="auth-screen" style="padding-bottom:16px;">
+    <div class="view active" id="auth-view-rejected">
+      <div class="empty-state" style="padding-top:30px;">
+        <div class="ic">❌</div>
+        <div class="t">Pendaftaran Akun Ditolak</div>
+      </div>
+      <div class="card">
+        <h3>Alasan Penolakan</h3>
+        <p class="card-desc" id="rejected-alasan" style="margin-bottom:0;color:var(--ink);"></p>
+      </div>
+      <button class="btn btn-primary" onclick="location.href='daftar.html'">Daftar Ulang</button>
+      <button class="btn btn-ghost" style="margin-top:10px;" onclick="location.href='index.html'">Kembali ke Login</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  (function () {
+    const info = JSON.parse(sessionStorage.getItem('wali_rejected_info') || '{}');
+    document.getElementById('rejected-alasan').textContent = info.alasan || '(tidak ada alasan tercatat)';
+  })();
+</script>
+</body>
+</html>

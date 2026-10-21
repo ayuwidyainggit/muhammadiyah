@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riwayat -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-header">
+    <div class="row-top">
+      <div>
+        <div class="greeting">Assalamualaikum,</div>
+        <div class="name" id="header-name">Bapak Yusuf Bachtiar</div>
+      </div>
+      <div class="header-icons">
+        <div class="bell-wrap" onclick="location.href='riwayat.html'" title="Notifikasi Aplikasi">
+          🔔<span class="bell-badge" id="bell-count">2</span>
+        </div>
+        <div class="avatar-circle" id="header-avatar">YB</div>
+      </div>
+    </div>
+    <div class="child-switch" id="child-switch"></div>
+  </div>
+
+  <div class="app-content" id="app-content">
+    <div class="view active" id="view-riwayat">
+      <div class="section-title">Riwayat Pembayaran</div>
+      <div class="segment">
+        <button class="active" data-f="all" onclick="setRiwayatFilter('all')">Semua</button>
+        <button data-f="success" onclick="setRiwayatFilter('success')">Berhasil</button>
+        <button data-f="expired" onclick="setRiwayatFilter('expired')">Gagal/Expired</button>
+      </div>
+      <div class="card" id="riwayat-list-card">
+        <div id="riwayat-list"></div>
+      </div>
+
+      <div class="section-title">Riwayat Konfirmasi Pembayaran Saya</div>
+      <p class="section-sub">Konfirmasi transfer manual (menu Bayar &gt; Transfer) dan rencana pembayaran (tombol Konfirmasi) yang pernah Anda kirim ke Bendahara.</p>
+      <div class="card">
+        <div id="pengajuan-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-btn" href="profil.html"><span class="n-ic">👤</span><span class="n-label">Profil</span></a>
+    <a class="nav-btn" href="notifikasi.html"><span class="n-ic">🔔</span><span class="n-label">Notifikasi</span></a>
+    <a class="nav-btn" href="bayar.html"><span class="n-ic">💳</span><span class="n-label">Bayar</span></a>
+    <a class="nav-btn active" href="riwayat.html"><span class="n-ic">🧾</span><span class="n-label">Riwayat</span></a>
+  </div>
+
+  <!-- ===================== INVOICE DETAIL SHEET ===================== -->
+  <div class="sheet-backdrop" id="detail-backdrop" onclick="closeDetailSheet()"></div>
+  <div class="sheet" id="detail-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h3>Detail Pembayaran</h3>
+      <button class="sheet-close" onclick="closeDetailSheet()">✕</button>
+    </div>
+    <div class="sheet-body" id="detail-body"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (requireLogin()) {
+    renderChildSwitch();
+    renderRiwayat();
+    renderPengajuanList();
+    updateBellBadge();
+  }
+</script>
+</body>
+</html>

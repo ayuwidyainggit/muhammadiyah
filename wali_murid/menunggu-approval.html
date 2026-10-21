@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menunggu Approval -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-content" id="auth-screen" style="padding-bottom:16px;">
+    <div class="view active" id="auth-view-pending">
+      <div class="empty-state" style="padding-top:30px;">
+        <div class="ic">⏳</div>
+        <div class="t">Akun Anda Menunggu Persetujuan</div>
+        <div class="d">Pendaftaran untuk anak: <b id="pending-nama-anak"></b></div>
+      </div>
+      <div class="card">
+        <p class="card-desc" style="margin-bottom:0;">Kepala Sekolah perlu memverifikasi &amp; menyetujui akun ini sebelum Anda bisa masuk (SSO) ke aplikasi mobile -- biasanya diproses dalam 1x24 jam kerja. Notifikasi WhatsApp/email dikirim begitu disetujui.</p>
+      </div>
+      <div class="note-box">ℹ️ Ini untuk mencegah orang tak dikenal mengaku sebagai wali murid siswa tertentu (verifikasi identitas oleh sekolah).</div>
+      <button class="btn btn-ghost" onclick="location.href='index.html'">Kembali ke Login</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  (function () {
+    const info = JSON.parse(sessionStorage.getItem('wali_pending_info') || '{}');
+    document.getElementById('pending-nama-anak').textContent = info.anakNama || '';
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Akun Wali Murid -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item active" data-rbac="wali" href="wali.html" id="nav-self"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Akun Wali Murid</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-wali">
+        <div class="page-title">
+          <h1>Akun Wali Murid (Mobile)</h1>
+          <p>Pendaftaran &amp; approval akun wali murid untuk akses aplikasi mobile -- approval di sini yang memberi akses SSO, bukan sekadar registrasi di app. Satu akun wali murid bisa terhubung ke lebih dari satu siswa (mis. kakak-adik di sekolah yang sama).</p>
+        </div>
+
+        <div class="card">
+          <h3>Daftar Akun Wali Murid</h3>
+          <p class="card-desc">Registrasi akun baru dilakukan oleh Admin. Akun yang mendaftar sendiri lewat aplikasi mobile (<i>self-register</i>) wajib disetujui dulu oleh <b>Kepala Sekolah</b> sebelum bisa SSO masuk -- mencegah orang tak dikenal mengaku sebagai wali murid siswa tertentu.</p>
+          <table class="dtab" id="wali-table">
+            <thead>
+              <tr><th style="width:18%">Nama</th><th style="width:16%">Kontak</th><th style="width:18%">Siswa Terkait</th><th style="width:12%">Metode</th><th style="width:14%">Status</th><th style="width:14%">Aksi</th></tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+          </table>
+          <button class="btn btn-primary btn-sm" id="btn-daftar-wali" style="margin-top:12px;" onclick="openDaftarWaliPanel()">+ Daftarkan Akun Wali Murid</button>
+
+          <div class="card" id="daftar-wali-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+            <h3>Daftarkan Akun Wali Murid</h3>
+            <p class="card-desc">Untuk wali murid yang datang langsung ke sekolah dan sudah diverifikasi identitasnya -- akun langsung Aktif, tidak melalui antrean approval.</p>
+            <div class="grid2">
+              <div class="field"><label>Nama Wali Murid</label><input type="text" id="wali-nama" placeholder="mis. Bapak/Ibu ..."></div>
+              <div class="field">
+                <label>Siswa Terkait (bisa pilih lebih dari satu)</label>
+                <select id="wali-siswa" multiple size="4">
+                  <!-- filled by JS -->
+                </select>
+                <div class="hint">Tahan Ctrl/Cmd (atau geser jari di mobile) untuk pilih beberapa siswa sekaligus.</div>
+              </div>
+              <div class="field"><label>No. WhatsApp</label><input type="tel" id="wali-wa" placeholder="08xx-xxxx-xxxx"></div>
+              <div class="field"><label>Email</label><input type="email" id="wali-email" placeholder="nama@email.com (opsional)"></div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-ghost" onclick="closeDaftarWaliPanel()">Batal</button>
+              <button class="btn btn-success" onclick="daftarkanWali()">Daftarkan &amp; Aktifkan</button>
+            </div>
+          </div>
+
+          <div class="note-box info" style="margin-top:14px;">Akun yang ditolak tidak bisa SSO ke aplikasi mobile sampai didaftarkan ulang dan disetujui kembali oleh Kepala Sekolah. Riwayat approval/penolakan tercatat untuk audit.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    renderWaliTable();
+    applyWaliUiForRole();
+  }
+</script>
+</body>
+</html>

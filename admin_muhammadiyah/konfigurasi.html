@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Konfigurasi Sistem</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+
+    <div class="nav-group-label">Onboarding</div>
+    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
+    <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
+
+    <div class="nav-group-label">Platform</div>
+    <a href="konfigurasi.html" class="nav-item active" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
+      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Konfigurasi Sistem</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">SA</div>
+        <div class="info">
+          <div class="name" id="uc-name">Super Admin</div>
+          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===================== VIEW: KONFIGURASI SISTEM ===================== -->
+      <div class="page-view active" id="view-konfigurasi">
+        <div class="page-title">
+          <h1>Konfigurasi Sistem</h1>
+          <p>Pengaturan platform tingkat global -- berlaku untuk seluruh sekolah kecuali di-override di level sekolah masing-masing.</p>
+        </div>
+
+        <div class="card">
+          <h3>Pengaturan Umum</h3>
+          <div class="grid2">
+            <div class="field"><label>Nama Platform</label><input type="text" value="SPP GeekGarden -- Muhammadiyah"></div>
+            <div class="field"><label>Zona Waktu Default</label><select><option selected>WIB (UTC+7)</option><option>WITA (UTC+8)</option><option>WIT (UTC+9)</option></select></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Integrasi Bank Global (Host-to-Host) <span class="tag-pill pg">BANK</span></h3>
+          <p class="card-desc">Satu kerjasama H2H terpusat, dipakai seluruh sekolah saat onboarding -- bukan diisi manual per sekolah.</p>
+          <div class="grid2">
+            <div class="field">
+              <label>Callback / Notifikasi URL</label>
+              <input type="text" value="https://api.geekgarden.id/webhooks/bsi-h2h" disabled style="background:#f5f6f8;">
+            </div>
+          </div>
+          <div class="field">
+            <label>Client Secret</label>
+            <input type="text" value="Dikelola di secrets manager backend -- tidak dapat dilihat/diubah dari panel ini" disabled style="background:#f5f6f8;color:var(--muted);font-style:italic;">
+            <div class="hint">Rotasi kredensial dilakukan tim Engineering/DevOps lewat akses infrastruktur terbatas, bukan lewat form web ini -- mengurangi permukaan risiko kebocoran (lihat Keamanan &amp; Kepatuhan).</div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Timeout Koneksi API Bank</label>
+              <input type="number" value="15" min="1" max="100"> <span class="hint">detik</span>
+            </div>
+            <div class="field">
+              <label>Maks. Percobaan Ulang Otomatis</label>
+              <input type="number" value="3"> <span class="hint">kali, jika koneksi gagal</span>
+            </div>
+          </div>
+          <div style="margin-top:6px;">
+            <span class="badge-status on"><span class="dot"></span> BSI Terhubung (Host-to-Host)</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Rekening Bank Penampung Pusat &amp; VA Pembayaran <span class="tag-pill pg">BANK</span></h3>
+          <p class="card-desc">Hanya <b>satu rekening penampung</b> dan <b>satu nomor Virtual Account (VA)</b> milik <b>Muhammadiyah Pusat</b>, dipakai bersama oleh seluruh sekolah -- wali murid di sekolah mana pun membayar ke VA yang sama ini, bukan ke rekening masing-masing sekolah. Rekening penampung di level sekolah (lihat Manajemen Sekolah &gt; Integrasi Bank &amp; Rekening) hanya dipakai untuk pencairan bagian fee/bagi hasil tiap sekolah, bukan untuk menampung pembayaran SPP secara langsung.</p>
+          <div class="grid3">
+            <div class="field">
+              <label>Nama Bank</label>
+              <select>
+                <option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option>
+                <option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Nomor Rekening Penampung Pusat</label>
+              <input type="text" value="8800112233">
+            </div>
+            <div class="field">
+              <label>Nama Pemilik Rekening</label>
+              <input type="text" value="PP Muhammadiyah -- GeekGarden (Penampung)">
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Nomor Virtual Account (VA) Terpusat</label>
+              <input type="text" value="88008 8001122 33" disabled style="background:#f5f6f8;">
+              <div class="hint">Satu nomor VA ini yang tampil ke seluruh wali murid di seluruh sekolah saat membayar -- digenerate dari rekening penampung pusat di atas.</div>
+            </div>
+            <div class="field">
+              <label>Verifikasi Nama Rekening</label>
+              <div><span class="badge-status on"><span class="dot"></span> Cocok dengan Bank (via API validasi H2H)</span></div>
+              <div class="hint">Dicek otomatis lewat API Account Inquiry bank mitra (BSI Host-to-Host) supaya tidak salah kirim dana.</div>
+            </div>
+          </div>
+          <div class="note-box info">Karena rekening &amp; VA ini dipakai bersama seluruh sekolah, sistem membedakan pembayaran tiap sekolah lewat kode unik/suffix nominal per invoice -- bukan dari nomor rekening tujuan. Setelah dana masuk ke rekening pusat ini, bagian fee tiap sekolah dicairkan berkala ke Rekening Penampung Sekolah masing-masing sesuai skema bagi hasil.</div>
+          <div style="margin-top:6px;">
+            <span class="badge-status on"><span class="dot"></span> Rekening Pusat Terverifikasi</span>
+            &nbsp;&nbsp;
+            <span class="badge-status on"><span class="dot"></span> VA Aktif untuk Seluruh Sekolah</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Notifikasi -- Nomor Resmi Terpusat</h3>
+          <p class="card-desc">Satu nomor WhatsApp Business resmi milik <b>Muhammadiyah Pusat (PP)</b>, dipakai untuk seluruh sekolah -- bukan per sekolah.</p>
+          <div class="grid2">
+            <div class="field"><label>Nomor WA Pusat (Muhammadiyah Pusat)</label><input type="text" value="+62 811-2233-4455" disabled style="background:#f5f6f8;"></div>
+            <div class="field"><label>Business Account ID (WABA)</label><input type="text" value="wa_biz_muhammadiyahpusat_001" disabled style="background:#f5f6f8;"></div>
+          </div>
+          <div class="note-box info">Karena nomor bersifat terpusat, identitas sekolah tidak lagi terlihat dari nomor pengirim -- setiap template <b>wajib mencantumkan nama sekolah</b> di isi pesan supaya wali murid tetap bisa mengenali tagihan anaknya. Ini juga mengubah asumsi "satu nomor resmi per sekolah" di panduan anti-penipuan (Bagian 9) -- perlu penyesuaian redaksi di sana kalau dokumennya mau di-update.</div>
+
+          <div class="grid2" style="margin-top:16px;">
+            <div class="field">
+              <label>Kanal Notifikasi ke Muhammadiyah Pusat (Internal)</label>
+              <div style="display:flex;gap:18px;padding-top:6px;">
+                <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" checked disabled> WhatsApp</label>
+                <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" checked> SMS</label>
+                <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" checked> Email</label>
+              </div>
+              <div class="hint">Bukan kanal reminder ke wali murid -- ini kanal yang dipakai saat ada laporan/komplain dari wali murid atau sekolah yang perlu diteruskan dan diketahui PP (mis. laporan dugaan penipuan, eskalasi kritis).</div>
+            </div>
+          </div>
+          <div class="note-box info">Preferensi kanal untuk menerima reminder tagihan (WA/SMS/Email) diatur oleh <b>masing-masing wali murid sendiri</b>, sesuai kondisi mereka (mis. tidak semua orang tua aktif pakai WhatsApp) -- bukan diseragamkan oleh Admin di sini. Pengaturan ini nantinya ada di profil/portal wali murid, di luar cakupan panel Super Admin ini.</div>
+        </div>
+
+        <div class="card">
+          <h3>Skema Bagi Hasil (Revenue Share) SPP <span class="tag-pill pg">GLOBAL</span></h3>
+          <p class="card-desc">Dana SPP yang terkumpul di Rekening Penampung Pusat (lihat kartu di atas) dibagi antara <b>Muhammadiyah Pusat</b> dan <b>Sekolah</b> setelah dikurangi Biaya Layanan Notifikasi di bawah -- ini jadi default untuk seluruh sekolah, kecuali suatu saat dibuat opsi override per sekolah.</p>
+          <div class="grid2">
+            <div class="field">
+              <label>Persentase untuk Muhammadiyah Pusat</label>
+              <input type="number" id="bh-pct-pusat" value="5" min="0" max="100" step="0.1" oninput="onBagiHasilInput('pusat')"> <span class="hint">%</span>
+            </div>
+            <div class="field">
+              <label>Persentase untuk Sekolah</label>
+              <input type="number" id="bh-pct-sekolah" value="95" min="0" max="100" step="0.1" oninput="onBagiHasilInput('sekolah')"> <span class="hint">%</span>
+            </div>
+          </div>
+          <div class="note-box info" id="bh-total-note">Total: 100% -- sudah pas, dana SPP terbagi habis antara Muhammadiyah Pusat &amp; Sekolah.</div>
+          <div class="note-box info" style="margin-top:8px;">GeekGarden <b>tidak</b> mengambil persentase dari dana SPP ini -- pendapatan GeekGarden murni dari Biaya Layanan Notifikasi di kartu bawah, yang dipotong lebih dulu dari dana terkumpul sebelum dibagi sesuai skema ini.</div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" id="bh-save-btn" onclick="saveBagiHasil()">Simpan Skema Bagi Hasil</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Biaya Layanan Notifikasi <span class="tag-pill sec">SUMBER PENDAPATAN GEEKGARDEN</span></h3>
+          <p class="card-desc">Biaya per notifikasi terkirim ke wali murid (reminder, invoice, dll) lewat kanal-kanal di bawah -- ini yang menjadi margin/keuntungan GeekGarden dari layanan notifikasi, dipotong dari dana yang terkumpul di Rekening Penampung Pusat sebelum sisanya dibagi ke Muhammadiyah Pusat &amp; Sekolah sesuai Skema Bagi Hasil di atas.</p>
+          <table class="accounts" id="notif-cost-table">
+            <thead>
+              <tr><th style="width:40%">Kanal Notifikasi</th><th style="width:32%">Biaya per Notifikasi (Rp)</th><th style="width:14%">Aktif</th></tr>
+            </thead>
+            <tbody id="notif-cost-body"></tbody>
+          </table>
+          <div class="hint" style="margin-top:8px;">Kanal Notifikasi Aplikasi (push) berlaku untuk App Wali Murid -- tidak dikenakan biaya operator seperti WA/Email, tapi tetap dihitung sebagai bagian pendapatan layanan.</div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" onclick="saveNotifCost()">Simpan Biaya Layanan Notifikasi</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill ok">DEFAULT PLATFORM</span></h3>
+          <p class="card-desc">Dinamis -- bisa tambah/hapus aturan sendiri. Ini jadi default untuk sekolah baru; tiap sekolah bisa override lewat Manajemen Sekolah.</p>
+          <table class="accounts" id="rules-table">
+            <thead>
+              <tr><th style="width:12%">Offset Hari</th><th style="width:24%">Nama Aturan</th><th style="width:22%">Level Penanganan</th><th style="width:24%">Channel</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="number" value="-7"></td>
+                <td><input type="text" value="Pengingat Awal"></td>
+                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="-3"></td>
+                <td><input type="text" value="Pengingat Mendekati"></td>
+                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="-1"></td>
+                <td><input type="text" value="Pengingat Terakhir"></td>
+                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="3"></td>
+                <td><input type="text" value="Lewat Jatuh Tempo"></td>
+                <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="7"></td>
+                <td><input type="text" value="Peringatan Tunggakan"></td>
+                <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox" checked> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="14"></td>
+                <td><input type="text" value="Eskalasi ke Kepala Sekolah"></td>
+                <td><select><option>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option selected>Level 3 -- Eskalasi</option></select></td>
+                <td>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
+                  <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label>
+                  <label style="font-size:11.5px;"><input type="checkbox" checked> Email</label>
+                </td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn-add-row" onclick="addRuleRow()">+ Tambah Aturan</button>
+          <div class="hint" style="margin-top:8px;">Offset negatif = hari sebelum jatuh tempo (H-), positif = hari setelah jatuh tempo (H+). Level 3 otomatis memicu <code>escalation.triggered</code> ke EscalationCase (lihat Skenario 6).</div>
+        </div>
+
+        <div class="card">
+          <h3>Template Pesan -- Default Platform <span class="tag-pill ok">DEFAULT PLATFORM</span></h3>
+          <p class="card-desc">Ini <b>bukan</b> editor punya sekolah tertentu -- ini teks default yang otomatis di-copy ke sekolah baru saat onboarding (lihat Skenario 11). Untuk mengubah template milik sekolah yang sudah aktif, buka <b>Manajemen Sekolah &gt; [pilih sekolah] &gt; Reminder &amp; Template</b>.</p>
+
+          <div id="tmpl-root-default">
+          <div class="channel-tabs">
+            <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-default')">WhatsApp</div>
+            <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-default')">SMS</div>
+            <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-default')">Email</div>
+          </div>
+
+          <div class="channel-panel" data-ch-panel="wa">
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+              <textarea>Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} ({nama_sekolah}). Tagihan SPP sebesar Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+              <textarea>Bpk/Ibu wali {nama_siswa} ({nama_sekolah}), tagihan SPP Rp{nominal} sudah melewati jatuh tempo {hari_terlambat} hari. Mohon segera diselesaikan: {link_bayar}</textarea>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 3 -- Eskalasi (H+14, ditembuskan ke Kepala Sekolah)</div>
+              <textarea>Pemberitahuan penting: tagihan SPP {nama_siswa} ({nama_sekolah}) telah menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea>
+            </div>
+          </div>
+          <div class="channel-panel" data-ch-panel="sms" style="display:none;">
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+              <textarea>{nama_sekolah}: SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea>
+              <div class="hint">Versi ringkas -- SMS dibatasi ±160 karakter per segmen.</div>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+              <textarea>{nama_sekolah}: SPP {nama_siswa} telat {hari_terlambat} hari. Segera bayar: {link_bayar}</textarea>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 3 -- Eskalasi (H+14)</div>
+              <textarea>{nama_sekolah}: Tunggakan SPP {nama_siswa} sudah {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea>
+            </div>
+          </div>
+          <div class="channel-panel" data-ch-panel="email" style="display:none;">
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+              <textarea>Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Kami informasikan tagihan SPP {nama_sekolah} sebesar Rp{nominal} akan jatuh tempo pada {tanggal_jatuh_tempo}.
+
+Silakan lakukan pembayaran melalui: {link_bayar}
+
+Terima kasih.</textarea>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+              <textarea>Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Tagihan SPP {nama_sekolah} sebesar Rp{nominal} telah melewati jatuh tempo selama {hari_terlambat} hari. Mohon segera diselesaikan melalui: {link_bayar}</textarea>
+            </div>
+            <div class="tmpl-card">
+              <div class="tmpl-head">Level 3 -- Eskalasi (H+14)</div>
+              <textarea>Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Tunggakan SPP {nama_sekolah} sudah mencapai {hari_terlambat} hari. Pihak sekolah akan menghubungi Bapak/Ibu untuk membahas penyelesaiannya.</textarea>
+            </div>
+          </div>
+          </div>
+
+          <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+            <button class="btn btn-success" onclick="showToast('✓ Template default platform berhasil disimpan')">Simpan Template Default</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Keamanan &amp; Kepatuhan <span class="tag-pill sec">SEC</span></h3>
+          <div class="grid2">
+            <div class="field"><label>Session Timeout</label><input type="number" value="30"> <span class="hint">menit tidak aktif -- berlaku global ke seluruh aplikasi (Admin Pusat, Portal Sekolah, App Wali Murid)</span></div>
+            <div class="field"><label>Retensi Audit Log</label><input type="number" value="5"> <span class="hint">tahun -- berlaku global ke seluruh aplikasi (Admin Pusat, Portal Sekolah, App Wali Murid)</span></div>
+          </div>
+          <div class="note-box info" style="margin-top:6px;">
+            Ketentuan berikut <b>tetap aktif secara default dari backend</b> dan sengaja tidak dijadikan opsi yang bisa dimatikan admin:
+            2FA wajib untuk peran PP &amp; PWM, dan enkripsi AES-256 untuk seluruh data pribadi siswa/wali murid sesuai UU PDP.
+          </div>
+          <div class="note-box info" style="margin-top:10px;">
+            <b>Kepala Sekolah tidak diwajibkan 2FA.</b> Approval write-off tetap dilindungi lewat RBAC (hanya Kepala Sekolah yang punya izin <code>approval</code>) dan segregation of duties (pengaju ≠ penyetuju) di Portal Sekolah -- 2FA/OTP untuk peran ini sengaja tidak diaktifkan supaya tidak menambah biaya pengiriman OTP per transaksi.
+          </div>
+          <div style="margin-top:10px;">
+            <span class="badge-status on"><span class="dot"></span> 2FA PP &amp; PWM: Wajib</span>
+            &nbsp;&nbsp;
+            <span class="badge-status off"><span class="dot"></span> 2FA Kepala Sekolah: Tidak Wajib</span>
+            &nbsp;&nbsp;
+            <span class="badge-status on"><span class="dot"></span> Enkripsi UU PDP: Aktif</span>
+            &nbsp;&nbsp;
+            <span class="badge-status on"><span class="dot"></span> Session Timeout &amp; Audit Log: Global</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:flex-end;">
+          <button class="btn btn-success" onclick="showToast()">Simpan Konfigurasi</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  const u = requireLogin();
+  if (u) {
+    applyCurrentUserToUi();
+    if (enforcePageAccess('konfigurasi')) {
+      applyRbacToSidebar();
+
+      // ---- Skema Bagi Hasil & Biaya Layanan Notifikasi ----
+      // Dana SPP terkumpul penuh di Rekening Penampung Pusat -- GeekGarden TIDAK mengambil
+      // persentase dari dana ini. Pendapatan GeekGarden murni dari notifCostData (biaya per
+      // notifikasi terkirim), dipotong dari dana terkumpul sebelum sisanya dibagi ke
+      // Muhammadiyah Pusat & Sekolah sesuai bagiHasilConfig.
+      const bagiHasilConfig = { pctPusat: 5, pctSekolah: 95 };
+      const notifCostData = [
+        { kanal: "WhatsApp", biaya: 4500, aktif: true },
+        { kanal: "Email", biaya: 1000, aktif: true },
+        { kanal: "Notifikasi Aplikasi (Push)", biaya: 500, aktif: true },
+      ];
+
+      function onBagiHasilInput(changed) {
+        const pusatEl = document.getElementById('bh-pct-pusat');
+        const sekolahEl = document.getElementById('bh-pct-sekolah');
+        const pusat = parseFloat(pusatEl.value) || 0;
+        const sekolah = parseFloat(sekolahEl.value) || 0;
+        const total = Math.round((pusat + sekolah) * 100) / 100;
+        const note = document.getElementById('bh-total-note');
+        const isValid = Math.abs(total - 100) < 0.01;
+        note.textContent = isValid
+          ? `Total: ${total}% -- sudah pas, dana SPP terbagi habis antara Muhammadiyah Pusat & Sekolah.`
+          : `Total: ${total}% -- harus tepat 100% supaya dana SPP terbagi habis (kurang/lebih ${Math.abs(100 - total).toFixed(1)}%).`;
+        note.classList.toggle('warn', !isValid);
+        note.classList.toggle('info', isValid);
+        document.getElementById('bh-save-btn').disabled = !isValid;
+      }
+      function saveBagiHasil() {
+        bagiHasilConfig.pctPusat = parseFloat(document.getElementById('bh-pct-pusat').value) || 0;
+        bagiHasilConfig.pctSekolah = parseFloat(document.getElementById('bh-pct-sekolah').value) || 0;
+        showToast('✓ Skema Bagi Hasil berhasil disimpan');
+      }
+
+      function renderNotifCostTable() {
+        document.getElementById('notif-cost-body').innerHTML = notifCostData.map((n, i) => `
+          <tr>
+            <td>${n.kanal}</td>
+            <td><input type="number" min="0" value="${n.biaya}" data-idx="${i}" class="notif-cost-input"></td>
+            <td style="text-align:center;"><label class="toggle"><input type="checkbox" ${n.aktif ? 'checked' : ''} data-idx="${i}" class="notif-cost-aktif"><span class="slider"></span></label></td>
+          </tr>`).join('');
+      }
+      function saveNotifCost() {
+        document.querySelectorAll('.notif-cost-input').forEach(inp => {
+          notifCostData[Number(inp.dataset.idx)].biaya = parseInt(inp.value, 10) || 0;
+        });
+        document.querySelectorAll('.notif-cost-aktif').forEach(chk => {
+          notifCostData[Number(chk.dataset.idx)].aktif = chk.checked;
+        });
+        renderNotifCostTable();
+        showToast('✓ Biaya Layanan Notifikasi berhasil disimpan');
+      }
+
+      renderNotifCostTable();
+
+      // expose to inline onclick/oninput="" handlers in the markup above
+      Object.assign(window, { onBagiHasilInput, saveBagiHasil, saveNotifCost });
+    }
+  }
+</script>
+</body>
+</html>

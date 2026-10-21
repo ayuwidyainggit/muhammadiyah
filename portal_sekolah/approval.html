@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Approval Write-off -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item active" data-rbac="approval" href="approval.html" id="nav-self"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Approval Write-off</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-approval">
+        <div class="page-title">
+          <h1>Approval Pengajuan Write-off</h1>
+          <p>Persetujuan hapus buku tagihan untuk siswa yang mengajukan pindah sekolah, diajukan oleh Bendahara sekolah.</p>
+        </div>
+
+        <div class="note-box info">Sebagai Kepala Sekolah, Anda berwenang <b>menyetujui atau menolak</b> pengajuan write-off dari Bendahara sekolah ini (segregation of duties) -- Bendahara yang mengajukan tidak bisa menyetujui pengajuannya sendiri, dan panel ini tidak menyediakan opsi untuk membuat pengajuan baru.</div>
+
+        <div class="stat-row" style="margin-top:16px;">
+          <div class="stat-card"><div class="lbl">Total Pengajuan</div><div class="val" id="wo-stat-total">--</div></div>
+          <div class="stat-card"><div class="lbl">Menunggu Approval</div><div class="val" id="wo-stat-pending">--</div></div>
+          <div class="stat-card"><div class="lbl">Disetujui</div><div class="val" id="wo-stat-approved">--</div></div>
+          <div class="stat-card"><div class="lbl">Ditolak</div><div class="val" id="wo-stat-rejected">--</div></div>
+        </div>
+
+        <div class="card" id="decision-panel" style="display:none;">
+          <h3 id="decision-title">Setujui Pengajuan Write-off</h3>
+          <p class="card-desc" id="decision-summary"></p>
+          <div id="decision-detail-box"></div>
+          <div class="field">
+            <label>Catatan Keputusan <span id="decision-catatan-req" style="display:none;color:var(--red);">-- wajib diisi untuk penolakan</span></label>
+            <textarea id="decision-catatan" placeholder="Tulis catatan untuk Bendahara..."></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="closeDecisionPanel()">Batal</button>
+            <button class="btn btn-success" id="decision-confirm-btn" onclick="confirmDecision()">Konfirmasi Setujui</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Daftar Pengajuan</h3>
+          <div class="filter-bar">
+            <select id="wo-filter-status" onchange="renderWriteoffTable()">
+              <option value="">Semua Status</option>
+              <option value="pending_approval">Menunggu Approval</option>
+              <option value="approved">Disetujui</option>
+              <option value="rejected">Ditolak</option>
+              <option value="applied">Diterapkan</option>
+            </select>
+          </div>
+          <table class="dtab">
+            <thead>
+              <tr>
+                <th style="width:16%">Siswa / Invoice</th>
+                <th style="width:36%">Alasan</th>
+                <th style="width:16%">Diajukan Oleh</th>
+                <th style="width:10%">Tanggal</th>
+                <th style="width:10%">Status</th>
+                <th style="width:12%">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="writeoff-approval-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+<!-- MODAL: DETAIL TUNGGAKAN (dipakai di Approval Write-off) -->
+<div class="modal-overlay" id="tunggakan-modal-overlay" onclick="if(event.target===this) closeTunggakanModal();">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3 id="tgk-modal-title">Detail Tunggakan</h3>
+        <div class="modal-sub" id="tgk-modal-sub"></div>
+      </div>
+      <span class="modal-close" onclick="closeTunggakanModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="note-box info" id="tgk-modal-rencana" style="display:none;"></div>
+      <table class="dtab" style="margin-top:12px;">
+        <thead>
+          <tr>
+            <th style="width:6%">No</th>
+            <th style="width:18%">Invoice</th>
+            <th style="width:28%">Keterangan</th>
+            <th style="width:14%">Jatuh Tempo</th>
+            <th style="width:14%">Telat</th>
+            <th style="width:20%;text-align:right;">Nominal</th>
+          </tr>
+        </thead>
+        <tbody id="tgk-modal-body"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" style="text-align:right;font-weight:800;color:var(--navy);border-top:2px solid var(--border);border-bottom:none;">Total Tunggakan</td>
+            <td style="text-align:right;font-weight:800;color:var(--navy);border-top:2px solid var(--border);border-bottom:none;" id="tgk-modal-total"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeTunggakanModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    renderWriteoffTable();
+    updateWriteoffStats();
+  }
+</script>
+</body>
+</html>

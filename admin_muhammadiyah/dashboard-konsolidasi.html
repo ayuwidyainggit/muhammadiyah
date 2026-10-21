@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Dashboard Konsolidasi</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <a href="dashboard-konsolidasi.html" class="nav-item active" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+
+    <div class="nav-group-label">Onboarding</div>
+    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
+    <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
+
+    <div class="nav-group-label">Platform</div>
+    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
+      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Dashboard Konsolidasi</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">SA</div>
+        <div class="info">
+          <div class="name" id="uc-name">Super Admin</div>
+          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===================== VIEW: DASHBOARD KONSOLIDASI ===================== -->
+      <div class="page-view active" id="view-dashboard-konsolidasi">
+        <div class="page-title">
+          <h1>Dashboard Konsolidasi</h1>
+          <p>Ringkasan performa pembayaran SPP seluruh jaringan sekolah Muhammadiyah, nasional -- bulan berjalan.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card"><div class="lbl">Total Sekolah</div><div class="val" id="kn-total-sekolah">--</div><div class="sub">terdaftar di platform</div></div>
+          <div class="stat-card"><div class="lbl">Total Siswa Aktif</div><div class="val" id="kn-total-siswa">--</div><div class="sub">seluruh jenjang &amp; wilayah</div></div>
+          <div class="stat-card"><div class="lbl">Total Tagihan</div><div class="val" id="kn-total-tagihan">--</div><div class="sub">bulan berjalan</div></div>
+          <div class="stat-card"><div class="lbl">Total Pembayaran</div><div class="val" id="kn-total-pembayaran">--</div><div class="sub">bulan berjalan</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="lbl">Collection Rate</div><div class="val" id="kn-collection-rate">--</div><div class="sub">nasional, bulan berjalan</div></div>
+          <div class="stat-card"><div class="lbl">Tunggakan</div><div class="val" id="kn-tunggakan">--</div><div class="sub">total tagihan -- terbayar</div></div>
+          <div class="stat-card"><div class="lbl">Transaksi</div><div class="val" id="kn-transaksi">--</div><div class="sub">Jan -- Jul, seluruh kanal PG</div></div>
+          <div class="stat-card"><div class="lbl">Sekolah Aktif</div><div class="val" id="kn-sekolah-aktif">--</div><div class="sub">dari total sekolah terdaftar</div></div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>A. Collection Rate per Wilayah</h3>
+            <p class="card-desc">Ranking PWM berdasarkan collection rate, bulan berjalan.</p>
+            <div id="kn-wilayah-bars"></div>
+            <div class="legend-row">
+              <span><span class="legend-dot" style="background:var(--accent);"></span>≥85% baik</span>
+              <span><span class="legend-dot" style="background:#e0a030;"></span>70-84% perlu dipantau</span>
+              <span><span class="legend-dot" style="background:var(--red);"></span>&lt;70% perlu tindak lanjut</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>B. Trend Transaksi Nasional</h3>
+            <p class="card-desc">Jumlah transaksi pembayaran seluruh sekolah, 7 bulan terakhir.</p>
+            <div class="filter-bar">
+              <select id="kn-filter-tahun" onchange="onTrendFilterChange()"><option>2026</option><option>2025</option></select>
+              <select id="kn-filter-bulan" onchange="onTrendFilterChange()"><option value="">Semua Bulan</option><option>Januari</option><option>Februari</option><option>Maret</option><option>April</option><option>Mei</option><option>Juni</option><option>Juli</option></select>
+              <select id="kn-filter-wilayah" onchange="onTrendFilterChange()"><option value="">Semua Wilayah</option><option>Jawa Barat</option><option>Jawa Timur</option><option>Jawa Tengah</option><option>DKI Jakarta</option><option>DI Yogyakarta</option><option>Sumatera</option><option>Kalimantan</option><option>Sulawesi</option></select>
+              <select id="kn-filter-jenjang" onchange="onTrendFilterChange()"><option value="">Semua Jenjang</option><option>SD/MI</option><option>SMP/MTs</option><option>SMA/MA</option><option>SMK</option></select>
+            </div>
+            <div id="national-trend-chart"></div>
+            <div class="hint">Filter di atas contoh interaksi UI -- data grafik pada prototipe ini bersifat statis (agregat nasional).</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>C. Ranking Sekolah -- Top Performing Schools</h3>
+          <p class="card-desc">Diurutkan berdasarkan <b>collection rate</b>, bukan nominal pembayaran -- supaya sekolah kecil dengan pengelolaan tunggakan yang baik tetap adil dibandingkan sekolah besar.</p>
+          <table class="accounts">
+            <thead>
+              <tr><th style="width:6%">Rank</th><th style="width:30%">Sekolah</th><th style="width:12%">Siswa</th><th style="width:16%">Tagihan</th><th style="width:16%">Terbayar</th><th style="width:12%">Collection</th></tr>
+            </thead>
+            <tbody id="kn-top-schools-body"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Bottom 10 Sekolah</h3>
+          <p class="card-desc">Collection rate terendah nasional -- kandidat prioritas pendampingan dari PWM/PDM/PCM terkait.</p>
+          <table class="accounts">
+            <thead>
+              <tr><th style="width:6%">Rank</th><th style="width:30%">Sekolah</th><th style="width:12%">Siswa</th><th style="width:16%">Tagihan</th><th style="width:16%">Terbayar</th><th style="width:12%">Collection</th></tr>
+            </thead>
+            <tbody id="kn-bottom-schools-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  const u = requireLogin();
+  if (u) {
+    applyCurrentUserToUi();
+    if (enforcePageAccess('dashboard-konsolidasi')) {
+      applyRbacToSidebar();
+
+      function fmtRp(n) { return 'Rp' + n.toLocaleString('id-ID'); }
+      function fmtRpSingkat(n) {
+        if (n >= 1000000000) return 'Rp' + (n / 1000000000).toFixed(1).replace(/\.0$/, '') + ' M';
+        if (n >= 1000000) return 'Rp' + Math.round(n / 1000000) + ' jt';
+        if (n >= 1000) return 'Rp' + Math.round(n / 1000) + ' rb';
+        return fmtRp(n);
+      }
+      function fmtInt(n) { return n.toLocaleString('id-ID'); }
+
+      const dashboardKpiNasional = {
+        totalSekolah: 1250, sekolahAktif: 1180, totalSiswaAktif: 325400,
+        totalTagihanRp: 125000000000, totalPembayaranRp: 108000000000,
+        collectionRate: 86.4, tunggakanRp: 17000000000, transaksi: 450230,
+      };
+
+      const wilayahCollectionData = [
+        { wilayah: 'Jawa Barat', rate: 91 },
+        { wilayah: 'DKI Jakarta', rate: 89 },
+        { wilayah: 'Jawa Timur', rate: 88 },
+        { wilayah: 'DI Yogyakarta', rate: 85 },
+        { wilayah: 'Jawa Tengah', rate: 84 },
+        { wilayah: 'Sumatera', rate: 81 },
+        { wilayah: 'Kalimantan', rate: 76 },
+        { wilayah: 'Sulawesi', rate: 72 },
+      ];
+
+      // jumlah transaksi bulanan nasional, Jan--Jul -- totalnya sengaja pas dengan
+      // KPI "Transaksi" (450.230) di atas supaya konsisten.
+      const nationalTrend = [
+        { bulan: 'Jan', jumlah: 58000 },
+        { bulan: 'Feb', jumlah: 60500 },
+        { bulan: 'Mar', jumlah: 63200 },
+        { bulan: 'Apr', jumlah: 68900 },
+        { bulan: 'Mei', jumlah: 71800 },
+        { bulan: 'Jun', jumlah: 66400 },
+        { bulan: 'Jul', jumlah: 61430 },
+      ];
+
+      // satu dataset performa sekolah -- Top 10 & Bottom 10 diturunkan dari sini
+      // dengan sorting berbeda, supaya selalu konsisten satu sama lain.
+      const schoolPerformanceData = [
+        { sekolah: 'SD Muhammadiyah 9 Malang', jenjang: 'SD/MI', wilayah: 'Jawa Timur', siswa: 520, tagihanJt: 546, targetPct: 97 },
+        { sekolah: 'SMP Muhammadiyah 1 Yogyakarta', jenjang: 'SMP/MTs', wilayah: 'DI Yogyakarta', siswa: 710, tagihanJt: 780, targetPct: 96 },
+        { sekolah: 'SD Muhammadiyah 4 Bandung', jenjang: 'SD/MI', wilayah: 'Jawa Barat', siswa: 465, tagihanJt: 488, targetPct: 95 },
+        { sekolah: 'SMA Muhammadiyah 1 Jakarta', jenjang: 'SMA/MA', wilayah: 'DKI Jakarta', siswa: 610, tagihanJt: 793, targetPct: 94 },
+        { sekolah: 'SD Muhammadiyah 16 Surabaya', jenjang: 'SD/MI', wilayah: 'Jawa Timur', siswa: 540, tagihanJt: 567, targetPct: 94 },
+        { sekolah: 'SMK Muhammadiyah 2 Solo', jenjang: 'SMK', wilayah: 'Jawa Tengah', siswa: 580, tagihanJt: 812, targetPct: 93 },
+        { sekolah: 'SMP Muhammadiyah 3 Depok', jenjang: 'SMP/MTs', wilayah: 'Jawa Barat', siswa: 495, tagihanJt: 545, targetPct: 92 },
+        { sekolah: 'SD Muhammadiyah 5 Medan', jenjang: 'SD/MI', wilayah: 'Sumatera', siswa: 410, tagihanJt: 431, targetPct: 91 },
+        { sekolah: 'SMA Muhammadiyah 2 Bantul', jenjang: 'SMA/MA', wilayah: 'DI Yogyakarta', siswa: 350, tagihanJt: 455, targetPct: 90 },
+        { sekolah: 'SD Muhammadiyah 12 Semarang', jenjang: 'SD/MI', wilayah: 'Jawa Tengah', siswa: 470, tagihanJt: 494, targetPct: 90 },
+        { sekolah: 'SMP Muhammadiyah 5 Bengkulu', jenjang: 'SMP/MTs', wilayah: 'Sumatera', siswa: 195, tagihanJt: 215, targetPct: 63 },
+        { sekolah: 'SD Muhammadiyah 2 Balikpapan', jenjang: 'SD/MI', wilayah: 'Kalimantan', siswa: 230, tagihanJt: 242, targetPct: 61 },
+        { sekolah: 'SMA Muhammadiyah 2 Kendari', jenjang: 'SMA/MA', wilayah: 'Sulawesi', siswa: 180, tagihanJt: 234, targetPct: 59 },
+        { sekolah: 'SD Muhammadiyah 6 Jambi', jenjang: 'SD/MI', wilayah: 'Sumatera', siswa: 205, tagihanJt: 215, targetPct: 57 },
+        { sekolah: 'SMP Muhammadiyah 4 Pontianak', jenjang: 'SMP/MTs', wilayah: 'Kalimantan', siswa: 240, tagihanJt: 264, targetPct: 55 },
+        { sekolah: 'SMK Muhammadiyah 3 Palu', jenjang: 'SMK', wilayah: 'Sulawesi', siswa: 275, tagihanJt: 385, targetPct: 52 },
+        { sekolah: 'SD Muhammadiyah 8 Pekanbaru', jenjang: 'SD/MI', wilayah: 'Sumatera', siswa: 220, tagihanJt: 231, targetPct: 50 },
+        { sekolah: 'SMA Muhammadiyah 1 Makassar', jenjang: 'SMA/MA', wilayah: 'Sulawesi', siswa: 300, tagihanJt: 390, targetPct: 48 },
+        { sekolah: 'SD Muhammadiyah 3 Banjarmasin', jenjang: 'SD/MI', wilayah: 'Kalimantan', siswa: 190, tagihanJt: 200, targetPct: 45 },
+        { sekolah: 'SMP Muhammadiyah 7 Palembang', jenjang: 'SMP/MTs', wilayah: 'Sumatera', siswa: 260, tagihanJt: 286, targetPct: 42 },
+      ];
+      schoolPerformanceData.forEach(s => {
+        s.terbayarJt = Math.round(s.tagihanJt * s.targetPct / 100);
+        s.collectionPct = Math.round(s.terbayarJt / s.tagihanJt * 100);
+      });
+
+      function renderKonsolidasiKpi() {
+        const k = dashboardKpiNasional;
+        document.getElementById('kn-total-sekolah').textContent = fmtInt(k.totalSekolah);
+        document.getElementById('kn-total-siswa').textContent = fmtInt(k.totalSiswaAktif);
+        document.getElementById('kn-total-tagihan').textContent = fmtRpSingkat(k.totalTagihanRp);
+        document.getElementById('kn-total-pembayaran').textContent = fmtRpSingkat(k.totalPembayaranRp);
+        document.getElementById('kn-collection-rate').textContent = k.collectionRate.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+        document.getElementById('kn-tunggakan').textContent = fmtRpSingkat(k.tunggakanRp);
+        document.getElementById('kn-transaksi').textContent = fmtInt(k.transaksi);
+        document.getElementById('kn-sekolah-aktif').textContent = fmtInt(k.sekolahAktif);
+      }
+
+      function barClassKn(pct) { return pct >= 85 ? 'good' : (pct >= 70 ? 'warn' : 'bad'); }
+      function renderWilayahBars() {
+        const sorted = [...wilayahCollectionData].sort((a, b) => b.rate - a.rate);
+        document.getElementById('kn-wilayah-bars').innerHTML = sorted.map(w => `
+          <div class="bar-row">
+            <div class="bar-label">${w.wilayah}</div>
+            <div class="bar-track"><div class="bar-fill ${barClassKn(w.rate)}" style="width:${w.rate}%;"></div></div>
+            <div class="bar-pct">${w.rate}%</div>
+          </div>`).join('');
+      }
+
+      function renderNationalTrendChart() {
+        const w = 560, h = 170, padL = 46, padR = 12, padT = 14, padB = 26;
+        const plotW = w - padL - padR, plotH = h - padT - padB;
+        const vals = nationalTrend.map(d => d.jumlah);
+        const minV = Math.floor(Math.min(...vals) / 5000) * 5000 - 5000;
+        const maxV = Math.ceil(Math.max(...vals) / 5000) * 5000 + 5000;
+        const n = nationalTrend.length;
+        const xPos = i => padL + (plotW * i / (n - 1));
+        const yPos = v => padT + plotH * (1 - (v - minV) / (maxV - minV));
+
+        const points = nationalTrend.map((d, i) => `${xPos(i)},${yPos(d.jumlah)}`).join(' ');
+        const areaPoints = `${xPos(0)},${yPos(minV)} ${points} ${xPos(n - 1)},${yPos(minV)}`;
+
+        const steps = 4;
+        const gridLines = Array.from({ length: steps + 1 }, (_, i) => minV + (maxV - minV) * i / steps).map(v => `
+          <line x1="${padL}" y1="${yPos(v)}" x2="${w - padR}" y2="${yPos(v)}" stroke="#eef1f6" stroke-width="1"/>
+          <text x="${padL - 8}" y="${yPos(v) + 4}" font-size="10" fill="#5b6674" text-anchor="end">${Math.round(v / 1000)}rb</text>
+        `).join('');
+
+        const dots = nationalTrend.map((d, i) => `
+          <circle cx="${xPos(i)}" cy="${yPos(d.jumlah)}" r="4" fill="#1f3864" stroke="#fff" stroke-width="1.5" />
+          <text x="${xPos(i)}" y="${yPos(d.jumlah) - 11}" font-size="10.5" fill="#1f3864" text-anchor="middle" font-weight="700">${(d.jumlah / 1000).toFixed(1)}rb</text>
+          <text x="${xPos(i)}" y="${h - 6}" font-size="11" fill="#5b6674" text-anchor="middle">${d.bulan}</text>
+        `).join('');
+
+        document.getElementById('national-trend-chart').innerHTML = `
+          <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block;">
+            ${gridLines}
+            <polygon points="${areaPoints}" fill="rgba(31,56,100,0.10)" />
+            <polyline points="${points}" fill="none" stroke="#1f3864" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+            ${dots}
+          </svg>`;
+      }
+
+      function onTrendFilterChange() {
+        showToast('Filter diterapkan (contoh interaksi -- data grafik statis di prototipe ini)');
+      }
+
+      function rankBadgeHtml(rank) {
+        const cls = rank === 1 ? 'top1' : (rank === 2 ? 'top2' : (rank === 3 ? 'top3' : ''));
+        return `<span class="rank-badge ${cls}">${rank}</span>`;
+      }
+      function schoolRowHtml(s, rank) {
+        return `
+          <tr>
+            <td>${rankBadgeHtml(rank)}</td>
+            <td><b>${s.sekolah}</b><br><span style="color:var(--muted);font-size:11px;">${s.jenjang} -- ${s.wilayah}</span></td>
+            <td>${fmtInt(s.siswa)}</td>
+            <td>${fmtRpSingkat(s.tagihanJt * 1000000)}</td>
+            <td>${fmtRpSingkat(s.terbayarJt * 1000000)}</td>
+            <td><b>${s.collectionPct}%</b></td>
+          </tr>`;
+      }
+      function renderTopSchools() {
+        const top = [...schoolPerformanceData].sort((a, b) => b.collectionPct - a.collectionPct).slice(0, 10);
+        document.getElementById('kn-top-schools-body').innerHTML = top.map((s, i) => schoolRowHtml(s, i + 1)).join('');
+      }
+      function renderBottomSchools() {
+        const bottom = [...schoolPerformanceData].sort((a, b) => a.collectionPct - b.collectionPct).slice(0, 10);
+        document.getElementById('kn-bottom-schools-body').innerHTML = bottom.map((s, i) => schoolRowHtml(s, i + 1)).join('');
+      }
+
+      renderKonsolidasiKpi();
+      renderWilayahBars();
+      renderNationalTrendChart();
+      renderTopSchools();
+      renderBottomSchools();
+      window.onTrendFilterChange = onTrendFilterChange;
+    }
+  }
+</script>
+</body>
+</html>

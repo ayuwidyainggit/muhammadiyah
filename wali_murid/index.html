@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Wali Murid -- SPP GeekGarden</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-content" id="auth-screen" style="padding-bottom:16px;">
+    <div class="view active" id="auth-view-login">
+      <div style="text-align:center;padding:14px 0 6px;">
+        <div class="avatar-circle lg" style="margin:0 auto 10px;background:var(--navy);">🎓</div>
+        <div style="font-size:16px;font-weight:800;color:var(--navy);">Portal Wali Murid</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">SD Muhammadiyah 4 Sidoarjo -- SPP GeekGarden</div>
+      </div>
+
+      <div class="card">
+        <div class="hint" id="auth-error" style="display:none;color:var(--red);background:var(--red-light);border-radius:8px;padding:8px 10px;margin-bottom:10px;"></div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="auth-email" placeholder="nama@email.com">
+        </div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>Password</label>
+          <input type="password" id="auth-password" placeholder="Masukkan password">
+        </div>
+        <button class="btn btn-primary" onclick="doWaliLogin()">Masuk</button>
+        <div class="hint" style="text-align:center;margin-top:10px;">Satu akun (SSO) untuk masuk ke aplikasi ini -- akun yang sama dipakai sekolah untuk memverifikasi Anda sebagai wali murid.</div>
+      </div>
+
+      <div class="card" style="text-align:center;">
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">Belum punya akun?</div>
+        <button class="btn btn-ghost" onclick="location.href='daftar.html'">Daftar Akun Baru</button>
+      </div>
+
+      <div class="card" style="background:var(--blue-light);border-color:#C7D6EF;">
+        <h3 style="color:var(--navy);">🧪 Demo -- Pilih Akun</h3>
+        <p class="card-desc">Memperagakan alur SSO: akun Aktif langsung masuk, akun lain diblokir sesuai status approval.</p>
+        <div id="demo-wali-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (getSession()) { location.replace('bayar.html'); }
+  renderDemoWaliList();
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-header">
+    <div class="row-top">
+      <div>
+        <div class="greeting">Assalamualaikum,</div>
+        <div class="name" id="header-name">Bapak Yusuf Bachtiar</div>
+      </div>
+      <div class="header-icons">
+        <div class="bell-wrap" onclick="location.href='riwayat.html'" title="Notifikasi Aplikasi">
+          🔔<span class="bell-badge" id="bell-count">2</span>
+        </div>
+        <div class="avatar-circle" id="header-avatar">YB</div>
+      </div>
+    </div>
+    <div class="child-switch" id="child-switch"></div>
+  </div>
+
+  <div class="app-content" id="app-content">
+    <div class="view active" id="view-profil">
+      <div class="section-title">Profil Orang Tua / Wali</div>
+      <div class="card" style="text-align:center;">
+        <div class="avatar-circle lg" style="margin:0 auto 10px;">YB</div>
+        <div style="font-size:15px;font-weight:700;">Yusuf Bachtiar</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">Ayah dari Fatimah Azzahra &amp; Muhammad Fadli Bachtiar</div>
+      </div>
+
+      <div class="card">
+        <h3>Data Pribadi</h3>
+        <p class="card-desc">Data ini dipakai untuk komunikasi seputar tagihan &amp; pembayaran SPP anak Anda.</p>
+        <div class="field">
+          <label>Nama Lengkap</label>
+          <input type="text" id="pf-nama" value="Yusuf Bachtiar">
+        </div>
+        <div class="field">
+          <label>Hubungan dengan Siswa</label>
+          <select id="pf-relasi">
+            <option value="ayah" selected>Ayah</option>
+            <option value="ibu">Ibu</option>
+            <option value="wali">Wali</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Pekerjaan</label>
+          <select id="pf-pekerjaan">
+            <option>Wiraswasta</option>
+            <option>Pegawai Swasta</option>
+            <option>PNS / ASN</option>
+            <option>TNI / Polri</option>
+            <option>Petani / Nelayan</option>
+            <option>Buruh Harian</option>
+            <option>Ibu Rumah Tangga</option>
+            <option>Tidak Bekerja</option>
+            <option>Lainnya</option>
+          </select>
+          <div class="hint">Membantu sekolah memahami kondisi ekonomi keluarga saat meninjau pengajuan keringanan.</div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>No. WhatsApp</label>
+            <input type="tel" id="pf-wa" value="0811-4433-2211">
+          </div>
+          <div class="field">
+            <label>No. HP Alternatif</label>
+            <input type="tel" id="pf-hp-alt" placeholder="Opsional" value="">
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="pf-email" value="yusuf.b@yahoo.com">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Preferensi Pengingat Tagihan</h3>
+        <p class="card-desc">Selain reminder otomatis dari sekolah, Anda bisa memilih tanggal favorit setiap bulan untuk menerima pengingat tambahan.</p>
+        <div class="field" style="margin-bottom:0;">
+          <label>Ingatkan saya setiap tanggal</label>
+          <select id="pf-tanggal-pengingat">
+            <script>document.write(Array.from({length:28}, (_, i) => `<option value="${i+1}" ${i+1===5?'selected':''}>Tanggal ${i+1}</option>`).join(''));</script>
+          </select>
+          <div class="hint">Contoh: kalau pilih tanggal 5, Anda akan menerima pesan pengingat tiap tanggal 5 setiap bulan untuk tagihan yang masih berjalan.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Data Anak</h3>
+        <p class="card-desc">Data akademik hanya bisa diubah oleh sekolah. Hubungi Tata Usaha bila ada kesalahan data.</p>
+        <div id="pf-children-list"></div>
+        <div class="note-box" style="margin-top:12px;margin-bottom:0;">ℹ️ Kalau anak Anda pindah sekolah, ajukan lewat tombol "Ajukan Pindah Sekolah" di baris nama anak. Cicilan yang <b>belum jatuh tempo</b> otomatis dihapus buku (write-off) oleh sekolah, namun cicilan yang <b>sudah jatuh tempo</b> tetap harus dilunasi.</div>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveProfile()">Simpan Perubahan</button>
+      <button class="btn btn-outline-red" style="margin-top:10px;" onclick="waliLogout()">Keluar</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-btn active" href="profil.html"><span class="n-ic">👤</span><span class="n-label">Profil</span></a>
+    <a class="nav-btn" href="notifikasi.html"><span class="n-ic">🔔</span><span class="n-label">Notifikasi</span></a>
+    <a class="nav-btn" href="bayar.html"><span class="n-ic">💳</span><span class="n-label">Bayar</span></a>
+    <a class="nav-btn" href="riwayat.html"><span class="n-ic">🧾</span><span class="n-label">Riwayat</span></a>
+  </div>
+
+  <!-- ===================== AJUKAN PINDAH SEKOLAH SHEET ===================== -->
+  <div class="sheet-backdrop" id="pindah-backdrop" onclick="closePindahSheet()"></div>
+  <div class="sheet" id="pindah-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h3>Ajukan Pindah Sekolah</h3>
+      <button class="sheet-close" onclick="closePindahSheet()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:-4px 0 14px;">Untuk <b id="pindah-child-label">--</b>. Setelah diajukan, cicilan yang belum jatuh tempo otomatis dihapus buku (write-off) oleh sekolah. Cicilan yang sudah jatuh tempo tetap harus dilunasi.</p>
+
+      <div id="pindah-tunggakan-box"></div>
+
+      <div class="field" id="pindah-rencana-field" style="display:none;">
+        <label>Rencana Tanggal Pelunasan Tunggakan</label>
+        <input type="date" id="pd-rencana-bayar">
+        <div class="hint">Wajib diisi karena masih ada tunggakan (tagihan jatuh tempo) yang belum dibayar.</div>
+      </div>
+
+      <div class="field">
+        <label>Tanggal Efektif Pindah</label>
+        <input type="date" id="pd-tanggal" value="2026-08-13">
+      </div>
+      <div class="field">
+        <label>Sekolah Tujuan (opsional)</label>
+        <input type="text" id="pd-sekolah-tujuan" placeholder="mis. SD Negeri 2 Sidoarjo">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Catatan (opsional)</label>
+        <textarea id="pd-catatan" placeholder="mis. mengikuti perpindahan tugas orang tua"></textarea>
+      </div>
+      <button class="btn btn-outline-red" style="margin-top:14px;" onclick="submitPindahSekolah()">Ajukan Pindah Sekolah</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (requireLogin()) {
+    renderChildSwitch();
+    renderChildrenList();
+    updateBellBadge();
+  }
+</script>
+</body>
+</html>

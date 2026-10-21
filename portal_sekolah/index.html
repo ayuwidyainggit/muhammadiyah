@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Masuk -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="logo"><span class="box">GG</span><span class="txt">Portal Sekolah</span></div>
+    <p class="sub-title">SD Muhammadiyah 4 Sidoarjo -- Platform Invoicing &amp; Payment SPP</p>
+
+    <div class="login-error" id="login-error"></div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="nama@sdmuh4sda.sch.id">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="login-password" placeholder="Masukkan password">
+        <button type="button" onclick="togglePw('login-password', this)">Lihat</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="doLogin(document.getElementById('login-email').value, document.getElementById('login-password').value)">Masuk</button>
+
+    <div class="login-divider">atau coba mode demo</div>
+    <div class="demo-role-list" id="demo-role-list"></div>
+
+    <div class="login-footnote">Prototipe -- autentikasi disimulasikan di sisi browser. Satu portal untuk Kepala Sekolah, Bendahara, dan Admin -- menu otomatis menyesuaikan peran.</div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  // ---- login screen: this is the only page where these run ----
+  function renderDemoRoleList() {
+    const icons = { "Kepala Sekolah": "🧑‍💼", "Bendahara": "💼", "Admin": "🔑" };
+    document.getElementById('demo-role-list').innerHTML = staffData
+      .filter(u => u.status === 'aktif')
+      .map(u => `<button type="button" class="demo-role-btn" onclick="demoLogin('${u.email}')">
+        <div><div class="rn">${icons[u.peran] || '👤'} ${u.peran}</div><div class="rd">${u.email} / ${u.password}</div></div>
+        <div class="go">Masuk →</div>
+      </button>`).join('');
+  }
+
+  function findUserByEmail(email) {
+    return staffData.find(u => u.email.toLowerCase() === (email || '').trim().toLowerCase());
+  }
+  function doLogin(email, password) {
+    const errEl = document.getElementById('login-error');
+    const genericErr = 'Email/password tidak dikenali (mode demo) -- coba salah satu peran di bawah.';
+    const user = findUserByEmail(email);
+    if (!user) {
+      errEl.textContent = genericErr;
+      errEl.style.display = 'block';
+      return;
+    }
+    if (user.status === 'undangan_terkirim') {
+      errEl.textContent = 'Akun ini belum diaktifkan -- selesaikan aktivasi lewat link undangan yang dikirim ke WhatsApp/email Anda terlebih dahulu.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (user.status === 'nonaktif') {
+      errEl.textContent = 'Akun ini berstatus Nonaktif -- hubungi Bendahara/Admin Pusat untuk mengaktifkan kembali.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (user.password !== password) {
+      errEl.textContent = genericErr;
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    loginAs(user);
+  }
+  function demoLogin(email) {
+    const user = staffData.find(u => u.email === email);
+    if (!user) return;
+    document.getElementById('login-email').value = user.email;
+    document.getElementById('login-password').value = user.password;
+    document.getElementById('login-error').style.display = 'none';
+    loginAs(user);
+  }
+  function loginAs(user) {
+    saveSession(user);
+    location.href = defaultPageFor(user.peran);
+  }
+
+  // already logged in (e.g. navigated "back" to index.html)? skip straight to the app.
+  const __existing = getSession();
+  if (__existing) {
+    location.replace(defaultPageFor(__existing.peran));
+  } else {
+    renderDemoRoleList();
+  }
+</script>
+</body>
+</html>

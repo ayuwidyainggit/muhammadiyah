@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Konfigurasi -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item active" data-rbac="konfigurasi" href="konfigurasi.html" id="nav-self"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Konfigurasi</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-konfigurasi">
+        <div class="page-title">
+          <h1>Konfigurasi Sekolah</h1>
+          <p>Rekening penampung dan aturan notifikasi khusus untuk SD Muhammadiyah 4 Sidoarjo. Pengaturan ini tidak memengaruhi sekolah lain.</p>
+        </div>
+
+        <div class="card">
+          <h3>Rekening Penampung (Disbursement) <span class="tag-pill pg">BANK</span></h3>
+          <p class="card-desc">Rekening tujuan pencairan dana milik sekolah ini -- terpisah dari kanal VA yang dilihat wali murid saat membayar.</p>
+          <div class="grid3">
+            <div class="field">
+              <label>Nama Bank</label>
+              <select>
+                <option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option>
+                <option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option>
+              </select>
+            </div>
+            <div class="field"><label>Nomor Rekening</label><input type="text" value="7123456789"></div>
+            <div class="field"><label>Nama Pemilik Rekening</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo"></div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Status Verifikasi</label>
+              <div><span class="badge-status on"><span class="dot"></span> Terverifikasi (via Account Inquiry API)</span></div>
+              <div class="hint">Dicek otomatis lewat API Account Inquiry bank mitra (BSI Host-to-Host), dicocokkan dengan nama di atas.</div>
+            </div>
+            <div class="field">
+              <label>Jadwal Disbursement</label>
+              <select><option selected>Harian (T+1)</option><option>Mingguan</option><option>Sesuai permintaan (manual)</option></select>
+            </div>
+          </div>
+          <div class="switch-row">
+            <div class="txt"><b>Aktifkan BSI juga sebagai kanal VA pembayaran</b><span>Opsional -- wali murid bisa bayar langsung lewat VA BSI</span></div>
+            <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" onclick="showToast('✓ Rekening Penampung berhasil disimpan')">Simpan</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Notifikasi -- Nomor Resmi</h3>
+          <p class="card-desc">Notifikasi ke wali murid dikirim lewat satu nomor WhatsApp Business resmi milik <b>Muhammadiyah Pusat</b>, bukan nomor milik sekolah masing-masing.</p>
+          <div class="grid2">
+            <div class="field"><label>Nomor WA Pengirim</label><input type="text" value="+62 811-2233-4455" disabled></div>
+            <div class="field"><label>Dikelola oleh</label><input type="text" value="Muhammadiyah Pusat (PP)" disabled></div>
+          </div>
+          <div class="note-box info">Karena nomor ini terpusat, pastikan setiap template pesan sekolah Anda (di bawah) tetap mencantumkan nama sekolah supaya wali murid mengenali tagihan anaknya.</div>
+        </div>
+
+        <div class="card">
+          <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+          <p class="card-desc">Berawal dari salinan Aturan Default Platform -- bisa diubah bebas khusus sekolah ini, tidak memengaruhi sekolah lain.</p>
+          <table class="dtab" id="rules-table">
+            <thead>
+              <tr><th style="width:12%">Offset Hari</th><th style="width:24%">Nama Aturan</th><th style="width:22%">Level Penanganan</th><th style="width:24%">Channel</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="number" value="-7"></td>
+                <td><input type="text" value="Pengingat Awal"></td>
+                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="-1"></td>
+                <td><input type="text" value="Pengingat Terakhir"></td>
+                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+              <tr>
+                <td><input type="number" value="5"></td>
+                <td><input type="text" value="Lewat Jatuh Tempo (disesuaikan sekolah ini)"></td>
+                <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn-add-row" onclick="addRuleRow()">+ Tambah Aturan</button>
+          <div class="hint" style="margin-top:8px;">Offset negatif = hari sebelum jatuh tempo (H-), positif = hari setelah jatuh tempo (H+).</div>
+        </div>
+
+        <div class="card">
+          <h3>Template Pesan <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+          <div id="tmpl-root-konfig">
+            <div class="channel-tabs">
+              <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-konfig')">WhatsApp</div>
+              <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-konfig')">SMS</div>
+              <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-konfig')">Email</div>
+            </div>
+            <div class="channel-panel" data-ch-panel="wa">
+              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo). Tagihan SPP Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Bpk/Ibu wali {nama_siswa}, tagihan SPP sudah lewat jatuh tempo {hari_terlambat} hari. Ditunggu konfirmasinya ya -- {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Pemberitahuan penting: tagihan SPP {nama_siswa} menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea></div>
+            </div>
+            <div class="channel-panel" data-ch-panel="sms" style="display:none;">
+              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>SDM4 Sidoarjo: SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>SDM4 Sidoarjo: SPP {nama_siswa} telat {hari_terlambat} hari. {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>SDM4 Sidoarjo: Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea></div>
+            </div>
+            <div class="channel-panel" data-ch-panel="email" style="display:none;">
+              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP SD Muhammadiyah 4 Sidoarjo Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP telah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}</textarea></div>
+              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tunggakan SPP sudah {hari_terlambat} hari. Sekolah akan menghubungi Bapak/Ibu.</textarea></div>
+            </div>
+          </div>
+          <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+            <button class="btn btn-success" onclick="showToast('✓ Template pesan sekolah ini berhasil disimpan')">Simpan Template</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+  }
+</script>
+</body>
+</html>

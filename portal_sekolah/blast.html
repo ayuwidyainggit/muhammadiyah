@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Blast Notifikasi -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item active" data-rbac="blast" href="blast.html" id="nav-self"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Blast Notifikasi</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-blast">
+        <div class="page-title">
+          <h1>Blast Notifikasi</h1>
+          <p>Kirim notifikasi manual ke wali murid, di luar jadwal reminder otomatis.</p>
+        </div>
+
+        <div class="card">
+          <h3>Kirim Notifikasi Manual</h3>
+
+          <div class="field"><label>Target Audiens</label></div>
+          <div class="radio-row" onclick="setBlastTarget('semua')">
+            <input type="radio" name="blast-target" id="blast-target-semua" checked>
+            <div class="txt"><b>Semua Wali Murid Aktif</b><span>Seluruh wali murid dari siswa berstatus aktif di sekolah ini</span></div>
+          </div>
+          <div class="radio-row" onclick="setBlastTarget('kelas')">
+            <input type="radio" name="blast-target" id="blast-target-kelas">
+            <div class="txt"><b>Berdasarkan Kelas</b><span>Pilih satu atau beberapa kelas</span></div>
+          </div>
+          <div class="sub-panel" id="blast-sub-kelas"></div>
+          <div class="radio-row" onclick="setBlastTarget('tunggakan')">
+            <input type="radio" name="blast-target" id="blast-target-tunggakan">
+            <div class="txt"><b>Berdasarkan Status Tunggakan</b><span>Hanya wali murid dengan tagihan menunggak</span></div>
+          </div>
+          <div class="sub-panel" id="blast-sub-tunggakan">
+            <select id="blast-tunggakan-level" onchange="updateBlastEstimate()">
+              <option value="overdue">Overdue</option>
+              <option value="escalated">Escalated</option>
+              <option value="semua">Semua yang Menunggak</option>
+            </select>
+          </div>
+          <div class="radio-row" onclick="setBlastTarget('manual')">
+            <input type="radio" name="blast-target" id="blast-target-manual">
+            <div class="txt"><b>Pilih Manual</b><span>Cari &amp; pilih siswa secara satu per satu</span></div>
+          </div>
+          <div class="sub-panel" id="blast-sub-manual">
+            <div id="blast-manual-list"></div>
+          </div>
+
+          <div class="field" style="margin-top:16px;"><label>Kanal Pengiriman</label></div>
+          <div style="display:flex;gap:18px;">
+            <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" id="blast-ch-wa" checked onchange="updateBlastEstimate()"> WhatsApp</label>
+            <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" id="blast-ch-sms"> SMS</label>
+            <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;"><input type="checkbox" id="blast-ch-email"> Email</label>
+          </div>
+          <div class="note-box info">Jika wali murid sudah mengatur preferensi kanal sendiri, kanal yang dipilih di sini akan disesuaikan otomatis dengan preferensi mereka.</div>
+
+          <div class="field" style="margin-top:16px;"><label>Isi Pesan</label></div>
+          <div class="radio-row" onclick="setBlastMsgMode('template')">
+            <input type="radio" name="blast-msg-mode" id="blast-msg-template" checked>
+            <div class="txt"><b>Gunakan Template</b><span>Pakai salah satu template pesan yang sudah ada</span></div>
+          </div>
+          <div class="sub-panel open" id="blast-sub-template">
+            <select id="blast-template-pick">
+              <option value="l1">Level 1 -- Pengingat</option>
+              <option value="l2">Level 2 -- Peringatan</option>
+              <option value="l3">Level 3 -- Eskalasi</option>
+            </select>
+          </div>
+          <div class="radio-row" onclick="setBlastMsgMode('manual')">
+            <input type="radio" name="blast-msg-mode" id="blast-msg-manual">
+            <div class="txt"><b>Tulis Manual</b><span>Ketik pesan bebas</span></div>
+          </div>
+          <div class="sub-panel" id="blast-sub-manualmsg">
+            <textarea id="blast-manual-text" placeholder="Tulis pesan Anda... boleh pakai placeholder {nama_siswa}, {nama_sekolah}, {nominal}, {tanggal_jatuh_tempo}, {hari_terlambat}, {link_bayar}"></textarea>
+          </div>
+
+          <div class="note-box info" style="margin-top:14px;" id="blast-estimate">≈ 0 wali murid akan menerima pesan ini</div>
+
+          <div class="btn-row">
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input type="datetime-local" id="blast-schedule-time" style="width:auto;">
+              <button class="btn btn-ghost" onclick="scheduleBlast()">Jadwalkan</button>
+            </div>
+            <button class="btn btn-primary" onclick="sendBlastNow()">Kirim Sekarang</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Riwayat Blast Notifikasi</h3>
+          <table class="dtab">
+            <thead>
+              <tr><th style="width:18%">Tanggal / Waktu</th><th style="width:26%">Target Audiens</th><th style="width:18%">Kanal</th><th style="width:14%">Jumlah Penerima</th><th style="width:14%">Status</th></tr>
+            </thead>
+            <tbody id="blast-history-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    refreshKelasDropdowns();
+    renderBlastHistory();
+    updateBlastEstimate();
+  }
+</script>
+</body>
+</html>

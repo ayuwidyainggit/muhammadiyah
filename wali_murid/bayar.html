@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayar -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-header">
+    <div class="row-top">
+      <div>
+        <div class="greeting">Assalamualaikum,</div>
+        <div class="name" id="header-name">Bapak Yusuf Bachtiar</div>
+      </div>
+      <div class="header-icons">
+        <div class="bell-wrap" onclick="location.href='riwayat.html'" title="Notifikasi Aplikasi">
+          🔔<span class="bell-badge" id="bell-count">2</span>
+        </div>
+        <div class="avatar-circle" id="header-avatar">YB</div>
+      </div>
+    </div>
+    <div class="child-switch" id="child-switch"></div>
+  </div>
+
+  <div class="app-content" id="app-content">
+    <div class="view active" id="view-bayar">
+      <div class="section-title">Pembayaran</div>
+      <div class="summary-card">
+        <div class="s-label">Total Tunggakan -- <span id="bayar-child-label">Fatimah Azzahra</span></div>
+        <div class="s-value" id="bayar-total">Rp0</div>
+        <div class="s-note" id="bayar-note">✓ Semua tagihan lunas</div>
+      </div>
+
+      <div id="bayar-invoice-list"></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-btn" href="profil.html"><span class="n-ic">👤</span><span class="n-label">Profil</span></a>
+    <a class="nav-btn" href="notifikasi.html"><span class="n-ic">🔔</span><span class="n-label">Notifikasi</span></a>
+    <a class="nav-btn active" href="bayar.html"><span class="n-ic">💳</span><span class="n-label">Bayar</span></a>
+    <a class="nav-btn" href="riwayat.html"><span class="n-ic">🧾</span><span class="n-label">Riwayat</span></a>
+  </div>
+
+  <!-- ===================== PAYMENT SHEET ===================== -->
+  <div class="sheet-backdrop" id="pay-backdrop" onclick="closePaySheet()"></div>
+  <div class="sheet" id="pay-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h3 id="pay-sheet-title">Bayar Tagihan</h3>
+      <button class="sheet-close" onclick="closePaySheet()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div class="segment" id="pay-method-segment">
+        <button class="active" data-pm="qris" onclick="setPayMethod('qris')">QRIS</button>
+        <button data-pm="va" onclick="setPayMethod('va')">Virtual Account</button>
+        <button data-pm="transfer" onclick="setPayMethod('transfer')">Transfer</button>
+      </div>
+
+      <!-- QRIS -->
+      <div id="pay-panel-qris">
+        <div class="qr-wrap">
+          <div class="qr-grid" id="qr-grid"></div>
+          <div class="qr-timer">⏱ Kedaluwarsa dalam <b id="qr-countdown">14:59</b></div>
+        </div>
+        <div class="qr-amount">
+          <div class="qa-label">Total Pembayaran</div>
+          <div class="qa-value" id="qr-amount-value">Rp0</div>
+        </div>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px;">Scan kode QRIS di atas lewat aplikasi m-Banking / e-wallet pilihan Anda (mendukung semua bank &amp; e-wallet berlogo QRIS).</p>
+        <button class="btn btn-accent" onclick="simulatePaymentSuccess()">Saya Sudah Bayar</button>
+      </div>
+
+      <!-- VA -->
+      <div id="pay-panel-va" style="display:none;">
+        <div class="field">
+          <label>Pilih Bank</label>
+          <div class="pill-row" id="va-bank-pills">
+            <button type="button" class="pill active" data-bank="BCA" onclick="selectVaBank(this)">BCA</button>
+            <button type="button" class="pill" data-bank="BSI" onclick="selectVaBank(this)">BSI</button>
+            <button type="button" class="pill" data-bank="Mandiri" onclick="selectVaBank(this)">Mandiri</button>
+            <button type="button" class="pill" data-bank="BNI" onclick="selectVaBank(this)">BNI</button>
+            <button type="button" class="pill" data-bank="BRI" onclick="selectVaBank(this)">BRI</button>
+          </div>
+        </div>
+        <div class="va-number-box">
+          <div class="vb-label">Nomor Virtual Account <span id="va-bank-label">BCA</span></div>
+          <div class="vb-number" id="va-number">8807 0142 2010 04</div>
+          <button class="btn btn-ghost btn-sm vb-copy" onclick="copyVaNumber()">📋 Salin Nomor VA</button>
+        </div>
+        <div class="qr-amount" style="margin-top:0;">
+          <div class="qa-label">Total Pembayaran</div>
+          <div class="qa-value" id="va-amount-value">Rp0</div>
+        </div>
+        <div class="qr-timer" style="justify-content:center;margin-top:2px;margin-bottom:6px;">⏱ Kedaluwarsa dalam <b id="va-countdown">23:59:00</b></div>
+
+        <div class="field" style="margin-top:14px;">
+          <label>Cara Bayar</label>
+          <div class="pill-row" id="va-method-pills">
+            <button type="button" class="pill active" data-method="mbanking" onclick="setVaMethod(this)">m-Banking</button>
+            <button type="button" class="pill" data-method="atm" onclick="setVaMethod(this)">ATM</button>
+            <button type="button" class="pill" data-method="ibanking" onclick="setVaMethod(this)">Internet Banking</button>
+          </div>
+        </div>
+        <ol class="instruction-list" id="va-instructions"></ol>
+
+        <button class="btn btn-accent" onclick="simulatePaymentSuccess()">Cek Status Pembayaran</button>
+      </div>
+
+      <!-- Transfer manual -- perlu verifikasi Bendahara -->
+      <div id="pay-panel-transfer" style="display:none;">
+        <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 12px;">Untuk transfer manual di luar QRIS/Virtual Account otomatis (mis. teller bank, rekening bukan atas nama sendiri). Tim Bendahara akan mencocokkan dengan mutasi rekening sekolah &amp; memverifikasi dalam 1x24 jam -- tagihan ditandai Lunas setelah diverifikasi.</p>
+
+        <div class="va-number-box">
+          <div class="vb-label">Rekening Tujuan -- Bendahara Sekolah</div>
+          <div class="vb-number" id="bendahara-rekening-number">7123 4567 89</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px;" id="bendahara-rekening-detail">Bank Syariah Indonesia (BSI) a.n. SD Muhammadiyah 4 Sidoarjo</div>
+          <button class="btn btn-ghost btn-sm vb-copy" onclick="copyBendaharaRekening()">📋 Salin Nomor Rekening</button>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Tanggal Transfer</label>
+            <input type="date" id="kf-tanggal" value="2026-08-13">
+          </div>
+          <div class="field">
+            <label>Nominal Transfer</label>
+            <input type="number" id="kf-nominal" placeholder="350000">
+          </div>
+        </div>
+        <div class="field">
+          <label>Bank Pengirim</label>
+          <input type="text" id="kf-bank" placeholder="mis. BCA a.n. Yusuf Bachtiar">
+        </div>
+        <div class="field">
+          <label>Bukti Transfer</label>
+          <div class="upload-box" onclick="document.getElementById('kf-file').click()">
+            <div class="ic">📎</div>
+            <div class="t">Ketuk untuk unggah bukti transfer</div>
+            <div class="d">JPG, PNG, atau PDF -- maks. 5MB</div>
+          </div>
+          <input type="file" id="kf-file" accept=".jpg,.jpeg,.png,.pdf" style="display:none;" onchange="onFileSelected('kf')">
+          <div class="upload-result" id="kf-file-result">
+            <span class="uf-ic">📄</span>
+            <span class="uf-name" id="kf-file-name"></span>
+            <button class="uf-remove" onclick="clearFile('kf')">Hapus</button>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Catatan (opsional)</label>
+          <textarea id="kf-catatan" placeholder="mis. transfer dilakukan lewat rekening suami/istri, dsb."></textarea>
+        </div>
+        <button class="btn btn-primary" style="margin-top:14px;" onclick="submitKonfirmasi()">Kirim Konfirmasi ke Bendahara</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== KONFIRMASI SHEET (rencana kapan akan membayar) ===================== -->
+  <div class="sheet-backdrop" id="konfirmasi-backdrop" onclick="closeKonfirmasiSheet()"></div>
+  <div class="sheet" id="konfirmasi-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h3>Konfirmasi Pembayaran</h3>
+      <button class="sheet-close" onclick="closeKonfirmasiSheet()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:-4px 0 14px;">Beri tahu Bendahara kapan Anda berencana membayar tagihan <b id="kf-invoice-label">--</b>.</p>
+
+      <div class="field">
+        <label>Rencananya kapan akan membayar?</label>
+        <input type="date" id="kfm-tanggal" value="2026-08-13">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Catatan (opsional)</label>
+        <textarea id="kfm-catatan" placeholder="mis. menunggu gajian tanggal 25"></textarea>
+      </div>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="submitRencanaBayar()">Kirim ke Bendahara</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (requireLogin()) {
+    renderChildSwitch();
+    renderBayarView();
+    updateBellBadge();
+    setVaMethod(document.querySelector('#va-method-pills .pill.active'));
+  }
+</script>
+</body>
+</html>

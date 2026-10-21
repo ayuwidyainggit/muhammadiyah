@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Manajemen Murid -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item active" data-rbac="murid" href="murid.html" id="nav-self"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Manajemen Murid</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-murid">
+
+        <!-- LIST -->
+        <div id="murid-list-panel">
+          <div class="page-title">
+            <h1>Manajemen Murid</h1>
+            <p>Data siswa aktif dan wali murid terkait, untuk keperluan penagihan SPP.</p>
+          </div>
+          <div class="card">
+            <div class="filter-bar">
+              <input type="text" class="search" id="murid-search" placeholder="Cari nama siswa / NIS..." oninput="renderStudentList()">
+              <select id="murid-filter-kelas" onchange="renderStudentList()">
+                <option value="">Semua Kelas</option>
+              </select>
+              <select id="murid-filter-status" onchange="renderStudentList()">
+                <option value="">Semua Status</option>
+                <option>aktif</option><option>lulus</option><option>pindah</option>
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="openTambahMuridPanel()">+ Tambah Siswa</button>
+            </div>
+            <table class="dtab">
+              <thead>
+                <tr><th style="width:30%">Nama Siswa</th><th style="width:14%">NIS</th><th style="width:12%">Kelas</th><th style="width:14%">Status</th><th style="width:18%">Wali Murid</th><th style="width:12%">Aksi</th></tr>
+              </thead>
+              <tbody id="murid-table-body"></tbody>
+            </table>
+
+            <div class="card" id="tambah-murid-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3>Tambah Siswa Baru</h3>
+              <p class="card-desc">Lengkapi data pokok siswa dulu -- wali murid &amp; kontaknya bisa ditambahkan setelah siswa tersimpan lewat halaman Detail.</p>
+              <div class="grid2">
+                <div class="field"><label>Nama Siswa</label><input type="text" id="tm-nama" placeholder="mis. Ahmad Fauzan"></div>
+                <div class="field"><label>NIS</label><input type="text" id="tm-nis" placeholder="mis. 2201007"></div>
+                <div class="field"><label>Kelas</label><select id="tm-kelas"></select></div>
+                <div class="field">
+                  <label>Status</label>
+                  <select id="tm-status">
+                    <option value="aktif" selected>aktif</option>
+                    <option value="pindah">pindah (siswa pindahan)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeTambahMuridPanel()">Batal</button>
+                <button class="btn btn-success" onclick="simpanMuridBaru()">Tambah Siswa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAIL -->
+        <div id="murid-detail-panel" style="display:none;">
+          <div class="page-title-row">
+            <div>
+              <h1 id="md-title" style="font-size:21px;color:var(--navy);margin:0 0 4px;font-weight:800;">Nama Siswa</h1>
+              <p style="font-size:13px;color:var(--muted);margin:0;" id="md-sub">NIS -- Kelas</p>
+            </div>
+            <button class="btn btn-ghost" onclick="closeStudentDetail()">&larr; Kembali ke Daftar Murid</button>
+          </div>
+
+          <div class="card">
+            <h3>Info Siswa</h3>
+            <div class="grid3">
+              <div class="field"><label>Nama Siswa</label><input type="text" id="md-nama"></div>
+              <div class="field"><label>NIS</label><input type="text" id="md-nis"></div>
+              <div class="field"><label>Kelas</label><select id="md-kelas"></select></div>
+            </div>
+            <div class="field" style="max-width:220px;">
+              <label>Status</label>
+              <select id="md-status"><option value="aktif">aktif</option><option value="lulus">lulus</option><option value="pindah">pindah</option></select>
+            </div>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-success" onclick="saveStudentInfo()">Simpan Info Siswa</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Wali Murid</h3>
+            <p class="card-desc">Satu siswa bisa punya lebih dari satu wali murid.</p>
+            <table class="dtab" id="md-guardian-table">
+              <thead>
+                <tr><th style="width:20%">Nama</th><th style="width:16%">No. WhatsApp</th><th style="width:16%">No. HP Alt</th><th style="width:18%">Email</th><th style="width:12%">Relasi</th><th style="width:12%">Kontak Utama</th><th style="width:6%"></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addGuardianRow()">+ Tambah Wali Murid</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    refreshKelasDropdowns();
+  }
+</script>
+</body>
+</html>

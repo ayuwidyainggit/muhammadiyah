@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Manajemen Sekolah</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+
+    <div class="nav-group-label">Onboarding</div>
+    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
+    <a href="manajemen.html" class="nav-item active" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
+
+    <div class="nav-group-label">Platform</div>
+    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
+      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Manajemen Sekolah</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">SA</div>
+        <div class="info">
+          <div class="name" id="uc-name">Super Admin</div>
+          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===================== VIEW: MANAJEMEN SEKOLAH ===================== -->
+      <div class="page-view active" id="view-manajemen">
+
+        <!-- LIST -->
+        <div id="ms-list-panel">
+          <div class="page-title">
+            <h1>Manajemen Sekolah</h1>
+            <p>Sekolah yang sudah terdaftar -- kelola konfigurasi masing-masing, termasuk override Aturan Reminder &amp; Template dari default platform.</p>
+          </div>
+          <div class="card">
+            <table class="accounts">
+              <thead>
+                <tr><th style="width:28%">Nama Sekolah</th><th style="width:12%">NPSN</th><th style="width:24%">Wilayah</th><th style="width:14%">Integrasi Bank</th><th style="width:12%">Status</th><th style="width:10%">Aksi</th></tr>
+              </thead>
+              <tbody id="ms-table-body">
+                <!-- filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DETAIL -->
+        <div id="ms-detail-panel" style="display:none;">
+          <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <h1 id="ms-detail-title">Nama Sekolah</h1>
+              <p id="ms-detail-sub">NPSN -- Wilayah</p>
+            </div>
+            <button class="btn btn-ghost" onclick="closeSchoolDetail()">&larr; Kembali ke Daftar Sekolah</button>
+          </div>
+
+          <div class="channel-tabs" style="margin-bottom:20px;">
+            <div class="channel-tab active" data-mstab="info" onclick="switchMsTab('info')">Info Sekolah</div>
+            <div class="channel-tab" data-mstab="pg" onclick="switchMsTab('pg')">Integrasi Bank &amp; Rekening</div>
+            <div class="channel-tab" data-mstab="tmpl" onclick="switchMsTab('tmpl')">Reminder &amp; Template</div>
+          </div>
+
+          <!-- TAB: INFO -->
+          <div class="ms-tab-panel" data-mspanel="info">
+            <div class="card">
+              <h3>Info Sekolah</h3>
+              <div class="grid2">
+                <div class="field"><label>Nama Sekolah</label><input type="text" id="ms-info-nama" value=""></div>
+                <div class="field"><label>NPSN</label><input type="text" id="ms-info-npsn" value=""></div>
+                <div class="field"><label>Jenjang</label><select><option>SD / MI</option><option>SMP / MTs</option><option>SMA / MA</option><option>SMK</option></select></div>
+                <div class="field"><label>Status</label><input type="text" id="ms-info-status" disabled style="background:#f5f6f8;"></div>
+              </div>
+              <div class="field"><label>Struktur Organisasi</label><input type="text" id="ms-info-org" disabled style="background:#f5f6f8;"></div>
+              <div id="ms-status-history" class="status-history" style="display:none;"></div>
+            </div>
+
+            <div class="card" id="ms-aksi-card">
+              <h3>Aksi Sekolah</h3>
+              <p class="card-desc" id="ms-aksi-desc"></p>
+              <div id="ms-aksi-tunggakan-note" class="note-box warn" style="display:none;"></div>
+              <div class="btn-row">
+                <button class="btn" id="ms-btn-nonaktifkan" style="background:var(--red);color:#fff;" onclick="openNonaktifModal()">Nonaktifkan Sekolah</button>
+                <button class="btn btn-success" id="ms-btn-aktifkan" style="display:none;" onclick="openAktifkanModal()">Aktifkan Kembali</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: BANK & REKENING -->
+          <div class="ms-tab-panel" data-mspanel="pg" style="display:none;">
+            <div class="note-box info">Integrasi bank (host-to-host) bersifat terpusat -- satu kerjasama BSI untuk seluruh sekolah, dikonfigurasi di Konfigurasi Sistem &gt; Integrasi Bank Global. Sekolah ini tidak butuh kredensial API terpisah, hanya rekening pencairan fee di bawah.</div>
+
+            <div class="card">
+              <h3>Rekening Penampung Sekolah (Bagi Hasil Fee) <span class="tag-pill pg">BANK</span></h3>
+              <p class="card-desc">Pembayaran SPP dari wali murid seluruhnya masuk ke <b>Rekening Penampung Pusat &amp; VA Terpusat</b> milik Muhammadiyah Pusat (lihat Konfigurasi Sistem &gt; Rekening Bank Penampung Pusat) -- <b>bukan</b> ke rekening di bawah ini. Rekening sekolah berikut hanya dipakai untuk pencairan bagian fee/bagi hasil yang jadi hak sekolah ini.</p>
+              <div class="grid3">
+                <div class="field"><label>Nama Bank</label>
+                  <select><option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option><option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option></select>
+                </div>
+                <div class="field"><label>Nomor Rekening</label><input type="text" value="7123456789"></div>
+                <div class="field"><label>Nama Pemilik Rekening</label><input type="text" id="ms-pg-owner" value=""></div>
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label>Verifikasi Nama Rekening</label>
+                  <span class="badge-status on"><span class="dot"></span> Cocok dengan Bank (via API validasi H2H)</span>
+                </div>
+                <div class="field"><label>Jadwal Pencairan Fee</label>
+                  <select><option selected>Harian (T+1)</option><option>Mingguan</option><option>Sesuai permintaan (manual)</option></select>
+                </div>
+              </div>
+              <div class="note-box info">Dana SPP terkumpul dulu di Rekening Penampung Pusat, lalu bagian fee sekolah ini dihitung &amp; dicairkan ke rekening di atas sesuai jadwal -- bukan langsung real-time per transaksi wali murid.</div>
+              <div class="btn-row" style="justify-content:flex-end;">
+                <button class="btn btn-success" onclick="showToast('✓ Rekening &amp; Integrasi Bank berhasil disimpan')">Simpan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: REMINDER & TEMPLATE (override) -->
+          <div class="ms-tab-panel" data-mspanel="tmpl" style="display:none;">
+            <div class="card">
+              <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+              <p class="card-desc">Berawal dari salinan Default Platform -- ubah bebas khusus untuk sekolah ini, tidak memengaruhi sekolah lain.</p>
+              <table class="accounts" id="ms-rules-table">
+                <thead>
+                  <tr><th style="width:12%">Offset Hari</th><th style="width:24%">Nama Aturan</th><th style="width:22%">Level Penanganan</th><th style="width:24%">Channel</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="number" value="-7"></td>
+                    <td><input type="text" value="Pengingat Awal"></td>
+                    <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+                  </tr>
+                  <tr>
+                    <td><input type="number" value="-1"></td>
+                    <td><input type="text" value="Pengingat Terakhir"></td>
+                    <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+                  </tr>
+                  <tr>
+                    <td><input type="number" value="5"></td>
+                    <td><input type="text" value="Lewat Jatuh Tempo (disesuaikan sekolah ini)"></td>
+                    <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
+                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
+                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
+                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn-add-row" onclick="addRuleRow('ms-rules-table')">+ Tambah Aturan</button>
+              <div class="hint" style="margin-top:8px;">Perhatikan: offset H+5 di sekolah ini sengaja beda dari default platform (H+3) -- menyesuaikan kebijakan sekolah.</div>
+            </div>
+
+            <div class="card">
+              <h3>Template Pesan Sekolah Ini <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+              <div id="tmpl-root-ms">
+                <div class="channel-tabs">
+                  <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-ms')">WhatsApp</div>
+                  <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-ms')">SMS</div>
+                  <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-ms')">Email</div>
+                </div>
+                <div class="channel-panel" data-ch-panel="wa">
+                  <div class="tmpl-card">
+                    <div class="tmpl-head">Level 1 -- Pengingat</div>
+                    <textarea>Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} ({nama_sekolah}). Tagihan SPP Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea>
+                  </div>
+                  <div class="tmpl-card">
+                    <div class="tmpl-head">Level 2 -- Peringatan</div>
+                    <textarea>Bpk/Ibu wali {nama_siswa} ({nama_sekolah}), tagihan SPP sudah lewat jatuh tempo {hari_terlambat} hari. Ditunggu konfirmasinya ya, Bpk/Ibu -- {link_bayar}</textarea>
+                    <div class="hint">Contoh: nada bahasa sekolah ini sengaja dibuat lebih santai dibanding default platform.</div>
+                  </div>
+                  <div class="tmpl-card">
+                    <div class="tmpl-head">Level 3 -- Eskalasi</div>
+                    <textarea>Pemberitahuan penting: tagihan SPP {nama_siswa} ({nama_sekolah}) menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea>
+                  </div>
+                </div>
+                <div class="channel-panel" data-ch-panel="sms" style="display:none;">
+                  <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>{nama_sekolah}: SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
+                  <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>{nama_sekolah}: SPP {nama_siswa} telat {hari_terlambat} hari. {link_bayar}</textarea></div>
+                  <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>{nama_sekolah}: Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea></div>
+                </div>
+                <div class="channel-panel" data-ch-panel="email" style="display:none;">
+                  <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP {nama_sekolah} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
+                  <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP {nama_sekolah} telah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}</textarea></div>
+                  <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tunggakan SPP {nama_sekolah} sudah {hari_terlambat} hari. Sekolah akan menghubungi Bapak/Ibu.</textarea></div>
+                </div>
+              </div>
+              <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+                <button class="btn btn-success" onclick="showToast('✓ Template sekolah ini berhasil disimpan')">Simpan Template Sekolah Ini</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: NONAKTIFKAN SEKOLAH ===================== -->
+<div class="modal-overlay" id="nonaktif-modal-overlay" onclick="if(event.target===this) closeNonaktifModal();">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3 id="nonaktif-modal-title">Nonaktifkan Sekolah</h3>
+        <div class="modal-sub" id="nonaktif-modal-sub"></div>
+      </div>
+      <span class="modal-close" onclick="closeNonaktifModal()">✕</span>
+    </div>
+    <div class="modal-body">
+
+      <div id="nonaktif-tunggakan-block" style="display:none;">
+        <div class="stat-callout">
+          <div class="sc-item">
+            <div class="sc-num" id="nonaktif-jml-siswa">0</div>
+            <div class="sc-label">siswa masih punya tunggakan</div>
+          </div>
+          <div class="sc-item">
+            <div class="sc-num" id="nonaktif-nominal">Rp0</div>
+            <div class="sc-label">total tunggakan belum lunas</div>
+          </div>
+        </div>
+        <div class="note-box warn" style="margin-top:12px;">
+          Menonaktifkan sekolah <b>tidak menghapus/write-off tunggakan ini secara otomatis</b>. Write-off hanya berlaku untuk siswa yang <b>pindah sekolah</b> dan tetap memerlukan persetujuan Kepala Sekolah (lihat Penghapusan Piutang) -- bukan mekanisme keringanan tunggakan umum.
+        </div>
+        <div class="note-box info" style="margin-top:8px;">
+          Setelah dinonaktifkan: staf sekolah (Admin/Kepala Sekolah/Bendahara) <b>tidak bisa lagi login</b> ke Portal Sekolah dan <b>tidak ada tagihan baru</b> yang diterbitkan. Wali murid yang masih punya tunggakan <b>tetap bisa login</b> ke App Wali Murid khusus untuk melihat &amp; melunasi tagihan lama -- dana yang masuk tetap diproses lewat mekanisme Host-to-Host seperti biasa.
+        </div>
+      </div>
+
+      <div id="nonaktif-bersih-block" style="display:none;">
+        <div class="note-box info">Sekolah ini tidak memiliki tunggakan yang belum lunas. Setelah dinonaktifkan, staf sekolah tidak bisa lagi login ke Portal Sekolah dan tidak ada tagihan baru yang diterbitkan.</div>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>Alasan Nonaktivasi <span style="color:var(--red);">*</span></label>
+        <textarea id="nonaktif-alasan" rows="3" placeholder="Contoh: Sekolah bergabung/merger dengan SD Muhammadiyah lain, operasional dihentikan per semester ini." oninput="validateNonaktifForm()"></textarea>
+      </div>
+
+      <label class="confirm-check" id="nonaktif-confirm-check" style="display:none;">
+        <input type="checkbox" id="nonaktif-checkbox" onchange="validateNonaktifForm()">
+        <span>Saya memahami tunggakan siswa di atas <b>tetap harus ditagih</b> dan <b>tidak terhapus otomatis</b> oleh proses nonaktivasi ini.</span>
+      </label>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeNonaktifModal()">Batal</button>
+      <button class="btn" id="nonaktif-confirm-btn" style="background:var(--red);color:#fff;" disabled onclick="confirmNonaktifkan()">Nonaktifkan Sekolah</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: AKTIFKAN KEMBALI ===================== -->
+<div class="modal-overlay" id="aktifkan-modal-overlay" onclick="if(event.target===this) closeAktifkanModal();">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-head">
+      <div>
+        <h3 id="aktifkan-modal-title">Aktifkan Kembali Sekolah</h3>
+        <div class="modal-sub" id="aktifkan-modal-sub"></div>
+      </div>
+      <span class="modal-close" onclick="closeAktifkanModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="note-box info">Sekolah akan berstatus <b>Aktif</b> kembali -- staf sekolah bisa login ke Portal Sekolah dan sistem mulai menerbitkan tagihan baru sesuai jadwal invoicing normal.</div>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeAktifkanModal()">Batal</button>
+      <button class="btn btn-success" onclick="confirmAktifkan()">Aktifkan Kembali</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  const u = requireLogin();
+  if (u) {
+    applyCurrentUserToUi();
+    if (enforcePageAccess('manajemen')) {
+      applyRbacToSidebar();
+
+      // ---- Manajemen Sekolah: list + detail ----
+      const schoolsData = [
+        { nama: "SD Muhammadiyah 4 Sidoarjo", npsn: "20501234", org: "PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota", pg: "BSI H2H -- Terhubung", status: "Aktif", tunggakanSiswa: 3, tunggakanNominal: 4500000, riwayatStatus: null },
+        { nama: "SD Muhammadiyah 1 Surabaya", npsn: "20502211", org: "PWM Jawa Timur / PDM Surabaya / PCM Wonokromo", pg: "BSI H2H -- Terhubung", status: "Aktif", tunggakanSiswa: 0, tunggakanNominal: 0, riwayatStatus: null },
+        { nama: "SMP Muhammadiyah 2 Malang", npsn: "20509987", org: "PWM Jawa Timur / PDM Malang / PCM Klojen", pg: "BSI H2H -- Terhubung", status: "Nonaktif", tunggakanSiswa: 2, tunggakanNominal: 1800000, riwayatStatus: "Dinonaktifkan 12 Agu 2026 oleh Siti Aminah (Super Admin) -- Alasan: Sekolah bergabung/merger dengan SMP Muhammadiyah 1 Malang mulai semester depan." },
+        { nama: "SMK Muhammadiyah 1 Yogyakarta", npsn: "20403321", org: "PWM DI Yogyakarta / PDM Kota Yogyakarta / PCM Danurejan", pg: "BSI H2H -- Pending", status: "Draft", tunggakanSiswa: 0, tunggakanNominal: 0, riwayatStatus: null },
+      ];
+
+      let msActiveIdx = null;
+
+      function fmtRpMs(n) { return "Rp" + n.toLocaleString('id-ID'); }
+
+      function renderSchoolList() {
+        const tbody = document.getElementById('ms-table-body');
+        tbody.innerHTML = schoolsData.map((s, i) => `
+          <tr>
+            <td><b>${s.nama}</b></td>
+            <td>${s.npsn}</td>
+            <td>${s.org}</td>
+            <td>${s.pg}</td>
+            <td><span class="badge-status ${s.status === 'Aktif' ? 'on' : s.status === 'Nonaktif' ? 'warn' : 'off'}"><span class="dot"></span> ${s.status}</span></td>
+            <td><button class="btn btn-ghost" style="padding:6px 12px;font-size:11.5px;" onclick="openSchoolDetail(${i})">Kelola</button></td>
+          </tr>`).join('');
+      }
+
+      function openSchoolDetail(i) {
+        msActiveIdx = i;
+        const s = schoolsData[i];
+        document.getElementById('ms-detail-title').textContent = s.nama;
+        document.getElementById('ms-detail-sub').textContent = `NPSN ${s.npsn} -- ${s.org}`;
+        document.getElementById('ms-info-nama').value = s.nama;
+        document.getElementById('ms-info-npsn').value = s.npsn;
+        document.getElementById('ms-info-status').value = s.status;
+        document.getElementById('ms-info-org').value = s.org;
+        document.getElementById('ms-pg-owner').value = s.nama;
+        document.getElementById('ms-list-panel').style.display = 'none';
+        document.getElementById('ms-detail-panel').style.display = 'block';
+        switchMsTab('info');
+        renderAksiSekolah();
+      }
+
+      function renderAksiSekolah() {
+        const s = schoolsData[msActiveIdx];
+        const btnNon = document.getElementById('ms-btn-nonaktifkan');
+        const btnAkt = document.getElementById('ms-btn-aktifkan');
+        const desc = document.getElementById('ms-aksi-desc');
+        const tgkNote = document.getElementById('ms-aksi-tunggakan-note');
+        const histBox = document.getElementById('ms-status-history');
+
+        if (s.status === 'Draft') {
+          desc.textContent = 'Sekolah ini masih berstatus Draft (belum diaktifkan lewat Pendaftaran Sekolah) -- aksi nonaktifkan/aktifkan hanya berlaku untuk sekolah yang sudah beroperasi.';
+          btnNon.style.display = 'none';
+          btnAkt.style.display = 'none';
+          tgkNote.style.display = 'none';
+        } else if (s.status === 'Aktif') {
+          desc.textContent = 'Menonaktifkan sekolah akan menghentikan login staf ke Portal Sekolah dan menghentikan penerbitan tagihan baru.';
+          btnNon.style.display = 'inline-flex';
+          btnAkt.style.display = 'none';
+          if (s.tunggakanSiswa > 0) {
+            tgkNote.style.display = 'block';
+            tgkNote.innerHTML = `⚠ ${s.tunggakanSiswa} siswa masih punya tunggakan (total ${fmtRpMs(s.tunggakanNominal)}) -- akan ditampilkan saat menonaktifkan.`;
+          } else {
+            tgkNote.style.display = 'none';
+          }
+        } else { // Nonaktif
+          desc.textContent = 'Sekolah ini sedang Nonaktif -- staf tidak bisa login ke Portal Sekolah dan tidak ada tagihan baru diterbitkan.';
+          btnNon.style.display = 'none';
+          btnAkt.style.display = 'inline-flex';
+          tgkNote.style.display = 'none';
+        }
+
+        if (s.riwayatStatus) {
+          histBox.style.display = 'block';
+          histBox.textContent = s.riwayatStatus;
+        } else {
+          histBox.style.display = 'none';
+        }
+      }
+
+      function closeSchoolDetail() {
+        document.getElementById('ms-detail-panel').style.display = 'none';
+        document.getElementById('ms-list-panel').style.display = 'block';
+      }
+
+      function switchMsTab(tab) {
+        document.querySelectorAll('#ms-detail-panel > .channel-tabs .channel-tab').forEach(t => t.classList.toggle('active', t.dataset.mstab === tab));
+        document.querySelectorAll('.ms-tab-panel').forEach(p => { p.style.display = p.dataset.mspanel === tab ? 'block' : 'none'; });
+      }
+
+      // ---- Nonaktifkan Sekolah modal ----
+      function openNonaktifModal() {
+        const s = schoolsData[msActiveIdx];
+        document.getElementById('nonaktif-modal-title').textContent = `Nonaktifkan ${s.nama}`;
+        document.getElementById('nonaktif-modal-sub').textContent = `NPSN ${s.npsn}`;
+        document.getElementById('nonaktif-alasan').value = '';
+
+        const adaTunggakan = s.tunggakanSiswa > 0;
+        document.getElementById('nonaktif-tunggakan-block').style.display = adaTunggakan ? 'block' : 'none';
+        document.getElementById('nonaktif-bersih-block').style.display = adaTunggakan ? 'none' : 'block';
+        document.getElementById('nonaktif-confirm-check').style.display = adaTunggakan ? 'flex' : 'none';
+        document.getElementById('nonaktif-checkbox').checked = false;
+
+        if (adaTunggakan) {
+          document.getElementById('nonaktif-jml-siswa').textContent = s.tunggakanSiswa;
+          document.getElementById('nonaktif-nominal').textContent = fmtRpMs(s.tunggakanNominal);
+        }
+
+        validateNonaktifForm();
+        document.getElementById('nonaktif-modal-overlay').classList.add('active');
+      }
+
+      function closeNonaktifModal() {
+        document.getElementById('nonaktif-modal-overlay').classList.remove('active');
+      }
+
+      function validateNonaktifForm() {
+        const s = schoolsData[msActiveIdx];
+        const alasanOk = document.getElementById('nonaktif-alasan').value.trim().length > 0;
+        const adaTunggakan = s && s.tunggakanSiswa > 0;
+        const checkOk = adaTunggakan ? document.getElementById('nonaktif-checkbox').checked : true;
+        document.getElementById('nonaktif-confirm-btn').disabled = !(alasanOk && checkOk);
+      }
+
+      function confirmNonaktifkan() {
+        const s = schoolsData[msActiveIdx];
+        const alasan = document.getElementById('nonaktif-alasan').value.trim();
+        s.status = 'Nonaktif';
+        const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        const pelaku = currentUser ? `${currentUser.nama} (${roleById(currentUser.roleId).nama})` : 'Admin Pusat';
+        s.riwayatStatus = `Dinonaktifkan ${tanggal} oleh ${pelaku} -- Alasan: ${alasan}`;
+        closeNonaktifModal();
+        renderSchoolList();
+        renderAksiSekolah();
+        document.getElementById('ms-info-status').value = s.status;
+        const msg = s.tunggakanSiswa > 0
+          ? `✓ ${s.nama} berhasil dinonaktifkan. Tunggakan ${s.tunggakanSiswa} siswa tetap dapat ditagih lewat App Wali Murid.`
+          : `✓ ${s.nama} berhasil dinonaktifkan.`;
+        showToast(msg);
+      }
+
+      // ---- Aktifkan Kembali modal ----
+      function openAktifkanModal() {
+        const s = schoolsData[msActiveIdx];
+        document.getElementById('aktifkan-modal-title').textContent = `Aktifkan Kembali ${s.nama}`;
+        document.getElementById('aktifkan-modal-sub').textContent = `NPSN ${s.npsn}`;
+        document.getElementById('aktifkan-modal-overlay').classList.add('active');
+      }
+
+      function closeAktifkanModal() {
+        document.getElementById('aktifkan-modal-overlay').classList.remove('active');
+      }
+
+      function confirmAktifkan() {
+        const s = schoolsData[msActiveIdx];
+        s.status = 'Aktif';
+        closeAktifkanModal();
+        renderSchoolList();
+        renderAksiSekolah();
+        document.getElementById('ms-info-status').value = s.status;
+        showToast(`✓ ${s.nama} berhasil diaktifkan kembali.`);
+      }
+
+      renderSchoolList();
+
+      // expose to inline onclick="" handlers in the markup above
+      Object.assign(window, {
+        openSchoolDetail, closeSchoolDetail, switchMsTab, renderAksiSekolah,
+        openNonaktifModal, closeNonaktifModal, validateNonaktifForm, confirmNonaktifkan,
+        openAktifkanModal, closeAktifkanModal, confirmAktifkan,
+      });
+    }
+  }
+</script>
+</body>
+</html>

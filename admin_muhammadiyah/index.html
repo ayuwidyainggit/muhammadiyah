@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Login</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="logo"><span class="box">GG</span><span class="txt">GeekGarden Admin</span></div>
+    <p class="sub-title">Portal Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP</p>
+
+    <div class="login-error" id="login-error"></div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="nama@muhammadiyah.id">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="login-password" placeholder="Masukkan password">
+        <button type="button" onclick="togglePw('login-password', this)">Lihat</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="doLogin(document.getElementById('login-email').value, document.getElementById('login-password').value)">Masuk</button>
+
+    <div class="login-divider">atau coba mode demo</div>
+    <div class="demo-role-list" id="demo-role-list"></div>
+
+    <div class="login-footnote">Prototipe -- autentikasi disimulasikan di sisi browser (bukan sistem login produksi). Klik salah satu peran di atas untuk langsung masuk &amp; melihat efek RBAC pada menu.</div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  // already logged in (e.g. opened index.html directly in another tab of the same session) -- skip straight to the app
+  (function () {
+    const u = getSession();
+    if (u) { location.replace(defaultPageFor(roleById(u.roleId))); return; }
+    renderDemoRoleList();
+  })();
+</script>
+</body>
+</html>

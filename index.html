@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap Platform SPP -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1F3864; --navy-dark: #16294a;
+    --green: #3E7D3A; --green-bg: #EEF6EC;
+    --teal: #0E7C86; --teal-bg: #E8F5F6;
+    --brown: #8A5A12; --brown-bg: #FBF4E6;
+    --admin-bg: #EDF1F8;
+    --red: #C0392B; --red-bg: #FCECEA;
+    --ink: #1d2433; --muted: #5b6674; --border: #dde3ec; --page: #f4f6fa;
+    --e-proses: #2C4A7C; --e-setuju: #3E8E41; --e-tolak: #C0392B; --e-uang: #0E7C86; --e-opsional: #8A94A6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  /* header */
+  .hero { background: linear-gradient(135deg, var(--navy-dark), var(--navy)); color: #fff; border-radius: 14px; padding: 22px 26px; }
+  .hero h1 { margin: 0 0 6px; font-size: 21px; display: flex; align-items: center; gap: 10px; }
+  .hero h1 .logo { background: #4caf50; border-radius: 8px; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+  .hero p { margin: 0; color: #cfd9ea; line-height: 1.55; font-size: 13.5px; }
+
+  /* app cards */
+  .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+  .app { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; }
+  .app .tag { font-size: 10.5px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+  .app .tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .app h3 { margin: 8px 0 6px; font-size: 16px; }
+  .app p { margin: 0 0 14px; color: var(--muted); font-size: 12.5px; line-height: 1.5; flex: 1; }
+  .app a { display: block; text-align: center; color: #fff; font-weight: 700; font-size: 12.5px; padding: 9px; border-radius: 8px; text-decoration: none; }
+  .app.admin .tag { color: var(--navy); } .app.admin a { background: var(--navy); }
+  .app.sekolah .tag { color: var(--green); } .app.sekolah a { background: var(--green); }
+  .app.wali .tag { color: var(--brown); } .app.wali a { background: var(--brown); }
+
+  /* panel */
+  .panel { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 16px; }
+  .panel h2 { margin: 0 0 4px; font-size: 17px; }
+  .panel .sub { margin: 0 0 16px; color: var(--muted); font-size: 12.5px; }
+
+  /* flowchart grid */
+  .scroll { overflow-x: auto; padding-bottom: 6px; }
+  .flow { position: relative; min-width: 1240px; display: grid;
+          grid-template-columns: 128px repeat(4, minmax(0, 1fr)); column-gap: 80px; row-gap: 46px; padding: 0 60px 10px 0; }
+  .lane-bg { grid-row: 1 / 17; border-radius: 12px; z-index: 0; margin: 0 -10px; }
+  .lane-bg.admin { background: var(--admin-bg); } .lane-bg.sekolah { background: var(--green-bg); }
+  .lane-bg.bsi { background: var(--teal-bg); } .lane-bg.wali { background: var(--brown-bg); }
+  .lane-head { grid-row: 1; z-index: 2; padding: 12px 4px 4px; }
+  .lane-head .pill { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; color: #fff; padding: 3px 9px; border-radius: 99px; }
+  .lane-head .nm { margin-top: 6px; font-weight: 800; font-size: 13px; }
+  .lane-head .ds { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .lane-head.admin .pill { background: var(--navy); } .lane-head.sekolah .pill { background: var(--green); }
+  .lane-head.bsi .pill { background: var(--teal); } .lane-head.wali .pill { background: var(--brown); }
+
+  .phase { grid-column: 1; z-index: 2; align-self: stretch; border-left: 3px solid var(--navy); padding: 2px 0 2px 10px; }
+  .phase .no { font-size: 10.5px; font-weight: 800; color: var(--navy); text-transform: uppercase; letter-spacing: .4px; }
+  .phase .nm { font-size: 13px; font-weight: 800; margin-top: 2px; line-height: 1.3; }
+  .phase .ds { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .phase.opt { border-left-color: var(--e-opsional); } .phase.opt .no { color: var(--e-opsional); }
+  .sep { grid-column: 1 / -1; z-index: 1; border-top: 1px dashed #c3ccd9; margin-top: -24px; height: 0; align-self: start; }
+
+  .node { position: relative; z-index: 3; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 11px 10px; box-shadow: 0 1px 2px rgba(20,30,50,.06); align-self: start; }
+  .node .id { font-size: 10.5px; font-weight: 800; }
+  .node .tt { font-size: 13px; font-weight: 800; margin-top: 2px; line-height: 1.3; }
+  .node .ds { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+  .node .role { display: inline-block; margin-top: 7px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: #f1f3f7; color: #44505f; }
+  .node.admin { border-color: #b8c6de; } .node.admin .id { color: var(--navy); }
+  .node.sekolah { border-color: #b9d8b4; } .node.sekolah .id { color: var(--green); }
+  .node.bsi { border-color: #a9d6da; } .node.bsi .id { color: var(--teal); }
+  .node.wali { border-color: #e6cf9f; } .node.wali .id { color: var(--brown); }
+  .node.start { box-shadow: 0 0 0 3px rgba(31,56,100,.12); }
+  .node.decision { border: 2px solid var(--green); background: #f7fbf6; }
+  .node.reject { border: 2px solid var(--red); background: var(--red-bg); } .node.reject .id { color: var(--red); }
+  .node.optional { border-style: dashed; background: #fbfcfe; }
+  .chips { margin-top: 7px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid; }
+  .chip.ok { color: var(--e-setuju); border-color: #a9d3ab; background: #eef8ee; }
+  .chip.no { color: var(--red); border-color: #efb5ae; background: #fdf0ee; }
+
+  svg.edges { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; overflow: visible; }
+  .elabel { font-size: 10.5px; font-weight: 700; }
+
+  /* legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; border-top: 1px solid var(--border); margin-top: 14px; padding-top: 12px; font-size: 11.5px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid; }
+  .legend .dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* changes */
+  .changes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 26px; margin: 0; padding: 0; list-style: none; }
+  .changes li { font-size: 12.5px; line-height: 1.5; padding-left: 22px; position: relative; }
+  .changes li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 800; }
+  .changes b { color: var(--ink); }
+  .foot { text-align: center; color: var(--muted); font-size: 11.5px; margin-top: 8px; }
+
+  @media (max-width: 760px) {
+    .apps, .changes { grid-template-columns: 1fr; }
+    .hero { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1><span class="logo">GG</span> GeekGarden -- Roadmap Platform Invoicing &amp; Payment SPP</h1>
+    <p>Alur kerja antara tiga aplikasi -- <b>Admin Muhammadiyah</b> (konfigurasi &amp; konsolidasi), <b>Portal Sekolah</b> (operasional per sekolah), dan <b>Aplikasi Wali Murid</b> (pendaftaran &amp; pembayaran SPP) -- serta <b>Bank BSI</b> sebagai bank penampung (Virtual Account &amp; QRIS, Host-to-Host).</p>
+  </div>
+
+  <div class="apps">
+    <div class="app admin">
+      <div class="tag">Admin Pusat</div>
+      <h3>Admin Muhammadiyah</h3>
+      <p>Konfigurasi platform &amp; integrasi BSI, pendaftaran sekolah baru, RBAC, settlement bagi hasil, dan dashboard konsolidasi seluruh sekolah.</p>
+      <a href="admin_muhammadiyah/index.html">Buka Admin Pusat →</a>
+    </div>
+    <div class="app sekolah">
+      <div class="tag">Per Sekolah</div>
+      <h3>Portal Sekolah</h3>
+      <p>Operasional harian sekolah: data murid &amp; wali, approval akun wali, tagihan, monitoring &amp; rekonsiliasi pembayaran, write-off.</p>
+      <a href="portal_sekolah/index.html">Buka Portal Sekolah →</a>
+    </div>
+    <div class="app wali">
+      <div class="tag">Orang Tua</div>
+      <h3>Aplikasi Wali Murid</h3>
+      <p>Daftar akun, menunggu approval sekolah, menerima notifikasi tagihan, bayar SPP via VA/QRIS, kuitansi &amp; riwayat.</p>
+      <a href="wali_murid/index.html">Buka Aplikasi Wali Murid →</a>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Flowchart Alur Kerja (Swimlane)</h2>
+    <p class="sub">Satu kolom = satu aplikasi/sistem, dikelompokkan per fase dari atas ke bawah. Panah menunjukkan serah terima (handoff) antar peran dan sistem.</p>
+
+    <div class="scroll">
+      <div class="flow" id="flow">
+        <!-- lane backgrounds -->
+        <div class="lane-bg admin" style="grid-column:2"></div>
+        <div class="lane-bg sekolah" style="grid-column:3"></div>
+        <div class="lane-bg bsi" style="grid-column:4"></div>
+        <div class="lane-bg wali" style="grid-column:5"></div>
+
+        <!-- lane headers -->
+        <div class="lane-head admin" style="grid-column:2" data-lane="2"><span class="pill">Admin Pusat</span><div class="nm">Admin Muhammadiyah</div><div class="ds">PP, PWM, Staff Keuangan Pusat</div></div>
+        <div class="lane-head sekolah" style="grid-column:3" data-lane="3"><span class="pill">Portal Sekolah</span><div class="nm">Portal Sekolah</div><div class="ds">Admin Sekolah, Kepala Sekolah, Bendahara</div></div>
+        <div class="lane-head bsi" style="grid-column:4" data-lane="4"><span class="pill">Sistem Eksternal</span><div class="nm">Bank BSI (H2H)</div><div class="ds">Rekening penampung, VA, QRIS</div></div>
+        <div class="lane-head wali" style="grid-column:5" data-lane="5"><span class="pill">Wali Murid</span><div class="nm">Aplikasi Wali Murid</div><div class="ds">Orang tua / wali</div></div>
+
+        <!-- phase labels (rows 2..19) -->
+        <div class="phase" style="grid-row:2 / 4"><div class="no">Fase 1</div><div class="nm">Setup platform</div><div class="ds">Sekali di awal, oleh Pusat</div></div>
+        <div class="sep" style="grid-row:4"></div>
+        <div class="phase" style="grid-row:4 / 6"><div class="no">Fase 2</div><div class="nm">Onboarding sekolah</div><div class="ds">Per sekolah baru</div></div>
+        <div class="sep" style="grid-row:6"></div>
+        <div class="phase" style="grid-row:6 / 10"><div class="no">Fase 3</div><div class="nm">Akun wali murid</div><div class="ds">Verifikasi identitas oleh sekolah</div></div>
+        <div class="sep" style="grid-row:10"></div>
+        <div class="phase" style="grid-row:10 / 12"><div class="no">Fase 4</div><div class="nm">Penagihan</div><div class="ds">Setiap periode tagihan</div></div>
+        <div class="sep" style="grid-row:12"></div>
+        <div class="phase" style="grid-row:12 / 15"><div class="no">Fase 5</div><div class="nm">Pembayaran</div><div class="ds">VA / QRIS, status otomatis</div></div>
+        <div class="sep" style="grid-row:15"></div>
+        <div class="phase opt" style="grid-row:15 / 17"><div class="no">Alur tambahan</div><div class="nm">Kasus khusus</div><div class="ds">Opsional / tidak setiap periode</div></div>
+
+        <!-- FASE 1 -->
+        <div class="node admin start" id="A1" style="grid-column:2;grid-row:2"><div class="id">A1 · MULAI</div><div class="tt">Konfigurasi Platform &amp; RBAC</div><div class="ds">Integrasi H2H BSI, rekening penampung &amp; VA pusat, skema bagi hasil, aturan reminder &amp; template default, pengguna &amp; hak akses Pusat.</div><span class="role">Super Admin</span></div>
+        <div class="node bsi" id="B1" style="grid-column:4;grid-row:2"><div class="id">B1</div><div class="tt">Koneksi H2H &amp; Rekening Penampung</div><div class="ds">Kredensial API, callback URL, IP whitelist, rekening penampung pusat aktif.</div><span class="role">Bank BSI</span></div>
+        <div class="node admin" id="A2" style="grid-column:2;grid-row:3"><div class="id">A2</div><div class="tt">Daftarkan Sekolah Baru</div><div class="ds">Wizard 4 langkah: data sekolah, 1 akun Admin Sekolah, rekening pencairan fee, invoicing default. Status Draft → Aktif.</div><span class="role">Admin Pusat / PWM</span></div>
+
+        <!-- FASE 2 -->
+        <div class="node sekolah" id="S1" style="grid-column:3;grid-row:4"><div class="id">S1</div><div class="tt">Aktivasi Akun &amp; Undang Staf</div><div class="ds">Admin Sekolah membuat password lewat link aktivasi, lalu mengundang Kepala Sekolah &amp; Bendahara.</div><span class="role">Admin Sekolah</span></div>
+        <div class="node sekolah" id="S2" style="grid-column:3;grid-row:5"><div class="id">S2</div><div class="tt">Setup Data Sekolah</div><div class="ds">Kategori &amp; kelas, data murid &amp; wali (impor), periode tahun ajaran, master data tagihan (jenis &amp; nominal SPP).</div><span class="role">Admin Sekolah / Bendahara</span></div>
+
+        <!-- FASE 3 -->
+        <div class="node wali start" id="W1" style="grid-column:5;grid-row:6"><div class="id">W1 · MULAI</div><div class="tt">Daftar Akun Wali</div><div class="ds">Self-register: data wali + satu atau lebih anak (NISN, kelas). Alternatif: Admin Sekolah mendaftarkan langsung (akun langsung aktif).</div><span class="role">Wali Murid</span></div>
+        <div class="node sekolah decision" id="S3" style="grid-column:3;grid-row:7"><div class="id">S3 · KEPUTUSAN</div><div class="tt">Review Akun Wali</div><div class="ds">Cocokkan data wali &amp; anak dengan data murid terdaftar.</div><div class="chips"><span class="chip ok">Setujui</span><span class="chip no">Tolak</span></div><span class="role">Kepala Sekolah</span></div>
+        <div class="node wali" id="W2" style="grid-column:5;grid-row:7"><div class="id">W2</div><div class="tt">Menunggu Persetujuan</div><div class="ds">Akun berstatus menunggu, belum bisa masuk aplikasi.</div></div>
+        <div class="node wali reject" id="W2a" style="grid-column:5;grid-row:8"><div class="id">W2a</div><div class="tt">Pendaftaran Ditolak</div><div class="ds">Alasan penolakan ditampilkan; wali bisa daftar ulang.</div></div>
+        <div class="node wali" id="W3" style="grid-column:5;grid-row:9"><div class="id">W3</div><div class="tt">Akun Aktif &amp; Login</div><div class="ds">Wali masuk aplikasi dan melihat tagihan semua anaknya.</div></div>
+
+        <!-- FASE 4 -->
+        <div class="node sekolah" id="S4" style="grid-column:3;grid-row:10"><div class="id">S4</div><div class="tt">Buat &amp; Publikasikan Tagihan</div><div class="ds">Individual atau massal per kelas; nominal mengikuti kategori kelas &amp; periode aktif.</div><span class="role">Bendahara</span></div>
+        <div class="node bsi" id="B2" style="grid-column:4;grid-row:11"><div class="id">B2</div><div class="tt">Terbitkan VA / QRIS Dinamis</div><div class="ds">Nomor VA dan QR per tagihan dibuat sesuai model integrasi yang disepakati.</div><span class="role">Bank BSI</span></div>
+        <div class="node wali" id="W4" style="grid-column:5;grid-row:11"><div class="id">W4</div><div class="tt">Terima Tagihan &amp; Reminder</div><div class="ds">Notifikasi WA / email / push + reminder H-7, H-3, H+3 dst. Tagihan tampil di aplikasi.</div></div>
+
+        <!-- FASE 5 -->
+        <div class="node wali" id="W5" style="grid-column:5;grid-row:12"><div class="id">W5</div><div class="tt">Bayar via VA / QRIS</div><div class="ds">Bayar lewat m-banking, ATM, internet banking, atau e-wallet berlogo QRIS.</div></div>
+        <div class="node bsi" id="B3" style="grid-column:4;grid-row:13"><div class="id">B3</div><div class="tt">Proses Pembayaran &amp; Callback</div><div class="ds">Dana masuk rekening penampung; BSI mengirim notifikasi pembayaran (callback) ke sistem.</div><span class="role">Bank BSI</span></div>
+        <div class="node sekolah" id="S5" style="grid-column:3;grid-row:14"><div class="id">S5</div><div class="tt">Status Lunas Otomatis</div><div class="ds">Tagihan berubah Lunas tanpa input manual; terpantau di Monitoring Transaksi.</div><span class="role">Sistem / Bendahara</span></div>
+        <div class="node wali" id="W6" style="grid-column:5;grid-row:14"><div class="id">W6</div><div class="tt">Kuitansi &amp; Riwayat</div><div class="ds">Status Lunas, kuitansi PDF, dan riwayat pembayaran per anak.</div></div>
+
+        <!-- ALUR TAMBAHAN -->
+        <div class="node sekolah optional" id="S7" style="grid-column:3;grid-row:15"><div class="id">S7 · OPSIONAL</div><div class="tt">Verifikasi Pembayaran Manual</div><div class="ds">Cocokkan bukti transfer / catat tunai → tagihan Lunas, lalu ikut rekonsiliasi. Menunggu keputusan Muhammadiyah.</div><span class="role">Bendahara</span></div>
+        <div class="node wali optional" id="W7" style="grid-column:5;grid-row:15"><div class="id">W7 · OPSIONAL</div><div class="tt">Transfer Manual + Bukti</div><div class="ds">Transfer di luar VA/QRIS, lalu unggah bukti transfer.</div></div>
+        <div class="node sekolah" id="S8" style="grid-column:3;grid-row:16"><div class="id">S8</div><div class="tt">Write-off Siswa Pindah</div><div class="ds">Bendahara mengajukan hapus buku cicilan yang belum jatuh tempo; Kepala Sekolah menyetujui atau menolak.</div><span class="role">Bendahara → Kepala Sekolah</span></div>
+        <div class="node wali" id="W8" style="grid-column:5;grid-row:16"><div class="id">W8</div><div class="tt">Ajukan Pindah Sekolah</div><div class="ds">Isi tanggal efektif &amp; rencana pelunasan tunggakan yang sudah jatuh tempo.</div></div>
+
+        <svg class="edges" id="edges"></svg>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><b class="dot" style="background:var(--navy)"></b>Admin Pusat</span>
+      <span><b class="dot" style="background:var(--green)"></b>Portal Sekolah</span>
+      <span><b class="dot" style="background:var(--teal)"></b>Bank BSI</span>
+      <span><b class="dot" style="background:var(--brown)"></b>Wali Murid</span>
+      <span><i style="border-color:var(--e-proses)"></i>Alur proses</span>
+      <span><i style="border-color:var(--e-uang);border-top-width:3px"></i>Alur uang &amp; status pembayaran</span>
+      <span><i style="border-color:var(--e-setuju)"></i>Cabang: Setujui</span>
+      <span><i style="border-color:var(--e-tolak);border-top-style:dashed"></i>Cabang: Tolak / ulang</span>
+      <span><i style="border-color:var(--e-opsional);border-top-style:dashed"></i>Alur opsional</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Perbaikan dari versi sebelumnya</h2>
+    <p class="sub">Disesuaikan dengan prototipe ketiga aplikasi dan keputusan bank penampung BSI (VA &amp; QRIS).</p>
+    <ul class="changes">
+      <li><b>Lane Bank BSI ditambahkan.</b> Penerbitan VA/QRIS, callback pembayaran, mutasi rekonsiliasi, dan pencairan fee sekarang terlihat; sebelumnya alur uang tidak tergambar.</li>
+      <li><b>Undangan staf diperbaiki.</b> Admin Pusat hanya membuat 1 akun Admin Sekolah; Admin Sekolah yang mengundang Kepala Sekolah &amp; Bendahara (sesuai prototipe).</li>
+      <li><b>Jenis biaya &amp; tahun ajaran dipindah ke Portal Sekolah.</b> Admin Pusat hanya mengatur konfigurasi global (H2H, rekening pusat, bagi hasil, template).</li>
+      <li><b>Cabang approval lengkap.</b> "Setujui" menuju Akun Aktif, "Tolak" menuju halaman ditolak dan bisa daftar ulang.</li>
+      <li><b>Bayar SPP tidak lagi diarahkan ke Input Pembayaran Manual.</b> Pembayaran VA/QRIS otomatis Lunas lewat callback BSI; pembayaran manual jadi alur opsional.</li>
+      <li><b>Langkah yang hilang ditambahkan:</b> setup data sekolah, rekonsiliasi harian, settlement bagi hasil, kuitansi, dan write-off siswa pindah.</li>
+      <li><b>Semua garis punya arah panah dan label</b>, tidak ada lagi garis tanpa ujung (mis. S5 → Dashboard).</li>
+      <li><b>Langkah dikelompokkan per fase</b> (setup → onboarding → akun wali → penagihan → pembayaran → rekonsiliasi), jadi urutan terbaca dari atas ke bawah.</li>
+    </ul>
+  </div>
+
+  <div class="foot">GeekGarden SPP Platform -- dokumen internal. Data &amp; autentikasi pada prototipe disimulasikan di sisi browser.</div>
+</div>
+
+<script>
+  // Garis penghubung digambar dari posisi kotak sebenarnya, jadi tetap rapi saat ukuran layar berubah.
+  // mode: 'auto' (default) | 'h' (lurus horizontal) | 'v' (lurus vertikal) | 'bottom' (keluar dari bawah)
+  //       | 'loop-right' (memutar lewat sisi kanan, untuk panah ke atas di kolom yang sama)
+  const EDGES = [
+    { from: 'A1', to: 'B1', type: 'proses', label: 'konfigurasi H2H' },
+    { from: 'A1', to: 'A2', type: 'proses' },
+    { from: 'A2', to: 'S1', type: 'proses', label: 'link aktivasi Admin Sekolah' },
+    { from: 'S1', to: 'S2', type: 'proses' },
+    { from: 'W1', to: 'W2', type: 'proses' },
+    { from: 'W2', to: 'S3', type: 'proses', label: 'pengajuan akun' },
+    { from: 'S3', to: 'W2a', type: 'tolak', label: 'Tolak', mode: 'bottom', dx: -22, ya: 22 },
+    { from: 'S3', to: 'W3', type: 'setuju', label: 'Setujui', mode: 'bottom', dx: 22, ya: 22 },
+    { from: 'W2a', to: 'W1', type: 'tolak', label: 'daftar ulang', mode: 'loop-right' },
+    { from: 'S2', to: 'S4', type: 'proses', label: 'data murid & tagihan siap', mode: 'loop-left' },
+    { from: 'W3', to: 'W4', type: 'proses' },
+    { from: 'S4', to: 'W4', type: 'proses', label: 'notifikasi tagihan', go: 10, ya: 32, ey: -14, tx: -50 },
+    { from: 'S4', to: 'B2', type: 'uang', label: 'buat VA / QRIS', go: -8, ya: 14, ey: 14 },
+    { from: 'B2', to: 'W4', type: 'uang', label: 'no. VA / QR' },
+    { from: 'W4', to: 'W5', type: 'proses' },
+    { from: 'W5', to: 'B3', type: 'uang', label: 'pembayaran' },
+    { from: 'B3', to: 'S5', type: 'uang', label: 'callback', go: 0 },
+    { from: 'B3', to: 'W6', type: 'uang', label: 'status lunas' },
+    { from: 'W7', to: 'S7', type: 'opsional', label: 'bukti transfer' },
+    { from: 'W8', to: 'S8', type: 'proses', label: 'pengajuan pindah' },
+  ];
+  const STYLE = {
+    proses:   { color: '#2C4A7C', width: 1.6, dash: '' },
+    uang:     { color: '#0E7C86', width: 2.4, dash: '' },
+    setuju:   { color: '#3E8E41', width: 1.8, dash: '' },
+    tolak:    { color: '#C0392B', width: 1.6, dash: '5 4' },
+    opsional: { color: '#8A94A6', width: 1.6, dash: '5 4' },
+  };
+
+  function rel(el, box) {
+    const r = el.getBoundingClientRect();
+    return { l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top,
+             cx: (r.left + r.right) / 2 - box.left, cy: (r.top + r.bottom) / 2 - box.top };
+  }
+
+  function draw() {
+    const flow = document.getElementById('flow');
+    const svg = document.getElementById('edges');
+    const box = flow.getBoundingClientRect();
+    svg.setAttribute('width', flow.scrollWidth); svg.setAttribute('height', flow.scrollHeight);
+    svg.setAttribute('viewBox', `0 0 ${flow.scrollWidth} ${flow.scrollHeight}`);
+
+    // batas tiap lane (untuk jalur di celah antar kolom)
+    const lanes = {};
+    document.querySelectorAll('.lane-head').forEach(h => { lanes[h.dataset.lane] = rel(h, box); });
+    const laneOf = el => parseInt(el.style.gridColumn, 10);
+    const rowOf = el => parseInt(el.style.gridRow, 10);
+    const gutterRight = c => (lanes[c].r + (lanes[c + 1] ? lanes[c + 1].l : lanes[c].r + 60)) / 2;
+    const gutterLeft = c => (lanes[c].l + (lanes[c - 1] ? lanes[c - 1].r : lanes[c].l - 60)) / 2;
+
+    let defs = '<defs>';
+    Object.entries(STYLE).forEach(([k, s]) => {
+      defs += `<marker id="arr-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${s.color}"/></marker>`;
+    });
+    defs += '</defs>';
+    let paths = '', labels = '';
+
+    EDGES.forEach(e => {
+      const A = document.getElementById(e.from), B = document.getElementById(e.to);
+      const a = rel(A, box), b = rel(B, box);
+      const la = laneOf(A), lb = laneOf(B), ra = rowOf(A), rb = rowOf(B);
+      const s = STYLE[e.type];
+      let pts, lab;
+      const mode = e.mode || (ra === rb ? 'h' : la === lb ? 'v' : 'auto');
+
+      if (mode === 'h') {
+        const y = Math.min(a.b, b.b) - Math.min(a.b - a.t, b.b - b.t) / 2;
+        const yy = Math.max(Math.max(a.t, b.t) + 14, Math.min(y, b.cy));
+        pts = lb > la ? [[a.r, yy], [b.l, yy]] : [[a.l, yy], [b.r, yy]];
+        lab = [(pts[0][0] + pts[1][0]) / 2, yy - 7];
+      } else if (mode === 'v') {
+        pts = [[b.cx, a.b], [b.cx, b.t]];
+        lab = [b.cx + 8, (a.b + b.t) / 2 + 4, 'start'];
+      } else if (mode === 'bottom') {
+        const x0 = a.cx + (e.dx || 0), gy = b.t - (e.ya || 16);
+        pts = [[x0, a.b], [x0, gy], [b.cx, gy], [b.cx, b.t]];
+        lab = [(x0 + b.cx) / 2, gy - 6];
+      } else if (mode === 'loop-right' || mode === 'loop-left') {
+        const right = mode === 'loop-right';
+        const gx = right ? gutterRight(la) : gutterLeft(la);
+        const xa = right ? a.r : a.l, xb = right ? b.r : b.l;
+        const ya = a.cy, yb = b.cy;
+        pts = [[xa, ya], [gx, ya], [gx, yb], [xb, yb]];
+        lab = [gx + (right ? 6 : -6), (ya + yb) / 2, right ? 'start' : 'end', true];
+      } else { // auto: keluar dari sisi ke arah tujuan, turun lewat celah antar kolom, masuk dari atas
+        const toRight = lb > la;
+        const gx = (toRight ? gutterRight(la) : gutterLeft(la)) + (e.go || 0);
+        const gy = b.t - (e.ya || 16);
+        const xa = toRight ? a.r : a.l;
+        const ey = a.cy + (e.ey || 0), tx = b.cx + (e.tx || 0);
+        pts = [[xa, ey], [gx, ey], [gx, gy], [tx, gy], [tx, b.t]];
+        lab = [(gx + tx) / 2, gy - 6];
+      }
+
+      const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+      paths += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.width}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round" marker-end="url(#arr-${e.type})"/>`;
+
+      if (e.label) {
+        const anchor = lab[2] || 'middle';
+        const w = e.label.length * 5.9 + 10;
+        const x0 = anchor === 'middle' ? lab[0] - w / 2 : anchor === 'start' ? lab[0] - 4 : lab[0] - w + 4;
+        if (lab[3]) { // label vertikal (jalur memutar)
+          labels += `<g transform="rotate(-90 ${lab[0]} ${lab[1]})"><rect x="${lab[0] - w / 2}" y="${lab[1] - 11}" width="${w}" height="15" rx="4" fill="#fff" opacity=".92"/><text class="elabel" x="${lab[0]}" y="${lab[1]}" text-anchor="middle" fill="${s.color}">${e.label}</text></g>`;
+        } else {
+          labels += `<rect x="${x0}" y="${lab[1] - 11}" width="${w}" height="15" rx="4" fill="#fff" opacity=".92"/><text class="elabel" x="${lab[0]}" y="${lab[1]}" text-anchor="${anchor}" fill="${s.color}">${e.label}</text>`;
+        }
+      }
+    });
+    svg.innerHTML = defs + paths + labels;
+  }
+
+  window.addEventListener('load', draw);
+  window.addEventListener('resize', () => { clearTimeout(window._t); window._t = setTimeout(draw, 80); });
+</script>
+</body>
+</html>

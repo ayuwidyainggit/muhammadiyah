@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Pendaftaran Sekolah</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+
+    <div class="nav-group-label">Onboarding</div>
+    <a href="pendaftaran.html" class="nav-item active" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
+    <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
+
+    <div class="nav-group-label">Platform</div>
+    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
+      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Pendaftaran Sekolah</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">SA</div>
+        <div class="info">
+          <div class="name" id="uc-name">Super Admin</div>
+          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===================== VIEW: PENDAFTARAN SEKOLAH ===================== -->
+      <div class="page-view active" id="view-pendaftaran">
+        <div class="page-title">
+          <h1>Pendaftaran Sekolah Baru</h1>
+          <p>Onboarding tenant baru ke platform -- data sekolah, akun awal, integrasi bank, dan konfigurasi invoicing.</p>
+        </div>
+
+        <div class="stepper">
+          <div class="step active" data-step="1"><div class="circle">1</div><div class="label">Data Sekolah</div></div>
+          <div class="step" data-step="2"><div class="circle">2</div><div class="label">Akun Awal</div></div>
+          <div class="step" data-step="3"><div class="circle">3</div><div class="label">Integrasi Bank</div></div>
+          <div class="step" data-step="4"><div class="circle">4</div><div class="label">Invoicing &amp; Review</div></div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step-panel" data-panel="1">
+          <div class="card">
+            <h3>Data Sekolah</h3>
+            <p class="card-desc">Data induk sekolah dan posisinya dalam struktur organisasi Muhammadiyah.</p>
+            <div class="grid2">
+              <div class="field">
+                <label>Nama Sekolah</label>
+                <input type="text" placeholder="mis. SD Muhammadiyah 1 Surabaya" value="SD Muhammadiyah 4 Sidoarjo">
+              </div>
+              <div class="field">
+                <label>NPSN</label>
+                <input type="text" placeholder="8 digit" value="20501234">
+              </div>
+              <div class="field">
+                <label>Jenjang</label>
+                <select>
+                  <option>SD / MI</option>
+                  <option>SMP / MTs</option>
+                  <option selected>SMA / MA</option>
+                  <option>SMK</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Perkiraan Jumlah Siswa Aktif</label>
+                <input type="number" value="480">
+              </div>
+              <div class="field">
+                <label>Wilayah (PWM)</label>
+                <select id="sel-pwm"></select>
+              </div>
+              <div class="field">
+                <label>Daerah (PDM)</label>
+                <select id="sel-pdm"></select>
+              </div>
+              <div class="field">
+                <label>Cabang (PCM)</label>
+                <select id="sel-pcm"></select>
+              </div>
+              <div class="field">
+                <label>Status Awal</label>
+                <input type="text" value="Draft (menunggu aktivasi)" disabled style="background:#f5f6f8;color:var(--muted);">
+              </div>
+            </div>
+            <div class="field">
+              <label>Alamat Lengkap</label>
+              <textarea>Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-panel" data-panel="2" style="display:none;">
+          <div class="card">
+            <h3>Akun Awal -- Admin Sekolah</h3>
+            <p class="card-desc">Cukup <b>1 akun</b> yang dibuat Pusat di awal. Akun ini menerima <b>link aktivasi</b> (bukan kredensial langsung) via WhatsApp/email setelah sekolah diaktifkan, lalu bertugas mengundang akun Kepala Sekolah dan Bendahara dari dalam aplikasi sekolah.</p>
+            <table class="accounts" id="accounts-table">
+              <thead>
+                <tr><th style="width:28%">Nama</th><th style="width:20%">Peran</th><th style="width:22%">No. WhatsApp</th><th style="width:30%">Email</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" value="Ahmad Yusuf"></td>
+                  <td><input type="text" value="Admin" disabled style="background:#f5f6f8;color:var(--muted);"></td>
+                  <td><input type="tel" value="0857xxxxxxx"></td>
+                  <td><input type="email" value="admin@sdmuh4sda.sch.id"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="hint">Peran otomatis "Admin" -- pemegang akun ini yang mendapat kewenangan mengatur RBAC &amp; akun pengguna sekolah, bukan Kepala Sekolah atau Bendahara (segregation of duties, lihat Skenario 9).</div>
+          </div>
+
+          <div class="card">
+            <h3>Kontak Sekolah</h3>
+            <p class="card-desc">Data kontak resmi sekolah untuk komunikasi administratif dari Pusat -- <b>bukan</b> akun login.</p>
+            <div class="grid2">
+              <div class="field">
+                <label>Email Sekolah</label>
+                <input type="email" value="info@sdmuh4sda.sch.id">
+              </div>
+              <div class="field">
+                <label>Nama Kontak Person</label>
+                <input type="text" value="Drs. Slamet Riyadi (Kepala Sekolah)">
+              </div>
+            </div>
+            <div class="field">
+              <label>No. WhatsApp Kontak Person</label>
+              <input type="tel" value="0812xxxxxxx">
+            </div>
+            <div class="note-box info">RBAC untuk peran Kepala Sekolah &amp; Bendahara otomatis diterapkan saat masing-masing diundang oleh Admin Sekolah -- Bendahara tidak bisa menyetujui write-off yang diajukan sendiri (segregation of duties, lihat Skenario 9).</div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-panel" data-panel="3" style="display:none;">
+          <div class="card">
+            <h3>Integrasi Bank (Host-to-Host) <span class="tag-pill pg">BANK</span></h3>
+            <p class="card-desc">Kerjasama langsung dengan bank mitra -- integrasi host-to-host (H2H), bukan lewat payment gateway pihak ketiga. Kredensial H2H bersifat terpusat untuk seluruh sekolah, dikelola lewat backend/DevOps -- bukan diisi manual per sekolah saat onboarding.</p>
+
+            <div class="switch-row">
+              <div class="txt"><b>BSI -- Bank Syariah Indonesia</b><span>Integrasi H2H -- Virtual Account &amp; notifikasi mutasi real-time</span></div>
+              <span class="badge-status on"><span class="dot"></span> Terhubung (kredensial terpusat)</span>
+            </div>
+            <div class="grid2" style="margin-top:10px;">
+              <div class="field">
+                <label>Kode Perusahaan (Company Code VA)</label>
+                <input type="text" value="88008" disabled style="background:#f5f6f8;">
+              </div>
+            </div>
+            <div class="hint">Client Secret &amp; kredensial sensitif lainnya tidak disimpan atau ditampilkan lewat panel ini -- dikelola langsung di secrets manager backend oleh tim Engineering/DevOps (lihat Konfigurasi Sistem &gt; Integrasi Bank Global).</div>
+          </div>
+
+          <div class="card">
+            <h3>Rekening Penampung Sekolah (Bagi Hasil Fee) <span class="tag-pill pg">BANK</span></h3>
+            <p class="card-desc">Pembayaran SPP dari wali murid seluruhnya masuk ke <b>Rekening Penampung Pusat &amp; VA Terpusat</b> milik Muhammadiyah Pusat (lihat Konfigurasi Sistem) -- <b>bukan</b> ke rekening di bawah ini. Rekening sekolah berikut hanya dipakai untuk pencairan bagian fee/bagi hasil yang jadi hak sekolah ini.</p>
+            <div class="grid3">
+              <div class="field">
+                <label>Nama Bank</label>
+                <select>
+                  <option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option>
+                  <option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Nomor Rekening</label>
+                <input type="text" placeholder="mis. 7123456789" value="7123456789">
+              </div>
+              <div class="field">
+                <label>Nama Pemilik Rekening</label>
+                <input type="text" placeholder="sesuai buku rekening" value="SD Muhammadiyah 4 Sidoarjo">
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Verifikasi Nama Rekening</label>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span class="badge-status on"><span class="dot"></span> Cocok dengan Bank (via API validasi H2H)</span>
+                </div>
+                <div class="hint">Dicek otomatis lewat API Account Inquiry bank mitra (BSI Host-to-Host) supaya tidak salah kirim dana.</div>
+              </div>
+              <div class="field">
+                <label>Jadwal Pencairan Fee</label>
+                <select>
+                  <option selected>Harian (T+1)</option>
+                  <option>Mingguan</option>
+                  <option>Sesuai permintaan (manual)</option>
+                </select>
+              </div>
+            </div>
+            <div class="note-box info">Dana SPP terkumpul dulu di Rekening Penampung Pusat, lalu bagian fee sekolah ini dihitung &amp; dicairkan ke rekening di atas sesuai jadwal -- bukan langsung real-time per transaksi wali murid.</div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-panel" data-panel="4" style="display:none;">
+          <div class="card">
+            <h3>Konfigurasi Invoicing Default</h3>
+            <div class="grid2">
+              <div class="field">
+                <label>Template Tagihan</label>
+                <select><option selected>Default Muhammadiyah</option><option>Custom</option></select>
+              </div>
+              <div class="field">
+                <label>Tanggal Jatuh Tempo Default (tiap bulan)</label>
+                <input type="number" value="10" min="1" max="28">
+              </div>
+            </div>
+            <div class="note-box info">Mengikuti <b>Aturan Reminder &amp; Eskalasi Default Platform</b> (6 aturan aktif: H-7, H-3, H-1, H+3, H+7, H+14) dari Konfigurasi Sistem. Isi pesan per channel (WA/SMS/Email) bisa disesuaikan untuk sekolah ini nanti lewat Manajemen Sekolah &gt; Template Pesan.</div>
+          </div>
+
+          <div class="card">
+            <h3>Ringkasan Pendaftaran</h3>
+            <table class="ref-table">
+              <tr><th style="width:32%">Sekolah</th><td>SD Muhammadiyah 4 Sidoarjo -- NPSN 20501234</td></tr>
+              <tr><th>Struktur Organisasi</th><td id="review-org">PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota</td></tr>
+              <tr><th>Akun Awal</th><td>1 akun (Admin) -- mengundang Kepala Sekolah &amp; Bendahara setelah aktivasi</td></tr>
+              <tr><th>Kontak Sekolah</th><td>info@sdmuh4sda.sch.id -- Drs. Slamet Riyadi (Kepala Sekolah)</td></tr>
+              <tr><th>Integrasi Bank</th><td>Host-to-Host BSI -- Bank Syariah Indonesia</td></tr>
+              <tr><th>Rekening Penampung Pusat &amp; VA</th><td>1 rekening &amp; 1 VA terpusat milik Muhammadiyah Pusat, dipakai bersama seluruh sekolah (lihat Konfigurasi Sistem)</td></tr>
+              <tr><th>Rekening Penampung Sekolah (Fee)</th><td>BSI -- 7123456789 a.n. SD Muhammadiyah 4 Sidoarjo, pencairan fee T+1</td></tr>
+              <tr><th>Invoicing</th><td>Template Default Muhammadiyah, jatuh tempo tgl 10, mengikuti Aturan Reminder &amp; Eskalasi Default Platform</td></tr>
+            </table>
+            <div class="note-box info">Setelah didaftarkan, status Sekolah berubah dari <b>Draft</b> ke <b>Aktif</b> dan event <code>school.onboarded</code> diterbitkan ke seluruh service terkait (lihat Skenario 11).</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btn-back" onclick="stepNav(-1)" disabled>&larr; Kembali</button>
+          <button class="btn btn-primary" id="btn-next" onclick="stepNav(1)">Lanjut &rarr;</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  const u = requireLogin();
+  if (u) {
+    applyCurrentUserToUi();
+    if (enforcePageAccess('pendaftaran')) {
+      applyRbacToSidebar();
+
+      // ---- cascading org selects ----
+      const orgData = {
+        "PWM Jawa Timur": {
+          "PDM Surabaya": ["PCM Wonokromo", "PCM Genteng", "PCM Tegalsari"],
+          "PDM Sidoarjo": ["PCM Sidoarjo Kota", "PCM Waru", "PCM Krian"]
+        },
+        "PWM DKI Jakarta": {
+          "PDM Jakarta Selatan": ["PCM Kebayoran Baru", "PCM Pasar Minggu"],
+          "PDM Jakarta Timur": ["PCM Duren Sawit", "PCM Cakung"]
+        },
+        "PWM Jawa Barat": {
+          "PDM Bandung": ["PCM Coblong", "PCM Sukajadi"],
+          "PDM Bekasi": ["PCM Bekasi Timur", "PCM Bekasi Selatan"]
+        }
+      };
+      const selPwm = document.getElementById('sel-pwm');
+      const selPdm = document.getElementById('sel-pdm');
+      const selPcm = document.getElementById('sel-pcm');
+
+      function fillPwm() {
+        selPwm.innerHTML = Object.keys(orgData).map(w => `<option>${w}</option>`).join('');
+        selPwm.value = "PWM Jawa Timur";
+        fillPdm();
+      }
+      function fillPdm() {
+        const pdms = Object.keys(orgData[selPwm.value]);
+        selPdm.innerHTML = pdms.map(d => `<option>${d}</option>`).join('');
+        selPdm.value = "PDM Sidoarjo";
+        fillPcm();
+      }
+      function fillPcm() {
+        const pcms = orgData[selPwm.value][selPdm.value];
+        selPcm.innerHTML = pcms.map(c => `<option>${c}</option>`).join('');
+        updateReview();
+      }
+      function updateReview() {
+        const el = document.getElementById('review-org');
+        if (el) el.textContent = `${selPwm.value} / ${selPdm.value} / ${selPcm.value}`;
+      }
+      selPwm.addEventListener('change', fillPdm);
+      selPdm.addEventListener('change', fillPcm);
+      selPcm.addEventListener('change', updateReview);
+      fillPwm();
+
+      // ---- stepper ----
+      let currentStep = 1;
+      const totalSteps = 4;
+      function stepNav(dir) {
+        const next = currentStep + dir;
+        if (next < 1 || next > totalSteps) {
+          if (next > totalSteps) { showToast('✓ Sekolah berhasil didaftarkan -- status: Aktif'); }
+          return;
+        }
+        document.querySelector(`.step-panel[data-panel="${currentStep}"]`).style.display = 'none';
+        document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+        if (dir > 0) {
+          document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('done');
+        } else {
+          document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('done');
+        }
+
+        currentStep = next;
+        document.querySelector(`.step-panel[data-panel="${currentStep}"]`).style.display = 'block';
+        document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+
+        document.getElementById('btn-back').disabled = currentStep === 1;
+        document.getElementById('btn-next').textContent = currentStep === totalSteps ? 'Daftarkan Sekolah ✓' : 'Lanjut →';
+      }
+      window.stepNav = stepNav;
+    }
+  }
+</script>
+</body>
+</html>

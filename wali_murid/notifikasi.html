@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifikasi -- Portal Wali Murid</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>••••</span><span>WiFi</span><span>100%</span></div>
+  </div>
+
+  <div class="app-header">
+    <div class="row-top">
+      <div>
+        <div class="greeting">Assalamualaikum,</div>
+        <div class="name" id="header-name">Bapak Yusuf Bachtiar</div>
+      </div>
+      <div class="header-icons">
+        <div class="bell-wrap" onclick="location.href='riwayat.html'" title="Notifikasi Aplikasi">
+          🔔<span class="bell-badge" id="bell-count">2</span>
+        </div>
+        <div class="avatar-circle" id="header-avatar">YB</div>
+      </div>
+    </div>
+    <div class="child-switch" id="child-switch"></div>
+  </div>
+
+  <div class="app-content" id="app-content">
+    <div class="view active" id="view-notifikasi">
+      <div class="section-title">Konfigurasi Notifikasi</div>
+      <p class="section-sub">Atur kanal mana saja yang Anda pakai untuk menerima info tagihan, reminder jatuh tempo, dan update pembayaran.</p>
+
+      <div class="card">
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">💬 WhatsApp</div>
+            <div class="t-desc">Kanal utama -- reminder, kuitansi, dan info penting dikirim ke sini.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="ntf-wa" checked onchange="onNotifToggle()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">✉️ SMS</div>
+            <div class="t-desc">Cadangan kalau nomor WhatsApp tidak aktif.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="ntf-sms" onchange="onNotifToggle()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">📧 Email</div>
+            <div class="t-desc">Kuitansi &amp; ringkasan bulanan dikirim sebagai lampiran.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="ntf-email" checked onchange="onNotifToggle()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">🔔 Push Notifikasi</div>
+            <div class="t-desc">Notifikasi pop-up di HP Anda walau aplikasi sedang tertutup.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="ntf-push" checked onchange="onNotifToggle()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="t-title">🔵 Notifikasi Aplikasi</div>
+            <div class="t-desc">Muncul di ikon lonceng dalam aplikasi ini (tetap tersimpan walau kanal lain dimatikan).</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="ntf-inapp" checked disabled><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="note-box blue">
+        ℹ️ Notifikasi Aplikasi tidak bisa dimatikan -- ini adalah catatan riwayat minimal di dalam aplikasi (mis. status pembayaran, hasil verifikasi konfirmasi manual) agar Anda tidak kehilangan info penting walau semua kanal eksternal dimatikan.
+      </div>
+
+      <button class="btn btn-primary" onclick="saveNotifPrefs()">Simpan Preferensi</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-btn" href="profil.html"><span class="n-ic">👤</span><span class="n-label">Profil</span></a>
+    <a class="nav-btn active" href="notifikasi.html"><span class="n-ic">🔔</span><span class="n-label">Notifikasi</span></a>
+    <a class="nav-btn" href="bayar.html"><span class="n-ic">💳</span><span class="n-label">Bayar</span></a>
+    <a class="nav-btn" href="riwayat.html"><span class="n-ic">🧾</span><span class="n-label">Riwayat</span></a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (requireLogin()) {
+    renderChildSwitch();
+    updateBellBadge();
+  }
+</script>
+</body>
+</html>

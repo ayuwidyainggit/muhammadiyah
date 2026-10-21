@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item active" data-rbac="dashboard" href="dashboard.html" id="nav-self"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
+    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
+    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Dashboard</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-dashboard">
+
+        <div id="dash-view-kepsek" style="display:none;">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+            <p>Ringkasan kondisi pembayaran SPP SD Muhammadiyah 4 Sidoarjo, bulan berjalan.</p>
+          </div>
+
+          <div class="stat-row" id="kpi-row">
+            <div class="stat-card"><div class="lbl">Collection Rate Bulan Berjalan</div><div class="val" id="kpi-collection-rate">--</div><div class="sub" id="kpi-collection-rate-sub">--</div></div>
+            <div class="stat-card"><div class="lbl">Outstanding</div><div class="val" id="kpi-outstanding">--</div><div class="sub">seluruh tunggakan aktif</div></div>
+            <div class="stat-card"><div class="lbl">Siswa Menunggak</div><div class="val" id="kpi-siswa-menunggak">--</div><div class="sub">dari seluruh siswa aktif</div></div>
+            <div class="stat-card"><div class="lbl">Invoice Overdue</div><div class="val" id="kpi-invoice-overdue">--</div><div class="sub">tagihan lewat jatuh tempo</div></div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-card"><div class="lbl">Siswa Aktif</div><div class="val" id="dash-total-siswa">--</div><div class="sub">seluruh jenjang</div></div>
+            <div class="stat-card"><div class="lbl">Estimasi Tagihan Bulan Ini</div><div class="val" id="dash-total-tagihan">--</div><div class="sub">berbasis SPP per siswa</div></div>
+            <div class="stat-card"><div class="lbl">Rata-rata Pelunasan per Kelas</div><div class="val" id="dash-avg-lunas">--</div><div class="sub">rata-rata sederhana antar kelas</div></div>
+            <div class="stat-card"><div class="lbl">Write-off Menunggu</div><div class="val" id="dash-pending-writeoff">--</div><div class="sub">perlu persetujuan Anda</div></div>
+          </div>
+
+          <div class="card">
+            <h3>Collection Rate 6 Bulan Terakhir</h3>
+            <p class="card-desc">Tren persentase pelunasan SPP sekolah, 6 bulan terakhir.</p>
+            <div id="collection-trend-chart"></div>
+          </div>
+
+          <div class="card">
+            <h3>Tren Siswa Berisiko Tidak Mampu Membayar (Kesulitan Ekonomi) <span class="tag-pill sec">SOSIAL</span></h3>
+            <p class="card-desc">Jumlah siswa yang tunggakannya diduga karena kesulitan ekonomi wali murid, 12 bulan terakhir -- dipakai mendeteksi pola musiman (mis. musim paceklik petani) supaya Muhammadiyah Pusat bisa menentukan follow-up atau kandidat penerima beasiswa, bukan sekadar penagihan.</p>
+            <div id="ekonomi-trend-chart"></div>
+            <div class="legend-row">
+              <span><span class="legend-dot" style="background:#c0392b;"></span> Bulan terindikasi musim paceklik</span>
+              <span><span class="legend-dot" style="background:var(--navy);"></span> Bulan normal</span>
+            </div>
+            <div class="note-box warn" id="ekonomi-trend-insight" style="margin-top:10px;"></div>
+          </div>
+
+          <div class="card">
+            <h3>Kategori Pekerjaan Wali -- Siswa Menunggak Bulan Ini</h3>
+            <p class="card-desc">Breakdown kategori pekerjaan wali murid dari siswa yang menunggak SPP bulan berjalan, membantu mengenali kelompok rentan yang butuh pendampingan, bukan penagihan.</p>
+            <div id="kategori-ekonomi-bar-list"></div>
+          </div>
+
+          <div class="card">
+            <h3>Kelas yang Perlu Perhatian</h3>
+            <p class="card-desc">3 kelas dengan collection rate terendah bulan berjalan, supaya Anda tidak perlu mencari sendiri.</p>
+            <table class="dtab">
+              <thead>
+                <tr><th>Kelas</th><th>Collection</th><th>Tunggakan</th><th>Siswa</th></tr>
+              </thead>
+              <tbody id="attention-class-table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="grid2">
+            <div class="card">
+              <h3>Status Pelunasan per Kelas</h3>
+              <p class="card-desc">Persentase siswa yang tagihan SPP-nya sudah lunas, bulan berjalan.</p>
+              <div id="dash-bar-list"></div>
+              <div class="legend-row">
+                <span><span class="legend-dot" style="background:var(--accent);"></span>≥85% baik</span>
+                <span><span class="legend-dot" style="background:#e0a030;"></span>70-84% perlu dipantau</span>
+                <span><span class="legend-dot" style="background:var(--red);"></span>&lt;70% perlu tindak lanjut</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Perlu Perhatian Anda</h3>
+              <p class="card-desc">Hal-hal yang sebaiknya segera ditindaklanjuti.</p>
+              <div id="dash-attention-list"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Kandidat Follow-up &amp; Beasiswa <span class="tag-pill sec">SOSIAL</span></h3>
+            <p class="card-desc">Siswa dengan tunggakan berturut-turut yang diduga akibat kesulitan ekonomi wali murid (bukan menghindar bayar) -- ajukan ke Muhammadiyah Pusat sebagai kandidat penerima bantuan/beasiswa.</p>
+            <table class="dtab">
+              <thead>
+                <tr><th>Siswa</th><th>Pekerjaan Wali</th><th>Tunggak Berturut</th><th>Total Tunggakan</th><th style="width:26%;">Catatan</th><th>Status</th><th></th></tr>
+              </thead>
+              <tbody id="kandidat-beasiswa-table-body"></tbody>
+            </table>
+            <div class="note-box info" style="margin-top:14px;">Pengajuan yang Anda kirim masuk sebagai rekomendasi ke Muhammadiyah Pusat untuk ditinjau lebih lanjut -- keputusan akhir pemberian bantuan/beasiswa tetap berada di Pusat, bukan di sekolah.</div>
+          </div>
+        </div>
+
+        <div id="dash-view-bendahara">
+        <div class="page-title">
+          <h1>Dashboard</h1>
+          <p>Hari ini uangnya bagaimana? Ringkasan status tagihan &amp; rekonsiliasi pembayaran -- fokus ke yang perlu Anda tindak lanjuti, bukan sekadar angka strategis.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card"><div class="lbl">Total Invoice</div><div class="val" id="dash-kpi-total-invoice">--</div><div class="sub">bulan berjalan</div></div>
+          <div class="stat-card"><div class="lbl">Lunas</div><div class="val" id="dash-kpi-lunas">--</div><div class="sub">status: paid</div></div>
+          <div class="stat-card"><div class="lbl">Belum Bayar</div><div class="val" id="dash-kpi-belum-bayar">--</div><div class="sub">belum jatuh tempo</div></div>
+          <div class="stat-card"><div class="lbl">Overdue</div><div class="val" id="dash-kpi-overdue">--</div><div class="sub">lewat jatuh tempo</div></div>
+        </div>
+        <div class="stat-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card"><div class="lbl">Outstanding</div><div class="val" id="dash-kpi-outstanding">--</div><div class="sub">total belum masuk kas</div></div>
+          <div class="stat-card clickable" onclick="goToInvoiceTab('manual')"><div class="lbl">Manual Verification</div><div class="val" id="dash-kpi-manual-verif">--</div><div class="sub">menunggu verifikasi Anda -- klik untuk tinjau →</div></div>
+          <div class="stat-card clickable" onclick="goToInvoiceTab('writeoff')"><div class="lbl">Write-off Pending</div><div class="val" id="dash-kpi-writeoff-pending">--</div><div class="sub">menunggu approval Kepsek -- klik untuk lihat →</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Payment Reconciliation</h3>
+          <p class="card-desc">Uang yang sudah masuk lewat kanal pembayaran, dicocokkan ke invoice -- supaya Anda tahu persis berapa yang <b>sudah masuk tapi belum ter-reconcile</b> dan butuh tindakan manual.</p>
+
+          <div class="recon-hero">
+            <span class="amt" id="recon-total">--</span>
+            <span class="lbl">Total Payment, bulan berjalan</span>
+          </div>
+
+          <div class="recon-bar-track" id="recon-bar-track"></div>
+
+          <div class="recon-legend" id="recon-legend"></div>
+
+          <div class="recon-action-box" id="recon-action-box">
+            <div class="txt" id="recon-action-txt"></div>
+            <button class="btn btn-primary" style="flex-shrink:0;" onclick="goToInvoiceTab('manual')">Tinjau Pembayaran Manual →</button>
+          </div>
+        </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    showRoleDashboard();
+  }
+</script>
+</body>
+</html>
