@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>GeekGarden Admin -- RBAC &amp; Pengguna</title>
+<title>GeekGarden Admin -- Role &amp; Hak Akses</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,9 +22,10 @@
     <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
     <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
 
-    <div class="nav-group-label">Platform</div>
+    <div class="nav-group-label">Konfigurasi</div>
     <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
-    <a href="rbac.html" class="nav-item active" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+    <a href="pengguna.html" class="nav-item" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
+    <a href="rbac.html" class="nav-item active" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
 
     <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
       <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
@@ -34,7 +35,7 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">RBAC &amp; Pengguna</b></div>
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Role &amp; Hak Akses</b></div>
       <div class="user-chip">
         <div class="av" id="uc-avatar">SA</div>
         <div class="info">
@@ -46,53 +47,27 @@
 
     <div class="content">
 
-      <!-- ===================== VIEW: RBAC & PENGGUNA ===================== -->
+      <!-- ===================== VIEW: ROLE & HAK AKSES ===================== -->
       <div class="page-view active" id="view-rbac">
         <div class="page-title">
-          <h1>RBAC &amp; Pengguna</h1>
-          <p>Kelola akun pengguna platform ini dan hak akses tiap peran (role) -- menentukan modul apa saja yang bisa diakses.</p>
+          <h1>Role &amp; Hak Akses</h1>
+          <p>Kelola role (peran) platform ini dan hak akses tiap role -- menentukan modul apa saja yang bisa diakses. Pengguna &amp; pemetaan role-nya diatur di menu Pengguna.</p>
         </div>
 
-        <div class="channel-tabs">
-          <div class="channel-tab active" data-rbactab="pengguna" onclick="switchRbacTab('pengguna')">Pengguna</div>
-          <div class="channel-tab" data-rbactab="role" onclick="switchRbacTab('role')">Role &amp; Hak Akses</div>
-        </div>
-
-        <!-- TAB: PENGGUNA -->
-        <div class="rbac-tab-panel" data-rbacpanel="pengguna">
-          <div class="card">
-            <h3>Daftar Pengguna Admin</h3>
-            <p class="card-desc">Akun yang bisa login ke portal Admin Pusat Muhammadiyah ini, beserta peran &amp; cakupan aksesnya.</p>
-            <table class="accounts">
-              <thead>
-                <tr><th style="width:19%">Nama</th><th style="width:25%">Email</th><th style="width:22%">Role</th><th style="width:15%">Cakupan</th><th style="width:11%">Status</th><th style="width:8%">Aksi</th></tr>
-              </thead>
-              <tbody id="rbac-users-body"></tbody>
-            </table>
-            <button class="btn-add-row" onclick="addUserRow()">+ Tambah Pengguna</button>
-            <div class="btn-row" style="justify-content:flex-end;">
-              <button class="btn btn-success" onclick="saveUsers()">Simpan Pengguna</button>
-            </div>
-            <div class="note-box info">💡 Pengguna baru yang ditambahkan mendapat password default <code>demo123</code> (khusus mode demo prototipe ini -- pada implementasi produksi, password diatur lewat email undangan/reset, bukan diketik admin).</div>
+        <div class="card">
+          <h3>Role &amp; Hak Akses Modul</h3>
+          <p class="card-desc">Tambah, ubah, atau hapus role, lalu centang modul yang boleh diakses tiap role. Perubahan berlaku ke seluruh pengguna dengan role tersebut setelah disimpan.</p>
+          <table class="accounts" id="rbac-matrix-table">
+            <thead>
+              <tr id="rbac-matrix-head"></tr>
+            </thead>
+            <tbody id="rbac-matrix-body"></tbody>
+          </table>
+          <button class="btn-add-row" onclick="addRoleRow()">+ Tambah Role</button>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" onclick="saveRoleMatrix()">Simpan Role &amp; Hak Akses</button>
           </div>
-        </div>
-
-        <!-- TAB: ROLE & HAK AKSES -->
-        <div class="rbac-tab-panel" data-rbacpanel="role" style="display:none;">
-          <div class="card">
-            <h3>Role &amp; Hak Akses Modul</h3>
-            <p class="card-desc">Centang modul yang boleh diakses tiap role. Perubahan berlaku ke seluruh pengguna dengan role tersebut setelah disimpan.</p>
-            <table class="accounts" id="rbac-matrix-table">
-              <thead>
-                <tr id="rbac-matrix-head"></tr>
-              </thead>
-              <tbody id="rbac-matrix-body"></tbody>
-            </table>
-            <div class="btn-row" style="justify-content:flex-end;">
-              <button class="btn btn-success" onclick="saveRoleMatrix()">Simpan Hak Akses</button>
-            </div>
-            <div class="note-box info">⚠️ Super Admin selalu memiliki akses penuh termasuk modul RBAC &amp; Pengguna ini sendiri, supaya tidak pernah ada kondisi di mana tak satu pun role bisa mengelola hak akses.</div>
-          </div>
+          <div class="note-box info">⚠️ Super Admin selalu memiliki akses penuh termasuk modul Role &amp; Hak Akses ini sendiri (tidak bisa dihapus/diubah izinnya), supaya tidak pernah ada kondisi di mana tak satu pun role bisa mengelola hak akses. Role lain tidak bisa dihapus selama masih ada pengguna yang memakainya -- pindahkan role pengguna tersebut dulu lewat menu Pengguna.</div>
         </div>
       </div>
 
@@ -110,106 +85,86 @@
     if (enforcePageAccess('rbac')) {
       applyRbacToSidebar();
 
-      function switchRbacTab(tab) {
-        document.querySelectorAll('#view-rbac .channel-tab').forEach(t => t.classList.toggle('active', t.dataset.rbactab === tab));
-        document.querySelectorAll('.rbac-tab-panel').forEach(p => { p.style.display = p.dataset.rbacpanel === tab ? 'block' : 'none'; });
-      }
-
-      // ---- Pengguna tab ----
-      function userRowHtml(u) {
-        const roleOptions = rolesData.map(r => `<option value="${r.id}" ${r.id === u.roleId ? 'selected' : ''}>${r.nama}</option>`).join('');
-        return `<tr data-user-id="${u.id}">
-          <td><input type="text" value="${u.nama}"></td>
-          <td><input type="email" value="${u.email}"></td>
-          <td><select>${roleOptions}</select></td>
-          <td><input type="text" value="${u.cakupan}"></td>
-          <td><select><option ${u.status === 'Aktif' ? 'selected' : ''}>Aktif</option><option ${u.status === 'Nonaktif' ? 'selected' : ''}>Nonaktif</option></select></td>
-          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-        </tr>`;
-      }
-      function renderUsersTable() {
-        document.getElementById('rbac-users-body').innerHTML = usersData.map(userRowHtml).join('');
-      }
-      function addUserRow() {
-        const tbody = document.getElementById('rbac-users-body');
-        const tr = document.createElement('tr');
-        const roleOptions = rolesData.map(r => `<option value="${r.id}">${r.nama}</option>`).join('');
-        tr.innerHTML = `
-          <td><input type="text" placeholder="Nama lengkap"></td>
-          <td><input type="email" placeholder="nama@muhammadiyah.id"></td>
-          <td><select>${roleOptions}</select></td>
-          <td><input type="text" placeholder="mis. Nasional / PWM ..."></td>
-          <td><select><option selected>Aktif</option><option>Nonaktif</option></select></td>
-          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>`;
-        tbody.appendChild(tr);
-      }
-      function saveUsers() {
-        const rows = document.querySelectorAll('#rbac-users-body tr');
-        const updated = [];
-        rows.forEach(row => {
-          const existingId = row.dataset.userId ? Number(row.dataset.userId) : null;
-          const inputs = row.querySelectorAll('input');
-          const selects = row.querySelectorAll('select');
-          const nama = inputs[0].value.trim();
-          const email = inputs[1].value.trim();
-          const cakupan = inputs[2].value.trim();
-          const roleId = Number(selects[0].value);
-          const status = selects[1].value;
-          if (!nama || !email) return; // skip incomplete rows
-          const existing = existingId ? usersData.find(u => u.id === existingId) : null;
-          updated.push({
-            id: existing ? existing.id : userSeq++,
-            nama, email, cakupan, roleId, status,
-            password: existing ? existing.password : 'demo123',
-          });
-        });
-        usersData.length = 0;
-        usersData.push(...updated);
-        renderUsersTable();
-        if (currentUser) {
-          const stillExists = usersData.find(u => u.id === currentUser.id);
-          if (stillExists) { currentUser = stillExists; saveSession(currentUser); applyCurrentUserToUi(); applyRbacToSidebar(); }
-        }
-        showToast('✓ Pengguna berhasil disimpan');
-      }
-
-      // ---- Role & Hak Akses tab ----
+      // ---- Role & Hak Akses (full CRUD) ----
       function renderRbacMatrixHead() {
         document.getElementById('rbac-matrix-head').innerHTML =
-          '<th style="width:22%">Role</th>' + rbacModules.map(m => `<th>${m.icon} ${m.label}</th>`).join('');
+          '<th style="width:8%">Icon</th><th style="width:16%">Nama Role</th><th style="width:20%">Deskripsi</th>' +
+          rbacModules.map(m => `<th>${m.icon} ${m.label}</th>`).join('') +
+          '<th style="width:7%">Aksi</th>';
+      }
+      function roleRowHtml(r) {
+        const isSuper = r.nama === 'Super Admin';
+        const cells = rbacModules.map(m => `
+          <td class="rbac-check-cell">
+            <input type="checkbox" ${r.perms[m.key] ? 'checked' : ''} ${isSuper ? 'checked disabled' : ''}>
+          </td>`).join('');
+        return `<tr data-role-id="${r.id}">
+          <td><input type="text" value="${r.icon}" style="text-align:center;" ${isSuper ? 'disabled' : ''}></td>
+          <td><input type="text" value="${r.nama}" ${isSuper ? 'disabled' : ''}></td>
+          <td><input type="text" value="${r.deskripsi}"></td>
+          ${cells}
+          <td>${isSuper ? '' : '<button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button>'}</td>
+        </tr>`;
       }
       function renderRoleMatrix() {
-        document.getElementById('rbac-matrix-body').innerHTML = rolesData.map(r => {
-          const isSuper = r.nama === 'Super Admin';
-          const cells = rbacModules.map(m => `
-            <td class="rbac-check-cell">
-              <input type="checkbox" ${r.perms[m.key] ? 'checked' : ''} ${isSuper ? 'checked disabled' : ''}>
-            </td>`).join('');
-          return `<tr data-role-id="${r.id}">
-            <td><div class="rbac-role-name">${r.icon} ${r.nama}</div><div class="rbac-role-desc">${r.deskripsi}</div></td>
-            ${cells}
-          </tr>`;
-        }).join('');
+        document.getElementById('rbac-matrix-body').innerHTML = rolesData.map(roleRowHtml).join('');
+      }
+      function addRoleRow() {
+        const tbody = document.getElementById('rbac-matrix-body');
+        const tr = document.createElement('tr');
+        const cells = rbacModules.map(() => `<td class="rbac-check-cell"><input type="checkbox"></td>`).join('');
+        tr.innerHTML = `
+          <td><input type="text" placeholder="🧩" style="text-align:center;"></td>
+          <td><input type="text" placeholder="Nama role baru"></td>
+          <td><input type="text" placeholder="Deskripsi singkat hak akses role ini"></td>
+          ${cells}
+          <td><button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button></td>`;
+        tbody.appendChild(tr);
+      }
+      function removeRoleRow(btn) {
+        const row = btn.closest('tr');
+        const roleId = row.dataset.roleId ? Number(row.dataset.roleId) : null;
+        if (roleId) {
+          const dipakai = usersData.some(u => u.roleId === roleId);
+          if (dipakai) {
+            showToast('✕ Role masih dipakai pengguna -- pindahkan role pengguna tersebut dulu di menu Pengguna');
+            return;
+          }
+        }
+        row.remove();
       }
       function saveRoleMatrix() {
-        document.querySelectorAll('#rbac-matrix-body tr').forEach(row => {
-          const roleId = Number(row.dataset.roleId);
-          const role = roleById(roleId);
+        const rows = document.querySelectorAll('#rbac-matrix-body tr');
+        const updated = [];
+        rows.forEach(row => {
+          const existingId = row.dataset.roleId ? Number(row.dataset.roleId) : null;
+          const existing = existingId ? roleById(existingId) : null;
+          const isSuper = existing && existing.nama === 'Super Admin';
+          const inputs = row.querySelectorAll('input[type=text]');
           const checks = row.querySelectorAll('input[type=checkbox]');
-          rbacModules.forEach((m, i) => { role.perms[m.key] = checks[i].checked; });
-          if (role.nama === 'Super Admin') { rbacModules.forEach(m => { role.perms[m.key] = true; }); }
+          const icon = inputs[0].value.trim() || '🧩';
+          const nama = isSuper ? existing.nama : inputs[1].value.trim();
+          const deskripsi = inputs[2].value.trim();
+          if (!nama) return; // skip incomplete new rows
+          const perms = {};
+          rbacModules.forEach((m, i) => { perms[m.key] = isSuper ? true : checks[i].checked; });
+          updated.push({ id: existing ? existing.id : roleSeq++, nama, icon, deskripsi, perms });
         });
+        rolesData.length = 0;
+        rolesData.push(...updated);
         renderRoleMatrix();
-        if (currentUser) applyRbacToSidebar();
-        showToast('✓ Hak akses role berhasil disimpan');
+        if (currentUser) {
+          const stillRole = roleById(currentUser.roleId);
+          if (stillRole) applyRbacToSidebar();
+        }
+        showToast('✓ Role & hak akses berhasil disimpan');
       }
 
-      renderUsersTable();
       renderRbacMatrixHead();
       renderRoleMatrix();
 
       // expose to inline onclick="" handlers in the markup above
-      Object.assign(window, { switchRbacTab, addUserRow, saveUsers, saveRoleMatrix });
+      Object.assign(window, { addRoleRow, removeRoleRow, saveRoleMatrix });
     }
   }
 </script>

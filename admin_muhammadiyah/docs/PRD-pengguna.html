@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Pengguna -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Pengguna</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Pengguna (Manajemen Akun Admin Platform)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>25-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>pengguna.html</code>, <code>app.js</code>, PRD Role &amp; Hak Akses</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>25-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>pengguna.html</code> (dipisah dari halaman RBAC &amp; Pengguna sebelumnya)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Fitur Pengguna memungkinkan Super Admin mengelola akun-akun yang bisa login ke portal Admin Pusat Muhammadiyah: menambah, mengubah data, mengganti role, mengubah status aktif/nonaktif, dan menghapus baris pengguna. Fitur ini terpisah dari pengaturan Role &amp; Hak Akses supaya pengelolaan "siapa" dan "apa haknya" lebih jelas tanggung jawabnya.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Super Admin</strong> mengalami <strong>kesulitan mengelola siapa saja yang boleh login ke portal Admin Pusat dan peran apa yang mereka pegang</strong> saat <strong>penambahan/penghapusan akses staf dilakukan manual lewat permintaan ke tim teknis</strong>, yang menyebabkan <strong>keterlambatan onboarding staf baru dan risiko akun staf yang sudah tidak aktif tetap bisa login</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Permintaan akun baru/non-aktif untuk staf Admin Pusat/Wilayah dikirim ke tim backend secara manual, tanpa riwayat terpusat tentang siapa punya akses apa dan sejak kapan.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin dapat membuka menu Pengguna, menambah baris pengguna baru dengan role &amp; cakupan yang sesuai, mengubah status menjadi Nonaktif saat staf keluar, dan menyimpan seluruh perubahan sekaligus -- tanpa keterlibatan tim backend untuk operasi rutin ini.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan role dan hak akses yang kini bisa dikustomisasi (lihat PRD Role &amp; Hak Akses), pengelolaan akun pengguna harus sama fleksibelnya dan dipisahkan sebagai modul mandiri agar tanggung jawabnya jelas dan mudah diaudit.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memungkinkan Super Admin mengelola akun pengguna platform secara self-service tanpa tiket ke tim teknis.</li>
+<li>Memastikan setiap pengguna baru otomatis mendapat password default yang aman untuk mode demo, dengan jalur produksi berbasis undangan/reset.</li>
+<li>Mencegah akun yang sudah tidak relevan (staf keluar/pindah) tetap aktif di platform lewat kontrol status Aktif/Nonaktif.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan reset password mandiri oleh pengguna (self-service reset) pada fase ini -- password diatur manual oleh Super Admin (mode demo).</li>
+<li>Tidak mendukung Single Sign-On (SSO) / login via akun organisasi pada fase ini.</li>
+<li>Tidak menyediakan log aktivitas detail per pengguna (login history) dari halaman ini.</li>
+</ul>
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui kebijakan password &amp; status akun</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain keamanan akun &amp; integrasi dengan RBAC</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi CRUD pengguna</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian validasi form &amp; edge case</td>
+</tr>
+<tr>
+<td>Super Admin</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pengguna utama fitur ini</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin</td>
+<td>Mengelola seluruh akun platform</td>
+<td>Menambah/menonaktifkan akun staf dengan cepat</td>
+<td>Proses manual lewat tim teknis lambat</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Staf baru (Admin Wilayah/Keuangan/Viewer)</td>
+<td>Penerima akun baru</td>
+<td>Bisa login dan langsung bekerja sesuai role</td>
+<td>Menunggu lama untuk mendapat akses</td>
+<td>Email/WhatsApp, web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daftar pengguna (Nama, Email, Role, Cakupan, Status, Aksi)</td>
+<td>Reset password self-service oleh pengguna</td>
+</tr>
+<tr>
+<td>Tambah baris pengguna baru</td>
+<td>Single Sign-On (SSO)</td>
+</tr>
+<tr>
+<td>Edit nama, email, role, cakupan, status pengguna existing</td>
+<td>Log aktivitas/login history per pengguna</td>
+</tr>
+<tr>
+<td>Hapus baris pengguna</td>
+<td>Approval berjenjang untuk penambahan pengguna baru</td>
+</tr>
+<tr>
+<td>Simpan seluruh perubahan pengguna sekaligus</td>
+<td>Notifikasi otomatis email/WA saat akun baru dibuat</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Daftar pengguna, tambah/edit/hapus baris, simpan perubahan, pemilihan role dari daftar role yang tersedia.</li>
+<li><strong>Should have</strong> -- Validasi format email &amp; kelengkapan data sebelum simpan.</li>
+<li><strong>Could have</strong> -- Notifikasi otomatis saat akun baru dibuat.</li>
+<li><strong>Won't have (now)</strong> -- Reset password self-service, SSO, log aktivitas.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Super Admin, saya ingin melihat daftar seluruh pengguna beserta role, cakupan, dan statusnya, supaya saya tahu siapa yang punya akses ke platform.</td>
+<td>Must</td>
+<td>Given saya membuka menu Pengguna, When halaman dimuat, Then tabel menampilkan Nama, Email, Role, Cakupan, Status, dan tombol hapus untuk setiap pengguna</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Super Admin, saya ingin menambahkan pengguna baru dengan role dan cakupan tertentu, supaya staf baru bisa login sesuai kewenangannya.</td>
+<td>Must</td>
+<td>Given saya menekan "+ Tambah Pengguna", When saya mengisi nama, email, memilih role, mengisi cakupan, dan menekan "Simpan Pengguna", Then baris baru tersimpan dengan password default dan muncul di daftar</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Super Admin, saya ingin menonaktifkan pengguna yang sudah tidak bertugas, supaya pengguna tersebut tidak bisa login lagi.</td>
+<td>Must</td>
+<td>Given saya mengubah status pengguna dari Aktif menjadi Nonaktif dan menekan "Simpan Pengguna", Then pengguna tersebut tidak bisa login walau kredensialnya benar</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin menghapus baris pengguna yang salah ditambahkan, supaya daftar pengguna tetap akurat.</td>
+<td>Should</td>
+<td>Given saya menekan tombol hapus (✕) pada satu baris, When saya menekan "Simpan Pengguna", Then pengguna tersebut tidak lagi muncul di daftar</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Daftar Pengguna</td>
+<td>Sistem harus menampilkan tabel pengguna dengan kolom Nama, Email, Role (dropdown dari daftar role aktif), Cakupan, Status (Aktif/Nonaktif), dan aksi hapus</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Dropdown Role bersumber dari data role yang dikelola di menu Role &amp; Hak Akses</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Tambah Pengguna</td>
+<td>Sistem harus menyediakan tombol "+ Tambah Pengguna" yang menambahkan baris kosong untuk diisi Nama, Email, Role, Cakupan, Status</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Baris baru belum tersimpan permanen sampai tombol "Simpan Pengguna" ditekan</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Simpan Pengguna</td>
+<td>Sistem harus menyimpan seluruh baris (baru &amp; existing) saat tombol "Simpan Pengguna" ditekan, melewati baris yang nama/email-nya kosong</td>
+<td>US-02, US-03, US-04</td>
+<td>Must</td>
+<td>Pengguna baru mendapat password default <code>demo123</code> (khusus mode demo; produksi via email undangan/reset)</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Ubah Status</td>
+<td>Sistem harus mengizinkan Super Admin mengubah status pengguna menjadi Aktif/Nonaktif melalui dropdown status pada baris</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Pengguna berstatus Nonaktif tidak dapat login meski kredensial benar</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Hapus Pengguna</td>
+<td>Sistem harus menghapus baris pengguna dari tabel saat tombol hapus ditekan, dan perubahan permanen setelah "Simpan Pengguna"</td>
+<td>US-04</td>
+<td>Should</td>
+<td>Pertimbangkan validasi agar Super Admin tidak menghapus akunnya sendiri yang sedang login (lihat Risiko)</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Sinkronisasi Sesi</td>
+<td>Jika pengguna yang sedang login mengubah datanya sendiri (nama/role), sistem harus memperbarui sesi &amp; tampilan UI (nama, avatar, role di header) tanpa perlu logout-login ulang</td>
+<td>US-02</td>
+<td>Should</td>
+<td>Berlaku saat Super Admin mengedit baris miliknya sendiri</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat daftar pengguna</td>
+<td>Ya.</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Tambah/edit/hapus pengguna</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Ubah role/status pengguna lain</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Catatan: pada konfigurasi default, hanya role dengan permission <code>pengguna</code> (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role &amp; Hak Akses.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pengguna baru dibuat</td>
+<td>Pengguna baru</td>
+<td>Email/WhatsApp (disarankan, belum diimplementasi)</td>
+<td>Kredensial/link aktivasi akun</td>
+</tr>
+<tr>
+<td>Status pengguna diubah menjadi Nonaktif</td>
+<td>Pengguna terkait (disarankan)</td>
+<td>Email (disarankan)</td>
+<td>Pemberitahuan akses dicabut</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Keamanan</td>
+<td>Password tidak boleh disimpan/ditampilkan dalam bentuk plain text di produksi</td>
+<td>Hashing standar industri (bcrypt/argon2 setara) sebelum go-live produksi</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Validasi</td>
+<td>Email pengguna harus unik dan berformat valid</td>
+<td>100% validasi sebelum simpan</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Performa</td>
+<td>Waktu simpan perubahan daftar pengguna</td>
+<td>&lt; 1 detik untuk ≤ 500 baris pengguna</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Auditability</td>
+<td>Setiap penambahan/penghapusan/perubahan status pengguna tercatat pelaku &amp; waktu</td>
+<td>100% tercatat di audit log</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Konsistensi sesi</td>
+<td>Perubahan data pengguna yang sedang login langsung tercermin di UI tanpa reload manual</td>
+<td>100% konsisten dalam sesi yang sama</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → Menu "Pengguna" → lihat daftar → (tambah baris baru / edit baris / hapus baris) → "Simpan Pengguna" → toast konfirmasi.</li>
+<li>Wireframe: mengikuti struktur <code>pengguna.html</code> (tabel akun dengan baris editable inline, tombol tambah di bawah tabel, tombol simpan di kanan bawah).</li>
+<li>Edge case yang wajib ditangani: menghapus akun yang sedang login (lihat Risiko), menambah pengguna dengan email yang sudah dipakai, menyimpan tanpa mengisi role (default ke role pertama di daftar).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modul Role &amp; Hak Akses</td>
+<td>Sumber daftar role yang tersedia untuk dipilih per pengguna</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Sistem Autentikasi/Session</td>
+<td>Validasi login &amp; sesi aktif pengguna</td>
+<td>Internal (session storage, akan dimigrasi ke backend auth produksi)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Email/WhatsApp Gateway</td>
+<td>Pengiriman kredensial/undangan akun baru (rencana produksi)</td>
+<td>REST API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: Pengguna (id, nama, email, password, roleId, cakupan, status).</li>
+<li>Migrasi data: akun admin existing (jika ada di sistem lama) perlu diimpor dengan pemetaan role yang sesuai.</li>
+<li>Retensi data: data pengguna disimpan selama akun ada di platform; pengguna yang dihapus idealnya di-soft-delete untuk keperluan audit, bukan hard-delete (perlu konfirmasi kebijakan).</li>
+<li>Laporan yang dibutuhkan: daftar pengguna per role, daftar pengguna nonaktif.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>"Cakupan" (misal: Nasional, PWM Jawa Timur) diisi manual sebagai teks bebas pada fase ini, bukan dari master data wilayah terstruktur.</li>
+<li>Satu pengguna hanya memiliki satu role aktif pada satu waktu.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Mode demo saat ini menyimpan password di sisi klien (sessionStorage); wajib diganti dengan autentikasi backend yang aman sebelum produksi.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah penghapusan pengguna harus soft-delete (untuk audit) atau hard-delete?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah dibutuhkan reset password self-service di rilis berikutnya?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Apakah "Cakupan" perlu diikat ke master data PWM/PDM/PCM, bukan teks bebas?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin menghapus/menonaktifkan akunnya sendiri yang sedang login, terkunci dari sistem</td>
+<td>H</td>
+<td>L</td>
+<td>Tambahkan validasi: minimal 1 akun Super Admin aktif harus tetap ada; peringatan saat menonaktifkan akun sendiri</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Password default <code>demo123</code> terbawa ke produksi</td>
+<td>H</td>
+<td>M</td>
+<td>Ganti mekanisme password sebelum go-live produksi (email undangan/reset wajib)</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup &amp; kebijakan password produksi</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>CRUD pengguna</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cakupan</td>
+<td>Lingkup wilayah/kewenangan seorang pengguna, misal "Nasional" atau "PWM Jawa Timur"</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Peran yang menentukan hak akses pengguna ke modul platform (lihat PRD Role &amp; Hak Akses)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

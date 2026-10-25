@@ -22,9 +22,10 @@
     <a href="pendaftaran.html" class="nav-item active" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
     <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
 
-    <div class="nav-group-label">Platform</div>
+    <div class="nav-group-label">Konfigurasi</div>
     <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
-    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+    <a href="pengguna.html" class="nav-item" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
 
     <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
       <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
@@ -56,8 +57,8 @@
         <div class="stepper">
           <div class="step active" data-step="1"><div class="circle">1</div><div class="label">Data Sekolah</div></div>
           <div class="step" data-step="2"><div class="circle">2</div><div class="label">Akun Awal</div></div>
-          <div class="step" data-step="3"><div class="circle">3</div><div class="label">Integrasi Bank</div></div>
-          <div class="step" data-step="4"><div class="circle">4</div><div class="label">Invoicing &amp; Review</div></div>
+          <div class="step" data-step="3"><div class="circle">3</div><div class="label">Rekening Penampung</div></div>
+          <div class="step" data-step="4"><div class="circle">4</div><div class="label">Review</div></div>
         </div>
 
         <!-- STEP 1 -->
@@ -156,25 +157,7 @@
         <!-- STEP 3 -->
         <div class="step-panel" data-panel="3" style="display:none;">
           <div class="card">
-            <h3>Integrasi Bank (Host-to-Host) <span class="tag-pill pg">BANK</span></h3>
-            <p class="card-desc">Kerjasama langsung dengan bank mitra -- integrasi host-to-host (H2H), bukan lewat payment gateway pihak ketiga. Kredensial H2H bersifat terpusat untuk seluruh sekolah, dikelola lewat backend/DevOps -- bukan diisi manual per sekolah saat onboarding.</p>
-
-            <div class="switch-row">
-              <div class="txt"><b>BSI -- Bank Syariah Indonesia</b><span>Integrasi H2H -- Virtual Account &amp; notifikasi mutasi real-time</span></div>
-              <span class="badge-status on"><span class="dot"></span> Terhubung (kredensial terpusat)</span>
-            </div>
-            <div class="grid2" style="margin-top:10px;">
-              <div class="field">
-                <label>Kode Perusahaan (Company Code VA)</label>
-                <input type="text" value="88008" disabled style="background:#f5f6f8;">
-              </div>
-            </div>
-            <div class="hint">Client Secret &amp; kredensial sensitif lainnya tidak disimpan atau ditampilkan lewat panel ini -- dikelola langsung di secrets manager backend oleh tim Engineering/DevOps (lihat Konfigurasi Sistem &gt; Integrasi Bank Global).</div>
-          </div>
-
-          <div class="card">
-            <h3>Rekening Penampung Sekolah (Bagi Hasil Fee) <span class="tag-pill pg">BANK</span></h3>
-            <p class="card-desc">Pembayaran SPP dari wali murid seluruhnya masuk ke <b>Rekening Penampung Pusat &amp; VA Terpusat</b> milik Muhammadiyah Pusat (lihat Konfigurasi Sistem) -- <b>bukan</b> ke rekening di bawah ini. Rekening sekolah berikut hanya dipakai untuk pencairan bagian fee/bagi hasil yang jadi hak sekolah ini.</p>
+            <h3>Rekening Penampung <span class="tag-pill pg">BANK</span></h3>
             <div class="grid3">
               <div class="field">
                 <label>Nama Bank</label>
@@ -184,63 +167,33 @@
                 </select>
               </div>
               <div class="field">
-                <label>Nomor Rekening</label>
+                <label>No Rek</label>
                 <input type="text" placeholder="mis. 7123456789" value="7123456789">
               </div>
               <div class="field">
-                <label>Nama Pemilik Rekening</label>
+                <label>Nama Pemilik</label>
                 <input type="text" placeholder="sesuai buku rekening" value="SD Muhammadiyah 4 Sidoarjo">
               </div>
             </div>
-            <div class="grid2">
-              <div class="field">
-                <label>Verifikasi Nama Rekening</label>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <span class="badge-status on"><span class="dot"></span> Cocok dengan Bank (via API validasi H2H)</span>
-                </div>
-                <div class="hint">Dicek otomatis lewat API Account Inquiry bank mitra (BSI Host-to-Host) supaya tidak salah kirim dana.</div>
-              </div>
-              <div class="field">
-                <label>Jadwal Pencairan Fee</label>
-                <select>
-                  <option selected>Harian (T+1)</option>
-                  <option>Mingguan</option>
-                  <option>Sesuai permintaan (manual)</option>
-                </select>
-              </div>
-            </div>
-            <div class="note-box info">Dana SPP terkumpul dulu di Rekening Penampung Pusat, lalu bagian fee sekolah ini dihitung &amp; dicairkan ke rekening di atas sesuai jadwal -- bukan langsung real-time per transaksi wali murid.</div>
           </div>
         </div>
 
         <!-- STEP 4 -->
         <div class="step-panel" data-panel="4" style="display:none;">
           <div class="card">
-            <h3>Konfigurasi Invoicing Default</h3>
-            <div class="grid2">
-              <div class="field">
-                <label>Template Tagihan</label>
-                <select><option selected>Default Muhammadiyah</option><option>Custom</option></select>
-              </div>
-              <div class="field">
-                <label>Tanggal Jatuh Tempo Default (tiap bulan)</label>
-                <input type="number" value="10" min="1" max="28">
-              </div>
-            </div>
-            <div class="note-box info">Mengikuti <b>Aturan Reminder &amp; Eskalasi Default Platform</b> (6 aturan aktif: H-7, H-3, H-1, H+3, H+7, H+14) dari Konfigurasi Sistem. Isi pesan per channel (WA/SMS/Email) bisa disesuaikan untuk sekolah ini nanti lewat Manajemen Sekolah &gt; Template Pesan.</div>
-          </div>
-
-          <div class="card">
             <h3>Ringkasan Pendaftaran</h3>
+            <p class="card-desc">Tinjau kembali data yang sudah diisi pada Step 1 -- 3 sebelum mendaftarkan sekolah.</p>
             <table class="ref-table">
-              <tr><th style="width:32%">Sekolah</th><td>SD Muhammadiyah 4 Sidoarjo -- NPSN 20501234</td></tr>
+              <tr><th style="width:32%">Nama Sekolah</th><td id="review-nama">SD Muhammadiyah 4 Sidoarjo</td></tr>
+              <tr><th>NPSN</th><td id="review-npsn">20501234</td></tr>
+              <tr><th>Jenjang</th><td id="review-jenjang">SMA / MA</td></tr>
+              <tr><th>Perkiraan Jumlah Siswa Aktif</th><td id="review-siswa">480</td></tr>
               <tr><th>Struktur Organisasi</th><td id="review-org">PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota</td></tr>
-              <tr><th>Akun Awal</th><td>1 akun (Admin) -- mengundang Kepala Sekolah &amp; Bendahara setelah aktivasi</td></tr>
-              <tr><th>Kontak Sekolah</th><td>info@sdmuh4sda.sch.id -- Drs. Slamet Riyadi (Kepala Sekolah)</td></tr>
-              <tr><th>Integrasi Bank</th><td>Host-to-Host BSI -- Bank Syariah Indonesia</td></tr>
-              <tr><th>Rekening Penampung Pusat &amp; VA</th><td>1 rekening &amp; 1 VA terpusat milik Muhammadiyah Pusat, dipakai bersama seluruh sekolah (lihat Konfigurasi Sistem)</td></tr>
-              <tr><th>Rekening Penampung Sekolah (Fee)</th><td>BSI -- 7123456789 a.n. SD Muhammadiyah 4 Sidoarjo, pencairan fee T+1</td></tr>
-              <tr><th>Invoicing</th><td>Template Default Muhammadiyah, jatuh tempo tgl 10, mengikuti Aturan Reminder &amp; Eskalasi Default Platform</td></tr>
+              <tr><th>Alamat Lengkap</th><td id="review-alamat">Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</td></tr>
+              <tr><th>Status Awal</th><td>Draft (menunggu aktivasi)</td></tr>
+              <tr><th>Akun Awal (Admin)</th><td id="review-admin">Ahmad Yusuf -- 0857xxxxxxx -- admin@sdmuh4sda.sch.id</td></tr>
+              <tr><th>Kontak Sekolah</th><td id="review-kontak">info@sdmuh4sda.sch.id -- Drs. Slamet Riyadi (Kepala Sekolah) -- 0812xxxxxxx</td></tr>
+              <tr><th>Rekening Penampung</th><td id="review-rekening">BSI -- Bank Syariah Indonesia -- 7123456789 a.n. SD Muhammadiyah 4 Sidoarjo</td></tr>
             </table>
             <div class="note-box info">Setelah didaftarkan, status Sekolah berubah dari <b>Draft</b> ke <b>Aktif</b> dan event <code>school.onboarded</code> diterbitkan ke seluruh service terkait (lihat Skenario 11).</div>
           </div>

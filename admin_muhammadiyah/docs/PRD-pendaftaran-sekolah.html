@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Pendaftaran Sekolah -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Pendaftaran Sekolah</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Pendaftaran Sekolah (Onboarding Sekolah Baru)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>25-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>pendaftaran.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, PRD Pengguna, PRD Role &amp; Hak Akses</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>25-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>pendaftaran.html</code> (4 langkah: Data Sekolah, Akun Awal, Rekening Penampung, Review)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Pendaftaran Sekolah adalah wizard 4 langkah bagi Super Admin/Admin Wilayah untuk mendaftarkan sekolah baru ke platform: mengisi data induk sekolah, membuat satu akun Admin awal, mencatat rekening penampung fee sekolah, lalu meninjau seluruh data sebelum sekolah diaktifkan. Hasilnya, sekolah baru bisa langsung beroperasi di platform tanpa proses manual bolak-balik dokumen.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Admin Pusat/Wilayah</strong> mengalami <strong>proses onboarding sekolah baru yang lambat dan rawan data tidak lengkap</strong> saat <strong>data sekolah, akun, dan rekening dikumpulkan secara manual lewat dokumen/email</strong>, yang menyebabkan <strong>sekolah baru tertunda aktif di platform dan admin harus mengulang verifikasi data</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Data sekolah baru (profil, struktur organisasi, kontak, rekening bagi hasil fee) dikumpulkan via formulir fisik/email ke Pusat, lalu dientri manual ke sistem oleh tim backend/DevOps -- termasuk kredensial integrasi bank yang bersifat sensitif, berisiko human error dan keterlambatan.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin/Admin Wilayah mengisi satu wizard terstruktur 4 langkah, meninjau ringkasan di langkah akhir, lalu menekan "Daftarkan Sekolah" -- status sekolah otomatis berubah dari Draft menjadi Aktif dan event onboarding diterbitkan ke seluruh service terkait.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetkan secara nasional) tidak bisa lagi mengandalkan entri manual oleh tim backend; proses onboarding harus self-service oleh Admin Wilayah/Pusat agar skalabel.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Mempercepat waktu onboarding sekolah baru dari proses manual (berhari-hari) menjadi wizard self-service (menit).</li>
+<li>Memastikan kelengkapan data sekolah (struktur organisasi, akun admin, rekening penampung) sebelum sekolah diaktifkan, lewat langkah Review wajib.</li>
+<li>Memisahkan kredensial integrasi bank sensitif (dikelola backend/DevOps terpusat) dari data yang diinput admin saat onboarding, demi keamanan.</li>
+<li>Menegaskan bahwa layanan H2H (Host-to-Host) dikelola di level Admin Muhammadiyah Pusat, bukan per sekolah -- sehingga pembayaran SPP wali murid (VA/QRIS) langsung masuk ke rekening Pusat, dan wizard onboarding tidak perlu mengatasi integrasi bank per sekolah.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mendukung pembuatan lebih dari 1 akun di tahap onboarding (hanya 1 akun Admin; Kepala Sekolah &amp; Bendahara diundang kemudian oleh Admin Sekolah).</li>
+<li>Tidak mendukung approval berjenjang (multi-level sign-off) untuk pendaftaran sekolah di fase ini.</li>
+<li>Tidak menyediakan draft tersimpan otomatis (auto-save) antar sesi pada fase ini -- pengisian wizard diasumsikan selesai dalam satu sesi.</li>
+<li>Tidak menyediakan validasi rekening penampung per sekolah</li>
+<li>Tidak mengotomasi sistem bagi hasil (revenue sharing) antara sekolah dan GeekGarden dari dana pembayaran SPP wali murid (via VA/QRIS) yang masuk ke rekening Pusat -- proses ini dilakukan manual di luar sistem.</li>
+</ul>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui alur onboarding &amp; data wajib</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain integrasi bank H2H &amp; event <code>school.onboarded</code></td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi wizard &amp; validasi data</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian tiap langkah wizard</td>
+</tr>
+<tr>
+<td>Admin Wilayah (PWM)</td>
+<td>Klien</td>
+<td>C/R</td>
+<td>Pengguna utama yang mendaftarkan sekolah di wilayahnya</td>
+</tr>
+<tr>
+<td>Tim Engineering/DevOps</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Mengelola kredensial H2H terpusat (di luar wizard)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin Pusat</td>
+<td>Mendaftarkan sekolah dari seluruh wilayah</td>
+<td>Onboarding sekolah cepat &amp; data lengkap</td>
+<td>Data sekolah tersebar, verifikasi manual lama</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Wilayah (PWM)</td>
+<td>Mendaftarkan sekolah di wilayahnya</td>
+<td>Sekolah di wilayahnya cepat aktif &amp; bisa menagih SPP</td>
+<td>Harus menunggu Pusat untuk entri data</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Sekolah (penerima akun)</td>
+<td>Staf sekolah yang menerima link aktivasi</td>
+<td>Aktivasi akun &amp; mulai mengundang Kepala Sekolah/Bendahara</td>
+<td>Tidak tahu kapan sekolah resmi aktif</td>
+<td>WhatsApp/email, web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step 1: Data Sekolah (profil, jenjang, struktur PWM/PDM/PCM, alamat, status awal Draft)</td>
+<td>Approval berjenjang sebelum sekolah diaktifkan</td>
+</tr>
+<tr>
+<td>Step 2: Akun Awal Admin Sekolah + Kontak Sekolah</td>
+<td>Pembuatan lebih dari 1 akun saat onboarding</td>
+</tr>
+<tr>
+<td>Step 3: Rekening Penampung (Nama Bank, No Rek, Nama Pemilik)</td>
+<td>Validasi otomatis nama rekening via API bank saat input</td>
+</tr>
+<tr>
+<td>Step 4: Review seluruh input Step 1-3 sebelum submit</td>
+<td>Auto-save draft antar sesi</td>
+</tr>
+<tr>
+<td></td>
+<td>Sistem hitung &amp; bagi hasil (revenue sharing) antara sekolah dan GeekGarden dari dana di rekening Pusat -- dilakukan manual di luar sistem</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Step 1-4 wizard lengkap, validasi data wajib, perubahan status Draft → Aktif.</li>
+<li><strong>Should have</strong> -- Review step yang merangkum seluruh input sebelum submit.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Admin Wilayah, saya ingin mengisi data induk sekolah (nama, NPSN, jenjang, struktur organisasi, alamat), supaya sekolah tercatat dengan benar di platform.</td>
+<td>Must</td>
+<td>Given saya berada di Step 1, When saya mengisi semua field wajib dan menekan "Lanjut", Then sistem berpindah ke Step 2 dengan data tersimpan sementara</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Admin Wilayah, saya ingin membuat satu akun Admin Sekolah beserta kontak sekolah, supaya sekolah punya satu titik kontak awal yang bisa mengundang staf lain.</td>
+<td>Must</td>
+<td>Given saya di Step 2, When saya mengisi nama, No. WhatsApp, dan email akun Admin serta kontak sekolah, Then data tersimpan dan saya bisa lanjut ke Step 3</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Admin Wilayah, saya ingin mencatat rekening penampung fee sekolah (Nama Bank, No Rek, Nama Pemilik), supaya pencairan bagi hasil fee sekolah punya tujuan rekening yang benar.</td>
+<td>Must</td>
+<td>Given saya di Step 3, When saya mengisi Nama Bank, No Rek, dan Nama Pemilik, Then data tersimpan dan saya bisa lanjut ke Step 4</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Admin Wilayah, saya ingin meninjau seluruh data dari Step 1-3 sebelum mendaftarkan sekolah, supaya saya bisa memastikan tidak ada kesalahan input sebelum sekolah diaktifkan.</td>
+<td>Must</td>
+<td>Given saya di Step 4, When halaman dimuat, Then seluruh data Step 1-3 (data sekolah, akun admin, kontak, rekening penampung) ditampilkan dalam satu tabel ringkasan, dan setelah saya menekan "Daftarkan Sekolah", status sekolah berubah dari Draft ke Aktif</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Data Sekolah</td>
+<td>Sistem harus menyediakan form Step 1 berisi Nama Sekolah, NPSN, Jenjang, Perkiraan Jumlah Siswa Aktif, Wilayah (PWM), Daerah (PDM), Cabang (PCM), Status Awal (readonly: Draft), dan Alamat Lengkap</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Dropdown PDM &amp; PCM mengikuti pilihan PWM yang dipilih (dependent select)</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Akun Awal</td>
+<td>Sistem harus menyediakan form Step 2 untuk 1 akun dengan peran otomatis "Admin" (Nama, No. WhatsApp, Email) dan Kontak Sekolah (Email Sekolah, Nama Kontak Person, No. WhatsApp Kontak Person)</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Akun ini menerima link aktivasi (bukan kredensial langsung) setelah sekolah Aktif; akun ini yang berhak mengundang Kepala Sekolah &amp; Bendahara</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Rekening Penampung</td>
+<td>Sistem harus menyediakan form Step 3 dengan tepat 3 field: Nama Bank (dropdown), No Rek, Nama Pemilik</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Rekening ini hanya untuk pencairan bagi hasil fee sekolah, bukan rekening penampung pembayaran SPP wali murid (yang terpusat di Konfigurasi Sistem)</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Review</td>
+<td>Sistem harus menampilkan ringkasan seluruh data Step 1-3 (Nama Sekolah, NPSN, Jenjang, Jumlah Siswa, Struktur Organisasi, Alamat, Status Awal, Akun Admin, Kontak Sekolah, Rekening Penampung) di Step 4 sebelum tombol submit ditekan</td>
+<td>US-04</td>
+<td>Must</td>
+<td>Review bersifat read-only summary, bukan form edit ulang</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Aktivasi Sekolah</td>
+<td>Sistem harus mengubah status sekolah dari "Draft" menjadi "Aktif" dan menerbitkan event <code>school.onboarded</code> ke service terkait saat tombol "Daftarkan Sekolah" ditekan di Step 4</td>
+<td>US-04</td>
+<td>Must</td>
+<td>Event ini memicu proses lain (misal: pembuatan akses login Admin Sekolah, mulai jadwal invoicing)</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Navigasi Wizard</td>
+<td>Sistem harus menyediakan tombol "Lanjut"/"Kembali" antar step dan indikator stepper (Data Sekolah → Akun Awal → Rekening Penampung → Review)</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Tombol "Kembali" nonaktif di Step 1; tombol "Lanjut" berubah teks jadi "Daftarkan Sekolah" di Step 4</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Halaman Pendaftaran Sekolah</td>
+<td>Ya</td>
+<td>YA.</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sekolah berhasil didaftarkan (status Aktif)</td>
+<td>Akun Admin Sekolah</td>
+<td>WhatsApp / Email</td>
+<td>Link aktivasi akun</td>
+</tr>
+<tr>
+<td>Event <code>school.onboarded</code> diterbitkan</td>
+<td>Service internal terkait (invoicing, RBAC sekolah)</td>
+<td>Event bus internal</td>
+<td>ID sekolah &amp; status Aktif</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Performa</td>
+<td>Waktu transisi antar step wizard</td>
+<td>&lt; 300 ms per perpindahan step (client-side)</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Validasi</td>
+<td>Field wajib tidak boleh kosong sebelum lanjut step</td>
+<td>100% validasi client-side + server-side sebelum submit akhir</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Keamanan</td>
+<td>Kredensial integrasi bank H2H tidak pernah diinput/ditampilkan di wizard ini</td>
+<td>Terpisah total dari form, dikelola di Konfigurasi Sistem oleh Engineering/DevOps</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Konsistensi data</td>
+<td>Data yang tampil di Review (Step 4) identik dengan yang tersimpan di Step 1-3</td>
+<td>0% selisih antara input dan ringkasan</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Usability</td>
+<td>Admin baru dapat menyelesaikan seluruh wizard tanpa panduan tambahan</td>
+<td>&lt; 10 menit untuk 1 pendaftaran sekolah</td>
+</tr>
+<tr>
+<td>NFR-06</td>
+<td>Auditability</td>
+<td>Perubahan status Draft → Aktif tercatat dengan waktu &amp; pelaku</td>
+<td>Tercatat di audit log/riwayat status sekolah</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → Menu "Pendaftaran Sekolah" → Step 1 Data Sekolah → Step 2 Akun Awal → Step 3 Rekening Penampung → Step 4 Review → submit → status Aktif.</li>
+<li>Wireframe: mengikuti struktur <code>pendaftaran.html</code> (stepper 4 langkah di bagian atas, form per step, tombol navigasi di bawah).</li>
+<li>Edge case yang wajib ditangani: NPSN duplikat, admin menutup browser di tengah wizard (data belum tersimpan permanen sampai submit akhir), No. WhatsApp/email akun Admin tidak valid format.</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Konfigurasi Sistem (Integrasi Bank Global H2H BSI)</td>
+<td>Sumber kredensial &amp; konfigurasi bank terpusat, tidak diisi di wizard ini</td>
+<td>Internal (shared config)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul RBAC &amp; Pengguna</td>
+<td>Pembuatan akun Admin Sekolah awal &amp; pemetaan role</td>
+<td>Internal API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>WhatsApp/Email Gateway</td>
+<td>Pengiriman link aktivasi ke akun Admin Sekolah</td>
+<td>REST API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: Sekolah, StrukturOrganisasi (PWM/PDM/PCM), AkunAdminSekolah, KontakSekolah, RekeningPenampungSekolah.</li>
+<li>Migrasi data: sekolah existing (jika ada) di luar platform perlu proses migrasi/impor tersendiri (di luar scope wizard ini).</li>
+<li>Retensi data: data pendaftaran disimpan permanen sebagai bagian profil sekolah, termasuk riwayat status (Draft/Aktif/Nonaktif).</li>
+<li>Laporan yang dibutuhkan: daftar sekolah per status pendaftaran, waktu rata-rata onboarding.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Integrasi H2H (Host-to-Host) ada di level <strong>Admin Muhammadiyah Pusat</strong>, bukan per sekolah. Satu kerja sama bank H2H terpusat (BSI) dipakai bersama oleh seluruh sekolah.</li>
+<li>Pembayaran SPP oleh wali murid (via Virtual Account/QRIS) <strong>langsung masuk ke rekening penampung Pusat</strong>, bukan ke rekening sekolah. Rekening penampung yang diisi di Step 3 wizard ini adalah rekening tujuan <strong>pencairan bagi hasil fee ke sekolah</strong>, bukan rekening penerima pembayaran SPP.</li>
+<li>NPSN bersifat unik per sekolah dan tersedia saat pendaftaran.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Wizard hanya mendukung pembuatan 1 akun Admin di awal; penambahan Kepala Sekolah/Bendahara dilakukan di luar modul ini (oleh Admin Sekolah).</li>
+<li><strong>Out of scope:</strong> mekanisme hitung &amp; bagi hasil (revenue sharing) antara sekolah dan GeekGarden dari dana yang terkumpul di rekening Pusat. Proses ini dilakukan <strong>manual di luar sistem</strong> (rekonsiliasi &amp; pencairan fee tidak diotomasi oleh platform pada fase ini).</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah NPSN perlu divalidasi ke database Kemendikbud secara real-time?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah dibutuhkan mekanisme simpan draft sebelum submit akhir di rilis berikutnya?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data NPSN/rekening salah input tidak terdeteksi sebelum Aktif</td>
+<td>H</td>
+<td>M</td>
+<td>Tambahkan validasi format &amp; konfirmasi di Review step; pertimbangkan verifikasi rekening via API bank</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Admin menutup browser di tengah wizard, data hilang</td>
+<td>M</td>
+<td>M</td>
+<td>Evaluasi kebutuhan auto-save/draft di rilis berikutnya</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup wizard + validasi field</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Step 1-4 + event onboarding</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM/PDM/PCM</td>
+<td>Pimpinan Wilayah/Daerah/Cabang Muhammadiyah, struktur organisasi berjenjang</td>
+</tr>
+<tr>
+<td>H2H</td>
+<td>Host-to-Host, integrasi langsung ke sistem bank mitra</td>
+</tr>
+<tr>
+<td>NPSN</td>
+<td>Nomor Pokok Sekolah Nasional</td>
+</tr>
+<tr>
+<td><code>school.onboarded</code></td>
+<td>Event internal yang diterbitkan saat sekolah berubah status jadi Aktif</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

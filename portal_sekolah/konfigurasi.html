@@ -25,8 +25,20 @@
     <div class="nav-group-label">Menu Utama</div>
     <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
     <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
-    <a class="nav-item active" data-rbac="konfigurasi" href="konfigurasi.html" id="nav-self"><span class="ic">⚙</span> Konfigurasi</a>
-    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item nav-parent active" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html" id="nav-self"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+    </div>
     <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
     <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
@@ -58,114 +70,198 @@
           <p>Rekening penampung dan aturan notifikasi khusus untuk SD Muhammadiyah 4 Sidoarjo. Pengaturan ini tidak memengaruhi sekolah lain.</p>
         </div>
 
-        <div class="card">
-          <h3>Rekening Penampung (Disbursement) <span class="tag-pill pg">BANK</span></h3>
-          <p class="card-desc">Rekening tujuan pencairan dana milik sekolah ini -- terpisah dari kanal VA yang dilihat wali murid saat membayar.</p>
-          <div class="grid3">
-            <div class="field">
-              <label>Nama Bank</label>
-              <select>
-                <option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option>
-                <option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option>
+        <!-- TAB: REKENING PENAMPUNG -->
+        <div class="page-tab-panel active" data-ptabpanel="rekening">
+          <div class="card">
+            <h3>Rekening Penampung (Disbursement) <span class="tag-pill pg">BANK</span></h3>
+            <p class="card-desc">Rekening tujuan pencairan dana milik sekolah ini -- terpisah dari kanal VA yang dilihat wali murid saat membayar. Bisa lebih dari satu rekening (mis. riwayat ganti bank); salah satu ditandai <b>Utama</b> sebagai tujuan pencairan aktif.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="rekening-search" placeholder="Cari nama pemilik / no. rekening..." oninput="renderRekeningTable()">
+              <select id="rekening-filter-bank" onchange="renderRekeningTable()"><option value="">Semua Bank</option></select>
+              <select id="rekening-filter-status" onchange="renderRekeningTable()">
+                <option value="">Semua Status</option>
+                <option value="menunggu_verifikasi">Menunggu Verifikasi</option>
+                <option value="terverifikasi">Terverifikasi</option>
+                <option value="ditolak">Ditolak</option>
               </select>
+              <button class="btn btn-primary btn-sm" onclick="openRekeningPanel()">+ Tambah Rekening</button>
             </div>
-            <div class="field"><label>Nomor Rekening</label><input type="text" value="7123456789"></div>
-            <div class="field"><label>Nama Pemilik Rekening</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo"></div>
-          </div>
-          <div class="grid2">
-            <div class="field">
-              <label>Status Verifikasi</label>
-              <div><span class="badge-status on"><span class="dot"></span> Terverifikasi (via Account Inquiry API)</span></div>
-              <div class="hint">Dicek otomatis lewat API Account Inquiry bank mitra (BSI Host-to-Host), dicocokkan dengan nama di atas.</div>
+            <table class="dtab" id="rekening-table">
+              <thead>
+                <tr><th style="width:18%">Bank</th><th style="width:14%">No. Rekening</th><th style="width:18%">Nama Pemilik</th><th style="width:14%">Jadwal Disbursement</th><th style="width:14%">Status Verifikasi</th><th style="width:10%">Kanal VA</th><th style="width:12%">Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+
+            <div class="card" id="rekening-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3 id="rekening-panel-title">Tambah Rekening Penampung</h3>
+              <div class="grid3">
+                <div class="field"><label>Nama Bank</label><select id="rek-bank"></select></div>
+                <div class="field"><label>Nomor Rekening</label><input type="text" id="rek-norek" placeholder="hanya angka, 6-20 digit"></div>
+                <div class="field"><label>Nama Pemilik Rekening</label><input type="text" id="rek-nama"></div>
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label>Jadwal Disbursement</label>
+                  <select id="rek-jadwal">
+                    <option value="harian">Harian (T+1)</option><option value="mingguan">Mingguan</option><option value="manual">Sesuai permintaan (manual)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Status Verifikasi</label>
+                  <select id="rek-status">
+                    <option value="menunggu_verifikasi">Menunggu Verifikasi</option><option value="terverifikasi">Terverifikasi</option><option value="ditolak">Ditolak</option>
+                  </select>
+                </div>
+              </div>
+              <div class="switch-row">
+                <div class="txt"><b>Aktifkan juga sebagai kanal VA pembayaran</b><span>Opsional -- wali murid bisa bayar langsung lewat VA bank ini</span></div>
+                <label class="toggle"><input type="checkbox" id="rek-va-aktif"><span class="slider"></span></label>
+              </div>
+              <div class="switch-row">
+                <div class="txt"><b>Jadikan rekening utama</b><span>Tujuan pencairan dana aktif -- otomatis menggantikan rekening utama sebelumnya</span></div>
+                <label class="toggle"><input type="checkbox" id="rek-utama"><span class="slider"></span></label>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeRekeningPanel()">Batal</button>
+                <button class="btn btn-success" onclick="saveRekening()">Simpan</button>
+              </div>
             </div>
-            <div class="field">
-              <label>Jadwal Disbursement</label>
-              <select><option selected>Harian (T+1)</option><option>Mingguan</option><option>Sesuai permintaan (manual)</option></select>
-            </div>
-          </div>
-          <div class="switch-row">
-            <div class="txt"><b>Aktifkan BSI juga sebagai kanal VA pembayaran</b><span>Opsional -- wali murid bisa bayar langsung lewat VA BSI</span></div>
-            <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
-          </div>
-          <div class="btn-row" style="justify-content:flex-end;">
-            <button class="btn btn-success" onclick="showToast('✓ Rekening Penampung berhasil disimpan')">Simpan</button>
           </div>
         </div>
 
-        <div class="card">
-          <h3>Notifikasi -- Nomor Resmi</h3>
-          <p class="card-desc">Notifikasi ke wali murid dikirim lewat satu nomor WhatsApp Business resmi milik <b>Muhammadiyah Pusat</b>, bukan nomor milik sekolah masing-masing.</p>
-          <div class="grid2">
-            <div class="field"><label>Nomor WA Pengirim</label><input type="text" value="+62 811-2233-4455" disabled></div>
-            <div class="field"><label>Dikelola oleh</label><input type="text" value="Muhammadiyah Pusat (PP)" disabled></div>
+        <!-- TAB: NOTIFIKASI -->
+        <div class="page-tab-panel" data-ptabpanel="notifikasi">
+          <div class="card">
+            <h3>Notifikasi -- Nomor Resmi</h3>
+            <p class="card-desc">Notifikasi ke wali murid dikirim lewat satu nomor WhatsApp Business resmi milik <b>Muhammadiyah Pusat</b>, bukan nomor milik sekolah masing-masing.</p>
+            <div class="grid2">
+              <div class="field"><label>Nomor WA Pengirim</label><input type="text" value="+62 811-2233-4455" disabled></div>
+              <div class="field"><label>Dikelola oleh</label><input type="text" value="Muhammadiyah Pusat (PP)" disabled></div>
+            </div>
+            <div class="note-box info">Karena nomor ini terpusat, pastikan setiap template pesan sekolah Anda tetap mencantumkan nama sekolah supaya wali murid mengenali tagihan anaknya.</div>
           </div>
-          <div class="note-box info">Karena nomor ini terpusat, pastikan setiap template pesan sekolah Anda (di bawah) tetap mencantumkan nama sekolah supaya wali murid mengenali tagihan anaknya.</div>
-        </div>
 
-        <div class="card">
-          <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
-          <p class="card-desc">Berawal dari salinan Aturan Default Platform -- bisa diubah bebas khusus sekolah ini, tidak memengaruhi sekolah lain.</p>
-          <table class="dtab" id="rules-table">
-            <thead>
-              <tr><th style="width:12%">Offset Hari</th><th style="width:24%">Nama Aturan</th><th style="width:22%">Level Penanganan</th><th style="width:24%">Channel</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="number" value="-7"></td>
-                <td><input type="text" value="Pengingat Awal"></td>
-                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-              </tr>
-              <tr>
-                <td><input type="number" value="-1"></td>
-                <td><input type="text" value="Pengingat Terakhir"></td>
-                <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-              </tr>
-              <tr>
-                <td><input type="number" value="5"></td>
-                <td><input type="text" value="Lewat Jatuh Tempo (disesuaikan sekolah ini)"></td>
-                <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-              </tr>
-            </tbody>
-          </table>
-          <button class="btn-add-row" onclick="addRuleRow()">+ Tambah Aturan</button>
-          <div class="hint" style="margin-top:8px;">Offset negatif = hari sebelum jatuh tempo (H-), positif = hari setelah jatuh tempo (H+).</div>
-        </div>
+          <div class="card">
+            <h3>Penerima Tembusan (CC) Notifikasi</h3>
+            <p class="card-desc">Staf sekolah ini yang ikut menerima salinan notifikasi tagihan wali murid -- berguna supaya Bendahara/Kepala Sekolah tahu progres penagihan tanpa buka Portal.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="cc-search" placeholder="Cari nama / peran..." oninput="renderNotifCcTable()">
+              <select id="cc-filter-aktif" onchange="renderNotifCcTable()">
+                <option value="">Semua Status</option><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option>
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="openNotifCcPanel()">+ Tambah Penerima</button>
+            </div>
+            <table class="dtab" id="notif-cc-table">
+              <thead><tr><th style="width:26%">Nama</th><th style="width:22%">Peran/Jabatan</th><th style="width:22%">No. WhatsApp</th><th style="width:14%">Status</th><th style="width:16%">Aksi</th></tr></thead>
+              <tbody></tbody>
+            </table>
 
-        <div class="card">
-          <h3>Template Pesan <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
-          <div id="tmpl-root-konfig">
-            <div class="channel-tabs">
-              <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-konfig')">WhatsApp</div>
-              <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-konfig')">SMS</div>
-              <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-konfig')">Email</div>
-            </div>
-            <div class="channel-panel" data-ch-panel="wa">
-              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo). Tagihan SPP Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Bpk/Ibu wali {nama_siswa}, tagihan SPP sudah lewat jatuh tempo {hari_terlambat} hari. Ditunggu konfirmasinya ya -- {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Pemberitahuan penting: tagihan SPP {nama_siswa} menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea></div>
-            </div>
-            <div class="channel-panel" data-ch-panel="sms" style="display:none;">
-              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>SDM4 Sidoarjo: SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>SDM4 Sidoarjo: SPP {nama_siswa} telat {hari_terlambat} hari. {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>SDM4 Sidoarjo: Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea></div>
-            </div>
-            <div class="channel-panel" data-ch-panel="email" style="display:none;">
-              <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP SD Muhammadiyah 4 Sidoarjo Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP telah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}</textarea></div>
-              <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tunggakan SPP sudah {hari_terlambat} hari. Sekolah akan menghubungi Bapak/Ibu.</textarea></div>
+            <div class="card" id="notif-cc-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3 id="notif-cc-panel-title">Tambah Penerima Tembusan</h3>
+              <div class="grid3">
+                <div class="field"><label>Nama</label><input type="text" id="cc-nama"></div>
+                <div class="field"><label>Peran/Jabatan</label><input type="text" id="cc-peran" placeholder="mis. Bendahara"></div>
+                <div class="field"><label>No. WhatsApp</label><input type="tel" id="cc-wa" placeholder="08xx-xxxx-xxxx"></div>
+              </div>
+              <div class="switch-row">
+                <div class="txt"><b>Aktif menerima tembusan</b></div>
+                <label class="toggle"><input type="checkbox" id="cc-aktif" checked><span class="slider"></span></label>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeNotifCcPanel()">Batal</button>
+                <button class="btn btn-success" onclick="saveNotifCc()">Simpan</button>
+              </div>
             </div>
           </div>
-          <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
-            <button class="btn btn-success" onclick="showToast('✓ Template pesan sekolah ini berhasil disimpan')">Simpan Template</button>
+        </div>
+
+        <!-- TAB: ATURAN REMINDER -->
+        <div class="page-tab-panel" data-ptabpanel="reminder">
+          <div class="card">
+            <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+            <p class="card-desc">Berawal dari salinan Aturan Default Platform -- bisa diubah bebas khusus sekolah ini, tidak memengaruhi sekolah lain.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="aturan-search" placeholder="Cari nama aturan..." oninput="renderAturanReminderTable()">
+              <select id="aturan-filter-level" onchange="renderAturanReminderTable()">
+                <option value="">Semua Level</option>
+                <option value="1">Level 1 -- Pengingat</option><option value="2">Level 2 -- Peringatan</option><option value="3">Level 3 -- Eskalasi</option>
+              </select>
+              <select id="aturan-filter-channel" onchange="renderAturanReminderTable()">
+                <option value="">Semua Channel</option><option value="wa">WA</option><option value="sms">SMS</option><option value="email">Email</option>
+              </select>
+              <select id="aturan-filter-aktif" onchange="renderAturanReminderTable()">
+                <option value="">Semua Status</option><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option>
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="openAturanReminderPanel()">+ Tambah Aturan</button>
+            </div>
+            <table class="dtab" id="rules-table">
+              <thead>
+                <tr><th style="width:12%">Offset Hari</th><th style="width:26%">Nama Aturan</th><th style="width:20%">Level Penanganan</th><th style="width:18%">Channel</th><th style="width:10%">Aktif</th><th style="width:14%">Aksi</th></tr>
+              </thead>
+              <tbody id="rules-body"></tbody>
+            </table>
+
+            <div class="card" id="aturan-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3 id="aturan-panel-title">Tambah Aturan Reminder</h3>
+              <div class="grid2">
+                <div class="field"><label>Offset Hari</label><input type="number" id="ar-offset" value="0"></div>
+                <div class="field"><label>Nama Aturan</label><input type="text" id="ar-nama" placeholder="mis. Pengingat Awal"></div>
+              </div>
+              <div class="field">
+                <label>Level Penanganan</label>
+                <select id="ar-level">
+                  <option value="1">Level 1 -- Pengingat</option>
+                  <option value="2">Level 2 -- Peringatan</option>
+                  <option value="3">Level 3 -- Eskalasi</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Channel</label>
+                <div>
+                  <label style="margin-right:14px;font-size:12.5px;"><input type="checkbox" id="ar-ch-wa"> WA</label>
+                  <label style="margin-right:14px;font-size:12.5px;"><input type="checkbox" id="ar-ch-sms"> SMS</label>
+                  <label style="font-size:12.5px;"><input type="checkbox" id="ar-ch-email"> Email</label>
+                </div>
+              </div>
+              <div class="switch-row">
+                <div class="txt"><b>Aktif</b></div>
+                <label class="toggle"><input type="checkbox" id="ar-aktif" checked><span class="slider"></span></label>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeAturanReminderPanel()">Batal</button>
+                <button class="btn btn-success" onclick="saveAturanReminder()">Simpan</button>
+              </div>
+            </div>
+
+            <div class="hint" style="margin-top:8px;">Offset negatif = hari sebelum jatuh tempo (H-), positif = hari setelah jatuh tempo (H+). Tiap aturan wajib punya nama, minimal 1 channel aktif, dan offset hari tidak boleh sama dengan aturan lain.</div>
+          </div>
+        </div>
+
+        <!-- TAB: TEMPLATE PESAN -->
+        <div class="page-tab-panel" data-ptabpanel="template">
+          <div class="card">
+            <h3>Template Pesan <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
+            <p class="card-desc">Template per channel &amp; level -- Level 1 &amp; 2 wajib mencantumkan link bayar supaya wali murid bisa langsung menindaklanjuti.</p>
+            <div id="tmpl-root-konfig">
+              <div class="channel-tabs">
+                <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-konfig')">WhatsApp</div>
+                <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-konfig')">SMS</div>
+                <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-konfig')">Email</div>
+              </div>
+              <div class="filter-bar">
+                <select id="tmpl-filter-level" onchange="renderTemplatePesan()">
+                  <option value="">Semua Level</option>
+                  <option value="1">Level 1 -- Pengingat</option><option value="2">Level 2 -- Peringatan</option><option value="3">Level 3 -- Eskalasi</option>
+                </select>
+              </div>
+              <div class="channel-panel" data-ch-panel="wa" id="tmpl-panel-wa"></div>
+              <div class="channel-panel" data-ch-panel="sms" id="tmpl-panel-sms" style="display:none;"></div>
+              <div class="channel-panel" data-ch-panel="email" id="tmpl-panel-email" style="display:none;"></div>
+            </div>
+            <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+              <button class="btn btn-success" onclick="saveTemplatePesan()">Simpan Template</button>
+            </div>
           </div>
         </div>
       </div>
@@ -180,6 +276,12 @@
 <script>
   restoreSession();
   if (currentUser) {
+    renderRekeningTable();
+    renderNotifCcTable();
+    renderAturanReminderTable();
+    renderTemplatePesan();
+    const __tab = new URLSearchParams(location.search).get('tab');
+    if (__tab) switchPageTab(__tab);
   }
 </script>
 </body>

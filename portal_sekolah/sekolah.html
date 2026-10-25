@@ -25,8 +25,20 @@
     <div class="nav-group-label">Menu Utama</div>
     <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
     <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
-    <a class="nav-item active" data-rbac="sekolah" href="sekolah.html" id="nav-self"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent active" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html" id="nav-self"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+    </div>
     <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
     <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
@@ -55,89 +67,128 @@
       <div class="page-view active" id="view-sekolah">
         <div class="page-title">
           <h1>Manajemen Sekolah</h1>
-          <p>Profil sekolah Anda dan pengguna yang punya akses ke sistem ini.</p>
+          <p>Profil sekolah Anda, kategori &amp; kelas, serta pengguna yang punya akses ke sistem ini.</p>
         </div>
 
-        <div class="card">
-          <h3>Profil Sekolah</h3>
-          <div class="grid2">
-            <div class="field"><label>Nama Sekolah</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo" disabled></div>
-            <div class="field"><label>NPSN</label><input type="text" value="20501234" disabled></div>
-            <div class="field"><label>Jenjang</label><input type="text" value="SD" disabled></div>
-            <div class="field"><label>Jumlah Siswa Aktif</label><input type="text" id="sk-jumlah-siswa" value="" disabled></div>
-          </div>
-          <div class="field"><label>Struktur Organisasi</label><input type="text" value="PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota" disabled></div>
-          <div class="field"><label>Alamat Lengkap</label><textarea>Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</textarea></div>
-          <div class="note-box info">Nama sekolah, NPSN, jenjang, dan struktur organisasi hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
-          <div class="btn-row" style="justify-content:flex-end;">
-            <button class="btn btn-success" onclick="showToast('✓ Alamat sekolah berhasil disimpan')">Simpan Alamat</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Kategori &amp; Master Kelas <span class="tag-pill pg">MEMPENGARUHI HARGA SPP</span></h3>
-          <p class="card-desc">Sekolah ini bisa punya lebih dari satu kategori kelas (mis. Reguler, Umum, atau kategori lain sesuai kebutuhan) -- tiap kelas di-assign ke satu kategori, dan tiap kategori bisa punya nominal SPP &amp; tagihan lain yang berbeda (diatur di <b>Master Data Tagihan</b>, halaman Transaksi &amp; Invoice).</p>
-          <div class="grid2" style="align-items:start;">
-            <div>
-              <label style="display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;">Kategori Kelas</label>
-              <table class="dtab" id="master-kategori-kelas-table">
-                <thead><tr><th>Nama Kategori</th><th style="width:18%">Aksi</th></tr></thead>
-                <tbody id="master-kategori-kelas-body"></tbody>
-              </table>
-              <button class="btn-add-row" onclick="addKategoriKelasRow()">+ Tambah Kategori</button>
-            </div>
-            <div>
-              <label style="display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;">Daftar Kelas &amp; Kategorinya</label>
-              <table class="dtab" id="master-kelas-table">
-                <thead><tr><th>Kelas</th><th>Kategori</th><th style="width:16%">Aksi</th></tr></thead>
-                <tbody id="master-kelas-body"></tbody>
-              </table>
-              <button class="btn-add-row" onclick="addMasterKelasRow()">+ Tambah Kelas</button>
-            </div>
-          </div>
-          <div class="hint" style="margin-top:10px;">Menghapus kategori yang masih dipakai kelas akan otomatis memindahkan kelas tersebut ke kategori pertama yang tersisa. Minimal harus ada 1 kategori.</div>
-          <div class="btn-row" style="justify-content:flex-end;">
-            <button class="btn btn-success" onclick="saveMasterKelas()">Simpan Kategori &amp; Kelas</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Pengguna &amp; Akun Sekolah</h3>
-          <p class="card-desc">Akun internal yang punya akses ke sekolah ini. Sebagai Admin, Anda berwenang mengatur RBAC &amp; mengundang seluruh peran -- termasuk Kepala Sekolah dan Bendahara -- dari sini.</p>
-          <table class="dtab" id="staff-table">
-            <thead>
-              <tr><th style="width:22%">Nama</th><th style="width:15%">Peran</th><th style="width:17%">No. WhatsApp</th><th style="width:20%">Email</th><th style="width:14%">Status Akun</th><th style="width:12%">Aksi</th></tr>
-            </thead>
-            <tbody>
-              <!-- filled by JS -->
-            </tbody>
-          </table>
-          <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="openInvitePanel()">+ Undang Pengguna Baru</button>
-
-          <div class="card" id="invite-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
-            <h3>Undang Pengguna Baru</h3>
-            <p class="card-desc">Sebagai Admin sekolah ini, Anda bisa mengundang akun Kepala Sekolah, Bendahara, atau Admin cadangan -- tidak perlu menunggu Muhammadiyah Pusat.</p>
+        <!-- TAB: PROFIL SEKOLAH -->
+        <div class="page-tab-panel active" data-ptabpanel="profil">
+          <div class="card">
+            <h3>Profil Sekolah</h3>
             <div class="grid2">
-              <div class="field"><label>Nama Lengkap</label><input type="text" id="inv-nama" placeholder="mis. Ahmad Yusuf"></div>
-              <div class="field">
-                <label>Peran</label>
-                <select id="inv-peran">
-                  <option value="Kepala Sekolah">Kepala Sekolah</option>
-                  <option value="Bendahara">Bendahara</option>
-                  <option value="Admin">Admin (cadangan)</option>
-                </select>
-              </div>
-              <div class="field"><label>No. WhatsApp</label><input type="tel" id="inv-wa" placeholder="08xx-xxxx-xxxx"></div>
-              <div class="field"><label>Email</label><input type="email" id="inv-email" placeholder="nama@sdmuh4sda.sch.id"></div>
+              <div class="field"><label>Nama Sekolah</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo" disabled></div>
+              <div class="field"><label>NPSN</label><input type="text" value="20501234" disabled></div>
+              <div class="field"><label>Jenjang</label><input type="text" value="SD" disabled></div>
+              <div class="field"><label>Jumlah Siswa Aktif</label><input type="text" id="sk-jumlah-siswa" value="" disabled></div>
             </div>
-            <div class="note-box info">Undangan dikirim sebagai <b>link aktivasi</b> lewat WhatsApp/email -- bukan password langsung. Penerima mengatur password miliknya sendiri saat mengklik link tersebut, supaya password tidak pernah tertulis di pesan chat.</div>
-            <div class="btn-row">
-              <button class="btn btn-ghost" onclick="closeInvitePanel()">Batal</button>
-              <button class="btn btn-success" onclick="sendInvite()">Kirim Undangan</button>
+            <div class="field"><label>Struktur Organisasi</label><input type="text" value="PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota" disabled></div>
+            <div class="field"><label>Alamat Lengkap</label><textarea id="sk-alamat"></textarea></div>
+            <div class="note-box info">Nama sekolah, NPSN, jenjang, dan struktur organisasi hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-success" onclick="saveAlamatSekolah()">Simpan Alamat</button>
             </div>
           </div>
+        </div>
 
-          <div class="note-box info" style="margin-top:14px;">Bendahara tidak bisa menyetujui pengajuan write-off yang dibuat sendiri (segregation of duties).</div>
+        <!-- TAB: KATEGORI SEKOLAH -->
+        <div class="page-tab-panel" data-ptabpanel="kategori">
+          <div class="card">
+            <h3>Kategori Sekolah <span class="tag-pill pg">MEMPENGARUHI HARGA SPP</span></h3>
+            <p class="card-desc">Sekolah ini bisa punya lebih dari satu kategori kelas (mis. Reguler, Umum, atau kategori lain sesuai kebutuhan) -- tiap kategori bisa punya nominal SPP &amp; tagihan lain yang berbeda (diatur di <b>Master Data Tagihan</b>, halaman Transaksi &amp; Invoice). Tiap kelas di tab <b>Kelas</b> di-assign ke salah satu kategori di bawah ini.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="kat-search" placeholder="Cari nama kategori..." oninput="renderKategoriKelasTable()">
+              <button class="btn btn-primary btn-sm" onclick="openKategoriPanel()">+ Tambah Kategori</button>
+            </div>
+            <table class="dtab" id="master-kategori-kelas-table">
+              <thead><tr><th>Nama Kategori</th><th style="width:18%">Jumlah Kelas</th><th style="width:20%">Aksi</th></tr></thead>
+              <tbody id="master-kategori-kelas-body"></tbody>
+            </table>
+
+            <div class="card" id="kategori-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3 id="kategori-panel-title">Tambah Kategori Sekolah</h3>
+              <div class="field"><label>Nama Kategori</label><input type="text" id="kat-nama" placeholder="mis. Reguler"></div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeKategoriPanel()">Batal</button>
+                <button class="btn btn-success" onclick="saveKategoriKelas()">Simpan</button>
+              </div>
+            </div>
+
+            <div class="hint" style="margin-top:10px;">Menghapus kategori yang masih dipakai kelas akan otomatis memindahkan kelas tersebut ke kategori pertama yang tersisa. Minimal harus ada 1 kategori. Nama kategori wajib diisi &amp; tidak boleh sama dengan kategori lain.</div>
+          </div>
+        </div>
+
+        <!-- TAB: KELAS -->
+        <div class="page-tab-panel" data-ptabpanel="kelas">
+          <div class="card">
+            <h3>Kelas</h3>
+            <p class="card-desc">Daftar kelas sekolah ini -- tiap kelas di-assign ke satu Kategori Sekolah. Sumber tunggal daftar kelas yang dipakai di seluruh portal (Manajemen Murid, Buat Tagihan, Akun Wali Murid, Blast Notifikasi).</p>
+            <div class="filter-bar">
+              <select id="mk-filter-kategori" onchange="renderMasterKelasTable()">
+                <option value="">Semua Kategori</option>
+              </select>
+            </div>
+            <table class="dtab" id="master-kelas-table">
+              <thead><tr><th>Kelas</th><th>Kategori</th><th style="width:16%">Aksi</th></tr></thead>
+              <tbody id="master-kelas-body"></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addMasterKelasRow()">+ Tambah Kelas</button>
+            <div class="hint" style="margin-top:10px;">Kelas yang masih ada siswa aktifnya tidak bisa dihapus -- pindahkan siswanya dulu lewat Manajemen Murid. Kode kelas wajib diisi &amp; tidak boleh sama dengan kelas lain.</div>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn btn-success" onclick="saveMasterKelasOnly()">Simpan Kelas</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PENGGUNA & AKUN SEKOLAH -->
+        <div class="page-tab-panel" data-ptabpanel="pengguna">
+          <div class="card">
+            <h3>Pengguna &amp; Akun Sekolah</h3>
+            <p class="card-desc">Akun internal yang punya akses ke sekolah ini. Sebagai Admin, Anda berwenang mengatur RBAC &amp; mengundang seluruh peran -- termasuk Kepala Sekolah dan Bendahara -- dari sini.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="sk-staff-search" placeholder="Cari nama / email..." oninput="renderStaffTable()">
+              <select id="sk-staff-filter-peran" onchange="renderStaffTable()">
+                <option value="">Semua Peran</option>
+                <option>Kepala Sekolah</option><option>Bendahara</option><option>Admin</option>
+              </select>
+              <select id="sk-staff-filter-status" onchange="renderStaffTable()">
+                <option value="">Semua Status</option>
+                <option value="aktif">aktif</option><option value="undangan_terkirim">undangan terkirim</option><option value="nonaktif">nonaktif</option>
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="openInvitePanel()">+ Undang Pengguna Baru</button>
+            </div>
+            <table class="dtab" id="staff-table">
+              <thead>
+                <tr><th style="width:22%">Nama</th><th style="width:15%">Peran</th><th style="width:17%">No. WhatsApp</th><th style="width:20%">Email</th><th style="width:14%">Status Akun</th><th style="width:12%">Aksi</th></tr>
+              </thead>
+              <tbody>
+                <!-- filled by JS -->
+              </tbody>
+            </table>
+
+            <div class="card" id="invite-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3 id="invite-panel-title">Undang Pengguna Baru</h3>
+              <p class="card-desc" id="invite-panel-desc">Sebagai Admin sekolah ini, Anda bisa mengundang akun Kepala Sekolah, Bendahara, atau Admin cadangan -- tidak perlu menunggu Muhammadiyah Pusat.</p>
+              <div class="grid2">
+                <div class="field"><label>Nama Lengkap</label><input type="text" id="inv-nama" placeholder="mis. Ahmad Yusuf"></div>
+                <div class="field">
+                  <label>Peran</label>
+                  <select id="inv-peran">
+                    <option value="Kepala Sekolah">Kepala Sekolah</option>
+                    <option value="Bendahara">Bendahara</option>
+                    <option value="Admin">Admin (cadangan)</option>
+                  </select>
+                </div>
+                <div class="field"><label>No. WhatsApp</label><input type="tel" id="inv-wa" placeholder="08xx-xxxx-xxxx"></div>
+                <div class="field"><label>Email</label><input type="email" id="inv-email" placeholder="nama@sdmuh4sda.sch.id"></div>
+              </div>
+              <div class="note-box info" id="invite-panel-note">Undangan dikirim sebagai <b>link aktivasi</b> lewat WhatsApp/email -- bukan password langsung. Penerima mengatur password miliknya sendiri saat mengklik link tersebut, supaya password tidak pernah tertulis di pesan chat.</div>
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closeInvitePanel()">Batal</button>
+                <button class="btn btn-success" id="invite-submit-btn" onclick="sendInvite()">Kirim Undangan</button>
+              </div>
+            </div>
+
+            <div class="note-box info" style="margin-top:14px;">Bendahara tidak bisa menyetujui pengajuan write-off yang dibuat sendiri (segregation of duties).</div>
+          </div>
         </div>
       </div>
 
@@ -155,6 +206,9 @@
     renderKategoriKelasTable();
     renderMasterKelasTable();
     refreshKelasDropdowns();
+    initSekolahProfil();
+    const __tab = new URLSearchParams(location.search).get('tab');
+    if (__tab) switchPageTab(__tab);
   }
 </script>
 </body>

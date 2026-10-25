@@ -25,8 +25,20 @@
     <div class="nav-group-label">Menu Utama</div>
     <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
     <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
-    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+    </div>
     <a class="nav-item active" data-rbac="wali" href="wali.html" id="nav-self"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
     <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
@@ -59,34 +71,61 @@
         </div>
 
         <div class="card">
-          <h3>Daftar Akun Wali Murid</h3>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <h3 style="margin:0;">Daftar Akun Wali Murid</h3>
+            <button class="btn btn-primary btn-sm" id="btn-daftar-wali" style="flex-shrink:0;" onclick="openDaftarWaliPanel()">+ Daftarkan Akun Wali Murid</button>
+          </div>
           <p class="card-desc">Registrasi akun baru dilakukan oleh Admin. Akun yang mendaftar sendiri lewat aplikasi mobile (<i>self-register</i>) wajib disetujui dulu oleh <b>Kepala Sekolah</b> sebelum bisa SSO masuk -- mencegah orang tak dikenal mengaku sebagai wali murid siswa tertentu.</p>
+          <div class="filter-bar">
+            <input type="text" class="search" id="wali-filter-nama" placeholder="Cari nama wali murid..." oninput="renderWaliTable()">
+            <input type="text" class="search" id="wali-filter-anak" placeholder="Cari nama anak/siswa..." oninput="renderWaliTable()">
+          </div>
           <table class="dtab" id="wali-table">
             <thead>
               <tr><th style="width:18%">Nama</th><th style="width:16%">Kontak</th><th style="width:18%">Siswa Terkait</th><th style="width:12%">Metode</th><th style="width:14%">Status</th><th style="width:14%">Aksi</th></tr>
             </thead>
             <tbody><!-- filled by JS --></tbody>
           </table>
-          <button class="btn btn-primary btn-sm" id="btn-daftar-wali" style="margin-top:12px;" onclick="openDaftarWaliPanel()">+ Daftarkan Akun Wali Murid</button>
 
           <div class="card" id="daftar-wali-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
-            <h3>Daftarkan Akun Wali Murid</h3>
-            <p class="card-desc">Untuk wali murid yang datang langsung ke sekolah dan sudah diverifikasi identitasnya -- akun langsung Aktif, tidak melalui antrean approval.</p>
+            <h3 id="daftar-wali-title">Daftarkan Akun Wali Murid</h3>
+            <p class="card-desc" id="daftar-wali-desc">Untuk wali murid yang datang langsung ke sekolah dan sudah diverifikasi identitasnya -- akun langsung Aktif, tidak melalui antrean approval.</p>
             <div class="grid2">
               <div class="field"><label>Nama Wali Murid</label><input type="text" id="wali-nama" placeholder="mis. Bapak/Ibu ..."></div>
-              <div class="field">
-                <label>Siswa Terkait (bisa pilih lebih dari satu)</label>
-                <select id="wali-siswa" multiple size="4">
-                  <!-- filled by JS -->
-                </select>
-                <div class="hint">Tahan Ctrl/Cmd (atau geser jari di mobile) untuk pilih beberapa siswa sekaligus.</div>
-              </div>
               <div class="field"><label>No. WhatsApp</label><input type="tel" id="wali-wa" placeholder="08xx-xxxx-xxxx"></div>
               <div class="field"><label>Email</label><input type="email" id="wali-email" placeholder="nama@email.com (opsional)"></div>
+              <div class="field" style="grid-column:1 / -1;">
+                <label>Siswa Terkait (bisa pilih lebih dari satu)</label>
+                <div class="grid3" style="margin-bottom:8px;">
+                  <div class="field" style="margin-bottom:0;">
+                    <label style="font-size:11px;font-weight:600;">Kategori Kelas</label>
+                    <select id="wali-siswa-kategori" onchange="onWaliKategoriChange()">
+                      <!-- filled by JS -->
+                    </select>
+                  </div>
+                  <div class="field" style="margin-bottom:0;">
+                    <label style="font-size:11px;font-weight:600;">Cari Kelas</label>
+                    <input type="text" id="wali-siswa-kelas-search" list="wali-kelas-datalist" placeholder="mis. 5B" autocomplete="off" oninput="onWaliKelasInputChange()" onchange="onWaliKelasInputChange()">
+                    <datalist id="wali-kelas-datalist"></datalist>
+                  </div>
+                  <div class="field" style="margin-bottom:0;">
+                    <label style="font-size:11px;font-weight:600;">Nama Siswa</label>
+                    <div class="search-select">
+                      <input type="text" id="wali-siswa-nama-search" placeholder="Cari nama siswa..." autocomplete="off"
+                        oninput="renderWaliSiswaSearchList()" onfocus="renderWaliSiswaSearchList()" onblur="setTimeout(hideWaliSiswaSearchList, 150)">
+                      <input type="hidden" id="wali-siswa-nama-value">
+                      <div id="wali-siswa-search-list" class="search-select-list" style="display:none;"></div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="addWaliSiswaFromSearch()">+ Tambah ke Daftar</button>
+                <div id="wali-siswa-chips" style="margin-top:10px;"></div>
+                <div class="hint">Pilih Kategori Kelas &amp; Kelas untuk mempersempit pencarian, ketik untuk mencari lalu klik nama siswa dari dropdown yang muncul, kemudian klik "+ Tambah ke Daftar" -- ulangi untuk menambahkan kakak-adik atau siswa lain yang terhubung ke akun wali ini.</div>
+              </div>
             </div>
             <div class="btn-row">
               <button class="btn btn-ghost" onclick="closeDaftarWaliPanel()">Batal</button>
-              <button class="btn btn-success" onclick="daftarkanWali()">Daftarkan &amp; Aktifkan</button>
+              <button class="btn btn-success" id="daftar-wali-submit-btn" onclick="daftarkanWali()">Daftarkan &amp; Aktifkan</button>
             </div>
           </div>
 

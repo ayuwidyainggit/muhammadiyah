@@ -25,8 +25,20 @@
     <div class="nav-group-label">Menu Utama</div>
     <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
     <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
-    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+    </div>
     <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
     <a class="nav-item active" data-rbac="murid" href="murid.html" id="nav-self"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
@@ -66,6 +78,9 @@
               <select id="murid-filter-kelas" onchange="renderStudentList()">
                 <option value="">Semua Kelas</option>
               </select>
+              <select id="murid-filter-periode" onchange="renderStudentList()">
+                <option value="">Semua Periode</option>
+              </select>
               <select id="murid-filter-status" onchange="renderStudentList()">
                 <option value="">Semua Status</option>
                 <option>aktif</option><option>lulus</option><option>pindah</option>
@@ -74,7 +89,7 @@
             </div>
             <table class="dtab">
               <thead>
-                <tr><th style="width:30%">Nama Siswa</th><th style="width:14%">NIS</th><th style="width:12%">Kelas</th><th style="width:14%">Status</th><th style="width:18%">Wali Murid</th><th style="width:12%">Aksi</th></tr>
+                <tr><th style="width:24%">Nama Siswa</th><th style="width:11%">NIS</th><th style="width:10%">Kelas</th><th style="width:13%">Periode</th><th style="width:12%">Status</th><th style="width:16%">Wali Murid</th><th style="width:14%">Aksi</th></tr>
               </thead>
               <tbody id="murid-table-body"></tbody>
             </table>
@@ -86,6 +101,10 @@
                 <div class="field"><label>Nama Siswa</label><input type="text" id="tm-nama" placeholder="mis. Ahmad Fauzan"></div>
                 <div class="field"><label>NIS</label><input type="text" id="tm-nis" placeholder="mis. 2201007"></div>
                 <div class="field"><label>Kelas</label><select id="tm-kelas"></select></div>
+                <div class="field">
+                  <label>Periode Tahun Ajaran</label>
+                  <select id="tm-periode"></select>
+                </div>
                 <div class="field">
                   <label>Status</label>
                   <select id="tm-status">
@@ -119,9 +138,16 @@
               <div class="field"><label>NIS</label><input type="text" id="md-nis"></div>
               <div class="field"><label>Kelas</label><select id="md-kelas"></select></div>
             </div>
-            <div class="field" style="max-width:220px;">
-              <label>Status</label>
-              <select id="md-status"><option value="aktif">aktif</option><option value="lulus">lulus</option><option value="pindah">pindah</option></select>
+            <div class="grid3">
+              <div class="field">
+                <label>Periode Tahun Ajaran</label>
+                <select id="md-periode"></select>
+                <div class="hint">Periode saat siswa duduk di kelas di atas -- naik kelas tiap tahun ajaran dicatat dengan mengubah Kelas &amp; Periode ini.</div>
+              </div>
+              <div class="field" style="max-width:220px;">
+                <label>Status</label>
+                <select id="md-status"><option value="aktif">aktif</option><option value="lulus">lulus</option><option value="pindah">pindah</option></select>
+              </div>
             </div>
             <div class="btn-row" style="justify-content:flex-end;">
               <button class="btn btn-success" onclick="saveStudentInfo()">Simpan Info Siswa</button>

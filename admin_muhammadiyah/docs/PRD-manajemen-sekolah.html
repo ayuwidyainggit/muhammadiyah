@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Manajemen Sekolah -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Manajemen Sekolah</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Manajemen Sekolah</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>25-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>manajemen.html</code>, <code>app.js</code>, PRD Pendaftaran Sekolah, PRD Dashboard Konsolidasi</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>25-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>manajemen.html</code> (daftar sekolah, Info Sekolah, Rekening Penampung, Reminder &amp; Template, nonaktifkan/aktifkan sekolah)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Manajemen Sekolah memungkinkan Super Admin/Admin Wilayah melihat daftar seluruh sekolah terdaftar dan mengelola konfigurasi masing-masing: data info sekolah, rekening penampung fee, override aturan reminder &amp; template pesan tagihan, serta menonaktifkan/mengaktifkan kembali sekolah. Fitur ini adalah pusat kendali operasional sekolah pasca-onboarding.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Admin Pusat/Wilayah</strong> mengalami <strong>kesulitan mengelola konfigurasi spesifik tiap sekolah (rekening, aturan reminder, status operasional) secara terpisah dan konsisten</strong> saat <strong>jumlah sekolah bertambah dan tiap sekolah punya kebutuhan sedikit berbeda dari default platform</strong>, yang menyebabkan <strong>inkonsistensi konfigurasi dan risiko kesalahan saat menonaktifkan sekolah yang masih punya tunggakan siswa</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Perubahan data sekolah, rekening, atau aturan reminder dilakukan via permintaan manual ke tim backend; status aktif/nonaktif sekolah tidak punya kontrol terpusat sehingga risiko sekolah dinonaktifkan tanpa mempertimbangkan tunggakan siswa yang belum lunas.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Admin dapat membuka daftar sekolah, memilih satu sekolah, dan mengelola seluruh konfigurasinya dalam 3 tab (Info Sekolah, Rekening Penampung, Reminder &amp; Template) dari satu halaman, termasuk proses nonaktifkan/aktifkan yang mewajibkan alasan dan menampilkan peringatan tunggakan bila ada.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Setelah sekolah mulai aktif bertransaksi, kebutuhan pengelolaan harian (ubah rekening, sesuaikan aturan reminder, nonaktifkan sekolah yang merger/tutup) menjadi rutin dan harus bisa dilakukan mandiri oleh Admin Pusat/Wilayah tanpa menunggu tim teknis.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memberikan satu titik kendali bagi Admin untuk mengelola konfigurasi tiap sekolah (info, rekening, reminder) tanpa melibatkan tim backend.</li>
+<li>Mencegah sekolah dinonaktifkan tanpa disertai pencatatan alasan dan kesadaran akan tunggakan siswa yang belum lunas.</li>
+<li>Memungkinkan sekolah menyesuaikan aturan reminder &amp; template pesan dari default platform sesuai kebutuhan lokal, tanpa memengaruhi sekolah lain.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mendukung penghapusan (delete) data sekolah secara permanen -- hanya status Aktif/Nonaktif.</li>
+<li>Tidak mendukung bulk edit/nonaktifkan banyak sekolah sekaligus pada fase ini.</li>
+<li>Tidak menangani write-off tunggakan dari halaman ini (write-off tunduk pada proses terpisah dengan approval Kepala Sekolah).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Metrik</th>
+<th>Baseline saat ini</th>
+<th>Target</th>
+<th>Cara ukur</th>
+<th>Waktu evaluasi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waktu rata-rata update konfigurasi sekolah (rekening/reminder)</td>
+<td>[ ] (manual, via tiket backend)</td>
+<td>&lt; 5 menit (self-service)</td>
+<td>Timestamp submit form</td>
+<td>2 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>% proses nonaktivasi sekolah yang menyertakan alasan tercatat</td>
+<td>0% (belum ada fitur)</td>
+<td>100%</td>
+<td>Audit log alasan nonaktivasi</td>
+<td>1 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>Jumlah kasus sekolah dinonaktifkan tanpa sadar ada tunggakan siswa</td>
+<td>[ ]</td>
+<td>0 kasus</td>
+<td>Insiden yang dilaporkan vs total nonaktivasi</td>
+<td>3 bulan setelah rilis</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui alur nonaktivasi &amp; aturan reminder override</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain relasi data sekolah, rekening, aturan reminder</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi tab &amp; validasi form</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian skenario tunggakan saat nonaktivasi</td>
+</tr>
+<tr>
+<td>Admin Wilayah (PWM)</td>
+<td>Klien</td>
+<td>C/R</td>
+<td>Pengguna utama yang mengelola sekolah di wilayahnya</td>
+</tr>
+<tr>
+<td>Bendahara/Kepala Sekolah</td>
+<td>Klien</td>
+<td>I</td>
+<td>Terdampak saat sekolah dinonaktifkan (tidak bisa login)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin Pusat</td>
+<td>Mengelola seluruh sekolah nasional</td>
+<td>Update konfigurasi sekolah cepat &amp; aman</td>
+<td>Tidak ada kontrol terpusat sebelumnya</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Wilayah (PWM)</td>
+<td>Mengelola sekolah di wilayahnya</td>
+<td>Sesuaikan aturan reminder sesuai kebijakan sekolah setempat</td>
+<td>Perubahan aturan default memengaruhi semua sekolah</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Staff Keuangan Pusat</td>
+<td>Memantau status &amp; rekening sekolah</td>
+<td>Pastikan rekening fee benar sebelum pencairan</td>
+<td>Data rekening tidak terverifikasi</td>
+<td>Laptop/web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daftar sekolah (nama, NPSN, wilayah, rekening penampung, status)</td>
+<td>Bulk action (nonaktifkan/edit banyak sekolah sekaligus)</td>
+</tr>
+<tr>
+<td>Tab Info Sekolah (profil, status, struktur organisasi, riwayat status)</td>
+<td>Penghapusan permanen data sekolah</td>
+</tr>
+<tr>
+<td>Tab Rekening Penampung (Nama Bank, No Rek, Nama Pemilik)</td>
+<td>Write-off tunggakan (proses terpisah)</td>
+</tr>
+<tr>
+<td>Tab Reminder &amp; Template (override aturan H-7/H-3/H-1/H+... dan template WA/SMS/Email per sekolah)</td>
+<td>Approval berjenjang untuk override aturan reminder</td>
+</tr>
+<tr>
+<td>Nonaktifkan Sekolah (dengan alasan wajib + peringatan tunggakan) &amp; Aktifkan Kembali</td>
+<td>Notifikasi otomatis ke wali murid saat sekolah dinonaktifkan</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Daftar sekolah, Tab Info Sekolah, Nonaktifkan/Aktifkan dengan validasi tunggakan.</li>
+<li><strong>Should have</strong> -- Tab Rekening Penampung, Tab Reminder &amp; Template override.</li>
+<li><strong>Could have</strong> -- Riwayat status sekolah yang lebih detail (multi-entry, bukan hanya entri terakhir).</li>
+<li><strong>Won't have (now)</strong> -- Bulk action, penghapusan permanen, write-off dari halaman ini.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Admin, saya ingin melihat daftar seluruh sekolah terdaftar beserta status dan rekening penampungnya, supaya saya bisa memilih sekolah yang perlu dikelola.</td>
+<td>Must</td>
+<td>Given saya membuka Manajemen Sekolah, When halaman dimuat, Then tabel menampilkan Nama Sekolah, NPSN, Wilayah, Rekening Penampung, Status, dan tombol "Kelola" untuk setiap sekolah</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Admin, saya ingin mengubah data Info Sekolah (nama, NPSN, jenjang), supaya data sekolah tetap akurat.</td>
+<td>Must</td>
+<td>Given saya di tab Info Sekolah, When saya mengubah field dan menyimpan, Then data tersimpan dan tercermin di daftar sekolah</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Admin, saya ingin memperbarui rekening penampung sekolah (Nama Bank, No Rek, Nama Pemilik), supaya pencairan fee sekolah ini mengarah ke rekening yang benar.</td>
+<td>Must</td>
+<td>Given saya di tab Rekening Penampung, When saya mengubah Nama Bank/No Rek/Nama Pemilik dan menekan "Simpan", Then sistem menampilkan konfirmasi "Rekening Penampung berhasil disimpan"</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Admin, saya ingin menonaktifkan sekolah yang sudah tidak beroperasi (misal merger), supaya staf sekolah tersebut tidak bisa login dan tidak ada tagihan baru diterbitkan.</td>
+<td>Must</td>
+<td>Given sekolah berstatus Aktif dan punya tunggakan siswa, When saya menekan "Nonaktifkan Sekolah", Then sistem menampilkan jumlah siswa &amp; nominal tunggakan, mewajibkan saya mengisi alasan dan mencentang pernyataan paham tunggakan tetap harus ditagih, sebelum tombol konfirmasi aktif</td>
+</tr>
+<tr>
+<td>US-05</td>
+<td>Sebagai Admin, saya ingin mengaktifkan kembali sekolah yang sebelumnya dinonaktifkan, supaya sekolah tersebut bisa beroperasi normal lagi.</td>
+<td>Should</td>
+<td>Given sekolah berstatus Nonaktif, When saya menekan "Aktifkan Kembali" dan konfirmasi, Then status sekolah berubah menjadi Aktif dan staf sekolah bisa login kembali</td>
+</tr>
+<tr>
+<td>US-06</td>
+<td>Sebagai Admin Wilayah, saya ingin mengubah aturan reminder &amp; template pesan khusus untuk satu sekolah, supaya gaya komunikasi penagihan sesuai kebijakan sekolah tersebut tanpa memengaruhi sekolah lain.</td>
+<td>Should</td>
+<td>Given saya di tab Reminder &amp; Template, When saya mengubah offset hari/level/channel suatu aturan atau isi template dan menyimpan, Then perubahan hanya berlaku untuk sekolah ini, sekolah lain tetap memakai Default Platform</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Daftar Sekolah</td>
+<td>Sistem harus menampilkan tabel seluruh sekolah dengan kolom Nama Sekolah, NPSN, Wilayah, Rekening Penampung, Status, dan aksi "Kelola"</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Status ditampilkan dengan badge warna (Aktif/Nonaktif/Draft)</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Info Sekolah</td>
+<td>Sistem harus menyediakan form edit Nama Sekolah, NPSN, Jenjang, Status (readonly), Struktur Organisasi (readonly), dan riwayat status jika pernah dinonaktifkan</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Struktur organisasi tidak bisa diubah dari tab ini (diatur saat pendaftaran)</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Rekening Penampung</td>
+<td>Sistem harus menyediakan form edit Nama Bank (dropdown), No Rek, Nama Pemilik untuk sekolah terpilih, dengan tombol "Simpan"</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Hanya untuk pencairan fee sekolah, bukan rekening penampung SPP wali murid (terpusat)</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Nonaktifkan Sekolah</td>
+<td>Sistem harus menampilkan modal konfirmasi berisi jumlah siswa &amp; nominal tunggakan (jika ada), field Alasan Nonaktivasi (wajib), dan checkbox pernyataan paham tunggakan tetap harus ditagih (wajib jika ada tunggakan) sebelum tombol konfirmasi bisa ditekan</td>
+<td>US-04</td>
+<td>Must</td>
+<td>Tombol konfirmasi disabled sampai alasan diisi dan (jika ada tunggakan) checkbox dicentang</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Aktifkan Kembali</td>
+<td>Sistem harus menyediakan modal konfirmasi sederhana untuk mengubah status sekolah Nonaktif menjadi Aktif</td>
+<td>US-05</td>
+<td>Should</td>
+<td>Setelah aktif, staf sekolah bisa login dan tagihan baru mulai diterbitkan sesuai jadwal normal</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Riwayat Status</td>
+<td>Sistem harus menyimpan dan menampilkan riwayat nonaktivasi terakhir (tanggal, pelaku, alasan) di tab Info Sekolah</td>
+<td>US-04</td>
+<td>Should</td>
+<td>Format: "Dinonaktifkan [tanggal] oleh [nama] ([role]) -- Alasan: [teks]"</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>Reminder &amp; Template Override</td>
+<td>Sistem harus menyediakan tabel aturan reminder (offset hari, nama aturan, level penanganan, channel WA/SMS/Email, aktif/nonaktif) dan editor template pesan per channel &amp; level, khusus untuk sekolah terpilih, awalnya berupa salinan Default Platform</td>
+<td>US-06</td>
+<td>Should</td>
+<td>Perubahan di sini tidak memengaruhi Default Platform maupun sekolah lain</td>
+</tr>
+<tr>
+<td>FR-08</td>
+<td>Tambah/Hapus Aturan Reminder</td>
+<td>Sistik harus mengizinkan Admin menambah baris aturan baru atau menghapus baris aturan yang ada pada tab Reminder &amp; Template sekolah ini</td>
+<td>US-06</td>
+<td>Could</td>
+<td>Minimal 1 aturan aktif disarankan, meski tidak dipaksakan di validasi</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat daftar sekolah</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Edit Info Sekolah</td>
+<td>CRUD</td>
+<td>CRUD</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Edit Rekening Penampung</td>
+<td>CRUD</td>
+<td>CRUD</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Nonaktifkan/Aktifkan sekolah</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Edit Reminder &amp; Template sekolah</td>
+<td>CRUD</td>
+<td>CRUD</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sekolah dinonaktifkan</td>
+<td>Staf sekolah (Admin/Kepsek/Bendahara)</td>
+<td>Email/WhatsApp (disarankan)</td>
+<td>Status sekolah berubah menjadi Nonaktif</td>
+</tr>
+<tr>
+<td>Sekolah diaktifkan kembali</td>
+<td>Staf sekolah</td>
+<td>Email/WhatsApp (disarankan)</td>
+<td>Status sekolah berubah menjadi Aktif, bisa login kembali</td>
+</tr>
+<tr>
+<td>Rekening penampung diubah</td>
+<td>Staff Keuangan Pusat (disarankan)</td>
+<td>Internal/audit log</td>
+<td>Perubahan rekening fee sekolah X</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Performa</td>
+<td>Waktu muat daftar sekolah</td>
+<td>p95 &lt; 1,5 detik untuk ≤ 5.000 sekolah (dengan paginasi/lazy-load)</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Validasi</td>
+<td>Tombol konfirmasi nonaktivasi tidak aktif sebelum alasan &amp; checklist terpenuhi</td>
+<td>100% enforced di client &amp; server</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Konsistensi</td>
+<td>Status sekolah di daftar dan di detail selalu sinkron setelah aksi aktifkan/nonaktifkan</td>
+<td>0% selisih status antar tampilan dalam satu sesi</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Auditability</td>
+<td>Setiap nonaktivasi tercatat waktu, pelaku, dan alasan</td>
+<td>100% tercatat, dapat ditelusuri</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Isolasi data</td>
+<td>Override Reminder &amp; Template satu sekolah tidak memengaruhi sekolah lain atau Default Platform</td>
+<td>0% kebocoran konfigurasi antar sekolah</td>
+</tr>
+<tr>
+<td>NFR-06</td>
+<td>Usability</td>
+<td>Admin dapat menyelesaikan 1 siklus edit konfigurasi (buka sekolah → ubah → simpan) tanpa panduan</td>
+<td>&lt; 3 menit</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Menu "Manajemen Sekolah" → Daftar Sekolah → klik "Kelola" → Detail Sekolah (tab Info Sekolah / Rekening Penampung / Reminder &amp; Template) → ubah data → Simpan, atau → Nonaktifkan/Aktifkan via modal konfirmasi.</li>
+<li>Wireframe: mengikuti struktur <code>manajemen.html</code> (list panel &amp; detail panel dengan channel-tabs).</li>
+<li>Edge case yang wajib ditangani: sekolah berstatus Draft (aksi nonaktifkan/aktifkan tidak relevan dan disembunyikan), sekolah dengan tunggakan nol (modal nonaktivasi menampilkan pesan "tidak ada tunggakan" tanpa checklist tambahan), sekolah dinonaktifkan lalu diaktifkan berkali-kali (riwayat status terbaru menimpa yang lama pada fase ini).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modul Pendaftaran Sekolah</td>
+<td>Sumber data awal sekolah (profil, struktur organisasi, rekening awal)</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Invoicing/Reminder Default Platform</td>
+<td>Sumber salinan awal aturan reminder saat override pertama dibuat</td>
+<td>Internal API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul RBAC &amp; Pengguna</td>
+<td>Validasi siapa yang bisa login setelah status sekolah berubah</td>
+<td>Internal API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: Sekolah, RekeningPenampungSekolah, AturanReminderSekolah (override), TemplatePesanSekolah (override), RiwayatStatusSekolah, Tunggakan (agregat per sekolah).</li>
+<li>Retensi data: riwayat status sekolah &amp; alasan nonaktivasi disimpan permanen untuk audit.</li>
+<li>Laporan yang dibutuhkan: daftar sekolah per status, daftar sekolah dengan override reminder aktif, daftar sekolah dengan tunggakan saat nonaktivasi.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Data tunggakan siswa per sekolah sudah tersedia secara real-time dari modul transaksi/invoicing saat modal nonaktivasi dibuka.</li>
+<li>Satu sekolah hanya memiliki satu set override Reminder &amp; Template aktif pada satu waktu.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Nonaktivasi sekolah tidak menghapus/write-off tunggakan secara otomatis; write-off tetap memerlukan proses &amp; approval tersendiri.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah riwayat status perlu menyimpan seluruh histori (multi-entry), bukan hanya entri terakhir?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah perlu notifikasi otomatis ke wali murid saat sekolah dinonaktifkan?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sekolah dinonaktifkan tanpa Admin sadar ada tunggakan besar</td>
+<td>H</td>
+<td>M</td>
+<td>Modal nonaktivasi wajib menampilkan jumlah &amp; nominal tunggakan beserta checklist pemahaman</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Override Reminder &amp; Template keliru diterapkan ke sekolah lain</td>
+<td>H</td>
+<td>L</td>
+<td>Isolasi data per sekolah divalidasi di level backend, bukan hanya UI</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup tab &amp; modal konfirmasi</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Daftar + 3 tab + nonaktif/aktifkan</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rekening Penampung</td>
+<td>Rekening sekolah untuk pencairan bagi hasil fee, berbeda dari rekening penampung pusat SPP</td>
+</tr>
+<tr>
+<td>Write-off</td>
+<td>Penghapusan piutang/tunggakan dengan approval, biasanya untuk siswa pindah sekolah</td>
+</tr>
+<tr>
+<td>Override</td>
+<td>Aturan khusus satu sekolah yang menggantikan default platform tanpa memengaruhi sekolah lain</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

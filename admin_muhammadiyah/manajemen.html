@@ -22,9 +22,10 @@
     <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
     <a href="manajemen.html" class="nav-item active" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
 
-    <div class="nav-group-label">Platform</div>
+    <div class="nav-group-label">Konfigurasi</div>
     <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
-    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> RBAC &amp; Pengguna</a>
+    <a href="pengguna.html" class="nav-item" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
 
     <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
       <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
@@ -58,7 +59,7 @@
           <div class="card">
             <table class="accounts">
               <thead>
-                <tr><th style="width:28%">Nama Sekolah</th><th style="width:12%">NPSN</th><th style="width:24%">Wilayah</th><th style="width:14%">Integrasi Bank</th><th style="width:12%">Status</th><th style="width:10%">Aksi</th></tr>
+                <tr><th style="width:28%">Nama Sekolah</th><th style="width:12%">NPSN</th><th style="width:24%">Wilayah</th><th style="width:14%">Rekening Penampung</th><th style="width:12%">Status</th><th style="width:10%">Aksi</th></tr>
               </thead>
               <tbody id="ms-table-body">
                 <!-- filled by JS -->
@@ -79,7 +80,7 @@
 
           <div class="channel-tabs" style="margin-bottom:20px;">
             <div class="channel-tab active" data-mstab="info" onclick="switchMsTab('info')">Info Sekolah</div>
-            <div class="channel-tab" data-mstab="pg" onclick="switchMsTab('pg')">Integrasi Bank &amp; Rekening</div>
+            <div class="channel-tab" data-mstab="pg" onclick="switchMsTab('pg')">Rekening Penampung</div>
             <div class="channel-tab" data-mstab="tmpl" onclick="switchMsTab('tmpl')">Reminder &amp; Template</div>
           </div>
 
@@ -108,32 +109,19 @@
             </div>
           </div>
 
-          <!-- TAB: BANK & REKENING -->
+          <!-- TAB: REKENING PENAMPUNG -->
           <div class="ms-tab-panel" data-mspanel="pg" style="display:none;">
-            <div class="note-box info">Integrasi bank (host-to-host) bersifat terpusat -- satu kerjasama BSI untuk seluruh sekolah, dikonfigurasi di Konfigurasi Sistem &gt; Integrasi Bank Global. Sekolah ini tidak butuh kredensial API terpisah, hanya rekening pencairan fee di bawah.</div>
-
             <div class="card">
-              <h3>Rekening Penampung Sekolah (Bagi Hasil Fee) <span class="tag-pill pg">BANK</span></h3>
-              <p class="card-desc">Pembayaran SPP dari wali murid seluruhnya masuk ke <b>Rekening Penampung Pusat &amp; VA Terpusat</b> milik Muhammadiyah Pusat (lihat Konfigurasi Sistem &gt; Rekening Bank Penampung Pusat) -- <b>bukan</b> ke rekening di bawah ini. Rekening sekolah berikut hanya dipakai untuk pencairan bagian fee/bagi hasil yang jadi hak sekolah ini.</p>
+              <h3>Rekening Penampung <span class="tag-pill pg">BANK</span></h3>
               <div class="grid3">
                 <div class="field"><label>Nama Bank</label>
                   <select><option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option><option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option></select>
                 </div>
-                <div class="field"><label>Nomor Rekening</label><input type="text" value="7123456789"></div>
-                <div class="field"><label>Nama Pemilik Rekening</label><input type="text" id="ms-pg-owner" value=""></div>
+                <div class="field"><label>No Rek</label><input type="text" value="7123456789"></div>
+                <div class="field"><label>Nama Pemilik</label><input type="text" id="ms-pg-owner" value=""></div>
               </div>
-              <div class="grid2">
-                <div class="field">
-                  <label>Verifikasi Nama Rekening</label>
-                  <span class="badge-status on"><span class="dot"></span> Cocok dengan Bank (via API validasi H2H)</span>
-                </div>
-                <div class="field"><label>Jadwal Pencairan Fee</label>
-                  <select><option selected>Harian (T+1)</option><option>Mingguan</option><option>Sesuai permintaan (manual)</option></select>
-                </div>
-              </div>
-              <div class="note-box info">Dana SPP terkumpul dulu di Rekening Penampung Pusat, lalu bagian fee sekolah ini dihitung &amp; dicairkan ke rekening di atas sesuai jadwal -- bukan langsung real-time per transaksi wali murid.</div>
               <div class="btn-row" style="justify-content:flex-end;">
-                <button class="btn btn-success" onclick="showToast('✓ Rekening &amp; Integrasi Bank berhasil disimpan')">Simpan</button>
+                <button class="btn btn-success" onclick="showToast('✓ Rekening Penampung berhasil disimpan')">Simpan</button>
               </div>
             </div>
           </div>

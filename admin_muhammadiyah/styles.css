@@ -367,10 +367,10 @@ table.accounts td input, table.accounts td select { font-size: 12px; padding: 7p
 .channel-tabs { display: flex; gap: 6px; margin: 14px 0 16px; border-bottom: 1px solid var(--border); }
 .channel-tab {
   padding: 8px 16px; font-size: 12.5px; font-weight: 700; color: var(--muted);
-  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  cursor: pointer;
 }
 .channel-tab:hover { color: var(--navy); }
-.channel-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+.channel-tab.active { color: var(--navy); }
 .tmpl-card {
   background: var(--light); border: 1px solid #d7e0ec; border-radius: 9px;
   padding: 12px 14px; margin-bottom: 12px;

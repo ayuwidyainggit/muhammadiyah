@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Dashboard Konsolidasi -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Dashboard Konsolidasi</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Dashboard Konsolidasi</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>25-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>dashboard-konsolidasi.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, PRD Pendaftaran Sekolah</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>25-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>dashboard-konsolidasi.html</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Dashboard Konsolidasi memberi Super Admin dan Admin Wilayah gambaran performa pembayaran SPP seluruh jaringan sekolah Muhammadiyah secara nasional dalam satu halaman, mencakup KPI agregat, ranking wilayah, tren transaksi, dan daftar sekolah terbaik/terburuk berdasarkan collection rate. Tujuannya agar Pusat bisa mengambil keputusan intervensi (pendampingan, eskalasi) tanpa harus merekap manual dari tiap sekolah.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Admin Pusat &amp; Pengurus Wilayah</strong> mengalami <strong>kesulitan memantau kesehatan pembayaran SPP ribuan sekolah secara real-time</strong> saat <strong>data pembayaran tersebar di masing-masing sekolah/wilayah</strong>, yang menyebabkan <strong>keterlambatan deteksi sekolah bermasalah dan intervensi yang reaktif, bukan proaktif</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Rekap performa pembayaran dikumpulkan manual dari laporan masing-masing PWM/PDM/sekolah (Excel, WhatsApp, email), sehingga data yang sampai ke Pusat sudah lama (lagging) dan tidak konsisten formatnya antar wilayah.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin login ke satu dashboard dan langsung melihat KPI nasional bulan berjalan, collection rate per wilayah, tren transaksi, serta sekolah dengan performa terbaik dan terburuk -- semua ter-update otomatis dari data transaksi platform, tanpa rekap manual.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Platform invoicing &amp; payment SPP sudah menangani onboarding dan transaksi sekolah; tanpa dashboard konsolidasi, data yang terkumpul tidak termanfaatkan untuk pengambilan keputusan Pusat, sehingga nilai platform bagi manajemen belum terasa.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memberikan visibilitas real-time atas collection rate nasional dan per wilayah kepada Pusat.</li>
+<li>Mempercepat identifikasi sekolah/wilayah bermasalah untuk pendampingan oleh PWM/PDM/PCM.</li>
+<li>Mengurangi waktu penyusunan laporan performa pembayaran dari manual (hari) menjadi instan (dashboard).</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan drill-down transaksi per siswa dari dashboard ini (drill-down detail ada di Manajemen Sekolah).</li>
+<li>Tidak melakukan ekspor laporan (PDF/Excel) di fase ini.</li>
+<li>Filter tren transaksi (tahun/bulan/wilayah/jenjang) pada fase ini adalah contoh interaksi UI; data grafik belum dinamis mengikuti filter.</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Metrik</th>
+<th>Baseline saat ini</th>
+<th>Target</th>
+<th>Cara ukur</th>
+<th>Waktu evaluasi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waktu Pusat mendapat laporan performa nasional</td>
+<td>3-5 hari (rekap manual)</td>
+<td>Real-time (&lt; 1 menit, saat login)</td>
+<td>Observasi penggunaan dashboard</td>
+<td>1 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>% Super Admin/Admin Wilayah yang mengakses dashboard mingguan</td>
+<td>0% (belum ada fitur)</td>
+<td>≥ 80%</td>
+<td>Log akses halaman</td>
+<td>2 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>Jumlah sekolah bottom-10 yang menerima pendampingan dalam 30 hari sejak teridentifikasi</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>Catatan tindak lanjut PWM/PDM</td>
+<td>3 bulan setelah rilis</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui scope KPI yang ditampilkan</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain sumber data &amp; agregasi KPI</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi dashboard &amp; performa query</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Validasi akurasi perhitungan KPI</td>
+</tr>
+<tr>
+<td>Staff Keuangan Pusat</td>
+<td>Klien</td>
+<td>C</td>
+<td>Validasi definisi collection rate &amp; tunggakan</td>
+</tr>
+<tr>
+<td>Pengurus PWM/PDM/PCM</td>
+<td>Klien</td>
+<td>I</td>
+<td>Menerima insight untuk pendampingan sekolah</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin Pusat</td>
+<td>Admin platform tingkat nasional, akses penuh</td>
+<td>Memantau kesehatan pembayaran seluruh jaringan sekolah</td>
+<td>Data performa tersebar, lambat direkap</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Wilayah (PWM)</td>
+<td>Mengelola sekolah di wilayahnya</td>
+<td>Memantau sekolah di wilayahnya, menindaklanjuti yang bermasalah</td>
+<td>Tidak punya visibilitas nasional untuk pembanding</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Staff Keuangan Pusat</td>
+<td>Memantau performa pembayaran &amp; data sekolah</td>
+<td>Memastikan collection rate sesuai target</td>
+<td>Rekonsiliasi manual antar sekolah</td>
+<td>Laptop/web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KPI ringkas nasional (total sekolah, siswa, tagihan, pembayaran, collection rate, tunggakan, transaksi, sekolah aktif)</td>
+<td>Ekspor laporan (PDF/Excel)</td>
+</tr>
+<tr>
+<td>Ranking collection rate per wilayah (PWM) dengan indikator warna</td>
+<td>Drill-down transaksi per siswa/per sekolah dari dashboard</td>
+</tr>
+<tr>
+<td>Tren transaksi nasional 7 bulan terakhir (grafik)</td>
+<td>Filter grafik yang benar-benar dinamis mengubah data (saat ini statis/demo)</td>
+</tr>
+<tr>
+<td>Top 10 &amp; Bottom 10 sekolah berdasarkan collection rate</td>
+<td>Notifikasi otomatis ke PWM/PDM untuk sekolah bottom-list</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- KPI nasional, ranking wilayah, Top/Bottom 10 sekolah.</li>
+<li><strong>Should have</strong> -- Tren transaksi nasional dengan grafik.</li>
+<li><strong>Could have</strong> -- Filter grafik yang benar-benar fungsional (tahun/bulan/wilayah/jenjang).</li>
+<li><strong>Won't have (now)</strong> -- Ekspor laporan, drill-down transaksi detail.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Super Admin, saya ingin melihat KPI nasional (total sekolah, siswa, tagihan, pembayaran, collection rate, tunggakan) saat login, supaya saya tahu kesehatan platform secara cepat.</td>
+<td>Must</td>
+<td>Given Super Admin login, When membuka Dashboard Konsolidasi, Then 8 kartu KPI tampil dengan nilai bulan berjalan tanpa perlu refresh manual</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Admin Wilayah, saya ingin melihat ranking collection rate per wilayah, supaya saya tahu posisi wilayah saya dibanding wilayah lain.</td>
+<td>Must</td>
+<td>Given data wilayah tersedia, When membuka panel "Collection Rate per Wilayah", Then daftar wilayah terurut dari rate tertinggi ke terendah dengan indikator warna (hijau ≥85%, kuning 70-84%, merah &lt;70%)</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Super Admin, saya ingin melihat daftar 10 sekolah dengan collection rate terendah, supaya saya bisa menugaskan PWM/PDM untuk pendampingan.</td>
+<td>Must</td>
+<td>Given data performa sekolah tersedia, When membuka panel "Bottom 10 Sekolah", Then tabel menampilkan 10 sekolah terurut dari collection rate terendah beserta jumlah siswa, tagihan, dan terbayar</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin melihat tren jumlah transaksi nasional 7 bulan terakhir, supaya saya bisa menilai arah pertumbuhan/penurunan transaksi.</td>
+<td>Should</td>
+<td>Given data transaksi bulanan tersedia, When membuka panel "Trend Transaksi Nasional", Then grafik garis menampilkan jumlah transaksi per bulan selama 7 bulan terakhir</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>KPI Nasional</td>
+<td>Sistem harus menampilkan 8 kartu KPI: Total Sekolah, Total Siswa Aktif, Total Tagihan, Total Pembayaran, Collection Rate, Tunggakan, Transaksi, Sekolah Aktif, seluruhnya dihitung untuk bulan berjalan</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Collection Rate = Total Pembayaran / Total Tagihan; Tunggakan = Total Tagihan - Total Pembayaran</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Ranking Wilayah</td>
+<td>Sistem harus menampilkan daftar PWM terurut descending berdasarkan collection rate, dengan bar visual dan kode warna ambang (≥85% hijau, 70-84% kuning, &lt;70% merah)</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Ambang warna mengikuti legend: baik / perlu dipantau / perlu tindak lanjut</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Tren Transaksi</td>
+<td>Sistem harus menampilkan grafik garis jumlah transaksi nasional untuk 7 bulan terakhir, dengan filter tahun, bulan, wilayah, dan jenjang</td>
+<td>US-04</td>
+<td>Should</td>
+<td>Pada fase awal filter boleh bersifat kosmetik (UI saja); versi produksi filter wajib memengaruhi data grafik</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Ranking Sekolah</td>
+<td>Sistem harus menampilkan Top 10 dan Bottom 10 sekolah berdasarkan collection rate (bukan nominal pembayaran), masing-masing menampilkan rank, nama sekolah, jenjang &amp; wilayah, jumlah siswa, total tagihan, total terbayar, dan collection rate</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Pengurutan wajib berbasis collection rate agar sekolah kecil dengan pengelolaan baik tetap dinilai adil dibanding sekolah besar</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Hak Akses Halaman</td>
+<td>Sistem harus membatasi akses Dashboard Konsolidasi berdasarkan permission role <code>dashboard-konsolidasi</code>; role tanpa izin diarahkan ke halaman default role tersebut</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Mengikuti matriks Role &amp; Hak Akses (lihat PRD Role &amp; Hak Akses)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat KPI nasional</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+</tr>
+<tr>
+<td>Lihat ranking wilayah &amp; sekolah</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+</tr>
+<tr>
+<td>Ubah filter tren transaksi</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+</tr>
+<tr>
+<td>Ekspor laporan</td>
+<td>-- (belum ada)</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.2 Notifikasi</h3>
+<p>Tidak ada notifikasi otomatis pada fase ini; dashboard bersifat pull (pengguna membuka halaman untuk melihat data), bukan push.</p>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Performa</td>
+<td>Waktu muat seluruh KPI &amp; grafik dashboard</td>
+<td>p95 &lt; 2 detik untuk ≤ 1.500 sekolah</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Skalabilitas</td>
+<td>Jumlah sekolah yang didukung tanpa degradasi tampilan</td>
+<td>≥ 5.000 sekolah terdaftar</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Ketersediaan</td>
+<td>Uptime halaman dashboard</td>
+<td>99,5% per bulan</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Keamanan</td>
+<td>Data KPI hanya dapat diakses role dengan permission <code>dashboard-konsolidasi</code></td>
+<td>Enforced di server-side, tidak hanya UI</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Akurasi data</td>
+<td>Konsistensi angka antar KPI (Top/Bottom list, ranking wilayah, KPI agregat)</td>
+<td>Selisih 0% antar sumber data yang sama dalam satu snapshot</td>
+</tr>
+<tr>
+<td>NFR-06</td>
+<td>Usability</td>
+<td>Pengguna baru dapat memahami status kesehatan platform tanpa panduan</td>
+<td>&lt; 1 menit untuk mengidentifikasi wilayah/sekolah bermasalah</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → (role memiliki akses) → Dashboard Konsolidasi tampil otomatis sebagai halaman pertama bagi role dengan prioritas akses tertinggi ke modul ini.</li>
+<li>Wireframe: mengikuti struktur <code>dashboard-konsolidasi.html</code> (kartu KPI, panel wilayah, grafik tren, tabel Top/Bottom 10).</li>
+<li>Edge case yang wajib ditangani: wilayah/sekolah tanpa data transaksi bulan berjalan, bulan pertama sekolah baru diaktifkan (belum ada histori 7 bulan untuk tren).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modul Transaksi/Payment (H2H BSI)</td>
+<td>Sumber data tagihan &amp; pembayaran untuk KPI</td>
+<td>Internal data pipeline / API</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Manajemen Sekolah</td>
+<td>Sumber data jumlah sekolah aktif &amp; status</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Pendaftaran Sekolah</td>
+<td>Sumber data total sekolah terdaftar</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: Sekolah, Siswa, Tagihan, Pembayaran, Wilayah (PWM/PDM/PCM), Transaksi.</li>
+<li>Agregasi yang dibutuhkan: total per bulan berjalan, per wilayah, per sekolah; histori 7 bulan untuk tren.</li>
+<li>Retensi data: data transaksi &amp; agregat historis disimpan sesuai kebijakan retensi platform (lihat PRD terkait keuangan/audit).</li>
+<li>Laporan yang dibutuhkan ke depan: ekspor KPI nasional &amp; ranking sekolah per periode (out of scope fase ini).</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Data transaksi dan tagihan dari seluruh sekolah sudah tersinkronisasi secara near-real-time ke data store yang dipakai dashboard.</li>
+<li>Definisi "bulan berjalan" dan "collection rate" sudah disepakati seragam oleh seluruh wilayah.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Dashboard ini hanya menampilkan agregat; tidak menggantikan laporan keuangan resmi/audit.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah filter tren transaksi (tahun/bulan/wilayah/jenjang) wajib fungsional penuh di rilis pertama, atau boleh menyusul?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah dibutuhkan ekspor laporan (PDF/Excel) dari dashboard ini pada rilis pertama?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data agregat tidak konsisten antar sumber (KPI vs tabel ranking)</td>
+<td>H</td>
+<td>M</td>
+<td>Satu sumber kebenaran (single source of truth) untuk perhitungan collection rate, divalidasi QA sebelum rilis</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Volume sekolah besar (&gt;5.000) membuat query agregat lambat</td>
+<td>M</td>
+<td>M</td>
+<td>Precompute/cache KPI harian, bukan query real-time penuh</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain data pipeline KPI</td>
+<td>Arsitektur agregasi</td>
+<td>[ ]</td>
+<td>Review SA</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>KPI + ranking + grafik</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Collection Rate</td>
+<td>Persentase total pembayaran terhadap total tagihan pada periode tertentu</td>
+</tr>
+<tr>
+<td>PWM / PDM / PCM</td>
+<td>Pimpinan Wilayah / Daerah / Cabang Muhammadiyah -- struktur organisasi yang menaungi sekolah</td>
+</tr>
+<tr>
+<td>H2H</td>
+<td>Host-to-Host, integrasi langsung dengan sistem bank mitra</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (asumsi perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

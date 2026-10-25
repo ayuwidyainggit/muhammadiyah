@@ -15,19 +15,20 @@ const rbacModules = [
   { key: 'pendaftaran', label: 'Pendaftaran Sekolah', icon: '＋', page: 'pendaftaran.html' },
   { key: 'manajemen', label: 'Manajemen Sekolah', icon: '🏫', page: 'manajemen.html' },
   { key: 'konfigurasi', label: 'Konfigurasi Sistem', icon: '⚙', page: 'konfigurasi.html' },
-  { key: 'rbac', label: 'RBAC & Pengguna', icon: '🔐', page: 'rbac.html' },
+  { key: 'pengguna', label: 'Pengguna', icon: '👤', page: 'pengguna.html' },
+  { key: 'rbac', label: 'Role & Hak Akses', icon: '🔐', page: 'rbac.html' },
 ];
 
 let roleSeq = 1;
 const rolesData = [
   { id: roleSeq++, nama: 'Super Admin', icon: '🛡️', deskripsi: 'Akses penuh ke seluruh modul platform.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: true, rbac: true } },
+    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: true, pengguna: true, rbac: true } },
   { id: roleSeq++, nama: 'Admin Wilayah (PWM)', icon: '🗺️', deskripsi: 'Kelola sekolah & onboarding di wilayahnya, tanpa akses konfigurasi platform.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: false, rbac: false } },
+    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: false, pengguna: false, rbac: false } },
   { id: roleSeq++, nama: 'Staff Keuangan Pusat', icon: '💰', deskripsi: 'Pantau performa pembayaran & data sekolah, tanpa ubah konfigurasi/onboarding.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: true, konfigurasi: false, rbac: false } },
+    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: true, konfigurasi: false, pengguna: false, rbac: false } },
   { id: roleSeq++, nama: 'Viewer (Read-only)', icon: '👁️', deskripsi: 'Hanya lihat Dashboard Konsolidasi.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: false, konfigurasi: false, rbac: false } },
+    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: false, konfigurasi: false, pengguna: false, rbac: false } },
 ];
 
 let userSeq = 1;
@@ -185,3 +186,26 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2600);
 }
+
+// ---- floating PRD doc button (muncul di semua halaman app, bukan di login) ----
+function injectPrdFab() {
+  if (!document.getElementById('app-shell')) return;
+  if (document.getElementById('prd-fab')) return;
+  const a = document.createElement('a');
+  a.id = 'prd-fab';
+  a.href = 'docs/index.html';
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = 'Baca dokumen PRD per fitur';
+  a.style.cssText = [
+    'position:fixed', 'bottom:26px', 'right:26px', 'background:var(--navy)', 'color:#fff',
+    'border:none', 'border-radius:999px', 'padding:13px 20px', 'font-size:13px', 'font-weight:700',
+    'box-shadow:0 6px 18px rgba(20,36,63,0.35)', 'cursor:pointer', 'display:flex', 'align-items:center',
+    'gap:8px', 'text-decoration:none', 'z-index:999', 'font-family:inherit',
+  ].join(';');
+  a.innerHTML = '📄 PRD';
+  a.addEventListener('mouseenter', () => { a.style.background = 'var(--navy-soft)'; });
+  a.addEventListener('mouseleave', () => { a.style.background = 'var(--navy)'; });
+  document.body.appendChild(a);
+}
+injectPrdFab();

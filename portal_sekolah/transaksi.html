@@ -25,8 +25,20 @@
     <div class="nav-group-label">Menu Utama</div>
     <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
     <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi</a>
-    <a class="nav-item" data-rbac="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah</a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+    </div>
     <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
     <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item active" data-rbac="transaksi" href="transaksi.html" id="nav-self"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
@@ -92,10 +104,15 @@
 
           <div class="card">
             <h3>Master Data Tagihan</h3>
-            <p class="card-desc">Kategori tagihan yang bisa dipakai berulang kali saat membuat tagihan -- baik yang sifatnya tetap dalam periode tertentu (mis. SPP bulanan, kegiatan per 6 bulan) maupun sekali bayar (mis. uang gedung, uang pangkal, uang pendaftaran).</p>
+            <p class="card-desc">Kategori tagihan yang bisa dipakai berulang kali saat membuat tagihan -- baik yang sifatnya tetap dalam periode tertentu (mis. SPP bulanan, kegiatan per 6 bulan) maupun sekali bayar (mis. uang gedung, uang pangkal, uang pendaftaran). Nominal bisa berbeda tiap Periode Tahun Ajaran, mis. SPP naik tiap tahun -- gunakan filter di bawah untuk melihat/mengubah nominal tahun tertentu.</p>
+            <div class="filter-bar">
+              <select id="mt-filter-periode" onchange="renderMasterTagihan()">
+                <option value="">Semua Periode</option>
+              </select>
+            </div>
             <table class="dtab" id="master-tagihan-table">
               <thead>
-                <tr><th style="width:22%">Nama Kategori</th><th style="width:16%">Periode Tagihan</th><th style="width:34%">Nominal per Kategori Kelas (Rp)</th><th style="width:12%">Aktif</th><th style="width:8%">Aksi</th></tr>
+                <tr><th style="width:18%">Nama Kategori</th><th style="width:14%">Periode Tahun Ajaran</th><th style="width:13%">Periode Tagihan</th><th style="width:29%">Nominal per Kategori Kelas (Rp)</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
               </thead>
               <tbody id="master-tagihan-body"></tbody>
             </table>
@@ -112,19 +129,13 @@
               <div class="txt"><b>Individual</b><span>Pilih kelas dulu, lalu pilih satu atau beberapa siswa -- tiap siswa bisa punya jenis tagihan &amp; nominal sendiri-sendiri</span></div>
             </div>
             <div class="sub-panel open" id="inv-sub-individual">
-              <div class="field" style="margin-bottom:12px;max-width:320px;">
-                <label>Pilih Kelas</label>
-                <select id="inv-ind-kelas" onchange="onIndividualKelasChange()">
-                  <option value="">-- pilih kelas --</option>
-                </select>
-              </div>
               <table class="dtab" id="inv-individual-table">
                 <thead>
-                  <tr><th style="width:18%">Siswa</th><th style="width:22%">Jenis Tagihan</th><th style="width:14%">Nominal (Rp)</th><th style="width:14%">Periode</th><th style="width:16%">Jatuh Tempo</th><th style="width:8%">Aksi</th></tr>
+                  <tr><th style="width:13%">Jenis Kelas</th><th style="width:11%">Kelas</th><th style="width:15%">Nama</th><th style="width:11%">Periode</th><th style="width:17%">Jenis Tagihan</th><th style="width:11%">Nominal (Rp)</th><th style="width:14%">Jatuh Tempo</th><th style="width:8%">Aksi</th></tr>
                 </thead>
                 <tbody id="inv-individual-body"></tbody>
               </table>
-              <div class="empty-hint" id="inv-individual-hint">Pilih kelas terlebih dahulu untuk menambahkan siswa.</div>
+              <div class="empty-hint" id="inv-individual-hint">Klik "+ Tambah Baris Siswa" untuk mulai menambahkan siswa -- tiap baris bisa pilih kelas &amp; siswa sendiri-sendiri.</div>
               <button class="btn-add-row" type="button" onclick="addIndividualInvoiceRow()">+ Tambah Baris Siswa</button>
               <div class="hint" style="margin-top:8px;">Setiap siswa punya periode &amp; jatuh tempo sendiri -- berguna kalau tanggal masuknya beda-beda (mis. siswa pindahan di tengah bulan).</div>
             </div>
@@ -135,6 +146,11 @@
             </div>
             <div class="sub-panel" id="inv-sub-massal">
               <div class="field">
+                <label>Kategori Kelas</label>
+                <select id="inv-massal-kategori" onchange="onMassalKategoriChange()"></select>
+                <div class="hint">Pilih Kategori Kelas dulu untuk mempersempit daftar kelas di bawah -- penting kalau nominal tagihannya beda per kategori.</div>
+              </div>
+              <div class="field">
                 <label>Target Kelas (bisa pilih lebih dari satu)</label>
                 <div id="inv-massal-kelas-chips"></div>
               </div>
@@ -143,7 +159,7 @@
                 <div class="field"><label>Nominal (Rp)</label><div id="inv-massal-nominal-wrap"></div><div class="hint">Nominal otomatis mengikuti Kategori Kelas dari kelas yang dipilih -- bisa diedit manual per kategori.</div></div>
               </div>
               <div class="grid2">
-                <div class="field"><label>Periode</label><select id="inv-periode"></select></div>
+                <div class="field"><label>Periode</label><select id="inv-periode" onchange="onMassalPeriodeChange()"></select></div>
                 <div class="field"><label>Jatuh Tempo</label><input type="date" id="inv-jatuh-tempo" value="2026-08-10"></div>
               </div>
               <div class="hint">Default periode yang aktif -- ganti dropdown jika ingin menagih untuk periode tahun ajaran lain. Berlaku sama untuk seluruh siswa di kelas yang dipilih; kalau butuh beda per anak, pakai mode Individual.</div>
@@ -340,8 +356,8 @@
     refreshKelasDropdowns();
     renderPeriodeTahunAjaran();
     renderMasterTagihan();
-    refreshJenisTagihanDropdowns();
     refreshPeriodeDropdowns();
+    refreshJenisTagihanDropdowns();
     renderInvoiceList();
     fillWriteoffInvoiceSelect();
     renderWriteoffList();

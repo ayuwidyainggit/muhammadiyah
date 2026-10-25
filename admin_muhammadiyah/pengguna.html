@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>GeekGarden Admin -- Pengguna</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+
+    <div class="nav-group-label">Onboarding</div>
+    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
+    <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
+
+    <div class="nav-group-label">Konfigurasi</div>
+    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
+    <a href="pengguna.html" class="nav-item active" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
+    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
+
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
+      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Pengguna</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">SA</div>
+        <div class="info">
+          <div class="name" id="uc-name">Super Admin</div>
+          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===================== VIEW: PENGGUNA ===================== -->
+      <div class="page-view active" id="view-pengguna">
+        <div class="page-title">
+          <h1>Pengguna</h1>
+          <p>Kelola akun pengguna yang bisa login ke platform ini, beserta peran (role) &amp; cakupan aksesnya. Hak akses tiap role diatur di menu Role &amp; Hak Akses.</p>
+        </div>
+
+        <div class="card">
+          <h3>Daftar Pengguna Admin</h3>
+          <p class="card-desc">Akun yang bisa login ke portal Admin Pusat Muhammadiyah ini, beserta peran &amp; cakupan aksesnya.</p>
+          <table class="accounts">
+            <thead>
+              <tr><th style="width:19%">Nama</th><th style="width:25%">Email</th><th style="width:22%">Role</th><th style="width:15%">Cakupan</th><th style="width:11%">Status</th><th style="width:8%">Aksi</th></tr>
+            </thead>
+            <tbody id="rbac-users-body"></tbody>
+          </table>
+          <button class="btn-add-row" onclick="addUserRow()">+ Tambah Pengguna</button>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" onclick="saveUsers()">Simpan Pengguna</button>
+          </div>
+          <div class="note-box info">💡 Pengguna baru yang ditambahkan mendapat password default <code>demo123</code> (khusus mode demo prototipe ini -- pada implementasi produksi, password diatur lewat email undangan/reset, bukan diketik admin).</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  const u = requireLogin();
+  if (u) {
+    applyCurrentUserToUi();
+    if (enforcePageAccess('pengguna')) {
+      applyRbacToSidebar();
+
+      // ---- Pengguna ----
+      function userRowHtml(u) {
+        const roleOptions = rolesData.map(r => `<option value="${r.id}" ${r.id === u.roleId ? 'selected' : ''}>${r.nama}</option>`).join('');
+        return `<tr data-user-id="${u.id}">
+          <td><input type="text" value="${u.nama}"></td>
+          <td><input type="email" value="${u.email}"></td>
+          <td><select>${roleOptions}</select></td>
+          <td><input type="text" value="${u.cakupan}"></td>
+          <td><select><option ${u.status === 'Aktif' ? 'selected' : ''}>Aktif</option><option ${u.status === 'Nonaktif' ? 'selected' : ''}>Nonaktif</option></select></td>
+          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
+        </tr>`;
+      }
+      function renderUsersTable() {
+        document.getElementById('rbac-users-body').innerHTML = usersData.map(userRowHtml).join('');
+      }
+      function addUserRow() {
+        const tbody = document.getElementById('rbac-users-body');
+        const tr = document.createElement('tr');
+        const roleOptions = rolesData.map(r => `<option value="${r.id}">${r.nama}</option>`).join('');
+        tr.innerHTML = `
+          <td><input type="text" placeholder="Nama lengkap"></td>
+          <td><input type="email" placeholder="nama@muhammadiyah.id"></td>
+          <td><select>${roleOptions}</select></td>
+          <td><input type="text" placeholder="mis. Nasional / PWM ..."></td>
+          <td><select><option selected>Aktif</option><option>Nonaktif</option></select></td>
+          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>`;
+        tbody.appendChild(tr);
+      }
+      function saveUsers() {
+        const rows = document.querySelectorAll('#rbac-users-body tr');
+        const updated = [];
+        rows.forEach(row => {
+          const existingId = row.dataset.userId ? Number(row.dataset.userId) : null;
+          const inputs = row.querySelectorAll('input');
+          const selects = row.querySelectorAll('select');
+          const nama = inputs[0].value.trim();
+          const email = inputs[1].value.trim();
+          const cakupan = inputs[2].value.trim();
+          const roleId = Number(selects[0].value);
+          const status = selects[1].value;
+          if (!nama || !email) return; // skip incomplete rows
+          const existing = existingId ? usersData.find(u => u.id === existingId) : null;
+          updated.push({
+            id: existing ? existing.id : userSeq++,
+            nama, email, cakupan, roleId, status,
+            password: existing ? existing.password : 'demo123',
+          });
+        });
+        usersData.length = 0;
+        usersData.push(...updated);
+        renderUsersTable();
+        if (currentUser) {
+          const stillExists = usersData.find(u => u.id === currentUser.id);
+          if (stillExists) { currentUser = stillExists; saveSession(currentUser); applyCurrentUserToUi(); applyRbacToSidebar(); }
+        }
+        showToast('✓ Pengguna berhasil disimpan');
+      }
+
+      renderUsersTable();
+
+      // expose to inline onclick="" handlers in the markup above
+      Object.assign(window, { addUserRow, saveUsers });
+    }
+  }
+</script>
+</body>
+</html>

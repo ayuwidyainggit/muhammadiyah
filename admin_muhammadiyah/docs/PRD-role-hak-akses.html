@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Role & Hak Akses -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Role &amp; Hak Akses</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Role &amp; Hak Akses (RBAC -- Role Management)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>25-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>rbac.html</code>, <code>app.js</code>, PRD Pengguna</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>25-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>rbac.html</code> (CRUD role penuh: tambah, ubah, hapus role &amp; matriks hak akses modul)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Role &amp; Hak Akses memungkinkan Super Admin mendefinisikan role (peran) baru, mengubah nama/ikon/deskripsi role yang ada, menghapus role yang tidak dipakai, dan mengatur modul apa saja yang boleh diakses tiap role lewat matriks checkbox. Fitur ini adalah fondasi kontrol akses seluruh platform.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Super Admin</strong> mengalami <strong>keterbatasan dalam menyesuaikan struktur peran &amp; hak akses platform sesuai kebutuhan organisasi yang terus berkembang</strong> saat <strong>role dan permission-nya hardcoded/tetap</strong>, yang menyebabkan <strong>platform tidak bisa mengakomodasi peran baru (misal: Admin Keuangan Wilayah) tanpa perubahan kode oleh tim developer</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Daftar role (Super Admin, Admin Wilayah, Staff Keuangan Pusat, Viewer) dan hak aksesnya didefinisikan secara tetap di kode aplikasi; penambahan atau penghapusan role, maupun penyesuaian hak akses modulnya, memerlukan perubahan kode dan rilis ulang oleh tim developer.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin dapat menambah role baru, mengubah nama/ikon/deskripsi, mencentang/mencentang-ulang modul yang boleh diakses tiap role, dan menghapus role yang sudah tidak terpakai -- semua lewat UI, tanpa menyentuh kode maupun menunggu rilis baru.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Semakin banyak modul yang ditambahkan ke platform (Dashboard, Pendaftaran, Manajemen Sekolah, Konfigurasi Sistem, Pengguna, Role &amp; Hak Akses), kebutuhan kombinasi hak akses antar role juga makin beragam antar wilayah/klien, sehingga pengelolaan role harus fleksibel dan mandiri (self-service).</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memungkinkan Super Admin membuat/mengubah/menghapus role tanpa keterlibatan tim developer.</li>
+<li>Menjamin selalu ada minimal satu role (Super Admin) dengan akses penuh termasuk ke modul ini sendiri, agar platform tidak pernah terkunci tanpa pengelola akses.</li>
+<li>Mencegah penghapusan role yang masih dipakai pengguna aktif, untuk menghindari pengguna kehilangan akses secara tidak sengaja.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mendukung hak akses granular per-aksi (create/read/update/delete) di level modul pada fase ini -- hak akses bersifat on/off per modul (boleh akses halaman atau tidak).</li>
+<li>Tidak mendukung role hierarki/pewarisan (role turunan yang mewarisi sebagian izin role induk).</li>
+<li>Tidak mendukung pembatasan hak akses berdasarkan cakupan wilayah secara otomatis dari modul ini (cakupan wilayah diatur di data pengguna, bukan role).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Metrik</th>
+<th>Baseline saat ini</th>
+<th>Target</th>
+<th>Cara ukur</th>
+<th>Waktu evaluasi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Waktu rata-rata membuat role baru &amp; mengatur izinnya</td>
+<td>[ ] (perubahan kode + rilis, berhari-hari)</td>
+<td>&lt; 5 menit (self-service)</td>
+<td>Timestamp "Simpan Role &amp; Hak Akses"</td>
+<td>1 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>Jumlah insiden "role terkunci" (tidak ada role yang bisa kelola RBAC)</td>
+<td>[ ]</td>
+<td>0 insiden</td>
+<td>Monitoring/insiden tercatat</td>
+<td>Selamanya (ongoing)</td>
+</tr>
+<tr>
+<td>% percobaan hapus role gagal karena masih dipakai pengguna (validasi berjalan)</td>
+<td>[ ]</td>
+<td>100% dari percobaan yang seharusnya diblok memang diblok</td>
+<td>Log percobaan hapus role</td>
+<td>2 bulan setelah rilis</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui struktur role &amp; modul yang bisa diatur</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain model permission &amp; enforcement server-side</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi CRUD role &amp; matriks</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian guard (tidak bisa hapus Super Admin/role terpakai)</td>
+</tr>
+<tr>
+<td>Super Admin</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pengguna utama fitur ini</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin</td>
+<td>Pengelola akses platform tingkat tertinggi</td>
+<td>Menyesuaikan role &amp; hak akses sesuai struktur organisasi</td>
+<td>Harus minta developer untuk ubah role/izin</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Wilayah/Staff Keuangan (role lain)</td>
+<td>Pengguna dengan role terbatas</td>
+<td>Hanya bisa mengakses modul yang relevan dengan tugasnya</td>
+<td>Kadang butuh akses modul baru yang belum diizinkan role-nya</td>
+<td>Laptop/web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabel matriks Role x Modul dengan checkbox hak akses on/off</td>
+<td>Hak akses granular per-aksi (create/read/update/delete)</td>
+</tr>
+<tr>
+<td>Tambah role baru (ikon, nama, deskripsi, hak akses awal)</td>
+<td>Role hierarki/pewarisan izin</td>
+</tr>
+<tr>
+<td>Edit nama/ikon/deskripsi/hak akses role existing (kecuali Super Admin dikunci)</td>
+<td>Pembatasan akses berbasis cakupan wilayah otomatis dari modul ini</td>
+</tr>
+<tr>
+<td>Hapus role, dengan guard: ditolak jika masih dipakai pengguna aktif atau jika role adalah Super Admin</td>
+<td>Audit trail detail siapa mengubah izin role kapan (saat ini hanya toast konfirmasi)</td>
+</tr>
+<tr>
+<td>Simpan seluruh perubahan matriks sekaligus</td>
+<td>Approval berjenjang untuk perubahan hak akses</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Matriks Role x Modul, tambah/edit/hapus role, guard Super Admin &amp; role terpakai.</li>
+<li><strong>Should have</strong> -- Validasi nama role tidak boleh kosong/duplikat.</li>
+<li><strong>Could have</strong> -- Riwayat perubahan hak akses (audit trail) per role.</li>
+<li><strong>Won't have (now)</strong> -- Hak akses granular per-aksi, role hierarki.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Super Admin, saya ingin melihat matriks seluruh role dan modul yang bisa mereka akses, supaya saya paham struktur hak akses platform saat ini.</td>
+<td>Must</td>
+<td>Given saya membuka menu Role &amp; Hak Akses, When halaman dimuat, Then tabel menampilkan setiap role sebagai baris dan setiap modul sebagai kolom checkbox, dengan baris Super Admin tercentang penuh dan terkunci</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Super Admin, saya ingin menambahkan role baru dengan nama, ikon, deskripsi, dan hak akses modul tertentu, supaya saya bisa mengakomodasi struktur organisasi baru tanpa menunggu developer.</td>
+<td>Must</td>
+<td>Given saya menekan "+ Tambah Role", When saya mengisi nama role, mencentang modul yang diizinkan, dan menekan "Simpan Role &amp; Hak Akses", Then role baru tersimpan dan langsung tersedia sebagai pilihan role di menu Pengguna</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Super Admin, saya ingin mengubah hak akses modul suatu role yang sudah ada, supaya izin aksesnya sesuai kebutuhan terbaru.</td>
+<td>Must</td>
+<td>Given saya mencentang/menghilangkan centang pada kolom modul untuk suatu role (bukan Super Admin), When saya menekan "Simpan Role &amp; Hak Akses", Then seluruh pengguna dengan role tersebut mengikuti izin baru pada sesi berikutnya</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin menghapus role yang sudah tidak dipakai, supaya daftar role tetap rapi.</td>
+<td>Must</td>
+<td>Given suatu role tidak memiliki pengguna aktif yang memakainya, When saya menekan tombol hapus (✕) pada baris role tersebut dan menyimpan, Then role tersebut tidak lagi muncul di matriks maupun di dropdown role pada menu Pengguna</td>
+</tr>
+<tr>
+<td>US-05</td>
+<td>Sebagai Super Admin, saya ingin dicegah menghapus role yang masih dipakai pengguna, supaya pengguna tidak kehilangan role secara tidak sengaja.</td>
+<td>Must</td>
+<td>Given suatu role masih dipakai minimal 1 pengguna aktif, When saya menekan tombol hapus pada baris role tersebut, Then sistem menampilkan pesan bahwa role masih dipakai dan baris tidak terhapus</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Matriks Role x Modul</td>
+<td>Sistem harus menampilkan tabel dengan setiap role sebagai baris (kolom Icon, Nama Role, Deskripsi, lalu satu kolom checkbox per modul platform) dan kolom Aksi di ujung kanan</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Daftar modul: Dashboard Konsolidasi, Pendaftaran Sekolah, Manajemen Sekolah, Konfigurasi Sistem, Pengguna, Role &amp; Hak Akses</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Role Super Admin Terkunci</td>
+<td>Sistem harus mengunci baris Super Admin: field ikon &amp; nama tidak bisa diubah, seluruh checkbox tercentang &amp; disabled, dan tombol hapus tidak ditampilkan</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Mencegah kondisi di mana tidak ada satu pun role yang bisa mengelola modul Role &amp; Hak Akses</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Tambah Role</td>
+<td>Sistem harus menyediakan tombol "+ Tambah Role" yang menambah baris baru dengan field kosong (ikon, nama, deskripsi) dan seluruh checkbox modul dalam keadaan tidak tercentang</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Baris baru belum tersimpan permanen sampai tombol "Simpan Role &amp; Hak Akses" ditekan</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Edit Role</td>
+<td>Sistem harus mengizinkan Super Admin mengubah ikon, nama, deskripsi, dan checkbox hak akses modul untuk role selain Super Admin</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Perubahan baru berlaku setelah disimpan</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Hapus Role (dengan guard)</td>
+<td>Sistem harus memvalidasi sebelum menghapus baris role: (a) role bukan Super Admin, dan (b) tidak ada pengguna aktif dengan <code>roleId</code> tersebut; jika salah satu gagal, tampilkan pesan penolakan dan batalkan penghapusan</td>
+<td>US-04, US-05</td>
+<td>Must</td>
+<td>Pesan: "Role masih dipakai pengguna -- pindahkan role pengguna tersebut dulu di menu Pengguna"</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Simpan Matriks</td>
+<td>Sistem harus menyimpan seluruh baris (baru &amp; existing) saat tombol "Simpan Role &amp; Hak Akses" ditekan, melewati baris yang nama role-nya kosong, dan memberi ID baru untuk role baru</td>
+<td>US-02, US-03</td>
+<td>Must</td>
+<td>Role Super Admin selalu dipaksa seluruh izinnya <code>true</code> saat disimpan, terlepas dari status checkbox</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>Sinkronisasi Sidebar</td>
+<td>Setelah menyimpan matriks, sistem harus memperbarui tampilan menu sidebar sesuai izin terbaru role milik pengguna yang sedang login</td>
+<td>US-03</td>
+<td>Should</td>
+<td>Jika pengguna yang login kehilangan akses ke halaman yang sedang dibuka, arahkan ke halaman default role tersebut</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat matriks role &amp; hak akses</td>
+<td>CRUD</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Tambah/edit/hapus role</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Role Super Admin dapat dihapus/diubah</td>
+<td>Tidak (selalu terkunci)</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Catatan: hanya role dengan permission <code>rbac</code> (default: Super Admin) yang dapat mengakses menu ini.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hak akses suatu role diubah</td>
+<td>Pengguna dengan role tersebut (disarankan)</td>
+<td>Email/in-app (belum diimplementasi)</td>
+<td>Pemberitahuan ada perubahan modul yang bisa diakses</td>
+</tr>
+<tr>
+<td>Role dihapus ditolak karena masih dipakai</td>
+<td>Super Admin (toast di UI)</td>
+<td>In-app toast</td>
+<td>Nama role &amp; instruksi tindak lanjut</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Keamanan</td>
+<td>Hak akses modul harus ditegakkan di server-side, tidak hanya menyembunyikan menu di UI</td>
+<td>100% endpoint API memvalidasi permission role sebelum memproses request</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Integritas</td>
+<td>Role Super Admin tidak dapat dihapus atau kehilangan akses penuh dalam kondisi apa pun</td>
+<td>0% kemungkinan sistem kehilangan role dengan akses penuh ke modul Role &amp; Hak Akses</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Validasi</td>
+<td>Penghapusan role yang masih dipakai pengguna harus diblok 100% dari percobaan</td>
+<td>0% role terhapus saat masih ada pengguna aktif memakainya</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Performa</td>
+<td>Waktu simpan perubahan matriks role</td>
+<td>&lt; 1 detik untuk ≤ 50 role x ≤ 20 modul</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Auditability</td>
+<td>Setiap perubahan hak akses role (tambah/ubah/hapus) tercatat pelaku &amp; waktu</td>
+<td>100% tercatat di audit log</td>
+</tr>
+<tr>
+<td>NFR-06</td>
+<td>Usability</td>
+<td>Super Admin dapat membuat role baru dengan hak akses yang benar tanpa panduan tambahan</td>
+<td>&lt; 3 menit per role baru</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login (sebagai Super Admin) → Menu "Role &amp; Hak Akses" → lihat matriks → (tambah baris role baru / ubah checkbox / hapus baris) → "Simpan Role &amp; Hak Akses" → toast konfirmasi atau penolakan.</li>
+<li>Wireframe: mengikuti struktur <code>rbac.html</code> (tabel matriks dengan kolom Icon/Nama Role/Deskripsi/[modul...]/Aksi, tombol tambah di bawah tabel).</li>
+<li>Edge case yang wajib ditangani: mencoba menghapus role yang sedang dipakai pengguna yang sedang login, menyimpan dengan nama role kosong (baris diabaikan), mencoba mencentang izin pada baris Super Admin (diabaikan karena disabled).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modul Pengguna</td>
+<td>Validasi role masih dipakai sebelum izin hapus; sumber dropdown role saat menambah/edit pengguna</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Seluruh modul platform (Dashboard, Pendaftaran, Manajemen, Konfigurasi)</td>
+<td>Penegakan permission saat navigasi/akses halaman</td>
+<td>Internal (guard per halaman)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: Role (id, ikon, nama, deskripsi, perms per modul), Modul/Permission Key (daftar modul platform yang bisa diberi izin).</li>
+<li>Retensi data: role yang dihapus idealnya tercatat di audit log historis, meski entitasnya sendiri dihapus dari daftar aktif.</li>
+<li>Laporan yang dibutuhkan: daftar role beserta jumlah pengguna yang memakainya, daftar modul dan role mana saja yang punya akses.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Daftar modul platform (Dashboard, Pendaftaran, Manajemen Sekolah, Konfigurasi, Pengguna, Role &amp; Hak Akses) relatif stabil dan hanya bertambah seiring modul baru dirilis, bukan dihapus sembarangan.</li>
+<li>Satu role dapat dipakai oleh banyak pengguna sekaligus.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Role "Super Admin" tidak dapat dihapus, diganti nama, atau dikurangi izinnya -- ini adalah batasan desain yang disengaja untuk mencegah platform terkunci.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah dibutuhkan hak akses granular per-aksi (create/read/update/delete) di rilis berikutnya?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah perubahan hak akses role perlu approval dari pihak lain sebelum berlaku efektif?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hak akses modul hanya ditegakkan di UI (client-side), bisa dibypass lewat API langsung</td>
+<td>H</td>
+<td>M</td>
+<td>Wajib implementasi penegakan permission di server-side sebelum produksi</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Guard "role masih dipakai" lolos karena race condition (pengguna ditambahkan ke role bersamaan dengan penghapusan role)</td>
+<td>M</td>
+<td>L</td>
+<td>Validasi ulang di server saat proses simpan, bukan hanya di client</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Model permission &amp; guard rules</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>CRUD role + matriks + guard</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RBAC</td>
+<td>Role-Based Access Control, model kontrol akses berbasis peran</td>
+</tr>
+<tr>
+<td>Permission key</td>
+<td>Kunci unik yang mewakili satu modul/halaman yang bisa diberi izin akses</td>
+</tr>
+<tr>
+<td>Guard</td>
+<td>Pemeriksaan validasi yang mencegah aksi tidak sah (misal hapus role yang masih dipakai)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>
