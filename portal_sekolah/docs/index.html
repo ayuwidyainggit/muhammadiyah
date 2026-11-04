@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dokumen Produk -- Portal Sekolah</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+  }
+  .doc-topbar .brand { font-size: 13.5px; font-weight: 700; }
+  .doc-wrap { max-width: 880px; margin: 0 auto; padding: 36px 24px 80px; }
+  .page-head h1 { color: var(--navy); font-size: 25px; font-weight: 800; margin: 0 0 6px; }
+  .page-head p { color: var(--muted); font-size: 13.8px; margin: 0 0 28px; }
+  .doc-list { display: flex; flex-direction: column; gap: 12px; }
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.05);
+    transition: box-shadow .15s, transform .15s;
+  }
+  .doc-item:hover {
+    box-shadow: 0 4px 14px rgba(20,36,63,0.14);
+    transform: translateY(-1px);
+    border-color: var(--navy-soft);
+  }
+  .doc-item .ic {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; flex-shrink: 0;
+  }
+  .doc-item .meta { flex: 1; min-width: 0; }
+  .doc-item .meta .t { font-size: 14.5px; font-weight: 700; color: var(--navy); }
+  .doc-item .meta .d { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .doc-item .go { font-size: 12px; color: var(--navy-soft); font-weight: 700; white-space: nowrap; }
+  .note {
+    margin-top: 28px;
+    font-size: 12.5px;
+    color: var(--muted);
+    background: #eef3ff;
+    border: 1px solid #dbe6fb;
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar"><span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen Produk</span></div>
+
+<div class="doc-wrap">
+  <div class="page-head">
+    <h1>Dokumen Produk</h1>
+    <p>Dokumen PRD per fitur Portal Sekolah -- referensi untuk Solution Architect, Developer, dan QA sebelum masuk ke tahap desain teknis &amp; pengujian.</p>
+  </div>
+
+  <div class="doc-list">
+    <a class="doc-item" href="PRD-konfigurasi-rekening-penampung.html">
+      <div class="ic">🏦</div>
+      <div class="meta">
+        <div class="t">Konfigurasi Rekening Penampung</div>
+        <div class="d">Tab "Rekening Penampung" pada menu Konfigurasi -- catat rekening bank sekolah, status Aktif/Nonaktif, dan rekening Utama</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-konfigurasi-aturan-reminder.html">
+      <div class="ic">⏰</div>
+      <div class="meta">
+        <div class="t">Aturan Reminder &amp; Eskalasi</div>
+        <div class="d">Tab "Aturan Reminder" pada menu Konfigurasi -- atur offset hari (H-/H+), level penanganan, dan channel notifikasi tagihan SPP</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-konfigurasi-template-pesan.html">
+      <div class="ic">💬</div>
+      <div class="meta">
+        <div class="t">Konfigurasi Template Pesan</div>
+        <div class="d">Tab "Template Pesan" pada menu Konfigurasi -- redaksi pesan notifikasi per channel (WhatsApp, Email, Push Notif, Notif Aplikasi) &amp; Level Penanganan</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-sekolah-profil.html">
+      <div class="ic">🏫</div>
+      <div class="meta">
+        <div class="t">Profil Sekolah</div>
+        <div class="d">Tab "Profil Sekolah" pada menu Manajemen Sekolah -- identitas sekolah (read-only) &amp; ubah Alamat Lengkap</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-sekolah-kategori.html">
+      <div class="ic">🏷️</div>
+      <div class="meta">
+        <div class="t">Kategori Sekolah</div>
+        <div class="d">Tab "Kategori Sekolah" pada menu Manajemen Sekolah -- kelola kategori kelas yang menentukan nominal SPP/tagihan lain</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-sekolah-kelas.html">
+      <div class="ic">🏷</div>
+      <div class="meta">
+        <div class="t">Kelas</div>
+        <div class="d">Tab "Kelas" pada menu Manajemen Sekolah -- sumber tunggal kode kelas &amp; kategori yang dipakai di seluruh portal</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-sekolah-pengguna.html">
+      <div class="ic">👤</div>
+      <div class="meta">
+        <div class="t">Pengguna &amp; Akun Sekolah</div>
+        <div class="d">Tab "Pengguna &amp; Akun Sekolah" pada menu Manajemen Sekolah -- undang &amp; kelola akun staf (Kepala Sekolah/Bendahara/Admin)</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-sekolah-rbac.html">
+      <div class="ic">🔐</div>
+      <div class="meta">
+        <div class="t">Role &amp; Hak Akses (Sekolah)</div>
+        <div class="d">Tab "Role &amp; Hak Akses" pada menu Manajemen Sekolah -- izin granular Create/Read/Update/Delete per modul untuk 3 role tetap</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-wali-murid.html">
+      <div class="ic">📱</div>
+      <div class="meta">
+        <div class="t">Akun Wali Murid (Mobile)</div>
+        <div class="d">Pendaftaran &amp; approval akun wali murid untuk SSO ke aplikasi mobile -- segregation of duties antara Admin &amp; Kepala Sekolah</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-manajemen-murid.html">
+      <div class="ic">🧑‍🎓</div>
+      <div class="meta">
+        <div class="t">Manajemen Murid</div>
+        <div class="d">Data pokok siswa per Periode/Kategori/Kelas (filter wajib, default kosong) &amp; kontak wali murid saat pendaftaran siswa baru</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+    <a class="doc-item" href="PRD-periode-tahun-ajaran.html">
+      <div class="ic">🗓️</div>
+      <div class="meta">
+        <div class="t">Periode Tahun Ajaran</div>
+        <div class="d">Halaman tersendiri (dipindah dari Transaksi &amp; Invoice) -- hanya 1 periode aktif sekaligus; periode yang sudah dipakai data siswa/tagihan dikunci dari Edit &amp; Hapus</div>
+      </div>
+      <span class="go">Baca &rarr;</span>
+    </a>
+  </div>
+
+  <div class="note">💡 Versi sumber (Markdown) tiap dokumen tetap tersedia di folder <code>docs/</code> dengan nama file yang sama berekstensi <code>.md</code>, untuk diedit atau dipakai di tool lain.</div>
+</div>
+
+</body>
+</html>

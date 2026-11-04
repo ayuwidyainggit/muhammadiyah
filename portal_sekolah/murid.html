@@ -28,7 +28,6 @@
     <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
     <div class="nav-children" data-nav-children="konfigurasi">
       <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
-      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
@@ -37,10 +36,12 @@
       <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
       <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child active" data-rbac="murid" href="murid.html" id="nav-self">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
-    <a class="nav-item active" data-rbac="murid" href="murid.html" id="nav-self"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
@@ -74,19 +75,24 @@
           </div>
           <div class="card">
             <div class="filter-bar">
-              <input type="text" class="search" id="murid-search" placeholder="Cari nama siswa / NIS..." oninput="renderStudentList()">
-              <select id="murid-filter-kelas" onchange="renderStudentList()">
-                <option value="">Semua Kelas</option>
-              </select>
               <select id="murid-filter-periode" onchange="renderStudentList()">
-                <option value="">Semua Periode</option>
+                <option value="">-- Pilih Periode Tahun Ajaran --</option>
               </select>
+              <select id="murid-filter-kategori" onchange="onMuridKategoriFilterChange()">
+                <option value="">-- Pilih Kategori Sekolah --</option>
+              </select>
+              <select id="murid-filter-kelas" onchange="renderStudentList()" disabled>
+                <option value="">-- Pilih Kategori Sekolah dulu --</option>
+              </select>
+              <input type="text" class="search" id="murid-filter-nama" placeholder="Cari nama siswa... (opsional)" oninput="renderStudentList()">
+              <input type="text" class="search" id="murid-filter-nis" placeholder="Cari NIS... (opsional)" oninput="renderStudentList()">
               <select id="murid-filter-status" onchange="renderStudentList()">
                 <option value="">Semua Status</option>
                 <option>aktif</option><option>lulus</option><option>pindah</option>
               </select>
               <button class="btn btn-primary btn-sm" onclick="openTambahMuridPanel()">+ Tambah Siswa</button>
             </div>
+            <div class="hint" style="margin-top:-2px;margin-bottom:10px;">Pilih <b>Periode Tahun Ajaran</b>, <b>Kategori Sekolah</b>, dan <b>Kelas</b> terlebih dahulu (wajib) untuk menampilkan daftar siswa -- Nama, NIS, dan Status bersifat opsional untuk mempersempit hasil.</div>
             <table class="dtab">
               <thead>
                 <tr><th style="width:24%">Nama Siswa</th><th style="width:11%">NIS</th><th style="width:10%">Kelas</th><th style="width:13%">Periode</th><th style="width:12%">Status</th><th style="width:16%">Wali Murid</th><th style="width:14%">Aksi</th></tr>
@@ -96,7 +102,7 @@
 
             <div class="card" id="tambah-murid-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
               <h3>Tambah Siswa Baru</h3>
-              <p class="card-desc">Lengkapi data pokok siswa dulu -- wali murid &amp; kontaknya bisa ditambahkan setelah siswa tersimpan lewat halaman Detail.</p>
+              <p class="card-desc">Lengkapi data pokok siswa beserta kontak yang dapat dihubungi. Setelah tersimpan, data ini di halaman Detail bersifat <b>hanya lihat</b> -- pengubahan/penambahan kontak selanjutnya dilakukan lewat menu <b>Akun Wali Murid</b>.</p>
               <div class="grid2">
                 <div class="field"><label>Nama Siswa</label><input type="text" id="tm-nama" placeholder="mis. Ahmad Fauzan"></div>
                 <div class="field"><label>NIS</label><input type="text" id="tm-nis" placeholder="mis. 2201007"></div>
@@ -113,6 +119,15 @@
                   </select>
                 </div>
               </div>
+              <div class="field" style="margin-top:4px;margin-bottom:8px;"><label>Kontak yang Dapat Dihubungi (bisa lebih dari satu)</label></div>
+              <table class="dtab" id="tm-kontak-table">
+                <thead>
+                  <tr><th style="width:24%">Nama</th><th style="width:14%">Relasi</th><th style="width:18%">No. WhatsApp</th><th style="width:18%">No. HP Alt</th><th style="width:20%">Email</th><th style="width:6%"></th></tr>
+                </thead>
+                <tbody id="tm-kontak-body"></tbody>
+              </table>
+              <button type="button" class="btn-add-row" onclick="addTmKontakRow()">+ Tambah Kontak</button>
+              <div class="hint" style="margin-top:8px;">Minimal 1 kontak wajib diisi (Nama &amp; No. WhatsApp); No. HP Alt dan Email opsional.</div>
               <div class="btn-row">
                 <button class="btn btn-ghost" onclick="closeTambahMuridPanel()">Batal</button>
                 <button class="btn btn-success" onclick="simpanMuridBaru()">Tambah Siswa</button>
@@ -155,19 +170,19 @@
           </div>
 
           <div class="card">
-            <h3>Wali Murid</h3>
-            <p class="card-desc">Satu siswa bisa punya lebih dari satu wali murid.</p>
+            <h3>Wali Murid <span class="tag-pill info">READ ONLY</span></h3>
+            <p class="card-desc">Satu siswa bisa punya lebih dari satu wali murid. Data di sini hanya untuk dilihat -- tambah/ubah/hapus wali murid dilakukan lewat menu <b>Akun Wali Murid</b>.</p>
             <table class="dtab" id="md-guardian-table">
               <thead>
-                <tr><th style="width:20%">Nama</th><th style="width:16%">No. WhatsApp</th><th style="width:16%">No. HP Alt</th><th style="width:18%">Email</th><th style="width:12%">Relasi</th><th style="width:12%">Kontak Utama</th><th style="width:6%"></th></tr>
+                <tr><th style="width:22%">Nama</th><th style="width:18%">No. WhatsApp</th><th style="width:18%">No. HP Alt</th><th style="width:20%">Email</th><th style="width:12%">Relasi</th><th style="width:10%">Kontak Utama</th></tr>
               </thead>
               <tbody></tbody>
             </table>
-            <button class="btn-add-row" onclick="addGuardianRow()">+ Tambah Wali Murid</button>
           </div>
         </div>
       </div>
 
+      <a class="fab-prd" href="docs/PRD-manajemen-murid.html" target="_blank" title="Lihat dokumen PRD Manajemen Murid">📄 Lihat PRD</a>
     </div>
   </div>
 </div>

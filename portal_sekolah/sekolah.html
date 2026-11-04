@@ -28,7 +28,6 @@
     <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
     <div class="nav-children" data-nav-children="konfigurasi">
       <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
-      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
@@ -37,10 +36,12 @@
       <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
       <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
@@ -80,13 +81,20 @@
               <div class="field"><label>Jenjang</label><input type="text" value="SD" disabled></div>
               <div class="field"><label>Jumlah Siswa Aktif</label><input type="text" id="sk-jumlah-siswa" value="" disabled></div>
             </div>
-            <div class="field"><label>Struktur Organisasi</label><input type="text" value="PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota" disabled></div>
+            <div class="grid4">
+              <div class="field"><label>Wilayah (PWM)</label><input type="text" value="PWM Jawa Timur" disabled></div>
+              <div class="field"><label>Daerah (PDM)</label><input type="text" value="PDM Sidoarjo" disabled></div>
+              <div class="field"><label>Cabang (PCM)</label><input type="text" value="PCM Sidoarjo Kota" disabled></div>
+              <div class="field"><label>Status</label><input type="text" value="Aktif" disabled></div>
+            </div>
             <div class="field"><label>Alamat Lengkap</label><textarea id="sk-alamat"></textarea></div>
-            <div class="note-box info">Nama sekolah, NPSN, jenjang, dan struktur organisasi hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
+            <div class="note-box info">Nama sekolah, NPSN, jenjang, struktur organisasi (Wilayah/Daerah/Cabang), dan status hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
             <div class="btn-row" style="justify-content:flex-end;">
               <button class="btn btn-success" onclick="saveAlamatSekolah()">Simpan Alamat</button>
             </div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-sekolah-profil.html" target="_blank" title="Lihat dokumen PRD Profil Sekolah">📄 Lihat PRD</a>
         </div>
 
         <!-- TAB: KATEGORI SEKOLAH -->
@@ -114,6 +122,8 @@
 
             <div class="hint" style="margin-top:10px;">Menghapus kategori yang masih dipakai kelas akan otomatis memindahkan kelas tersebut ke kategori pertama yang tersisa. Minimal harus ada 1 kategori. Nama kategori wajib diisi &amp; tidak boleh sama dengan kategori lain.</div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-sekolah-kategori.html" target="_blank" title="Lihat dokumen PRD Kategori Sekolah">📄 Lihat PRD</a>
         </div>
 
         <!-- TAB: KELAS -->
@@ -136,6 +146,8 @@
               <button class="btn btn-success" onclick="saveMasterKelasOnly()">Simpan Kelas</button>
             </div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-sekolah-kelas.html" target="_blank" title="Lihat dokumen PRD Kelas">📄 Lihat PRD</a>
         </div>
 
         <!-- TAB: PENGGUNA & AKUN SEKOLAH -->
@@ -189,9 +201,60 @@
 
             <div class="note-box info" style="margin-top:14px;">Bendahara tidak bisa menyetujui pengajuan write-off yang dibuat sendiri (segregation of duties).</div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-sekolah-pengguna.html" target="_blank" title="Lihat dokumen PRD Pengguna & Akun Sekolah">📄 Lihat PRD</a>
+        </div>
+
+        <!-- TAB: ROLE & HAK AKSES -->
+        <div class="page-tab-panel" data-ptabpanel="rbac">
+          <div class="card">
+            <h3>Role &amp; Hak Akses</h3>
+            <p class="card-desc">Role di portal ini bersifat tetap (Kepala Sekolah, Bendahara, Admin) -- tidak bisa ditambah atau dihapus. Sebagai Admin, Anda bisa mengatur hak akses granular per modul (Create/Read/Update/Delete) lewat tombol "Kelola Izin". Perubahan berlaku ke seluruh pengguna sekolah ini dengan role tersebut.</p>
+            <table class="dtab" id="rbac-role-table">
+              <thead>
+                <tr><th style="width:22%">Role</th><th style="width:58%">Deskripsi</th><th style="width:20%">Aksi</th></tr>
+              </thead>
+              <tbody id="rbac-role-body"></tbody>
+            </table>
+            <div class="note-box info" style="margin-top:14px;">⚠️ Admin selalu memiliki akses penuh (Create/Read/Update/Delete) termasuk modul Role &amp; Hak Akses ini sendiri (tidak bisa diubah izinnya), supaya tidak pernah ada kondisi di mana tak satu pun pengguna sekolah ini bisa mengelola hak akses. Centang <b>Read</b> pada modul tertentu agar role bisa membuka menunya; Create/Update/Delete baru berpengaruh bila Read juga aktif.</div>
+          </div>
+
+          <a class="fab-prd" href="docs/PRD-sekolah-rbac.html" target="_blank" title="Lihat dokumen PRD Role & Hak Akses">📄 Lihat PRD</a>
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: KELOLA IZIN ROLE (sekolah ini) ===================== -->
+<div class="modal-overlay" id="rbac-perm-modal-overlay-sk" onclick="if(event.target===this) closeRbacPermModalSekolah();">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-head">
+      <div>
+        <h3 id="rbac-perm-modal-title-sk">Kelola Izin Role</h3>
+        <div class="modal-sub" id="rbac-perm-modal-sub-sk"></div>
+      </div>
+      <span class="modal-close" onclick="closeRbacPermModalSekolah()">✕</span>
+    </div>
+    <div class="modal-body">
+      <table class="dtab" id="rbac-perm-table-sk">
+        <thead>
+          <tr>
+            <th style="width:36%">Modul</th>
+            <th class="rbac-check-cell">Create</th>
+            <th class="rbac-check-cell">Read</th>
+            <th class="rbac-check-cell">Update</th>
+            <th class="rbac-check-cell">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="rbac-perm-body-sk"></tbody>
+      </table>
+      <div class="note-box info" style="margin-top:12px;">Centang <b>Read</b> agar role ini bisa membuka menu/halaman modul tersebut. Create/Update/Delete tetap bisa dicentang terlepas dari Read, namun baru berpengaruh pada aksi di dalam halaman setelah Read juga aktif.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeRbacPermModalSekolah()">Batal</button>
+      <button class="btn btn-success" id="rbac-perm-save-btn-sk" onclick="saveRbacPermModalSekolah()">Simpan Izin</button>
     </div>
   </div>
 </div>
@@ -207,6 +270,7 @@
     renderMasterKelasTable();
     refreshKelasDropdowns();
     initSekolahProfil();
+    renderRbacRoleTable();
     const __tab = new URLSearchParams(location.search).get('tab');
     if (__tab) switchPageTab(__tab);
   }

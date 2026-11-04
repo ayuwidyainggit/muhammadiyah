@@ -280,7 +280,7 @@
     background: var(--red-light); color: var(--red); border: none; border-radius: 5px;
     width: 24px; height: 24px; cursor: pointer; font-weight: 800; font-size: 12px;
   }
-  .row-actions { display: flex; gap: 6px; }
+  .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .row-actions + .btn { margin-top: 6px; }
   .icon-btn {
     width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--accent);
@@ -297,6 +297,7 @@
     cursor: pointer; border: none;
   }
   .btn-sm { padding: 6px 12px; font-size: 11.5px; border-radius: 6px; }
+  .btn-xs { padding: 3px 9px; font-size: 10.5px; border-radius: 5px; }
   .btn-primary { background: var(--navy); color: #fff; }
   .btn-primary:hover { background: var(--navy-soft); }
   .btn-ghost { background: #fff; color: var(--navy); border: 1px solid var(--border); }
@@ -330,6 +331,14 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.18);
     display: none; align-items: center; gap: 8px; z-index: 999; max-width: 360px;
   }
+
+  .fab-prd {
+    position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+    border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35); cursor: pointer;
+    display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
 
   .channel-tabs { display: flex; gap: 6px; margin: 0 0 16px; border-bottom: 1px solid var(--border); }
   .channel-tab {
@@ -460,6 +469,10 @@
   .modal-body { padding: 20px 24px 6px; }
   .modal-box .btn-row { padding: 0 24px 20px; margin-top: 16px; }
   .telat-pill { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: var(--red-light); color: var(--red); }
+
+  /* ---------- RBAC: tabel Role & modal Kelola Izin (sekolah.html?tab=rbac) ---------- */
+  .rbac-check-cell { text-align: center; }
+  .rbac-check-cell input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
 
   /* ---------- DASHBOARD (KEPALA SEKOLAH): bar chart per kelas ---------- */
   .bar-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid #eef1f6; }

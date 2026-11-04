@@ -10,40 +10,70 @@ let currentUser = null;
 // ==================================================================
 // RBAC -- modules (nav order also defines default-landing-page priority), roles & users
 // ==================================================================
+// `group: null` = tampil berdiri sendiri di sidebar (tidak di bawah nav-group-label manapun).
 const rbacModules = [
-  { key: 'dashboard-konsolidasi', label: 'Dashboard Konsolidasi', icon: '📊', page: 'dashboard-konsolidasi.html' },
-  { key: 'pendaftaran', label: 'Pendaftaran Sekolah', icon: '＋', page: 'pendaftaran.html' },
-  { key: 'manajemen', label: 'Manajemen Sekolah', icon: '🏫', page: 'manajemen.html' },
-  { key: 'konfigurasi', label: 'Konfigurasi Sistem', icon: '⚙', page: 'konfigurasi.html' },
-  { key: 'pengguna', label: 'Pengguna', icon: '👤', page: 'pengguna.html' },
-  { key: 'rbac', label: 'Role & Hak Akses', icon: '🔐', page: 'rbac.html' },
+  { key: 'dashboard-konsolidasi', label: 'Dashboard Konsolidasi', icon: '📊', page: 'dashboard-konsolidasi.html', group: null },
+  { key: 'pendaftaran', label: 'Pendaftaran Sekolah', icon: '＋', page: 'pendaftaran.html', group: 'Onboarding' },
+  { key: 'manajemen', label: 'Manajemen Sekolah', icon: '🏫', page: 'manajemen.html', group: 'Onboarding' },
+  { key: 'konfigurasi', label: 'Konfigurasi Sistem', icon: '⚙', page: 'konfigurasi.html', group: 'Konfigurasi' },
+  { key: 'pengguna', label: 'Pengguna', icon: '👤', page: 'pengguna.html', group: 'Konfigurasi' },
+  { key: 'rbac', label: 'Role & Hak Akses', icon: '🔐', page: 'rbac.html', group: 'Konfigurasi' },
 ];
+
+// Hak akses per modul bersifat granular per-aksi: Create, Read, Update, Delete.
+// "Read" juga berfungsi sebagai gate akses menu/halaman (lihat enforcePageAccess/applyRbacToSidebar).
+function cru(c, r, u, d) { return { c, r, u, d }; }
+function cruFull(v) { return cru(v, v, v, v); }
 
 let roleSeq = 1;
 const rolesData = [
-  { id: roleSeq++, nama: 'Super Admin', icon: '🛡️', deskripsi: 'Akses penuh ke seluruh modul platform.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: true, pengguna: true, rbac: true } },
-  { id: roleSeq++, nama: 'Admin Wilayah (PWM)', icon: '🗺️', deskripsi: 'Kelola sekolah & onboarding di wilayahnya, tanpa akses konfigurasi platform.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: true, manajemen: true, konfigurasi: false, pengguna: false, rbac: false } },
-  { id: roleSeq++, nama: 'Staff Keuangan Pusat', icon: '💰', deskripsi: 'Pantau performa pembayaran & data sekolah, tanpa ubah konfigurasi/onboarding.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: true, konfigurasi: false, pengguna: false, rbac: false } },
-  { id: roleSeq++, nama: 'Viewer (Read-only)', icon: '👁️', deskripsi: 'Hanya lihat Dashboard Konsolidasi.',
-    perms: { 'dashboard-konsolidasi': true, pendaftaran: false, manajemen: false, konfigurasi: false, pengguna: false, rbac: false } },
+  { id: roleSeq++, nama: 'Super Admin', kode: 'SUPER_ADMIN', icon: '🛡️', deskripsi: 'Akses penuh (Create/Read/Update/Delete) ke seluruh modul platform.',
+    perms: {
+      'dashboard-konsolidasi': cruFull(true), pendaftaran: cruFull(true), manajemen: cruFull(true),
+      konfigurasi: cruFull(true), pengguna: cruFull(true), rbac: cruFull(true),
+    } },
+  { id: roleSeq++, nama: 'Admin Wilayah (PWM)', kode: 'ADMIN_WILAYAH_PWM', icon: '🗺️', deskripsi: 'Kelola sekolah & onboarding di wilayahnya, tanpa akses konfigurasi platform.',
+    perms: {
+      'dashboard-konsolidasi': cru(false, true, false, false),
+      pendaftaran: cru(true, true, true, false),
+      manajemen: cru(false, true, true, false),
+      konfigurasi: cru(false, false, false, false),
+      pengguna: cru(false, false, false, false),
+      rbac: cru(false, false, false, false),
+    } },
+  { id: roleSeq++, nama: 'Staff Keuangan Pusat', kode: 'STAFF_KEUANGAN_PUSAT', icon: '💰', deskripsi: 'Pantau performa pembayaran & data sekolah, tanpa ubah konfigurasi/onboarding.',
+    perms: {
+      'dashboard-konsolidasi': cru(false, true, false, false),
+      pendaftaran: cru(false, false, false, false),
+      manajemen: cru(false, true, false, false),
+      konfigurasi: cru(false, false, false, false),
+      pengguna: cru(false, false, false, false),
+      rbac: cru(false, false, false, false),
+    } },
+  { id: roleSeq++, nama: 'Viewer (Read-only)', kode: 'VIEWER', icon: '👁️', deskripsi: 'Hanya lihat Dashboard Konsolidasi.',
+    perms: {
+      'dashboard-konsolidasi': cru(false, true, false, false),
+      pendaftaran: cru(false, false, false, false),
+      manajemen: cru(false, false, false, false),
+      konfigurasi: cru(false, false, false, false),
+      pengguna: cru(false, false, false, false),
+      rbac: cru(false, false, false, false),
+    } },
 ];
 
 let userSeq = 1;
 const usersData = [
-  { id: userSeq++, nama: 'Siti Aminah', email: 'superadmin@geekgarden.id', password: 'admin123', roleId: 1, cakupan: 'Nasional', status: 'Aktif' },
-  { id: userSeq++, nama: 'Budi Santoso', email: 'wilayah.jatim@muhammadiyah.id', password: 'wilayah123', roleId: 2, cakupan: 'PWM Jawa Timur', status: 'Aktif' },
-  { id: userSeq++, nama: 'Rina Kartika', email: 'keuangan@muhammadiyah.id', password: 'keuangan123', roleId: 3, cakupan: 'Nasional', status: 'Aktif' },
-  { id: userSeq++, nama: 'Ahmad Fauzi', email: 'viewer@muhammadiyah.id', password: 'viewer123', roleId: 4, cakupan: 'Nasional', status: 'Aktif' },
-  { id: userSeq++, nama: 'Dedi Kurniawan', email: 'nonaktif@muhammadiyah.id', password: 'nonaktif123', roleId: 4, cakupan: 'Nasional', status: 'Nonaktif' },
+  { id: userSeq++, nama: 'Siti Aminah', email: 'superadmin@geekgarden.id', password: 'admin123', roleId: 1, status: 'Aktif' },
+  { id: userSeq++, nama: 'Budi Santoso', email: 'wilayah.jatim@muhammadiyah.id', password: 'wilayah123', roleId: 2, status: 'Aktif' },
+  { id: userSeq++, nama: 'Rina Kartika', email: 'keuangan@muhammadiyah.id', password: 'keuangan123', roleId: 3, status: 'Aktif' },
+  { id: userSeq++, nama: 'Ahmad Fauzi', email: 'viewer@muhammadiyah.id', password: 'viewer123', roleId: 4, status: 'Aktif' },
+  { id: userSeq++, nama: 'Dedi Kurniawan', email: 'nonaktif@muhammadiyah.id', password: 'nonaktif123', roleId: 4, status: 'Nonaktif' },
 ];
 
 function roleById(id) { return rolesData.find(r => r.id === Number(id)); }
 
 function defaultPageFor(role) {
-  const mod = rbacModules.find(m => role.perms[m.key]);
+  const mod = rbacModules.find(m => role.perms[m.key] && role.perms[m.key].r);
   return mod ? mod.page : 'dashboard-konsolidasi.html';
 }
 
@@ -56,8 +86,16 @@ function requireLogin() {
 }
 function enforcePageAccess(pageKey) {
   const role = roleById(currentUser.roleId);
-  if (!role.perms[pageKey]) { location.replace(defaultPageFor(role)); return false; }
+  const p = role.perms[pageKey];
+  if (!p || !p.r) { location.replace(defaultPageFor(role)); return false; }
   return true;
+}
+// guard tambahan untuk aksi tertentu di dalam halaman (create/update/delete),
+// dipakai terpisah dari enforcePageAccess yang hanya menjaga akses Read ke halaman
+function hasPerm(pageKey, action) {
+  const role = roleById(currentUser.roleId);
+  const p = role.perms[pageKey];
+  return !!(p && p[action]);
 }
 function logout() {
   clearSession();
@@ -70,7 +108,7 @@ function applyCurrentUserToUi() {
   const initials = currentUser.nama.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
   const av = document.getElementById('uc-avatar'); if (av) av.textContent = initials;
   const nm = document.getElementById('uc-name'); if (nm) nm.textContent = currentUser.nama;
-  const rl = document.getElementById('uc-role'); if (rl) rl.textContent = `${role.nama} -- ${currentUser.cakupan}`;
+  const rl = document.getElementById('uc-role'); if (rl) rl.textContent = role.nama;
   const cr = document.getElementById('crumb-role'); if (cr) cr.textContent = role.nama;
 }
 
@@ -78,7 +116,8 @@ function applyRbacToSidebar() {
   if (!currentUser) return;
   const role = roleById(currentUser.roleId);
   document.querySelectorAll('.nav-item[data-rbac]').forEach(item => {
-    item.style.display = role.perms[item.dataset.rbac] ? 'flex' : 'none';
+    const p = role.perms[item.dataset.rbac];
+    item.style.display = (p && p.r) ? 'flex' : 'none';
   });
   document.querySelectorAll('.nav-group-label').forEach(label => {
     let sib = label.nextElementSibling, anyVisible = false;
@@ -158,7 +197,7 @@ function switchChannel(ch, rootId) {
   });
 }
 
-// dynamic reminder/escalation rule rows (used in Konfigurasi Sistem default + Manajemen Sekolah override)
+// dynamic reminder/escalation rule rows (used in Konfigurasi Sistem default platform)
 function addRuleRow(tableId) {
   const tbody = document.querySelector('#' + (tableId || 'rules-table') + ' tbody');
   const tr = document.createElement('tr');
@@ -167,14 +206,48 @@ function addRuleRow(tableId) {
     <td><input type="text" placeholder="Nama aturan baru"></td>
     <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
     <td>
-      <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label>
-      <label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label>
-      <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <label style="font-size:11.5px;"><input type="checkbox" checked> WA</label>
+        <label style="font-size:11.5px;"><input type="checkbox"> Email</label>
+        <label style="font-size:11.5px;"><input type="checkbox"> Push Notif</label>
+        <label style="font-size:11.5px;"><input type="checkbox"> Notif Aplikasi</label>
+      </div>
     </td>
     <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
     <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>`;
   tbody.appendChild(tr);
 }
+
+// default message templates (WA/Email/Push Notif/Notif Aplikasi x level 1-3) persisted across reloads
+const TMPL_DEFAULT_IDS = [
+  'tmpl-default-wa-1', 'tmpl-default-wa-2', 'tmpl-default-wa-3',
+  'tmpl-default-email-1', 'tmpl-default-email-2', 'tmpl-default-email-3',
+  'tmpl-default-push-1', 'tmpl-default-push-2', 'tmpl-default-push-3',
+  'tmpl-default-inapp-1', 'tmpl-default-inapp-2', 'tmpl-default-inapp-3',
+];
+const TMPL_DEFAULT_STORAGE_KEY = 'tmpl-default';
+
+function saveDefaultTemplate() {
+  const data = {};
+  TMPL_DEFAULT_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  localStorage.setItem(TMPL_DEFAULT_STORAGE_KEY, JSON.stringify(data));
+  showToast('✓ Template default platform berhasil disimpan');
+}
+
+function loadDefaultTemplate() {
+  const raw = localStorage.getItem(TMPL_DEFAULT_STORAGE_KEY);
+  if (!raw) return;
+  let data;
+  try { data = JSON.parse(raw); } catch (e) { return; }
+  TMPL_DEFAULT_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && typeof data[id] === 'string') el.value = data[id];
+  });
+}
+document.addEventListener('DOMContentLoaded', loadDefaultTemplate);
 
 // ---- toast ----
 let toastTimer;
@@ -187,16 +260,62 @@ function showToast(msg) {
   toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2600);
 }
 
+// ---- confirm modal (generic, dipakai sebelum Edit/Hapus/Nonaktifkan data yang sudah tersimpan) ----
+function ensureConfirmModal() {
+  if (document.getElementById('gconfirm-overlay')) return;
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="modal-overlay" id="gconfirm-overlay" onclick="if(event.target===this) closeConfirmModal();">
+      <div class="modal-box" style="max-width:420px;">
+        <div class="modal-head">
+          <h3 id="gconfirm-title">Konfirmasi</h3>
+          <span class="modal-close" onclick="closeConfirmModal()">✕</span>
+        </div>
+        <div class="modal-body">
+          <p id="gconfirm-message" style="margin:0;font-size:13px;color:var(--ink);line-height:1.6;"></p>
+        </div>
+        <div class="btn-row" style="justify-content:flex-end;">
+          <button class="btn btn-ghost" onclick="closeConfirmModal()">Batal</button>
+          <button class="btn" id="gconfirm-btn"></button>
+        </div>
+      </div>
+    </div>`);
+}
+function closeConfirmModal() {
+  const overlay = document.getElementById('gconfirm-overlay');
+  if (overlay) overlay.classList.remove('active');
+}
+function confirmAction(opts, onConfirm) {
+  ensureConfirmModal();
+  const { title = 'Konfirmasi', message = '', confirmLabel = 'Ya, Lanjutkan', danger = false } = opts;
+  document.getElementById('gconfirm-title').textContent = title;
+  document.getElementById('gconfirm-message').textContent = message;
+  const btn = document.getElementById('gconfirm-btn');
+  btn.textContent = confirmLabel;
+  btn.style.background = danger ? 'var(--red)' : 'var(--navy)';
+  btn.style.color = '#fff';
+  btn.onclick = () => { closeConfirmModal(); onConfirm(); };
+  document.getElementById('gconfirm-overlay').classList.add('active');
+}
+
 // ---- floating PRD doc button (muncul di semua halaman app, bukan di login) ----
+const PRD_BY_PAGE = {
+  'dashboard-konsolidasi.html': 'docs/PRD-dashboard-konsolidasi.html',
+  'pendaftaran.html': 'docs/PRD-pendaftaran-sekolah.html',
+  'manajemen.html': 'docs/PRD-manajemen-sekolah.html',
+  'konfigurasi.html': 'docs/PRD-konfigurasi-sistem.html',
+  'pengguna.html': 'docs/PRD-pengguna.html',
+  'rbac.html': 'docs/PRD-role-hak-akses.html',
+};
 function injectPrdFab() {
   if (!document.getElementById('app-shell')) return;
   if (document.getElementById('prd-fab')) return;
+  const currentFile = location.pathname.split('/').pop();
   const a = document.createElement('a');
   a.id = 'prd-fab';
-  a.href = 'docs/index.html';
+  a.href = PRD_BY_PAGE[currentFile] || 'docs/index.html';
   a.target = '_blank';
   a.rel = 'noopener';
-  a.title = 'Baca dokumen PRD per fitur';
+  a.title = 'Baca PRD fitur ini';
   a.style.cssText = [
     'position:fixed', 'bottom:26px', 'right:26px', 'background:var(--navy)', 'color:#fff',
     'border:none', 'border-radius:999px', 'padding:13px 20px', 'font-size:13px', 'font-weight:700',

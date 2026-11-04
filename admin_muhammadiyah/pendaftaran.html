@@ -36,11 +36,14 @@
   <div class="main">
     <div class="topbar">
       <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Pendaftaran Sekolah</b></div>
-      <div class="user-chip">
-        <div class="av" id="uc-avatar">SA</div>
-        <div class="info">
-          <div class="name" id="uc-name">Super Admin</div>
-          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+      <div class="topbar-right">
+        <a class="btn-prd" href="docs/PRD-pendaftaran-sekolah.html" target="_blank" rel="noopener">📄 PRD</a>
+        <div class="user-chip">
+          <div class="av" id="uc-avatar">SA</div>
+          <div class="info">
+            <div class="name" id="uc-name">Super Admin</div>
+            <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+          </div>
         </div>
       </div>
     </div>
@@ -69,24 +72,20 @@
             <div class="grid2">
               <div class="field">
                 <label>Nama Sekolah</label>
-                <input type="text" placeholder="mis. SD Muhammadiyah 1 Surabaya" value="SD Muhammadiyah 4 Sidoarjo">
+                <input type="text" id="pd-nama-sekolah" placeholder="mis. SD Muhammadiyah 1 Surabaya" value="SD Muhammadiyah 4 Sidoarjo">
               </div>
               <div class="field">
                 <label>NPSN</label>
-                <input type="text" placeholder="8 digit" value="20501234">
+                <input type="text" id="pd-npsn" placeholder="8 digit" value="20501234">
               </div>
               <div class="field">
                 <label>Jenjang</label>
-                <select>
+                <select id="pd-jenjang">
                   <option>SD / MI</option>
                   <option>SMP / MTs</option>
                   <option selected>SMA / MA</option>
                   <option>SMK</option>
                 </select>
-              </div>
-              <div class="field">
-                <label>Perkiraan Jumlah Siswa Aktif</label>
-                <input type="number" value="480">
               </div>
               <div class="field">
                 <label>Wilayah (PWM)</label>
@@ -107,7 +106,7 @@
             </div>
             <div class="field">
               <label>Alamat Lengkap</label>
-              <textarea>Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</textarea>
+              <textarea id="pd-alamat">Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</textarea>
             </div>
           </div>
         </div>
@@ -123,10 +122,10 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" value="Ahmad Yusuf"></td>
+                  <td><input type="text" id="pd-admin-nama" value="Ahmad Yusuf"></td>
                   <td><input type="text" value="Admin" disabled style="background:#f5f6f8;color:var(--muted);"></td>
-                  <td><input type="tel" value="0857xxxxxxx"></td>
-                  <td><input type="email" value="admin@sdmuh4sda.sch.id"></td>
+                  <td><input type="tel" id="pd-admin-wa" value="085712345678"></td>
+                  <td><input type="email" id="pd-admin-email" value="admin@sdmuh4sda.sch.id"></td>
                 </tr>
               </tbody>
             </table>
@@ -139,16 +138,16 @@
             <div class="grid2">
               <div class="field">
                 <label>Email Sekolah</label>
-                <input type="email" value="info@sdmuh4sda.sch.id">
+                <input type="email" id="pd-kontak-email" value="info@sdmuh4sda.sch.id">
               </div>
               <div class="field">
                 <label>Nama Kontak Person</label>
-                <input type="text" value="Drs. Slamet Riyadi (Kepala Sekolah)">
+                <input type="text" id="pd-kontak-nama" value="Drs. Slamet Riyadi (Kepala Sekolah)">
               </div>
             </div>
             <div class="field">
               <label>No. WhatsApp Kontak Person</label>
-              <input type="tel" value="0812xxxxxxx">
+              <input type="tel" id="pd-kontak-wa" value="081223456789">
             </div>
             <div class="note-box info">RBAC untuk peran Kepala Sekolah &amp; Bendahara otomatis diterapkan saat masing-masing diundang oleh Admin Sekolah -- Bendahara tidak bisa menyetujui write-off yang diajukan sendiri (segregation of duties, lihat Skenario 9).</div>
           </div>
@@ -158,21 +157,34 @@
         <div class="step-panel" data-panel="3" style="display:none;">
           <div class="card">
             <h3>Rekening Penampung <span class="tag-pill pg">BANK</span></h3>
-            <div class="grid3">
-              <div class="field">
-                <label>Nama Bank</label>
-                <select>
-                  <option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option>
-                  <option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option>
-                </select>
+            <p class="card-desc">Data rekening ini hanya bersifat informasi -- bukan proses otomatis. Pencairan dana (disbursement) tetap dilakukan secara manual oleh admin Muhammadiyah. Boleh terdiri dari 1 rekening atau lebih; minimal harus ada 1 rekening.</p>
+            <div class="filter-bar">
+              <input type="text" class="search" id="pd-rek-search" placeholder="Cari nama pemilik / no. rekening..." oninput="renderPdRekeningTable()">
+              <select id="pd-rek-filter-bank" onchange="renderPdRekeningTable()"><option value="">Semua Bank</option></select>
+              <button class="btn btn-primary btn-sm" onclick="openPdRekeningPanel()">+ Tambah Rekening</button>
+            </div>
+            <table class="dtab" id="pd-rekening-table">
+              <thead>
+                <tr><th style="width:26%">Bank</th><th style="width:22%">No. Rekening</th><th style="width:28%">Nama Pemilik</th><th style="width:24%">Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+
+            <div class="card" id="pd-rekening-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+              <h3>Tambah Rekening Penampung</h3>
+              <div class="grid3">
+                <div class="field"><label>Nama Bank</label><select id="pd-rek-bank" onchange="handlePdRekBankChange()"></select></div>
+                <div class="field" id="pd-rek-bank-lainnya-wrap" style="display:none;"><label>Nama Bank Lainnya</label><input type="text" id="pd-rek-bank-lainnya" placeholder="Tulis nama bank"></div>
+                <div class="field"><label>Nomor Rekening</label><input type="text" id="pd-rek-norek" placeholder="hanya angka, 6-20 digit"></div>
+                <div class="field"><label>Nama Pemilik Rekening</label><input type="text" id="pd-rek-nama" placeholder="sesuai buku rekening"></div>
               </div>
-              <div class="field">
-                <label>No Rek</label>
-                <input type="text" placeholder="mis. 7123456789" value="7123456789">
+              <div class="switch-row">
+                <div class="txt"><b>Jadikan rekening utama</b><span>Tujuan pencairan dana aktif -- otomatis menggantikan rekening utama sebelumnya</span></div>
+                <label class="toggle"><input type="checkbox" id="pd-rek-utama"><span class="slider"></span></label>
               </div>
-              <div class="field">
-                <label>Nama Pemilik</label>
-                <input type="text" placeholder="sesuai buku rekening" value="SD Muhammadiyah 4 Sidoarjo">
+              <div class="btn-row">
+                <button class="btn btn-ghost" onclick="closePdRekeningPanel()">Batal</button>
+                <button class="btn btn-success" onclick="savePdRekening()">Simpan</button>
               </div>
             </div>
           </div>
@@ -182,19 +194,44 @@
         <div class="step-panel" data-panel="4" style="display:none;">
           <div class="card">
             <h3>Ringkasan Pendaftaran</h3>
-            <p class="card-desc">Tinjau kembali data yang sudah diisi pada Step 1 -- 3 sebelum mendaftarkan sekolah.</p>
-            <table class="ref-table">
-              <tr><th style="width:32%">Nama Sekolah</th><td id="review-nama">SD Muhammadiyah 4 Sidoarjo</td></tr>
-              <tr><th>NPSN</th><td id="review-npsn">20501234</td></tr>
-              <tr><th>Jenjang</th><td id="review-jenjang">SMA / MA</td></tr>
-              <tr><th>Perkiraan Jumlah Siswa Aktif</th><td id="review-siswa">480</td></tr>
-              <tr><th>Struktur Organisasi</th><td id="review-org">PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota</td></tr>
-              <tr><th>Alamat Lengkap</th><td id="review-alamat">Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur</td></tr>
-              <tr><th>Status Awal</th><td>Draft (menunggu aktivasi)</td></tr>
-              <tr><th>Akun Awal (Admin)</th><td id="review-admin">Ahmad Yusuf -- 0857xxxxxxx -- admin@sdmuh4sda.sch.id</td></tr>
-              <tr><th>Kontak Sekolah</th><td id="review-kontak">info@sdmuh4sda.sch.id -- Drs. Slamet Riyadi (Kepala Sekolah) -- 0812xxxxxxx</td></tr>
-              <tr><th>Rekening Penampung</th><td id="review-rekening">BSI -- Bank Syariah Indonesia -- 7123456789 a.n. SD Muhammadiyah 4 Sidoarjo</td></tr>
-            </table>
+            <p class="card-desc">Tinjau kembali data yang sudah diisi pada Step 1 -- 3 sebelum mendaftarkan sekolah. Tekan "Edit" pada bagian yang ingin diubah untuk langsung kembali ke step tersebut.</p>
+
+            <div class="review-section">
+              <div class="review-section-head">
+                <span class="review-section-title">1. Data Sekolah</span>
+                <button class="btn btn-outline btn-xs" onclick="goToStep(1)">✎ Edit</button>
+              </div>
+              <table class="ref-table">
+                <tr><th style="width:32%">Nama Sekolah</th><td id="review-nama"></td></tr>
+                <tr><th>NPSN</th><td id="review-npsn"></td></tr>
+                <tr><th>Jenjang</th><td id="review-jenjang"></td></tr>
+                <tr><th>Struktur Organisasi</th><td id="review-org"></td></tr>
+                <tr><th>Alamat Lengkap</th><td id="review-alamat"></td></tr>
+                <tr><th>Status Awal</th><td>Draft (menunggu aktivasi)</td></tr>
+              </table>
+            </div>
+
+            <div class="review-section">
+              <div class="review-section-head">
+                <span class="review-section-title">2. Akun Awal</span>
+                <button class="btn btn-outline btn-xs" onclick="goToStep(2)">✎ Edit</button>
+              </div>
+              <table class="ref-table">
+                <tr><th style="width:32%">Akun Awal (Admin)</th><td id="review-admin"></td></tr>
+                <tr><th>Kontak Sekolah</th><td id="review-kontak"></td></tr>
+              </table>
+            </div>
+
+            <div class="review-section">
+              <div class="review-section-head">
+                <span class="review-section-title">3. Rekening Penampung</span>
+                <button class="btn btn-outline btn-xs" onclick="goToStep(3)">✎ Edit</button>
+              </div>
+              <table class="ref-table">
+                <tr><th style="width:32%">Rekening Penampung</th><td id="review-rekening"></td></tr>
+              </table>
+            </div>
+
             <div class="note-box info">Setelah didaftarkan, status Sekolah berubah dari <b>Draft</b> ke <b>Aktif</b> dan event <code>school.onboarded</code> diterbitkan ke seluruh service terkait (lihat Skenario 11).</div>
           </div>
         </div>
@@ -223,7 +260,8 @@
       const orgData = {
         "PWM Jawa Timur": {
           "PDM Surabaya": ["PCM Wonokromo", "PCM Genteng", "PCM Tegalsari"],
-          "PDM Sidoarjo": ["PCM Sidoarjo Kota", "PCM Waru", "PCM Krian"]
+          "PDM Sidoarjo": ["PCM Sidoarjo Kota", "PCM Waru", "PCM Krian"],
+          "PDM Malang": ["PCM Klojen", "PCM Lowokwaru"]
         },
         "PWM DKI Jakarta": {
           "PDM Jakarta Selatan": ["PCM Kebayoran Baru", "PCM Pasar Minggu"],
@@ -232,6 +270,9 @@
         "PWM Jawa Barat": {
           "PDM Bandung": ["PCM Coblong", "PCM Sukajadi"],
           "PDM Bekasi": ["PCM Bekasi Timur", "PCM Bekasi Selatan"]
+        },
+        "PWM DI Yogyakarta": {
+          "PDM Kota Yogyakarta": ["PCM Danurejan", "PCM Gondokusuman"]
         }
       };
       const selPwm = document.getElementById('sel-pwm');
@@ -263,31 +304,156 @@
       selPcm.addEventListener('change', updateReview);
       fillPwm();
 
+      // ---- Rekening Penampung (boleh lebih dari 1, minimal harus ada 1) ----
+      const BANK_OPTIONS_PD = ["BCA", "Mandiri", "BNI", "BRI", "BSI -- Bank Syariah Indonesia", "Lainnya"];
+      let pdRekeningSeq = 2;
+      const pdRekeningList = [
+        { id: 1, bank: "BSI -- Bank Syariah Indonesia", noRekening: "7123456789", namaPemilik: "SD Muhammadiyah 4 Sidoarjo", utama: true }
+      ];
+      function fillPdRekeningBankFilter() {
+        const sel = document.getElementById('pd-rek-filter-bank');
+        if (!sel) return;
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">Semua Bank</option>' + BANK_OPTIONS_PD.map(b => `<option value="${b}" ${b === cur ? 'selected' : ''}>${b}</option>`).join('');
+      }
+      function renderPdRekeningTable() {
+        if (!document.getElementById('pd-rekening-table')) return;
+        fillPdRekeningBankFilter();
+        const searchQ = (document.getElementById('pd-rek-search').value || '').trim().toLowerCase();
+        const bankQ = document.getElementById('pd-rek-filter-bank').value;
+        const tbody = document.querySelector('#pd-rekening-table tbody');
+        const rows = pdRekeningList
+          .map((r, i) => ({ r, i }))
+          .filter(({ r }) => !bankQ || r.bank === bankQ)
+          .filter(({ r }) => !searchQ || r.namaPemilik.toLowerCase().includes(searchQ) || r.noRekening.includes(searchQ));
+        tbody.innerHTML = rows.length ? rows.map(({ r, i }) => `
+          <tr>
+            <td>${r.bank}${r.utama ? ' <span class="tag-pill ok">UTAMA</span>' : ''}</td>
+            <td>${r.noRekening}</td>
+            <td>${r.namaPemilik}</td>
+            <td>
+              <div class="row-actions">
+                <button class="icon-btn icon-btn-red" onclick="removePdRekening(${i})" title="Hapus">✕</button>
+              </div>
+              ${!r.utama ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setPdRekeningUtama(${i})">Jadikan Utama</button>` : ''}
+            </td>
+          </tr>`).join('') : `<tr><td colspan="4" class="empty-hint">Tidak ada rekening yang cocok dengan filter.</td></tr>`;
+        updateReviewRekening();
+      }
+      function handlePdRekBankChange() {
+        const sel = document.getElementById('pd-rek-bank');
+        const wrap = document.getElementById('pd-rek-bank-lainnya-wrap');
+        if (!sel || !wrap) return;
+        wrap.style.display = sel.value === 'Lainnya' ? 'block' : 'none';
+        if (sel.value !== 'Lainnya') document.getElementById('pd-rek-bank-lainnya').value = '';
+      }
+      function openPdRekeningPanel() {
+        const sel = document.getElementById('pd-rek-bank');
+        sel.innerHTML = BANK_OPTIONS_PD.map(b => `<option value="${b}">${b}</option>`).join('');
+        const panel = document.getElementById('pd-rekening-panel');
+        document.getElementById('pd-rek-bank-lainnya').value = '';
+        document.getElementById('pd-rek-norek').value = '';
+        document.getElementById('pd-rek-nama').value = '';
+        document.getElementById('pd-rek-utama').checked = false;
+        handlePdRekBankChange();
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      function closePdRekeningPanel() {
+        document.getElementById('pd-rekening-panel').style.display = 'none';
+      }
+      function savePdRekening() {
+        const bankSel = document.getElementById('pd-rek-bank').value;
+        const bankLainnya = document.getElementById('pd-rek-bank-lainnya').value.trim();
+        const bank = bankSel === 'Lainnya' ? bankLainnya : bankSel;
+        const noRekening = document.getElementById('pd-rek-norek').value.trim();
+        const namaPemilik = document.getElementById('pd-rek-nama').value.trim();
+        const utama = document.getElementById('pd-rek-utama').checked;
+
+        if (!bankSel) { showToast('Nama Bank wajib dipilih'); return; }
+        if (bankSel === 'Lainnya' && bankLainnya.length < 3) { showToast('Nama Bank Lainnya wajib diisi, minimal 3 karakter'); return; }
+        if (!/^\d{6,20}$/.test(noRekening)) { showToast('Nomor Rekening wajib angka, 6-20 digit'); return; }
+        if (namaPemilik.length < 3) { showToast('Nama Pemilik Rekening minimal 3 karakter'); return; }
+        const dup = pdRekeningList.some(r => r.bank === bank && r.noRekening === noRekening);
+        if (dup) { showToast('Rekening dengan bank & nomor yang sama sudah terdaftar'); return; }
+
+        if (utama) pdRekeningList.forEach(r => r.utama = false);
+        const payload = { bank, noRekening, namaPemilik, utama };
+        if (!pdRekeningList.length) payload.utama = true;
+        pdRekeningList.push({ id: pdRekeningSeq++, ...payload });
+        closePdRekeningPanel();
+        renderPdRekeningTable();
+        showToast('✓ Rekening Penampung berhasil disimpan');
+      }
+      function setPdRekeningUtama(idx) {
+        pdRekeningList.forEach((r, i) => r.utama = (i === idx));
+        renderPdRekeningTable();
+        showToast(`✓ ${pdRekeningList[idx].bank} dijadikan rekening utama`);
+      }
+      function removePdRekening(idx) {
+        if (pdRekeningList.length <= 1) { showToast('Rekening ini tidak bisa dihapus -- minimal harus ada 1 rekening penampung tercatat.'); return; }
+        const r = pdRekeningList[idx];
+        if (!confirm(`Hapus rekening ${r.bank} -- ${r.noRekening}? Tindakan ini tidak bisa dibatalkan.`)) return;
+        const wasUtama = r.utama;
+        pdRekeningList.splice(idx, 1);
+        if (wasUtama && pdRekeningList.length) pdRekeningList[0].utama = true;
+        renderPdRekeningTable();
+        showToast('Rekening dihapus');
+      }
+      function updateReviewRekening() {
+        const el = document.getElementById('review-rekening');
+        if (!el) return;
+        el.innerHTML = pdRekeningList.map(r => `${r.bank} -- ${r.noRekening} a.n. ${r.namaPemilik}${r.utama ? ' <span class="tag-pill ok">UTAMA</span>' : ''}`).join('<br>');
+      }
+      renderPdRekeningTable();
+
+      // ---- Review (Step 4) -- harus selalu menyamakan nilai aktual dari Step 1-3, bukan teks statis ----
+      function updateReviewAll() {
+        document.getElementById('review-nama').textContent = document.getElementById('pd-nama-sekolah').value.trim() || '--';
+        document.getElementById('review-npsn').textContent = document.getElementById('pd-npsn').value.trim() || '--';
+        document.getElementById('review-jenjang').textContent = document.getElementById('pd-jenjang').value;
+        document.getElementById('review-alamat').textContent = document.getElementById('pd-alamat').value.trim() || '--';
+        const adminNama = document.getElementById('pd-admin-nama').value.trim();
+        const adminWa = document.getElementById('pd-admin-wa').value.trim();
+        const adminEmail = document.getElementById('pd-admin-email').value.trim();
+        document.getElementById('review-admin').textContent = `${adminNama} -- ${adminWa} -- ${adminEmail}`;
+        const kontakEmail = document.getElementById('pd-kontak-email').value.trim();
+        const kontakNama = document.getElementById('pd-kontak-nama').value.trim();
+        const kontakWa = document.getElementById('pd-kontak-wa').value.trim();
+        document.getElementById('review-kontak').textContent = `${kontakEmail} -- ${kontakNama} -- ${kontakWa}`;
+        updateReview(); // Struktur Organisasi (PWM/PDM/PCM)
+        updateReviewRekening();
+      }
+
       // ---- stepper ----
       let currentStep = 1;
       const totalSteps = 4;
       function stepNav(dir) {
         const next = currentStep + dir;
-        if (next < 1 || next > totalSteps) {
-          if (next > totalSteps) { showToast('✓ Sekolah berhasil didaftarkan -- status: Aktif'); }
-          return;
-        }
+        if (next > totalSteps) { showToast('✓ Sekolah berhasil didaftarkan -- status: Aktif'); return; }
+        if (next < 1) return;
+        goToStep(next);
+      }
+      // lompat langsung ke step manapun (dipakai tombol "Edit" per bagian di Ringkasan, dan stepNav di atas)
+      function goToStep(target) {
+        if (target < 1 || target > totalSteps || target === currentStep) return;
         document.querySelector(`.step-panel[data-panel="${currentStep}"]`).style.display = 'none';
         document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-        if (dir > 0) {
+        if (target > currentStep) {
           document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('done');
-        } else {
-          document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('done');
         }
 
-        currentStep = next;
+        currentStep = target;
         document.querySelector(`.step-panel[data-panel="${currentStep}"]`).style.display = 'block';
         document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('done');
+        if (currentStep === totalSteps) updateReviewAll();
 
         document.getElementById('btn-back').disabled = currentStep === 1;
         document.getElementById('btn-next').textContent = currentStep === totalSteps ? 'Daftarkan Sekolah ✓' : 'Lanjut →';
       }
       window.stepNav = stepNav;
+      window.goToStep = goToStep;
     }
   }
 </script>

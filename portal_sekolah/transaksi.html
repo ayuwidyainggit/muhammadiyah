@@ -28,7 +28,6 @@
     <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
     <div class="nav-children" data-nav-children="konfigurasi">
       <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
-      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
@@ -37,10 +36,12 @@
       <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
       <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item active" data-rbac="transaksi" href="transaksi.html" id="nav-self"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
@@ -87,24 +88,9 @@
         <!-- TAB: TAGIHAN -->
         <div class="page-tab-panel active" data-ptabpanel="tagihan">
           <div class="card">
-            <h3>Master Periode Tahun Ajaran</h3>
-            <p class="card-desc">Daftar periode tahun ajaran sekolah ini -- hanya <b>satu periode yang bisa aktif</b> dalam satu waktu. Periode aktif menjadi pilihan default saat membuat tagihan baru di bawah.</p>
-            <table class="dtab" id="master-periode-table">
-              <thead>
-                <tr><th style="width:30%">Tahun Ajaran</th><th style="width:24%">Tanggal Mulai</th><th style="width:24%">Tanggal Selesai</th><th style="width:12%">Aktif</th><th style="width:10%">Aksi</th></tr>
-              </thead>
-              <tbody id="master-periode-body"></tbody>
-            </table>
-            <button class="btn-add-row" onclick="addPeriodeRow()">+ Tambah Periode Tahun Ajaran</button>
-            <div class="hint" style="margin-top:8px;">Pilih salah satu radio di kolom Aktif lalu klik Simpan -- otomatis menonaktifkan periode lainnya.</div>
-            <div class="btn-row" style="justify-content:flex-end;">
-              <button class="btn btn-success" onclick="savePeriodeTahunAjaran()">Simpan Periode Tahun Ajaran</button>
-            </div>
-          </div>
-
-          <div class="card">
             <h3>Master Data Tagihan</h3>
             <p class="card-desc">Kategori tagihan yang bisa dipakai berulang kali saat membuat tagihan -- baik yang sifatnya tetap dalam periode tertentu (mis. SPP bulanan, kegiatan per 6 bulan) maupun sekali bayar (mis. uang gedung, uang pangkal, uang pendaftaran). Nominal bisa berbeda tiap Periode Tahun Ajaran, mis. SPP naik tiap tahun -- gunakan filter di bawah untuk melihat/mengubah nominal tahun tertentu.</p>
+            <div class="note-box info" style="margin-bottom:14px;">Kelola daftar Periode Tahun Ajaran (tambah/ubah/hapus, tandai periode aktif) di menu <b>Manajemen Sekolah &rarr; Periode Tahun Ajaran</b>.</div>
             <div class="filter-bar">
               <select id="mt-filter-periode" onchange="renderMasterTagihan()">
                 <option value="">Semua Periode</option>
@@ -354,7 +340,6 @@
   restoreSession();
   if (currentUser) {
     refreshKelasDropdowns();
-    renderPeriodeTahunAjaran();
     renderMasterTagihan();
     refreshPeriodeDropdowns();
     refreshJenisTagihanDropdowns();

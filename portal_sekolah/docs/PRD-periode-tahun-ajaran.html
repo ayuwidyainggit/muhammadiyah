@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Periode Tahun Ajaran -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Periode Tahun Ajaran <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Periode Tahun Ajaran -- halaman tersendiri <code>periode.html</code>, nav-child di bawah menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>periode.html</code>, <code>app.js</code> (data <code>periodeTahunAjaranData</code>, <code>periodeSeq</code>; fungsi <code>renderMasterPeriodeTable</code>, <code>openPeriodePanel</code>, <code>closePeriodePanel</code>, <code>savePeriodeTahunAjaran</code>, <code>setPeriodeAktif</code>, <code>removePeriodeRow</code>, <code>isPeriodeReferenced</code>, <code>getActivePeriodeNama</code>, <code>periodeOptions</code>, <code>refreshPeriodeDropdowns</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-manajemen-murid.html">PRD Manajemen Murid</a> -- field <code>periode</code> pada data siswa mereferensikan periode di sini; Master Data Tagihan (Transaksi &amp; Invoice, di luar lingkup dokumen ini) -- field <code>periodeTahunAjaran</code> mereferensikan periode yang sama; PRD Role &amp; Hak Akses -- izin modul <code>periode</code> diatur di sana (catatan: dokumen tersebut belum memuat modul ini pada saat PRD ini ditulis, perlu disinkronkan terpisah)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan pemindahan Master Periode Tahun Ajaran dari tab "Tagihan" milik Transaksi &amp; Invoice (pola edit-semua-baris-lalu-simpan) menjadi halaman tersendiri dengan CRUD per-baris (panel Tambah/Edit, hapus langsung per baris) serta aturan baru: periode yang sudah direferensikan data siswa/tagihan dikunci dari Edit &amp; Hapus.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Periode Tahun Ajaran</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini mengelola daftar <strong>periode tahun ajaran</strong> milik satu sekolah (mis. "2026/2027") beserta tanggal mulai &amp; selesainya, dan menandai <strong>satu periode sebagai aktif</strong> pada satu waktu. Periode aktif menjadi pilihan default saat Bendahara/Admin membuat tagihan baru. Fitur ini <strong>tidak</strong> mengatur nominal tagihan per periode (lihat Master Data Tagihan, menu Transaksi &amp; Invoice, di luar lingkup dokumen ini) dan <strong>tidak</strong> mengatur kenaikan kelas siswa antar periode (lihat <a class="xref" href="PRD-manajemen-murid.html">PRD Manajemen Murid</a>) -- fitur ini hanya menyediakan daftar periode yang dirujuk kedua fitur tersebut.</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Periode Tahun Ajaran</td><td>Rentang satu tahun ajaran sekolah (mis. "2026/2027"), dengan tanggal mulai &amp; selesai</td></tr>
+              <tr><td>Periode Aktif</td><td>Satu periode yang ditandai sebagai periode berjalan saat ini -- jadi pilihan default saat membuat tagihan baru</td></tr>
+              <tr><td>Periode Terpakai (Terkunci)</td><td>Periode yang sudah direferensikan oleh data siswa dan/atau Master Data Tagihan -- tidak bisa diubah atau dihapus (lihat BR-06)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child tersendiri di bawah grup "Manajemen Sekolah" pada sidebar (sejajar dengan Profil Sekolah, Kategori Sekolah, Kelas, Pengguna &amp; Akun Sekolah, Role &amp; Hak Akses -- yang merupakan tab di dalam <code>sekolah.html</code> -- serta Akun Wali Murid &amp; Manajemen Murid yang juga halaman tersendiri). Sebelumnya fitur ini adalah bagian dari tab "Tagihan" milik Transaksi &amp; Invoice; dipindah menjadi halaman tersendiri dengan izin modul (<code>data-rbac="periode"</code>) sendiri yang mengikuti akses modul <code>transaksi</code> yang sudah ada sebelumnya, supaya peran yang tadinya bisa mengelola periode (Bendahara, Admin) tidak kehilangan akses setelah pemindahan.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar periode tahun ajaran dengan status Aktif/Nonaktif dan pencarian.</li>
+          <li>Menambah periode tahun ajaran baru.</li>
+          <li>Mengubah periode yang belum direferensikan data lain.</li>
+          <li>Menandai satu periode sebagai periode aktif (menggantikan periode aktif sebelumnya).</li>
+          <li>Menghapus periode yang belum direferensikan data lain.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Mengelola periode tahun ajaran -- menambah, mengubah (jika belum terpakai), menghapus (jika belum terpakai), dan menandai periode aktif. Mengikuti akses modul <code>transaksi</code> yang sudah dimiliki Bendahara sebelumnya.</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- mengelola periode tahun ajaran secara penuh.</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default, kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Minimal harus selalu ada 1 periode tahun ajaran tersisa (tidak boleh dihapus sampai kosong).</li>
+          <li>Hanya satu periode yang boleh berstatus Aktif pada satu waktu.</li>
+          <li>Periode yang sudah direferensikan data siswa atau Master Data Tagihan tidak bisa diubah (Edit) atau dihapus (Hapus) -- lihat BR-06.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Keterkaitan periode dengan data lain dicek berdasarkan <strong>nama periode (string)</strong>, bukan <code>id</code> -- lihat <a class="xref" href="#sec-6">bagian 6</a>.</li>
+          <li>Nomor tagihan bulanan pada data invoice (mis. <code>"2026-07"</code>) adalah konsep "periode" yang berbeda (bulan penagihan) dan <strong>tidak</strong> termasuk dalam pengecekan referensi periode tahun ajaran -- lihat <a class="xref" href="#sec-8">Batasan, bagian 8</a>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Periode</td><td>Sistem menampilkan tabel berisi Tahun Ajaran, Tanggal Mulai, Tanggal Selesai, Status (Aktif/Nonaktif), dan Aksi</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Cari Periode</td><td>Sistem menyediakan input pencarian Tahun Ajaran yang langsung memperbarui tabel saat diketik</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Tambah Periode</td><td>Tombol "+ Tambah Periode Tahun Ajaran" membuka panel form berisi Tahun Ajaran, Tanggal Mulai, Tanggal Selesai, dan toggle "Jadikan periode aktif"</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Simpan Periode Baru</td><td>Saat "Simpan" ditekan pada mode tambah, sistem memvalidasi input (lihat <a class="xref" href="#sec-5">bagian 5</a>), lalu menambahkan periode baru -- langsung Aktif jika ini periode pertama, atau jika toggle "Jadikan periode aktif" dicentang</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Ubah Periode</td><td>Tombol edit (&#9998;) hanya tampil untuk periode yang <strong>belum</strong> direferensikan data lain; membuka panel form yang sama dalam mode edit, terisi data periode terkait</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Simpan Perubahan Periode</td><td>Saat "Simpan" ditekan pada mode edit, sistem menampilkan dialog konfirmasi sebelum benar-benar menyimpan perubahan</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Jadikan Periode Aktif</td><td>Tombol "Jadikan Aktif" pada periode yang belum aktif menjadikannya satu-satunya periode aktif, melepas status aktif dari periode sebelumnya -- tersedia baik untuk periode terkunci maupun tidak</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Hapus Periode</td><td>Tombol hapus (&#10005;) hanya tampil untuk periode yang <strong>belum</strong> direferensikan data lain; menampilkan dialog konfirmasi sebelum menghapus</td><td>Must</td></tr>
+              <tr><td>FR-09</td><td>Tandai Periode Terkunci</td><td>Periode yang direferensikan data siswa dan/atau Master Data Tagihan menampilkan badge "&#128274; Terpakai" sebagai pengganti tombol Edit &amp; Hapus pada kolom Aksi</td><td>Must</td></tr>
+              <tr><td>FR-10</td><td>Minimal Satu Periode</td><td>Sistem menolak penghapusan periode terakhir (jumlah periode tersisa = 0) dengan pesan "Minimal harus ada 1 periode tahun ajaran"</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Menambah periode tahun ajaran baru &amp; menjadikannya aktif</strong></p>
+        <ol>
+          <li>Bendahara menekan "+ Tambah Periode Tahun Ajaran", mengisi Tahun Ajaran "2027/2028", Tanggal Mulai, Tanggal Selesai, dan mencentang "Jadikan periode aktif".</li>
+          <li>Bendahara menekan "Simpan".</li>
+          <li>Sistem memvalidasi; jika valid, periode baru ditambahkan, periode aktif sebelumnya otomatis dilepas statusnya, panel ditutup, tabel &amp; dropdown periode di halaman lain diperbarui, toast "&#10003; Periode Tahun Ajaran berhasil disimpan" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba mengubah/menghapus periode yang sudah terpakai (ditolak)</strong></p>
+        <ol>
+          <li>Admin melihat periode "2026/2027" yang sudah dipakai data siswa aktif -- kolom Aksi menampilkan badge "&#128274; Terpakai" tanpa tombol Edit/Hapus.</li>
+          <li>Karena tombol disembunyikan di UI, percobaan mengubah/menghapus periode ini hanya mungkin lewat pemanggilan fungsi langsung; sistem tetap menolak dengan toast "Periode ini sudah dipakai data siswa/tagihan -- tidak bisa diubah" atau "...tidak bisa dihapus" sebagai pertahanan lapis kedua.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mencoba menghapus satu-satunya periode (ditolak)</strong></p>
+        <ol>
+          <li>Admin menekan hapus pada periode satu-satunya yang tersisa (dan belum terpakai).</li>
+          <li>Sistem menolak dan menampilkan toast "Minimal harus ada 1 periode tahun ajaran" -- tanpa dialog konfirmasi (ditolak lebih dulu sebelum konfirmasi ditampilkan).</li>
+        </ol>
+
+        <p><strong>UC-04 -- Memindahkan periode aktif</strong></p>
+        <ol>
+          <li>Bendahara menekan "Jadikan Aktif" pada periode "2025/2026" yang sedang Nonaktif (meski periode ini berstatus Terpakai).</li>
+          <li>Sistem menjadikan periode tersebut satu-satunya periode Aktif; periode yang tadinya Aktif berubah menjadi Nonaktif (status Terpakai/terkunci-nya tidak berubah).</li>
+          <li>Toast "&#10003; 2025/2026 dijadikan periode aktif" ditampilkan; dropdown periode di halaman Transaksi &amp; Invoice dan Manajemen Murid ikut memperbarui pilihan default-nya.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Tahun Ajaran wajib diisi (tidak boleh kosong setelah di-<em>trim</em>)</td></tr>
+              <tr><td>BR-02</td><td>Tanggal Mulai dan Tanggal Selesai wajib diisi</td></tr>
+              <tr><td>BR-03</td><td>Tanggal Mulai tidak boleh setelah Tanggal Selesai</td></tr>
+              <tr><td>BR-04</td><td>Tahun Ajaran wajib unik (case-insensitive) di antara seluruh periode sekolah ini; saat mode edit, pengecekan keunikan mengecualikan periode yang sedang diedit sendiri</td></tr>
+              <tr><td>BR-05</td><td>Hanya satu periode yang boleh berstatus Aktif pada satu waktu; menandai periode lain sebagai aktif (lewat Simpan dengan toggle dicentang, atau tombol "Jadikan Aktif") otomatis melepas status aktif dari periode sebelumnya. Jika suatu operasi (mis. hapus periode aktif) membuat tidak ada periode yang aktif, sistem otomatis menjadikan periode pertama yang tersisa sebagai aktif</td></tr>
+              <tr><td>BR-06</td><td>Periode yang namanya direferensikan oleh <code>studentsData[].periode</code> (data siswa) dan/atau <code>masterTagihanData[].periodeTahunAjaran</code> (Master Data Tagihan) tidak bisa diubah (Edit) maupun dihapus (Hapus) -- dicek ulang di lapisan fungsi (<code>openPeriodePanel</code>, <code>savePeriodeTahunAjaran</code>, <code>removePeriodeRow</code>), bukan hanya menyembunyikan tombol di UI</td></tr>
+              <tr><td>BR-07</td><td>Jumlah periode tidak boleh menjadi 0 -- penghapusan periode terakhir ditolak, terlepas dari status terpakai/tidaknya</td></tr>
+              <tr><td>BR-08</td><td>Periode baru yang ditambahkan otomatis berstatus Aktif jika ini periode pertama di sekolah tersebut, meski toggle "Jadikan periode aktif" tidak dicentang</td></tr>
+              <tr><td>BR-09</td><td>Status terkunci (BR-06) tidak menghalangi aksi "Jadikan Aktif" -- periode yang sudah terpakai tetap bisa dipindahkan statusnya menjadi/bukan Aktif, karena aksi ini tidak mengubah data historis apa pun</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Tahun Ajaran</td><td><code>#prd-nama</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em>; wajib unik, case-insensitive (lihat BR-01, BR-04)</td></tr>
+              <tr><td>Tanggal Mulai</td><td><code>#prd-mulai</code></td><td><strong>Ya</strong></td><td>Format tanggal (<code>&lt;input type="date"&gt;</code>); tidak boleh setelah Tanggal Selesai (lihat BR-02, BR-03)</td></tr>
+              <tr><td>Tanggal Selesai</td><td><code>#prd-selesai</code></td><td><strong>Ya</strong></td><td>Format tanggal; tidak boleh sebelum Tanggal Mulai (lihat BR-02, BR-03)</td></tr>
+              <tr><td>Jadikan Periode Aktif</td><td><code>#prd-aktif</code></td><td>Tidak (opsional)</td><td>Boolean (toggle); jika dicentang, melepas status aktif dari periode lain (lihat BR-05, BR-08)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>PeriodeTahunAjaran</code> (<code>periodeTahunAjaranData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>integer</td><td>Tidak (dibuat sistem)</td><td>Pengenal unik, auto-increment per sekolah (<code>periodeSeq</code>)</td></tr>
+              <tr><td><code>nama</code></td><td>string</td><td><strong>Ya</strong></td><td>Nama tahun ajaran, mis. <code>"2026/2027"</code> (lihat BR-01, BR-04). Inilah nilai yang dicocokkan oleh <code>isPeriodeReferenced</code> terhadap <code>studentsData[].periode</code> dan <code>masterTagihanData[].periodeTahunAjaran</code> -- bukan <code>id</code></td></tr>
+              <tr><td><code>mulai</code></td><td>string (tanggal ISO <code>YYYY-MM-DD</code>)</td><td><strong>Ya</strong></td><td>Tanggal mulai periode (lihat BR-02, BR-03)</td></tr>
+              <tr><td><code>selesai</code></td><td>string (tanggal ISO <code>YYYY-MM-DD</code>)</td><td><strong>Ya</strong></td><td>Tanggal selesai periode (lihat BR-02, BR-03)</td></tr>
+              <tr><td><code>aktif</code></td><td>boolean</td><td>Tidak langsung -- hasil toggle/tombol "Jadikan Aktif"</td><td>Hanya satu periode per sekolah yang bernilai <code>true</code> (lihat BR-05, BR-08, BR-09)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><em>Catatan: status "terkunci" (BR-06) <strong>bukan field tersimpan</strong> pada entitas ini -- dihitung ulang setiap render lewat <code>isPeriodeReferenced(nama)</code>, membandingkan <code>nama</code> periode terhadap dua entitas lain (<code>studentsData</code>, <code>masterTagihanData</code>) di luar lingkup dokumen ini.</em></p>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Validasi</td><td>Seluruh input form divalidasi sebelum data tersimpan (lihat <a class="xref" href="#sec-5">bagian 5</a>)</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-02</td><td>Integritas Referensial</td><td>Periode yang direferensikan data lain tidak bisa diubah/dihapus baik lewat UI (tombol disembunyikan) maupun lewat pemanggilan fungsi langsung (guard di lapisan fungsi)</td><td>100% percobaan ubah/hapus periode terpakai ditolak, di kedua lapisan</td></tr>
+              <tr><td>NFR-03</td><td>Konsistensi data</td><td>Status "Aktif" harus selalu unik (maksimal satu <code>true</code>) dan selalu ada (minimal satu periode) setelah setiap operasi</td><td>100% invariant terjaga setelah setiap aksi</td></tr>
+              <tr><td>NFR-04</td><td>Feedback</td><td>Setiap aksi (tambah/ubah/hapus/jadikan aktif) menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-05</td><td>Konsistensi lintas halaman</td><td>Perubahan daftar periode (tambah/hapus/ganti aktif) langsung memperbarui dropdown periode di halaman Transaksi &amp; Invoice dan Manajemen Murid lewat <code>refreshPeriodeDropdowns()</code></td><td>0% dropdown periode di halaman lain menampilkan data basi setelah perubahan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Pengecekan "terpakai" (BR-06) hanya mencakup <code>studentsData[].periode</code> dan <code>masterTagihanData[].periodeTahunAjaran</code>. Field <code>periode</code> pada data invoice/tagihan (mis. <code>"2026-07"</code>) adalah nomor bulan penagihan -- konsep berbeda dari periode tahun ajaran -- dan <strong>tidak</strong> ikut dicek, meski secara tidak langsung sebuah invoice selalu dibuat dalam konteks suatu periode tahun ajaran yang aktif saat itu.</li>
+          <li>Tidak ada riwayat perubahan (audit trail) untuk tanggal mulai/selesai suatu periode sebelum periode tersebut menjadi terpakai.</li>
+          <li>Tidak ada validasi tumpang-tindih (overlap) tanggal antar periode -- dua periode dengan rentang tanggal yang beririsan bisa tersimpan bersamaan.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Karena sebuah periode baru biasanya ditambahkan sebelum ada siswa/tagihan yang memakainya, jendela waktu di mana Edit masih memungkinkan (sebelum terkunci) dianggap cukup untuk mengoreksi kesalahan input tanggal/nama.</li>
+          <li>Izin modul <code>periode</code> mengikuti pola akses modul <code>transaksi</code> yang sudah ada sejak sebelum fitur ini dipindah menjadi halaman tersendiri (Bendahara &amp; Admin bisa akses, Kepala Sekolah tidak) -- lihat <a class="xref" href="#sec-3">bagian 3.3</a>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah perlu menampilkan rincian data apa saja yang membuat suatu periode "Terpakai" (mis. jumlah siswa, jumlah entri Master Data Tagihan) saat pengguna meng-hover/klik badge "&#128274; Terpakai", supaya lebih transparan daripada sekadar status terkunci?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu validasi tumpang-tindih (overlap) tanggal mulai/selesai antar periode, supaya tidak ada dua periode aktif-potensial dengan rentang tanggal yang saling beririsan?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah Kepala Sekolah perlu akses lihat-saja (read-only) ke daftar periode tahun ajaran, mengingat perannya melihat ringkasan sekolah di Dashboard yang bisa jadi bergantung pada periode aktif?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>4</td><td>PRD Role &amp; Hak Akses belum memuat modul <code>periode</code> pada tabelnya -- perlu disinkronkan agar modul ini tercatat konsisten di kedua dokumen?</td><td>Tim Produk GeekGarden</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Periode Tahun Ajaran</td><td>Rentang satu tahun ajaran sekolah beserta tanggal mulai &amp; selesainya</td></tr>
+              <tr><td>Periode Aktif</td><td>Satu periode yang menjadi pilihan default saat membuat tagihan baru; unik, selalu ada satu per sekolah</td></tr>
+              <tr><td>Terpakai / Terkunci</td><td>Status turunan (bukan field tersimpan) yang menandai periode sudah direferensikan data siswa atau Master Data Tagihan, sehingga tidak bisa diubah/dihapus</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

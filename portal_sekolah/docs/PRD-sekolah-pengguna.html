@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Pengguna &amp; Akun Sekolah -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Pengguna &amp; Akun Sekolah <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Pengguna &amp; Akun Sekolah -- tab "Pengguna &amp; Akun Sekolah" pada menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>sekolah.html</code> (tab <code>pengguna</code>), <code>app.js</code> (data <code>staffData</code>, fungsi <code>renderStaffTable</code>, <code>openInvitePanel</code>, <code>openEditStaffPanel</code>, <code>sendInvite</code>, <code>resendInvite</code>, <code>simulateActivation</code>, <code>toggleStaffStatus</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-sekolah-rbac.html">PRD Role &amp; Hak Akses</a> -- peran yang bisa diundang di sini (Kepala Sekolah/Bendahara/Admin) adalah role tetap yang izinnya diatur di tab tersebut</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Pengguna &amp; Akun Sekolah</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini mengelola akun internal staf sekolah (Kepala Sekolah, Bendahara, Admin) yang bisa login ke Portal Sekolah. Admin berwenang mengundang pengguna baru lewat <strong>link aktivasi</strong> (bukan password langsung), mengubah data pengguna, serta mengaktifkan/menonaktifkan akun. Fitur ini <strong>tidak</strong> mengatur hak akses per modul (itu diatur di tab Role &amp; Hak Akses, lihat <a class="xref" href="PRD-sekolah-rbac.html">PRD terkait</a>) dan <strong>tidak</strong> mengatur akun Wali Murid (mobile) yang diatur terpisah di menu Akun Wali Murid.</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Link Aktivasi</td><td>Tautan sekali pakai yang dikirim ke WhatsApp/email penerima undangan, dipakai untuk mengatur password sendiri -- password tidak pernah dikirim lewat pesan chat</td></tr>
+              <tr><td>Segregation of Duties</td><td>Prinsip pemisahan tugas -- pihak yang melakukan satu aksi tidak boleh juga menyetujui/mengendalikan aksi terkait yang sama (lihat BR-05, BR-06)</td></tr>
+              <tr><td>Simulasikan Aktivasi</td><td>Tombol khusus prototipe yang mensimulasikan penerima undangan menyelesaikan aktivasi &amp; mengatur password -- di produksi, ini terjadi otomatis saat penerima klik link undangan, bukan aksi manual Admin</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Tab ini adalah salah satu dari lima tab pada menu "Manajemen Sekolah". Peran yang dikelola di sini (Kepala Sekolah, Bendahara, Admin) adalah tiga role tetap yang dipakai juga di tab Role &amp; Hak Akses untuk mengatur izin per modul.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar pengguna sekolah dengan pencarian &amp; filter peran/status.</li>
+          <li>Mengundang pengguna baru (Kepala Sekolah/Bendahara/Admin cadangan) lewat link aktivasi.</li>
+          <li>Mengubah data pengguna yang sudah ada (nama, peran, WA, email).</li>
+          <li>Mengirim ulang undangan yang belum diaktivasi.</li>
+          <li>Mensimulasikan aktivasi undangan (khusus kebutuhan demo/prototipe).</li>
+          <li>Mengaktifkan/menonaktifkan akun pengguna.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Admin</td><td>Satu-satunya peran dengan akses modul "sekolah" secara default -- berwenang mengundang &amp; mengelola seluruh pengguna, termasuk Kepala Sekolah dan Bendahara.</td></tr>
+              <tr><td>Kepala Sekolah, Bendahara</td><td>Tidak punya akses ke tab ini secara default (tidak bisa mengundang/mengelola pengguna lain), kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Pengguna <strong>tidak bisa mengubah peran akunnya sendiri</strong> menjadi bukan Admin (mencegah Admin tidak sengaja mengunci diri sendiri dari modul ini).</li>
+          <li>Pengguna <strong>tidak bisa menonaktifkan akunnya sendiri</strong>.</li>
+          <li>Password tidak pernah diinput atau ditampilkan oleh Admin -- selalu diatur sendiri oleh penerima lewat link aktivasi.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Pengiriman undangan nyata (WhatsApp/email berisi link aktivasi) berada di luar lingkup dokumen ini -- prototipe hanya menampilkan toast konfirmasi "terkirim".</li>
+          <li>Tombol "Simulasikan Aktivasi" adalah kebutuhan demo, bukan fitur produksi -- lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Pengguna</td><td>Sistem menampilkan tabel berisi Nama, Peran, No. WhatsApp, Email, Status Akun, dan Aksi</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Cari &amp; Filter Pengguna</td><td>Sistem menyediakan pencarian nama/email, filter Peran (Semua/Kepala Sekolah/Bendahara/Admin), dan filter Status (Semua/aktif/undangan terkirim/nonaktif)</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Undang Pengguna Baru</td><td>Tombol "+ Undang Pengguna Baru" membuka panel form berisi Nama Lengkap, Peran (dropdown), No. WhatsApp, Email</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Kirim Undangan</td><td>Saat "Kirim Undangan" ditekan, sistem memvalidasi input, menambahkan pengguna baru berstatus "undangan terkirim" dengan token undangan unik, dan menampilkan toast konfirmasi pengiriman</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Ubah Data Pengguna</td><td>Tombol edit (&#9998;) membuka panel form yang sama dalam mode edit, terisi data pengguna terkait</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Simpan Perubahan Pengguna</td><td>Saat disimpan pada mode edit, sistem menampilkan dialog konfirmasi sebelum benar-benar menyimpan perubahan data</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Kirim Ulang Undangan</td><td>Untuk pengguna berstatus "undangan terkirim", tombol "Kirim Ulang" mengirim ulang link aktivasi &amp; menampilkan toast konfirmasi</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Simulasikan Aktivasi (Prototipe)</td><td>Untuk pengguna berstatus "undangan terkirim", tombol "Simulasikan Aktivasi" mengubah status jadi "aktif" dan mengisi password demo -- mewakili aksi yang di produksi dilakukan otomatis oleh sistem saat penerima klik link</td><td>Should</td></tr>
+              <tr><td>FR-09</td><td>Nonaktifkan/Aktifkan Pengguna</td><td>Tombol "Nonaktifkan" (dengan dialog konfirmasi) atau "Aktifkan Kembali" sesuai status saat ini, kecuali untuk akun milik pengguna yang sedang login</td><td>Must</td></tr>
+              <tr><td>FR-10</td><td>Tandai Akun Sendiri</td><td>Baris pengguna yang sedang login ditandai "Akun Anda" di kolom Aksi, tanpa tombol nonaktifkan</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Mengundang Kepala Sekolah baru</strong></p>
+        <ol>
+          <li>Admin menekan "+ Undang Pengguna Baru", mengisi Nama Lengkap, memilih Peran "Kepala Sekolah", mengisi No. WhatsApp &amp; Email.</li>
+          <li>Admin menekan "Kirim Undangan".</li>
+          <li>Sistem memvalidasi (nama/WA/email wajib, format email valid, email tidak duplikat); jika valid, pengguna baru ditambahkan berstatus "Undangan Terkirim", panel ditutup, toast "&#10003; Undangan aktivasi dikirim ke [WA] &amp; [email]" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba mengubah peran akun sendiri jadi Bendahara (ditolak)</strong></p>
+        <ol>
+          <li>Admin yang sedang login membuka form edit akunnya sendiri, mengubah Peran dari "Admin" ke "Bendahara", lalu menekan "Simpan Perubahan".</li>
+          <li>Sistem menolak dan menampilkan toast "Tidak bisa mengubah peran akun Anda sendiri menjadi bukan Admin" -- perubahan tidak tersimpan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Menonaktifkan akun Bendahara</strong></p>
+        <ol>
+          <li>Admin menekan "Nonaktifkan" pada baris akun Bendahara.</li>
+          <li>Sistem menampilkan dialog konfirmasi "Nonaktifkan akun [nama]? Pengguna ini tidak akan bisa login sampai diaktifkan kembali."</li>
+          <li>Admin menyetujui; status akun berubah jadi Nonaktif, tombol berganti jadi "Aktifkan Kembali", toast konfirmasi ditampilkan.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Nama, No. WhatsApp, dan Email wajib diisi sebelum undangan bisa dikirim atau perubahan disimpan</td></tr>
+              <tr><td>BR-02</td><td>Email wajib berformat valid (mengandung <code>@</code> dan domain)</td></tr>
+              <tr><td>BR-03</td><td>Email wajib unik (case-insensitive) di antara seluruh pengguna sekolah ini; saat mode edit, pengecekan keunikan mengecualikan pengguna yang sedang diedit sendiri</td></tr>
+              <tr><td>BR-04</td><td>Pengguna baru selalu dimulai berstatus "undangan terkirim" dengan <code>password: null</code> -- password diisi sendiri oleh penerima saat aktivasi, tidak pernah diinput Admin</td></tr>
+              <tr><td>BR-05</td><td>Pengguna tidak bisa mengubah peran akunnya sendiri menjadi selain Admin (segregation of duties -- mencegah mengunci diri sendiri dari modul RBAC)</td></tr>
+              <tr><td>BR-06</td><td>Pengguna tidak bisa menonaktifkan akunnya sendiri</td></tr>
+              <tr><td>BR-07</td><td>Status akun hanya bisa salah satu dari: <code>undangan_terkirim</code>, <code>aktif</code>, <code>nonaktif</code> -- transisi status mengikuti alur: undangan terkirim &rarr; aktif (lewat aktivasi) &rarr; nonaktif/aktif (toggle berulang)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama Lengkap</td><td><code>#inv-nama</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01)</td></tr>
+              <tr><td>Peran</td><td><code>#inv-peran</code></td><td><strong>Ya</strong></td><td>Salah satu dari: Kepala Sekolah, Bendahara, Admin (cadangan)</td></tr>
+              <tr><td>No. WhatsApp</td><td><code>#inv-wa</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01); tidak ada validasi format digit di prototipe saat ini</td></tr>
+              <tr><td>Email</td><td><code>#inv-email</code></td><td><strong>Ya</strong></td><td>Regex format email dasar <code>^[^\s@]+@[^\s@]+\.[^\s@]+$</code>; wajib unik case-insensitive (lihat BR-02, BR-03)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>Pengguna</code> (<code>staffData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>nama</code></td><td>string</td><td><strong>Ya</strong></td><td>Nama lengkap pengguna (lihat BR-01)</td></tr>
+              <tr><td><code>peran</code></td><td>enum (string)</td><td><strong>Ya</strong></td><td><code>Kepala Sekolah</code> | <code>Bendahara</code> | <code>Admin</code> -- dipakai juga sebagai kunci ke <code>rbacPerms</code> (lihat <a class="xref" href="PRD-sekolah-rbac.html">PRD Role &amp; Hak Akses</a>)</td></tr>
+              <tr><td><code>wa</code></td><td>string</td><td><strong>Ya</strong></td><td>Nomor WhatsApp, tujuan pengiriman link aktivasi (lihat BR-01)</td></tr>
+              <tr><td><code>email</code></td><td>string</td><td><strong>Ya</strong></td><td>Wajib format valid &amp; unik (lihat BR-02, BR-03); juga dipakai sebagai identitas login</td></tr>
+              <tr><td><code>password</code></td><td>string | null</td><td>Tidak (dibuat sistem/pengguna sendiri)</td><td><code>null</code> sampai aktivasi; diisi otomatis (demo) oleh "Simulasikan Aktivasi" (lihat BR-04)</td></tr>
+              <tr><td><code>status</code></td><td>enum (string)</td><td>Tidak (diatur sistem)</td><td><code>undangan_terkirim</code> | <code>aktif</code> | <code>nonaktif</code> -- default <code>undangan_terkirim</code> saat dibuat (lihat BR-07)</td></tr>
+              <tr><td><code>inviteToken</code></td><td>string</td><td>Tidak (dibuat sistem)</td><td>Token undangan unik, dibuat saat pengguna baru ditambahkan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Keamanan</td><td>Password tidak pernah tertulis dalam pesan undangan (WhatsApp/email) -- hanya berupa link aktivasi sekali pakai</td><td>0% pesan undangan berisi teks password</td></tr>
+              <tr><td>NFR-02</td><td>Validasi</td><td>Seluruh input form divalidasi sebelum data tersimpan</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-03</td><td>Feedback</td><td>Setiap aksi (undang/ubah/kirim ulang/aktivasi/toggle status) menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-04</td><td>Konsistensi data</td><td>Tidak pernah ada kondisi di mana pengguna yang sedang login kehilangan akses ke modul ini sendiri (lihat BR-05)</td><td>100% invariant terjaga setelah setiap aksi</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI untuk perubahan data pengguna atau toggle status.</li>
+          <li>Tidak ada mekanisme hapus akun secara permanen -- hanya nonaktifkan.</li>
+          <li>Pengiriman undangan nyata (integrasi WhatsApp/email) tidak termasuk dalam lingkup dokumen ini.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Tombol "Simulasikan Aktivasi" hanya untuk kebutuhan demo/prototipe dan akan dihapus/diganti proses otomatis di produksi.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Bagaimana mekanisme aktivasi nyata di produksi (klik link -> halaman set password -> status otomatis jadi aktif) -- siapa yang membangun halaman aktivasi tersebut?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah undangan punya masa berlaku (expired) jika tidak diaktivasi dalam waktu tertentu?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah perlu audit log (pelaku &amp; waktu) untuk setiap perubahan data pengguna dan toggle status aktif/nonaktif?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Undangan terkirim</td><td>Status akun yang sudah ditambahkan tapi belum menyelesaikan proses aktivasi/pengaturan password</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Konfigurasi Sistem -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Konfigurasi Sistem</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Konfigurasi Sistem (Pengaturan Global Platform)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.4</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>26-10-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>konfigurasi.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, PRD Dashboard Konsolidasi</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>26-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>konfigurasi.html</code> setelah disederhanakan menjadi 4 kartu: Rekening Bank Penampung Pusat &amp; VA, Notifikasi Nomor Resmi Terpusat, Aturan Reminder &amp; Eskalasi, Template Pesan Default Platform.</td>
+</tr>
+<tr>
+<td>v0.2</td>
+<td>27-10-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Menyesuaikan dengan kondisi prototipe terbaru: tombol "Simpan Template Default" kini benar-benar menyimpan isi 9 textarea (3 kanal x 3 level) ke <code>localStorage</code> browser dan memuat ulang nilainya saat halaman dibuka kembali (lihat FR-07). Tombol "Simpan Konfigurasi" global pada kartu lain masih berupa mock UI (toast saja, belum ada penyimpanan nyata) -- lihat Batasan.</td>
+</tr>
+<tr>
+<td>v0.3</td>
+<td>02-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Sinkronisasi dengan prototipe terkini <code>konfigurasi.html</code>: kanal Aturan Reminder &amp; Template Pesan diperbarui dari WA/SMS/Email menjadi 4 kanal -- WA, Email, Push Notif, Notif Aplikasi (SMS tidak lagi tersedia). Kartu Template Pesan Default kini berisi 12 textarea (4 kanal x 3 level). Ditambahkan catatan bahwa template Push Notif sengaja tidak memuat placeholder <code>{link_bayar}</code> karena dibuat ringkas untuk notifikasi singkat di perangkat (lihat FR-06 &amp; NFR-02).</td>
+</tr>
+<tr>
+<td>v0.4</td>
+<td>03-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Membersihkan sisa referensi SMS yang masih tertinggal di beberapa bagian dokumen setelah migrasi ke 4 kanal pada v0.3: FR-05 (channel per baris Aturan Reminder), FR-06 (tab kanal Template Pesan), bagian 8 (wireframe), dan bagian 10 (model data <code>AturanReminder.channels</code>) kini konsisten menyebut WA/Email/Push Notif/Notif Aplikasi. NFR-02 diperjelas agar tidak mewajibkan placeholder <code>{link_bayar}</code> pada kanal Push Notif (by design, lihat FR-06). Menambahkan istilah "Push Notif" &amp; "Notif Aplikasi" ke Glosarium.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Fitur Konfigurasi Sistem memungkinkan Super Admin mengatur baseline global yang berlaku untuk seluruh sekolah di platform: rekening bank penampung pusat beserta Virtual Account (VA) pembayaran, nomor WhatsApp Business resmi terpusat, aturan reminder &amp; eskalasi tagihan default, dan template pesan default. Pengaturan ini menjadi acuan awal bagi sekolah baru saat onboarding dan sebagian dapat di-override di level sekolah masing-masing lewat menu Manajemen Sekolah.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Super Admin</strong> mengalami <strong>kesulitan menjaga konsistensi rekening penampung, identitas pengirim notifikasi, dan aturan penagihan di seluruh sekolah</strong> saat <strong>tiap pengaturan tersebut harus diisi atau disamakan secara manual per sekolah</strong>, yang menyebabkan <strong>risiko salah kirim dana, identitas pengirim pesan yang tidak konsisten, dan pengalaman wali murid yang berbeda-beda antar sekolah</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Tanpa satu tempat terpusat, rekening penampung, nomor resmi WhatsApp, dan aturan reminder berisiko diisi berbeda-beda oleh tiap sekolah -- menyulitkan audit, rekonsiliasi dana, dan konsistensi komunikasi ke wali murid.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin membuka menu Konfigurasi Sistem dan mengatur empat area global dari satu halaman: Rekening Bank Penampung Pusat &amp; VA Pembayaran, Notifikasi Nomor Resmi Terpusat, Aturan Reminder &amp; Eskalasi default, dan Template Pesan default -- lalu menyimpan sekaligus lewat tombol "Simpan Konfigurasi" (atau tombol simpan per kartu untuk Aturan Reminder dan Template Pesan).</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Platform sedang menambah jumlah sekolah onboarding secara bertahap (lihat PRD Pendaftaran Sekolah); baseline konfigurasi global harus tersedia dan stabil sebelum skala bertambah, supaya setiap sekolah baru mendapat pengaturan default yang sama dan teruji.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Menyediakan satu sumber kebenaran (single source of truth) untuk rekening penampung pusat dan nomor Virtual Account (VA) pembayaran yang dipakai seluruh sekolah.</li>
+<li>Menstandarkan nomor WhatsApp Business resmi platform supaya identitas pengirim notifikasi ke wali murid konsisten dan dapat dipercaya.</li>
+<li>Menyediakan baseline Aturan Reminder &amp; Eskalasi serta Template Pesan default yang otomatis disalin ke sekolah baru saat onboarding, sehingga sekolah baru tidak mulai dari nol.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mengatur nama platform maupun zona waktu umum dari halaman ini pada fase ini.</li>
+<li>Tidak menampilkan/mengelola kredensial integrasi Host-to-Host (callback URL, client secret) dari panel ini -- kredensial tersebut dikelola lewat secrets manager backend oleh tim Engineering/DevOps.</li>
+<li>Tidak mengatur skema bagi hasil (revenue share) SPP maupun biaya layanan notifikasi dari modul ini.</li>
+<li>Tidak mengatur kebijakan keamanan sesi (session timeout), retensi audit log, maupun kewajiban 2FA dari modul ini.</li>
+</ul>
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui kebijakan rekening penampung &amp; identitas resmi platform</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain konsistensi data global vs. override per sekolah</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi penyimpanan konfigurasi &amp; propagasi ke sekolah baru</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian validasi rekening, VA, dan template pesan</td>
+</tr>
+<tr>
+<td>Super Admin</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pengguna utama fitur ini</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin</td>
+<td>Mengelola pengaturan global seluruh sekolah</td>
+<td>Menjaga rekening, nomor resmi, dan aturan reminder konsisten &amp; terbaru</td>
+<td>Risiko inkonsistensi bila diatur manual per sekolah</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Wali murid</td>
+<td>Penerima notifikasi tagihan</td>
+<td>Membayar ke rekening/VA yang benar dan mengenali pengirim pesan</td>
+<td>Bingung bila nomor pengirim/rekening berubah-ubah antar sekolah</td>
+<td>WhatsApp/Email/Push Notif/Notif Aplikasi</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rekening Bank Penampung Pusat &amp; VA Pembayaran (Nama Bank, Nomor Rekening, Nama Pemilik)</td>
+<td>Pengaturan Umum platform (nama platform, zona waktu default)</td>
+</tr>
+<tr>
+<td>Notifikasi -- Nomor Resmi Terpusat (nomor WA, Business Account ID) -- tampil read-only</td>
+<td>Integrasi Bank Host-to-Host (callback URL, client secret, timeout, retry)</td>
+</tr>
+<tr>
+<td>Aturan Reminder &amp; Eskalasi default platform (tambah/hapus baris, channel WA/Email/Push Notif/Notif Aplikasi per baris, aktif/nonaktif)</td>
+<td>Skema Bagi Hasil (Revenue Share) SPP</td>
+</tr>
+<tr>
+<td>Template Pesan Default Platform per kanal (WhatsApp/Email/Push Notif/Notif Aplikasi) x level (1/2/3)</td>
+<td>Biaya Layanan Notifikasi per kanal</td>
+</tr>
+<tr>
+<td>Simpan konfigurasi (global dan per kartu Aturan Reminder / Template Pesan)</td>
+<td>Keamanan &amp; Kepatuhan (session timeout, retensi audit log, kewajiban 2FA)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Rekening Bank Penampung Pusat &amp; VA, Notifikasi Nomor Resmi Terpusat, Aturan Reminder &amp; Eskalasi default, Template Pesan default.</li>
+<li><strong>Should have</strong> -- Validasi format nomor rekening dan placeholder template sebelum simpan.</li>
+<li><strong>Could have</strong> -- Pratinjau (preview) template pesan dengan data contoh sebelum disimpan.</li>
+<li><strong>Won't have (now)</strong> -- Pengaturan umum platform, integrasi H2H, skema bagi hasil, biaya layanan notifikasi, keamanan &amp; kepatuhan (dipindahkan keluar dari modul ini).</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Super Admin, saya ingin mengatur rekening bank penampung pusat dan nomor VA pembayaran, supaya seluruh sekolah membayar ke tujuan yang sama dan benar.</td>
+<td>Must</td>
+<td>Given saya membuka Konfigurasi Sistem, When saya mengisi Nama Bank, Nomor Rekening, dan Nama Pemilik Rekening lalu menekan "Simpan Konfigurasi", Then data tersimpan sebagai acuan tunggal seluruh sekolah</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Super Admin, saya ingin melihat nomor WhatsApp Business resmi terpusat platform, supaya saya bisa memastikan identitas pengirim notifikasi konsisten.</td>
+<td>Must</td>
+<td>Given saya membuka Konfigurasi Sistem, When saya melihat kartu Notifikasi, Then nomor WA Pusat dan Business Account ID (WABA) ditampilkan sebagai field terkunci (read-only)</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Super Admin, saya ingin menambah atau menghapus aturan reminder &amp; eskalasi default, supaya sekolah baru punya jadwal penagihan baku saat onboarding.</td>
+<td>Must</td>
+<td>Given saya menekan "+ Tambah Aturan", When saya mengisi offset hari, nama aturan, level penanganan, dan channel, Then baris baru tersimpan di tabel Aturan Reminder &amp; Eskalasi</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin mengubah teks template pesan default per kanal dan level, supaya komunikasi ke wali murid konsisten sejak sekolah baru aktif.</td>
+<td>Must</td>
+<td>Given saya membuka tab WhatsApp/Email/Push Notif/Notif Aplikasi pada kartu Template Pesan, When saya mengubah isi textarea pada level tertentu dan menekan "Simpan Template Default", Then teks tersimpan sebagai default platform</td>
+</tr>
+<tr>
+<td>US-05</td>
+<td>Sebagai Super Admin, saya ingin menyimpan seluruh perubahan konfigurasi sekaligus, supaya saya tidak perlu menyimpan tiap kartu satu per satu.</td>
+<td>Should</td>
+<td>Given saya telah mengubah beberapa field pada halaman Konfigurasi Sistem, When saya menekan tombol "Simpan Konfigurasi" di bagian bawah halaman, Then seluruh perubahan pada field yang relevan tersimpan</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Rekening Bank Penampung Pusat &amp; VA</td>
+<td>Sistem harus menyediakan field Nama Bank (dropdown: BCA, Mandiri, BNI, BRI, BSI, Lainnya), Nomor Rekening Penampung Pusat, dan Nama Pemilik Rekening</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Hanya satu rekening penampung pusat yang berlaku untuk seluruh sekolah; bukan diisi per sekolah</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Notifikasi -- Nomor Resmi Terpusat</td>
+<td>Sistem harus menampilkan Nomor WA Pusat (Muhammadiyah Pusat) dan Business Account ID (WABA) sebagai field terkunci (disabled/read-only)</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Satu nomor WhatsApp Business resmi dipakai untuk seluruh sekolah, bukan per sekolah; perubahan dilakukan lewat proses backend</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Tambah Aturan Reminder</td>
+<td>Sistem harus menyediakan tombol "+ Tambah Aturan" yang menambahkan baris baru pada tabel Aturan Reminder &amp; Eskalasi untuk diisi offset hari, nama, level, dan channel</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Baris baru belum permanen sampai tersimpan</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Hapus Aturan Reminder</td>
+<td>Sistem harus menghapus baris aturan reminder dari tabel saat tombol hapus (✕) pada baris tersebut ditekan</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Minimal disarankan tetap ada aturan aktif agar sekolah baru tidak onboarding tanpa reminder sama sekali (lihat Risiko)</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Konfigurasi Channel &amp; Level per Aturan</td>
+<td>Setiap baris aturan reminder harus memiliki pilihan Level Penanganan (Level 1 -- Pengingat, Level 2 -- Peringatan, Level 3 -- Eskalasi), channel (WA/Email/Push Notif/Notif Aplikasi), dan toggle Aktif/Nonaktif</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Level 3 memicu event <code>escalation.triggered</code> ke EscalationCase (lihat Skenario 6 pada dokumen sistem terkait)</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Template Pesan per Kanal &amp; Level</td>
+<td>Sistem harus menyediakan tab kanal (WhatsApp, Email, Push Notif, Notif Aplikasi) yang masing-masing menampilkan 3 kartu template (Level 1, 2, 3) berisi textarea teks pesan dengan placeholder <code>{nama_siswa}</code>, <code>{nama_sekolah}</code>, <code>{nominal}</code>, <code>{tanggal_jatuh_tempo}</code>, <code>{hari_terlambat}</code>, <code>{link_bayar}</code></td>
+<td>US-04</td>
+<td>Must</td>
+<td>Template ini adalah default platform, otomatis disalin ke sekolah baru saat onboarding; bukan editor milik sekolah tertentu. Khusus kanal <strong>Push Notif</strong>, placeholder <code>{link_bayar}</code> sengaja tidak dipakai karena teksnya dibuat ringkas untuk notifikasi singkat di perangkat (lock screen) -- lihat NFR-02</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>Simpan Aturan Reminder &amp; Template Pesan</td>
+<td>Sistem harus menyediakan tombol simpan khusus pada kartu Aturan Reminder (implisit lewat Simpan Konfigurasi) dan kartu Template Pesan ("Simpan Template Default")</td>
+<td>US-03, US-04</td>
+<td>Must</td>
+<td>Simpan Template Default hanya menyimpan perubahan pada kartu Template Pesan, ke <code>localStorage</code> browser pada sesi Super Admin yang bersangkutan; nilai dimuat ulang otomatis saat halaman dibuka kembali di browser/device yang sama</td>
+</tr>
+<tr>
+<td>FR-08</td>
+<td>Simpan Konfigurasi Global</td>
+<td>Sistem harus menyediakan tombol "Simpan Konfigurasi" di bagian bawah halaman yang menyimpan perubahan pada kartu Rekening Bank, Notifikasi, dan Aturan Reminder</td>
+<td>US-05</td>
+<td>Should</td>
+<td>Menampilkan toast konfirmasi "Konfigurasi berhasil disimpan"</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat halaman Konfigurasi Sistem</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Ubah Rekening Bank Penampung Pusat &amp; VA</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Tambah/hapus Aturan Reminder &amp; Eskalasi</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Ubah Template Pesan Default</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Catatan: pada konfigurasi default, hanya role dengan permission <code>konfigurasi</code> (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role &amp; Hak Akses.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Konfigurasi berhasil disimpan</td>
+<td>Super Admin</td>
+<td>Toast UI</td>
+<td>"Konfigurasi berhasil disimpan"</td>
+</tr>
+<tr>
+<td>Template Pesan Default berhasil disimpan</td>
+<td>Super Admin</td>
+<td>Toast UI</td>
+<td>"Template default platform berhasil disimpan"</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Validasi</td>
+<td>Nomor Rekening Penampung Pusat harus berupa digit dan tidak boleh kosong sebelum simpan</td>
+<td>100% validasi sebelum simpan</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Validasi</td>
+<td>Template pesan harus mempertahankan placeholder minimum <code>{nama_siswa}</code> saat disimpan; untuk kanal WhatsApp/Email/Notif Aplikasi, placeholder <code>{link_bayar}</code> juga wajib dipertahankan -- <strong>kecuali kanal Push Notif</strong> yang memang didesain tanpa <code>{link_bayar}</code></td>
+<td>100% template WA/Email/Notif Aplikasi tervalidasi memiliki placeholder minimum; 100% template Push Notif tervalidasi memiliki <code>{nama_siswa}</code></td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Performa</td>
+<td>Waktu simpan konfigurasi (seluruh kartu)</td>
+<td>&lt; 1 detik untuk kondisi data saat ini (≤ 20 baris aturan)</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Konsistensi</td>
+<td>Perubahan pada Rekening Bank Penampung Pusat &amp; VA dan Nomor Resmi Terpusat harus tercermin di seluruh sekolah tanpa perlu diisi ulang per sekolah</td>
+<td>100% sekolah membaca nilai global yang sama</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Auditability</td>
+<td>Setiap perubahan pada rekening penampung, aturan reminder, dan template pesan tercatat pelaku &amp; waktu</td>
+<td>100% tercatat di audit log</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → Menu "Konfigurasi Sistem" → ubah field pada kartu Rekening Bank Penampung Pusat &amp; VA / Notifikasi Nomor Resmi Terpusat / Aturan Reminder &amp; Eskalasi / Template Pesan → simpan per kartu (Template Pesan) atau "Simpan Konfigurasi" di bawah halaman → toast konfirmasi.</li>
+<li>Wireframe: mengikuti struktur <code>konfigurasi.html</code> -- empat kartu berurutan (Rekening Bank, Notifikasi, Aturan Reminder dengan tabel baris dinamis, Template Pesan dengan tab kanal WA/Email/Push Notif/Notif Aplikasi), diakhiri tombol simpan di kanan bawah.</li>
+<li>Edge case yang wajib ditangani: menghapus seluruh baris Aturan Reminder sehingga sekolah baru tidak memiliki reminder default sama sekali (lihat Risiko); mengubah/menghapus placeholder penting pada Template Pesan sehingga pesan terkirim tanpa data krusial (mis. tanpa <code>{link_bayar}</code>).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modul Pendaftaran Sekolah (Onboarding)</td>
+<td>Menyalin Aturan Reminder &amp; Template Pesan default ke sekolah baru saat onboarding</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Manajemen Sekolah</td>
+<td>Membaca Rekening Penampung Pusat &amp; VA sebagai acuan tunggal pembayaran, dan menjadi tempat override Aturan Reminder per sekolah</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>WhatsApp Business API</td>
+<td>Pengiriman notifikasi dari Nomor Resmi Terpusat sesuai Template Pesan</td>
+<td>REST API (WABA)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama:
+  <ul>
+    <li><code>RekeningPenampungPusat</code> (namaBank, nomorRekening, namaPemilikRekening).</li>
+    <li><code>NomorResmiTerpusat</code> (nomorWA, businessAccountId) -- read-only dari panel ini.</li>
+    <li><code>AturanReminder</code> (offsetHari, namaAturan, levelPenanganan, channels[WA/Email/PushNotif/NotifAplikasi], aktif).</li>
+    <li><code>TemplatePesanDefault</code> (kanal, level, teks).</li>
+  </ul>
+</li>
+<li>Migrasi data: tidak ada migrasi dari sistem lama pada fase ini; data merupakan baseline baru platform.</li>
+<li>Retensi data: seluruh entitas di atas disimpan selama platform berjalan; perubahan harus tercatat di audit log (lihat NFR-05).</li>
+<li>Laporan yang dibutuhkan: riwayat perubahan Rekening Penampung Pusat &amp; VA (untuk kebutuhan audit keuangan), daftar Aturan Reminder aktif saat ini.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Rekening Penampung Pusat &amp; VA Pembayaran yang diatur di halaman ini adalah satu-satunya tujuan pembayaran SPP untuk seluruh sekolah (detail pembagian dana ke sekolah diatur di luar modul ini).</li>
+<li>Nomor WA Pusat dan Business Account ID bersifat read-only di panel ini karena rotasi/perubahannya dilakukan lewat proses backend, bukan lewat form web.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Pengaturan Umum platform, integrasi Host-to-Host, skema bagi hasil, biaya layanan notifikasi, dan kebijakan keamanan &amp; kepatuhan tidak lagi dikelola dari halaman ini pada versi saat ini.</li>
+<li>Pada versi prototipe saat ini, Template Pesan Default hanya tersimpan di <code>localStorage</code> browser lokal Super Admin (per browser/device), belum ke backend/database bersama -- berbeda dengan kartu Rekening Bank, Notifikasi, dan Aturan Reminder yang tombol simpannya masih mock UI (toast tanpa penyimpanan nyata). Keduanya harus disatukan ke penyimpanan backend sebelum go-live agar memenuhi NFR-04 dan NFR-05.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Di modul/halaman mana Pengaturan Umum (nama platform, zona waktu) dan integrasi Host-to-Host sekarang dikelola?</td>
+<td>Solution Architect</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apakah dibutuhkan validasi minimal 1 Aturan Reminder aktif agar sekolah baru tidak onboarding tanpa reminder?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Apakah Template Pesan default perlu mode pratinjau (preview) dengan data contoh sebelum disimpan?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin menghapus seluruh baris Aturan Reminder &amp; Eskalasi, sekolah baru onboarding tanpa reminder default</td>
+<td>H</td>
+<td>L</td>
+<td>Tambahkan validasi minimal 1 aturan aktif sebelum simpan, atau peringatan konfirmasi saat menghapus baris terakhir</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Kesalahan input Nomor Rekening Penampung Pusat menyebabkan dana SPP salah tujuan</td>
+<td>H</td>
+<td>L</td>
+<td>Tambahkan validasi format nomor rekening dan konfirmasi ganda sebelum simpan</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Template Pesan kehilangan placeholder penting (mis. <code>{link_bayar}</code>) sehingga wali murid tidak bisa membayar</td>
+<td>M</td>
+<td>M</td>
+<td>Validasi placeholder minimum sebelum simpan (lihat NFR-02)</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Template Pesan Default yang tersimpan di <code>localStorage</code> browser hilang (cache dibersihkan) atau tidak konsisten antar device/browser Super Admin, karena belum ada penyimpanan backend terpusat</td>
+<td>M</td>
+<td>M</td>
+<td>Migrasikan penyimpanan Template Pesan Default (dan kartu lain) dari <code>localStorage</code> ke backend/database bersama sebelum go-live</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup final 4 kartu Konfigurasi Sistem</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Implementasi penyimpanan konfigurasi backend</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VA</td>
+<td>Virtual Account -- nomor virtual tujuan pembayaran SPP yang digenerate dari rekening penampung pusat</td>
+</tr>
+<tr>
+<td>WABA</td>
+<td>WhatsApp Business Account ID -- identitas akun WhatsApp Business resmi platform</td>
+</tr>
+<tr>
+<td>H+/H-</td>
+<td>Offset hari terhadap tanggal jatuh tempo tagihan (H- = sebelum jatuh tempo, H+ = setelah jatuh tempo)</td>
+</tr>
+<tr>
+<td>Level Penanganan</td>
+<td>Tingkat eskalasi pesan reminder: Level 1 (Pengingat), Level 2 (Peringatan), Level 3 (Eskalasi)</td>
+</tr>
+<tr>
+<td>Push Notif</td>
+<td>Notifikasi singkat yang tampil di perangkat wali murid (mis. lock screen); teks dibuat ringkas dan sengaja tidak memuat placeholder <code>{link_bayar}</code></td>
+</tr>
+<tr>
+<td>Notif Aplikasi</td>
+<td>Notifikasi yang tampil di halaman Notifikasi pada App Wali Murid, tidak terikat batas panjang pesan seperti Push Notif</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

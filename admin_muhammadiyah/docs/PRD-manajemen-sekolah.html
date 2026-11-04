@@ -185,7 +185,7 @@
 </tr>
 <tr>
 <td>Versi dokumen</td>
-<td>v0.1</td>
+<td>v0.4</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -234,33 +234,52 @@
 <td>Tim Produk GeekGarden</td>
 <td>Draft awal berdasarkan prototipe <code>manajemen.html</code> (daftar sekolah, Info Sekolah, Rekening Penampung, Reminder &amp; Template, nonaktifkan/aktifkan sekolah)</td>
 </tr>
+<tr>
+<td>v0.2</td>
+<td>02-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Sinkronisasi dengan prototipe terkini: (1) Rekening Penampung berubah dari form tunggal menjadi manajemen multi-rekening per sekolah (tambah/edit/hapus, filter, status verifikasi, rekening utama, minimal 1 rekening aktif); (2) channel Reminder &amp; Template diperbarui dari WA/SMS/Email menjadi WA/Email/Push Notif/Notif Aplikasi; (3) tambah mode "Detail" (read-only) terpisah dari mode "Kelola" pada daftar sekolah; (4) tambah catatan bahwa wali murid tetap bisa login ke App Wali Murid untuk melunasi tunggakan lama meski sekolah sudah Nonaktif</td>
+</tr>
+<tr>
+<td>v0.3</td>
+<td>02-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Sinkronisasi dengan prototipe terkini: (1) field Struktur Organisasi dipecah menjadi 3 field terpisah -- Wilayah (PWM), Daerah (PDM), Cabang (PCM) -- baik di kolom tabel daftar sekolah maupun di tab Info Sekolah; (2) tambah field teks "Nama Bank Lainnya" pada form Rekening Penampung, muncul saat dropdown Nama Bank diisi "Lainnya"; (3) tambah toolbar pencarian &amp; filter pada Daftar Sekolah (cari Nama Sekolah/NPSN, filter Wilayah (PWM), filter Status)</td>
+</tr>
+<tr>
+<td>v0.4</td>
+<td>03-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Perombakan navigasi &amp; penyederhanaan lingkup berdasarkan prototipe terkini: (1) mode "Kelola" diubah dari 3 tab bebas menjadi <strong>wizard 4 step</strong> (Info Sekolah &rarr; Akun Awal &rarr; Rekening Penampung &rarr; Review) dengan tombol Lanjut/Kembali -- step tetap bisa diklik langsung kapan saja; (2) step baru <strong>"Akun Awal"</strong> ditambahkan, berisi kartu "Akun Awal -- Admin Sekolah" (Nama, Peran, No. WhatsApp, Email akun login) yang sebelumnya tidak ada sama sekali di halaman ini, plus kartu Kontak Sekolah yang dipindah dari tab Info Sekolah; (3) field Alamat Lengkap ditambahkan ke Info Sekolah, dan Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) diubah dari readonly menjadi <strong>dropdown cascading yang bisa diedit</strong> (sebelumnya hanya bisa diisi saat Pendaftaran Sekolah); (4) step Review kini menampilkan ringkasan per bagian (Info Sekolah/Akun Awal/Rekening Penampung) masing-masing dengan tombol "Edit" untuk kembali ke step terkait, diakhiri tombol <strong>"Simpan Perubahan"</strong> yang benar-benar menuliskan perubahan ke data sekolah (sebelumnya field-field ini bisa diisi tapi tidak pernah tersimpan); (5) fitur <strong>Reminder &amp; Template override per sekolah dihapus seluruhnya</strong> dari lingkup halaman ini (FR-07/FR-08 pada versi sebelumnya); (6) tombol hapus &amp; aktifkan/nonaktifkan pada baris tabel Rekening Penampung dihapus -- aksi yang tersisa hanya edit (✎) dan "Jadikan Utama"; (7) tombol Nonaktifkan/Aktifkan ditambahkan langsung pada baris Daftar Sekolah, tidak perlu lagi membuka "Kelola" dulu.</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
 <h2>2. Ringkasan &amp; Latar Belakang</h2>
 <h3>2.1 Ringkasan</h3>
-<p>Manajemen Sekolah memungkinkan Super Admin/Admin Wilayah melihat daftar seluruh sekolah terdaftar dan mengelola konfigurasi masing-masing: data info sekolah, rekening penampung fee, override aturan reminder &amp; template pesan tagihan, serta menonaktifkan/mengaktifkan kembali sekolah. Fitur ini adalah pusat kendali operasional sekolah pasca-onboarding.</p>
+<p>Manajemen Sekolah memungkinkan Super Admin/Admin Wilayah melihat daftar seluruh sekolah terdaftar dan mengelola konfigurasi masing-masing: data info sekolah, akun awal (admin sekolah &amp; kontak sekolah), rekening penampung fee, serta menonaktifkan/mengaktifkan kembali sekolah. Fitur ini adalah pusat kendali operasional sekolah pasca-onboarding, dan sengaja dirancang memakai alur wizard yang sama dengan Pendaftaran Sekolah supaya Admin tidak perlu mempelajari dua pola UI berbeda.</p>
 <h3>2.2 Problem Statement</h3>
-<p><strong>Admin Pusat/Wilayah</strong> mengalami <strong>kesulitan mengelola konfigurasi spesifik tiap sekolah (rekening, aturan reminder, status operasional) secara terpisah dan konsisten</strong> saat <strong>jumlah sekolah bertambah dan tiap sekolah punya kebutuhan sedikit berbeda dari default platform</strong>, yang menyebabkan <strong>inkonsistensi konfigurasi dan risiko kesalahan saat menonaktifkan sekolah yang masih punya tunggakan siswa</strong>.</p>
+<p><strong>Admin Pusat/Wilayah</strong> mengalami <strong>kesulitan mengelola data spesifik tiap sekolah (info sekolah, akun awal, rekening, status operasional) secara terpisah dan konsisten</strong> saat <strong>jumlah sekolah bertambah dan tiap perubahan harus diminta manual ke tim backend</strong>, yang menyebabkan <strong>inkonsistensi data dan risiko kesalahan saat menonaktifkan sekolah yang masih punya tunggakan siswa</strong>.</p>
 <h3>2.3 Kondisi Saat Ini (As-Is)</h3>
-<p>Perubahan data sekolah, rekening, atau aturan reminder dilakukan via permintaan manual ke tim backend; status aktif/nonaktif sekolah tidak punya kontrol terpusat sehingga risiko sekolah dinonaktifkan tanpa mempertimbangkan tunggakan siswa yang belum lunas.</p>
+<p>Perubahan data sekolah, akun awal, atau rekening dilakukan via permintaan manual ke tim backend; status aktif/nonaktif sekolah tidak punya kontrol terpusat sehingga risiko sekolah dinonaktifkan tanpa mempertimbangkan tunggakan siswa yang belum lunas.</p>
 <h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
-<p>Admin dapat membuka daftar sekolah, memilih satu sekolah, dan mengelola seluruh konfigurasinya dalam 3 tab (Info Sekolah, Rekening Penampung, Reminder &amp; Template) dari satu halaman, termasuk proses nonaktifkan/aktifkan yang mewajibkan alasan dan menampilkan peringatan tunggakan bila ada.</p>
+<p>Admin dapat membuka daftar sekolah, memilih satu sekolah, dan mengelola seluruh konfigurasinya lewat wizard 4 step (Info Sekolah &rarr; Akun Awal &rarr; Rekening Penampung &rarr; Review) dari satu halaman -- step bisa diisi dalam urutan apa pun (klik langsung ke step manapun, atau pakai tombol Lanjut/Kembali), diakhiri step Review yang merangkum seluruh data per bagian (dengan tombol "Edit" untuk kembali ke step terkait) sebelum ditekan "Simpan Perubahan". Proses nonaktifkan/aktifkan bisa dilakukan langsung dari baris Daftar Sekolah maupun dari dalam wizard, keduanya mewajibkan alasan dan menampilkan peringatan tunggakan bila ada.</p>
 <h3>2.5 Kenapa Sekarang?</h3>
-<p>Setelah sekolah mulai aktif bertransaksi, kebutuhan pengelolaan harian (ubah rekening, sesuaikan aturan reminder, nonaktifkan sekolah yang merger/tutup) menjadi rutin dan harus bisa dilakukan mandiri oleh Admin Pusat/Wilayah tanpa menunggu tim teknis.</p>
+<p>Setelah sekolah mulai aktif bertransaksi, kebutuhan pengelolaan harian (ubah info sekolah/akun awal, ubah rekening, nonaktifkan sekolah yang merger/tutup) menjadi rutin dan harus bisa dilakukan mandiri oleh Admin Pusat/Wilayah tanpa menunggu tim teknis.</p>
 <hr />
 <h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
 <h3>3.1 Tujuan Bisnis</h3>
 <ol>
-<li>Memberikan satu titik kendali bagi Admin untuk mengelola konfigurasi tiap sekolah (info, rekening, reminder) tanpa melibatkan tim backend.</li>
+<li>Memberikan satu titik kendali bagi Admin untuk mengelola konfigurasi tiap sekolah (info, akun awal, rekening) tanpa melibatkan tim backend.</li>
 <li>Mencegah sekolah dinonaktifkan tanpa disertai pencatatan alasan dan kesadaran akan tunggakan siswa yang belum lunas.</li>
-<li>Memungkinkan sekolah menyesuaikan aturan reminder &amp; template pesan dari default platform sesuai kebutuhan lokal, tanpa memengaruhi sekolah lain.</li>
+<li>Menyediakan satu alur wizard yang konsisten antara Pendaftaran Sekolah dan Manajemen Sekolah (field, tahapan step, dan pola Review per bagian yang sama), supaya Admin tidak perlu belajar dua pola UI berbeda untuk tugas yang serupa.</li>
 </ol>
 <h3>3.2 Non-Tujuan (Out of Goal)</h3>
 <ul>
 <li>Tidak mendukung penghapusan (delete) data sekolah secara permanen -- hanya status Aktif/Nonaktif.</li>
 <li>Tidak mendukung bulk edit/nonaktifkan banyak sekolah sekaligus pada fase ini.</li>
 <li>Tidak menangani write-off tunggakan dari halaman ini (write-off tunduk pada proses terpisah dengan approval Kepala Sekolah).</li>
+<li>Tidak mengelola Aturan Reminder &amp; Template Pesan per sekolah dari halaman ini pada fase ini -- fitur override yang pernah ada (lihat v0.1 -- v0.3) dihapus dari lingkup Manajemen Sekolah; bila dibutuhkan kembali, akan dirancang ulang sebagai modul/halaman terpisah.</li>
 </ul>
 <h3>3.3 Metrik Keberhasilan (KPI)</h3>
 <div class="table-scroll"><table>
@@ -275,7 +294,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Waktu rata-rata update konfigurasi sekolah (rekening/reminder)</td>
+<td>Waktu rata-rata update konfigurasi sekolah (info sekolah/akun awal/rekening)</td>
 <td>[ ] (manual, via tiket backend)</td>
 <td>&lt; 5 menit (self-service)</td>
 <td>Timestamp submit form</td>
@@ -314,13 +333,13 @@
 <td>Product Owner</td>
 <td>Klien (Muhammadiyah Pusat)</td>
 <td>A</td>
-<td>Menyetujui alur nonaktivasi &amp; aturan reminder override</td>
+<td>Menyetujui alur nonaktivasi sekolah &amp; perubahan data sekolah lewat wizard</td>
 </tr>
 <tr>
 <td>Solution Architect</td>
 <td>GeekGarden</td>
 <td>R</td>
-<td>Desain relasi data sekolah, rekening, aturan reminder</td>
+<td>Desain relasi data sekolah, akun awal, rekening</td>
 </tr>
 <tr>
 <td>Tech Lead</td>
@@ -370,8 +389,8 @@
 <tr>
 <td>Admin Wilayah (PWM)</td>
 <td>Mengelola sekolah di wilayahnya</td>
-<td>Sesuaikan aturan reminder sesuai kebijakan sekolah setempat</td>
-<td>Perubahan aturan default memengaruhi semua sekolah</td>
+<td>Pastikan info sekolah, akun awal, dan rekening penampung selalu akurat tanpa menunggu tim backend</td>
+<td>Perubahan data sekolah sebelumnya harus lewat tiket manual ke tim backend</td>
 <td>Laptop/web</td>
 </tr>
 <tr>
@@ -395,33 +414,37 @@
 </thead>
 <tbody>
 <tr>
-<td>Daftar sekolah (nama, NPSN, wilayah, rekening penampung, status)</td>
+<td>Daftar sekolah (nama, NPSN, Wilayah/PWM, Daerah/PDM, Cabang/PCM sebagai kolom terpisah, status rekening penampung, status) dengan dua mode akses: "Kelola" (wizard, edit) dan "Detail" (tab, read-only), dilengkapi pencarian (nama/NPSN), filter (Wilayah, Status), dan tombol cepat Nonaktifkan/Aktifkan langsung per baris</td>
 <td>Bulk action (nonaktifkan/edit banyak sekolah sekaligus)</td>
 </tr>
 <tr>
-<td>Tab Info Sekolah (profil, status, struktur organisasi, riwayat status)</td>
+<td>Step Info Sekolah (profil, status, Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) sebagai 3 dropdown cascading yang bisa diedit, Alamat Lengkap, riwayat status)</td>
 <td>Penghapusan permanen data sekolah</td>
 </tr>
 <tr>
-<td>Tab Rekening Penampung (Nama Bank, No Rek, Nama Pemilik)</td>
-<td>Write-off tunggakan (proses terpisah)</td>
+<td>Step Akun Awal -- kartu Akun Awal (Admin Sekolah: Nama, Peran, No. WhatsApp, Email) dan kartu Kontak Sekolah (Email Sekolah, Nama Kontak Person, No. WhatsApp Kontak Person)</td>
+<td>Multi-akun Admin per sekolah (saat ini hanya 1 akun Admin, sama seperti Pendaftaran Sekolah)</td>
 </tr>
 <tr>
-<td>Tab Reminder &amp; Template (override aturan H-7/H-3/H-1/H+... dan template WA/SMS/Email per sekolah)</td>
-<td>Approval berjenjang untuk override aturan reminder</td>
+<td>Step Rekening Penampung -- manajemen multi-rekening per sekolah (tambah/edit, cari &amp; filter per bank/status, status verifikasi, tandai rekening utama; minimal 1 rekening)</td>
+<td>Write-off tunggakan (proses terpisah); hapus &amp; aktifkan/nonaktifkan rekening langsung dari tabel (dihapus dari UI versi ini)</td>
 </tr>
 <tr>
-<td>Nonaktifkan Sekolah (dengan alasan wajib + peringatan tunggakan) &amp; Aktifkan Kembali</td>
+<td>Step Review -- ringkasan per bagian (Info Sekolah/Akun Awal/Rekening Penampung) dengan tombol "Edit" untuk kembali ke step terkait, diakhiri tombol "Simpan Perubahan" yang menuliskan perubahan ke data sekolah</td>
+<td>Aturan Reminder &amp; Template Pesan override per sekolah (dihapus dari lingkup Manajemen Sekolah, lihat 3.2)</td>
+</tr>
+<tr>
+<td>Nonaktifkan Sekolah (dengan alasan wajib + peringatan tunggakan) &amp; Aktifkan Kembali -- bisa dipicu dari baris Daftar Sekolah maupun dari kartu Aksi Sekolah di step Info Sekolah</td>
 <td>Notifikasi otomatis ke wali murid saat sekolah dinonaktifkan</td>
 </tr>
 </tbody>
 </table></div>
 <h3>5.2 Prioritas (MoSCoW)</h3>
 <ul>
-<li><strong>Must have</strong> -- Daftar sekolah, Tab Info Sekolah, Nonaktifkan/Aktifkan dengan validasi tunggakan.</li>
-<li><strong>Should have</strong> -- Tab Rekening Penampung, Tab Reminder &amp; Template override.</li>
+<li><strong>Must have</strong> -- Daftar sekolah (+ tombol cepat Nonaktifkan/Aktifkan), wizard step Info Sekolah &amp; Akun Awal, Nonaktifkan/Aktifkan dengan validasi tunggakan.</li>
+<li><strong>Should have</strong> -- Step Rekening Penampung, step Review dengan Edit per bagian &amp; Simpan Perubahan, mode Detail (read-only), pencarian &amp; filter Daftar Sekolah.</li>
 <li><strong>Could have</strong> -- Riwayat status sekolah yang lebih detail (multi-entry, bukan hanya entri terakhir).</li>
-<li><strong>Won't have (now)</strong> -- Bulk action, penghapusan permanen, write-off dari halaman ini.</li>
+<li><strong>Won't have (now)</strong> -- Bulk action, penghapusan permanen, write-off dari halaman ini, Aturan Reminder &amp; Template override per sekolah (dihapus dari lingkup), hapus/aktifkan-nonaktifkan rekening langsung dari tabel.</li>
 </ul>
 <h3>5.3 User Stories</h3>
 <div class="table-scroll"><table>
@@ -438,19 +461,19 @@
 <td>US-01</td>
 <td>Sebagai Admin, saya ingin melihat daftar seluruh sekolah terdaftar beserta status dan rekening penampungnya, supaya saya bisa memilih sekolah yang perlu dikelola.</td>
 <td>Must</td>
-<td>Given saya membuka Manajemen Sekolah, When halaman dimuat, Then tabel menampilkan Nama Sekolah, NPSN, Wilayah, Rekening Penampung, Status, dan tombol "Kelola" untuk setiap sekolah</td>
+<td>Given saya membuka Manajemen Sekolah, When halaman dimuat, Then tabel menampilkan Nama Sekolah, NPSN, Wilayah (PWM), Daerah (PDM), Cabang (PCM), Rekening Penampung, Status, dan tombol "Kelola"/"Detail" untuk setiap sekolah</td>
 </tr>
 <tr>
 <td>US-02</td>
-<td>Sebagai Admin, saya ingin mengubah data Info Sekolah (nama, NPSN, jenjang), supaya data sekolah tetap akurat.</td>
+<td>Sebagai Admin, saya ingin mengubah data Info Sekolah (nama, NPSN, jenjang, Wilayah/Daerah/Cabang, alamat), supaya data sekolah tetap akurat.</td>
 <td>Must</td>
-<td>Given saya di tab Info Sekolah, When saya mengubah field dan menyimpan, Then data tersimpan dan tercermin di daftar sekolah</td>
+<td>Given saya di step Info Sekolah, When saya mengubah field, lalu membuka step Review dan menekan "Simpan Perubahan", Then data tersimpan dan tercermin di judul halaman serta Daftar Sekolah; And selama saya belum menekan "Simpan Perubahan" di Review, perubahan belum tersimpan permanen</td>
 </tr>
 <tr>
 <td>US-03</td>
-<td>Sebagai Admin, saya ingin memperbarui rekening penampung sekolah (Nama Bank, No Rek, Nama Pemilik), supaya pencairan fee sekolah ini mengarah ke rekening yang benar.</td>
+<td>Sebagai Admin, saya ingin mengelola satu atau lebih rekening penampung sekolah (tambah, edit, cari/filter, tandai rekening utama), supaya pencairan fee sekolah ini selalu mengarah ke rekening yang benar dan terverifikasi.</td>
 <td>Must</td>
-<td>Given saya di tab Rekening Penampung, When saya mengubah Nama Bank/No Rek/Nama Pemilik dan menekan "Simpan", Then sistem menampilkan konfirmasi "Rekening Penampung berhasil disimpan"</td>
+<td>Given saya di step Rekening Penampung, When saya menambah/mengubah data rekening (Nama Bank -- termasuk opsi "Lainnya", Nomor Rekening, Nama Pemilik) dan menekan "Simpan" pada panel rekening, Then sistem memvalidasi data (nomor rekening 6-20 digit, nama pemilik minimal 3 karakter, kombinasi bank+nomor tidak duplikat) dan menampilkan konfirmasi "Rekening Penampung berhasil disimpan"; And ketika saya menandai satu rekening sebagai "utama", rekening utama sebelumnya otomatis tidak lagi utama</td>
 </tr>
 <tr>
 <td>US-04</td>
@@ -466,9 +489,33 @@
 </tr>
 <tr>
 <td>US-06</td>
-<td>Sebagai Admin Wilayah, saya ingin mengubah aturan reminder &amp; template pesan khusus untuk satu sekolah, supaya gaya komunikasi penagihan sesuai kebijakan sekolah tersebut tanpa memengaruhi sekolah lain.</td>
+<td>Sebagai Admin, saya ingin melihat dan mengubah Akun Awal (Admin Sekolah) beserta Kontak Sekolah dalam satu step terpisah, supaya informasi akun login dan kontak administratif sekolah mudah ditinjau tanpa tercampur dengan data profil sekolah.</td>
+<td>Must</td>
+<td>Given saya di step Akun Awal, When halaman dibuka, Then saya melihat kartu "Akun Awal -- Admin Sekolah" (Nama, Peran = Admin [readonly], No. WhatsApp, Email) dan kartu "Kontak Sekolah" (Email Sekolah, Nama Kontak Person, No. WhatsApp Kontak Person); And perubahan pada kedua kartu tersimpan lewat "Simpan Perubahan" di step Review</td>
+</tr>
+<tr>
+<td>US-07</td>
+<td>Sebagai Admin/Staff dengan hak akses lihat saja, saya ingin membuka detail sekolah dalam mode "Detail" (read-only), supaya saya bisa meninjau seluruh konfigurasi sekolah tanpa risiko mengubah data secara tidak sengaja.</td>
 <td>Should</td>
-<td>Given saya di tab Reminder &amp; Template, When saya mengubah offset hari/level/channel suatu aturan atau isi template dan menyimpan, Then perubahan hanya berlaku untuk sekolah ini, sekolah lain tetap memakai Default Platform</td>
+<td>Given saya menekan tombol "Detail" pada daftar sekolah, When halaman detail terbuka, Then navigasi berubah dari stepper menjadi tab biasa tanpa step Review, seluruh field dinonaktifkan, dan tombol aksi (Nonaktifkan/Aktifkan, Tambah Rekening, Lanjut/Kembali, Simpan Perubahan) disembunyikan, dan badge "READ ONLY" ditampilkan di judul halaman</td>
+</tr>
+<tr>
+<td>US-08</td>
+<td>Sebagai Admin, saya ingin mencari dan memfilter daftar sekolah berdasarkan nama/NPSN, Wilayah (PWM), dan Status, supaya saya cepat menemukan sekolah yang perlu dikelola saat jumlah sekolah terdaftar sudah banyak.</td>
+<td>Should</td>
+<td>Given saya mengetik kata kunci pada kotak cari atau memilih filter Wilayah (PWM)/Status, When input berubah, Then tabel daftar sekolah langsung memperbarui hasil tanpa reload halaman; And jika tidak ada sekolah yang cocok, tabel menampilkan pesan "Tidak ada sekolah yang cocok dengan filter."</td>
+</tr>
+<tr>
+<td>US-09</td>
+<td>Sebagai Admin, saya ingin meninjau ringkasan seluruh perubahan per bagian (Info Sekolah/Akun Awal/Rekening Penampung) di step Review sebelum menyimpan, dan bisa langsung kembali ke bagian tertentu lewat tombol "Edit", supaya saya tidak perlu menebak-nebak bagian mana yang masih perlu diperbaiki.</td>
+<td>Should</td>
+<td>Given saya berada di step Review, When saya menekan "Edit" pada salah satu bagian, Then wizard langsung berpindah ke step terkait; And setelah saya mengubah data lalu kembali ke Review, ringkasan ter-update otomatis menampilkan nilai terbaru dari form</td>
+</tr>
+<tr>
+<td>US-10</td>
+<td>Sebagai Admin, saya ingin menekan tombol Nonaktifkan/Aktifkan langsung dari baris Daftar Sekolah, supaya saya tidak perlu membuka "Kelola" dulu hanya untuk mengubah status operasional sekolah.</td>
+<td>Should</td>
+<td>Given saya di Daftar Sekolah, When saya menekan "Nonaktifkan" (untuk sekolah berstatus Aktif) atau "Aktifkan" (untuk sekolah berstatus Nonaktif) pada suatu baris, Then modal konfirmasi terkait terbuka langsung tanpa harus membuka halaman Kelola/Detail terlebih dahulu</td>
 </tr>
 </tbody>
 </table></div>
@@ -489,26 +536,26 @@
 <tr>
 <td>FR-01</td>
 <td>Daftar Sekolah</td>
-<td>Sistem harus menampilkan tabel seluruh sekolah dengan kolom Nama Sekolah, NPSN, Wilayah, Rekening Penampung, Status, dan aksi "Kelola"</td>
-<td>US-01</td>
+<td>Sistem harus menampilkan tabel seluruh sekolah dengan kolom Nama Sekolah, NPSN, Wilayah (PWM), Daerah (PDM), Cabang (PCM), Rekening Penampung (status koneksi), Status, dan aksi per baris: "Kelola" (wizard edit), "Detail" (mode read-only), dan tombol cepat "Nonaktifkan"/"Aktifkan" sesuai status sekolah saat itu</td>
+<td>US-01, US-10</td>
 <td>Must</td>
-<td>Status ditampilkan dengan badge warna (Aktif/Nonaktif/Draft)</td>
+<td>Status ditampilkan dengan badge warna (Aktif/Nonaktif/Draft). Wilayah, Daerah, dan Cabang ditampilkan sebagai kolom terpisah, bukan satu string gabungan. Tombol Nonaktifkan hanya tampil untuk status Aktif, tombol Aktifkan hanya untuk status Nonaktif; keduanya membuka modal konfirmasi yang sama seperti di FR-04/FR-05 tanpa perlu membuka Kelola/Detail</td>
 </tr>
 <tr>
 <td>FR-02</td>
 <td>Info Sekolah</td>
-<td>Sistem harus menyediakan form edit Nama Sekolah, NPSN, Jenjang, Status (readonly), Struktur Organisasi (readonly), dan riwayat status jika pernah dinonaktifkan</td>
+<td>Sistem harus menyediakan step "Info Sekolah" berisi form edit Nama Sekolah, NPSN, Jenjang, Status (readonly), Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) sebagai 3 dropdown cascading, Alamat Lengkap, dan riwayat status jika pernah dinonaktifkan</td>
 <td>US-02</td>
 <td>Must</td>
-<td>Struktur organisasi tidak bisa diubah dari tab ini (diatur saat pendaftaran)</td>
+<td>Wilayah/Daerah/Cabang kini <strong>bisa diedit langsung</strong> dari step ini lewat 3 dropdown cascading (Daerah mengikuti pilihan Wilayah, Cabang mengikuti pilihan Daerah) -- sama seperti pola di Pendaftaran Sekolah, berbeda dari versi sebelumnya yang readonly. Perubahan pada seluruh field di step ini baru benar-benar tersimpan setelah menekan "Simpan Perubahan" di step Review (lihat FR-12)</td>
 </tr>
 <tr>
 <td>FR-03</td>
 <td>Rekening Penampung</td>
-<td>Sistem harus menyediakan form edit Nama Bank (dropdown), No Rek, Nama Pemilik untuk sekolah terpilih, dengan tombol "Simpan"</td>
+<td>Sistem harus menyediakan manajemen rekening penampung per sekolah: tabel daftar rekening (Bank, No. Rekening, Nama Pemilik, Status Verifikasi), pencarian &amp; filter (bank, status), tambah/edit rekening (Nama Bank -- dropdown dengan opsi "Lainnya" yang menampilkan field teks "Nama Bank Lainnya" bila dipilih, Nomor Rekening, Nama Pemilik, toggle "Jadikan rekening utama"), dan "Jadikan Utama" untuk rekening non-utama</td>
 <td>US-03</td>
 <td>Must</td>
-<td>Hanya untuk pencairan fee sekolah, bukan rekening penampung SPP wali murid (terpusat)</td>
+<td>Boleh lebih dari 1 rekening per sekolah, minimal harus ada 1 rekening. Nomor rekening wajib numerik 6-20 digit; Nama Pemilik minimal 3 karakter; kombinasi Bank+Nomor Rekening tidak boleh duplikat. Jika Nama Bank dipilih "Lainnya", field "Nama Bank Lainnya" wajib diisi minimal 3 karakter dan nilai tersebut yang disimpan sebagai Nama Bank (bukan literal "Lainnya"); pada mode edit, dropdown otomatis terpilih "Lainnya" dan field ini terisi ulang bila Nama Bank tersimpan di luar daftar tetap. <strong>Pada versi ini, aksi hapus dan aktifkan/nonaktifkan rekening dihilangkan dari tampilan</strong> -- hanya edit (✎) dan "Jadikan Utama" yang tersedia dari UI. Data ini hanya bersifat informasi (bukan proses otomatis) -- disbursement tetap dilakukan manual oleh admin Muhammadiyah, dan ini bukan rekening penampung SPP wali murid (terpusat)</td>
 </tr>
 <tr>
 <td>FR-04</td>
@@ -516,7 +563,7 @@
 <td>Sistem harus menampilkan modal konfirmasi berisi jumlah siswa &amp; nominal tunggakan (jika ada), field Alasan Nonaktivasi (wajib), dan checkbox pernyataan paham tunggakan tetap harus ditagih (wajib jika ada tunggakan) sebelum tombol konfirmasi bisa ditekan</td>
 <td>US-04</td>
 <td>Must</td>
-<td>Tombol konfirmasi disabled sampai alasan diisi dan (jika ada tunggakan) checkbox dicentang</td>
+<td>Tombol konfirmasi disabled sampai alasan diisi dan (jika ada tunggakan) checkbox dicentang. Setelah dinonaktifkan: staf sekolah (Admin/Kepala Sekolah/Bendahara) tidak bisa lagi login ke Portal Sekolah dan tidak ada tagihan baru diterbitkan; namun wali murid yang masih punya tunggakan tetap bisa login ke App Wali Murid khusus untuk melihat &amp; melunasi tagihan lama, dan dana yang masuk tetap diproses lewat mekanisme Host-to-Host seperti biasa</td>
 </tr>
 <tr>
 <td>FR-05</td>
@@ -535,20 +582,36 @@
 <td>Format: "Dinonaktifkan [tanggal] oleh [nama] ([role]) -- Alasan: [teks]"</td>
 </tr>
 <tr>
-<td>FR-07</td>
-<td>Reminder &amp; Template Override</td>
-<td>Sistem harus menyediakan tabel aturan reminder (offset hari, nama aturan, level penanganan, channel WA/SMS/Email, aktif/nonaktif) dan editor template pesan per channel &amp; level, khusus untuk sekolah terpilih, awalnya berupa salinan Default Platform</td>
-<td>US-06</td>
+<td>FR-09</td>
+<td>Mode Detail (Read-Only)</td>
+<td>Sistem harus menyediakan mode "Detail" yang membuka halaman detail sekolah yang sama seperti mode "Kelola", namun navigasinya berubah dari stepper (wizard) menjadi tab biasa tanpa step Review, seluruh field dinonaktifkan, dan seluruh tombol aksi (Nonaktifkan/Aktifkan, Tambah Rekening, Lanjut/Kembali, Simpan Perubahan) disembunyikan, ditandai badge "READ ONLY" pada judul halaman</td>
+<td>US-07</td>
 <td>Should</td>
-<td>Perubahan di sini tidak memengaruhi Default Platform maupun sekolah lain</td>
+<td>Tidak ada perubahan data yang mungkin terjadi dalam mode ini; ditujukan untuk peran dengan hak akses lihat saja. Step tetap bisa diklik langsung (navigasi tab), hanya saja tanpa opsi Lanjut/Kembali/Simpan Perubahan dan tanpa step Review</td>
 </tr>
 <tr>
-<td>FR-08</td>
-<td>Tambah/Hapus Aturan Reminder</td>
-<td>Sistik harus mengizinkan Admin menambah baris aturan baru atau menghapus baris aturan yang ada pada tab Reminder &amp; Template sekolah ini</td>
+<td>FR-10</td>
+<td>Pencarian &amp; Filter Daftar Sekolah</td>
+<td>Sistem harus menyediakan kotak pencarian (Nama Sekolah/NPSN) dan dropdown filter Wilayah (PWM) serta Status pada Daftar Sekolah, yang langsung memperbarui tabel saat diubah tanpa reload halaman</td>
+<td>US-08</td>
+<td>Should</td>
+<td>Opsi dropdown filter Wilayah (PWM) diisi otomatis dari daftar sekolah yang ada (bukan daftar tetap/hardcode); bila tidak ada hasil, tabel menampilkan pesan "Tidak ada sekolah yang cocok dengan filter."</td>
+</tr>
+<tr>
+<td>FR-11</td>
+<td>Akun Awal</td>
+<td>Sistem harus menyediakan step "Akun Awal" berisi kartu "Akun Awal -- Admin Sekolah" (Nama, Peran = Admin [readonly], No. WhatsApp, Email) dan kartu "Kontak Sekolah" (Email Sekolah, Nama Kontak Person, No. WhatsApp Kontak Person)</td>
 <td>US-06</td>
-<td>Could</td>
-<td>Minimal 1 aturan aktif disarankan, meski tidak dipaksakan di validasi</td>
+<td>Must</td>
+<td>Kartu Akun Awal -- Admin Sekolah baru ditambahkan di versi ini (v0.4); sebelumnya hanya kartu Kontak Sekolah yang ada, tergabung keliru di bawah judul "Akun Awal". Peran selalu "Admin" dan tidak bisa diubah (segregation of duties, sama seperti Pendaftaran Sekolah)</td>
+</tr>
+<tr>
+<td>FR-12</td>
+<td>Wizard &amp; Review per Step</td>
+<td>Sistem harus menyediakan navigasi wizard 4 step (Info Sekolah, Akun Awal, Rekening Penampung, Review) pada mode "Kelola", dengan step yang bisa diklik langsung maupun lewat tombol "Lanjut"/"Kembali"; step terakhir (Review) menampilkan ringkasan tiap bagian dengan tombol "Edit" untuk kembali ke step terkait, diakhiri tombol "Simpan Perubahan"</td>
+<td>US-02, US-06, US-09</td>
+<td>Must</td>
+<td>"Simpan Perubahan" menuliskan nilai Nama Sekolah, NPSN, Jenjang, Wilayah/Daerah/Cabang, Alamat, Akun Awal (Admin), dan Kontak Sekolah ke data sekolah, lalu memperbarui judul halaman dan Daftar Sekolah serta menampilkan toast konfirmasi. Sebelum versi ini, field-field tersebut bisa diedit di form namun tidak pernah benar-benar tersimpan. Tombol "Kembali" nonaktif di step pertama; label tombol "Lanjut" berubah jadi "Simpan Perubahan ✓" di step terakhir</td>
 </tr>
 </tbody>
 </table></div>
@@ -566,6 +629,13 @@
 <tbody>
 <tr>
 <td>Lihat daftar sekolah</td>
+<td>Read</td>
+<td>Read</td>
+<td>Read</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Buka mode "Detail" (read-only, seluruh tab)</td>
 <td>Read</td>
 <td>Read</td>
 <td>Read</td>
@@ -593,7 +663,7 @@
 <td>--</td>
 </tr>
 <tr>
-<td>Edit Reminder &amp; Template sekolah</td>
+<td>Edit Akun Awal (Admin Sekolah &amp; Kontak Sekolah)</td>
 <td>CRUD</td>
 <td>CRUD</td>
 <td>--</td>
@@ -670,9 +740,9 @@
 </tr>
 <tr>
 <td>NFR-05</td>
-<td>Isolasi data</td>
-<td>Override Reminder &amp; Template satu sekolah tidak memengaruhi sekolah lain atau Default Platform</td>
-<td>0% kebocoran konfigurasi antar sekolah</td>
+<td>Konsistensi</td>
+<td>Perubahan yang ditekan lewat "Simpan Perubahan" di step Review harus menuliskan seluruh field dari step Info Sekolah &amp; Akun Awal secara bersamaan (atomic), tidak ada field yang tersimpan sebagian</td>
+<td>100% field tersimpan dalam satu aksi "Simpan Perubahan", 0% penyimpanan sebagian</td>
 </tr>
 <tr>
 <td>NFR-06</td>
@@ -685,9 +755,9 @@
 <hr />
 <h2>8. Alur Pengguna &amp; Desain</h2>
 <ul>
-<li>Alur utama: Menu "Manajemen Sekolah" → Daftar Sekolah → klik "Kelola" → Detail Sekolah (tab Info Sekolah / Rekening Penampung / Reminder &amp; Template) → ubah data → Simpan, atau → Nonaktifkan/Aktifkan via modal konfirmasi.</li>
-<li>Wireframe: mengikuti struktur <code>manajemen.html</code> (list panel &amp; detail panel dengan channel-tabs).</li>
-<li>Edge case yang wajib ditangani: sekolah berstatus Draft (aksi nonaktifkan/aktifkan tidak relevan dan disembunyikan), sekolah dengan tunggakan nol (modal nonaktivasi menampilkan pesan "tidak ada tunggakan" tanpa checklist tambahan), sekolah dinonaktifkan lalu diaktifkan berkali-kali (riwayat status terbaru menimpa yang lama pada fase ini).</li>
+<li>Alur utama: Menu "Manajemen Sekolah" → Daftar Sekolah → klik "Kelola" → wizard 4 step (Info Sekolah → Akun Awal → Rekening Penampung → Review) → tekan "Simpan Perubahan" di step Review; atau → klik "Nonaktifkan"/"Aktifkan" langsung dari baris Daftar Sekolah maupun dari kartu "Aksi Sekolah" di step Info Sekolah, keduanya via modal konfirmasi yang sama.</li>
+<li>Wireframe: mengikuti struktur <code>manajemen.html</code> -- list panel &amp; detail panel dengan <strong>stepper</strong> (bernomor, bisa diklik langsung + tombol Lanjut/Kembali) pada mode "Kelola", dan <strong>tab biasa tanpa step Review</strong> pada mode "Detail".</li>
+<li>Edge case yang wajib ditangani: sekolah berstatus Draft (aksi nonaktifkan/aktifkan tidak relevan dan disembunyikan), sekolah dengan tunggakan nol (modal nonaktivasi menampilkan pesan "tidak ada tunggakan" tanpa checklist tambahan), sekolah dinonaktifkan lalu diaktifkan berkali-kali (riwayat status terbaru menimpa yang lama pada fase ini), memilih "Lainnya" pada Nama Bank tanpa mengisi field "Nama Bank Lainnya" (sistem menolak simpan), pencarian/filter Daftar Sekolah yang tidak menemukan hasil (tabel menampilkan pesan kosong, bukan tabel blank), sekolah Nonaktif dengan tunggakan tersisa (wali murid tetap bisa login ke App Wali Murid untuk melunasi tagihan lama meski staf sekolah sudah tidak bisa login), dan Admin mengubah data di beberapa step lalu menutup halaman <em>tanpa</em> menekan "Simpan Perubahan" di Review (perubahan tidak tersimpan -- lihat Risiko bagian 12).</li>
 </ul>
 <hr />
 <h2>9. Integrasi &amp; Dependensi</h2>
@@ -710,13 +780,6 @@
 <td>[ ]</td>
 </tr>
 <tr>
-<td>Modul Invoicing/Reminder Default Platform</td>
-<td>Sumber salinan awal aturan reminder saat override pertama dibuat</td>
-<td>Internal API</td>
-<td>[ ]</td>
-<td>[ ]</td>
-</tr>
-<tr>
 <td>Modul RBAC &amp; Pengguna</td>
 <td>Validasi siapa yang bisa login setelah status sekolah berubah</td>
 <td>Internal API</td>
@@ -728,16 +791,17 @@
 <hr />
 <h2>10. Kebutuhan Data</h2>
 <ul>
-<li>Entitas utama: Sekolah, RekeningPenampungSekolah, AturanReminderSekolah (override), TemplatePesanSekolah (override), RiwayatStatusSekolah, Tunggakan (agregat per sekolah).</li>
+<li>Entitas utama: Sekolah (atribut termasuk nama, NPSN, jenjang, status, <strong>wilayah/PWM, daerah/PDM, cabang/PCM sebagai 3 field terpisah</strong> yang bisa diedit, alamat lengkap, akun awal admin [nama, no. WhatsApp, email, peran="Admin"], kontak sekolah [email, nama kontak person, no. WhatsApp]), RekeningPenampungSekolah (relasi satu-ke-banyak terhadap Sekolah; atribut: bank -- termasuk nama bank kustom hasil input "Nama Bank Lainnya", nomor rekening, nama pemilik, status verifikasi, flag utama), RiwayatStatusSekolah, Tunggakan (agregat per sekolah).</li>
+<li>Entitas AturanReminderSekolah dan TemplatePesanSekolah (override per sekolah) <strong>dihapus dari lingkup data halaman ini sejak v0.4</strong> -- lihat 3.2 Non-Tujuan.</li>
 <li>Retensi data: riwayat status sekolah &amp; alasan nonaktivasi disimpan permanen untuk audit.</li>
-<li>Laporan yang dibutuhkan: daftar sekolah per status, daftar sekolah dengan override reminder aktif, daftar sekolah dengan tunggakan saat nonaktivasi.</li>
+<li>Laporan yang dibutuhkan: daftar sekolah per status, daftar sekolah dengan tunggakan saat nonaktivasi.</li>
 </ul>
 <hr />
 <h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
 <p><strong>Asumsi:</strong></p>
 <ul>
 <li>Data tunggakan siswa per sekolah sudah tersedia secara real-time dari modul transaksi/invoicing saat modal nonaktivasi dibuka.</li>
-<li>Satu sekolah hanya memiliki satu set override Reminder &amp; Template aktif pada satu waktu.</li>
+<li>Satu sekolah hanya memiliki satu akun Admin Sekolah yang dikelola dari step Akun Awal, sama seperti satu akun Admin yang dibuat saat Pendaftaran Sekolah.</li>
 </ul>
 <p><strong>Batasan:</strong></p>
 <ul>
@@ -792,10 +856,10 @@
 <td>[ ]</td>
 </tr>
 <tr>
-<td>Override Reminder &amp; Template keliru diterapkan ke sekolah lain</td>
-<td>H</td>
-<td>L</td>
-<td>Isolasi data per sekolah divalidasi di level backend, bukan hanya UI</td>
+<td>Admin mengubah data di beberapa step lalu menutup halaman tanpa menekan "Simpan Perubahan" di Review, mengira perubahan sudah tersimpan</td>
+<td>M</td>
+<td>M</td>
+<td>Label tombol terakhir dibuat jelas ("Simpan Perubahan ✓"); pertimbangkan dialog konfirmasi saat keluar bila ada perubahan belum disimpan (future improvement)</td>
 <td>[ ]</td>
 </tr>
 </tbody>
@@ -826,7 +890,7 @@
 </tr>
 <tr>
 <td>Development</td>
-<td>Daftar + 3 tab + nonaktif/aktifkan</td>
+<td>Daftar + wizard 4 step (Info Sekolah/Akun Awal/Rekening Penampung/Review) + nonaktif/aktifkan</td>
 <td>[ ]</td>
 <td>Lolos code review</td>
 </tr>
@@ -863,8 +927,36 @@
 <td>Penghapusan piutang/tunggakan dengan approval, biasanya untuk siswa pindah sekolah</td>
 </tr>
 <tr>
-<td>Override</td>
-<td>Aturan khusus satu sekolah yang menggantikan default platform tanpa memengaruhi sekolah lain</td>
+<td>Wizard</td>
+<td>Alur pengisian form bertahap dalam beberapa step berurutan, diakhiri step Review sebelum data disimpan -- dipakai pada mode "Kelola" Manajemen Sekolah, sama seperti Pendaftaran Sekolah</td>
+</tr>
+<tr>
+<td>Rekening Utama</td>
+<td>Satu rekening penampung yang ditandai sebagai tujuan pencairan dana aktif untuk sekolah tersebut; menandai rekening lain sebagai utama otomatis menggantikan status utama sebelumnya</td>
+</tr>
+<tr>
+<td>Push Notif</td>
+<td>Notifikasi singkat yang tampil di perangkat wali murid (mis. lock screen), teksnya harus ringkas</td>
+</tr>
+<tr>
+<td>Notif Aplikasi</td>
+<td>Notifikasi yang tampil di halaman Notifikasi pada App Wali Murid, tidak terikat batas panjang pesan seperti Push Notif</td>
+</tr>
+<tr>
+<td>Mode Detail</td>
+<td>Tampilan halaman detail sekolah dalam keadaan read-only (semua field &amp; tombol aksi dinonaktifkan/disembunyikan), berbeda dari mode "Kelola" yang memungkinkan edit penuh</td>
+</tr>
+<tr>
+<td>PWM</td>
+<td>Pimpinan Wilayah Muhammadiyah -- tingkat struktur organisasi setingkat provinsi, field "Wilayah" pada data sekolah</td>
+</tr>
+<tr>
+<td>PDM</td>
+<td>Pimpinan Daerah Muhammadiyah -- tingkat struktur organisasi setingkat kota/kabupaten, field "Daerah" pada data sekolah</td>
+</tr>
+<tr>
+<td>PCM</td>
+<td>Pimpinan Cabang Muhammadiyah -- tingkat struktur organisasi setingkat kecamatan, field "Cabang" pada data sekolah</td>
 </tr>
 </tbody>
 </table></div>

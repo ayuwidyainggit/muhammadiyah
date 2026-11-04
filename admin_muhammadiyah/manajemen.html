@@ -1,471 +1,1580 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>GeekGarden Admin -- Manajemen Sekolah</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeekGarden Admin -- Manajemen Sekolah</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app-shell">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="brand">
+          <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+          <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+        </div>
 
-<div class="app" id="app-shell">
+        <a
+          href="dashboard-konsolidasi.html"
+          class="nav-item"
+          data-rbac="dashboard-konsolidasi"
+          ><span class="ic">📊</span> Dashboard Konsolidasi</a
+        >
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="brand">
-      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
-      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
-    </div>
+        <div class="nav-group-label">Onboarding</div>
+        <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"
+          ><span class="ic">＋</span> Pendaftaran Sekolah</a
+        >
+        <a href="manajemen.html" class="nav-item active" data-rbac="manajemen"
+          ><span class="ic">🏫</span> Manajemen Sekolah</a
+        >
 
-    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+        <div class="nav-group-label">Konfigurasi</div>
+        <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
+          ><span class="ic">⚙</span> Konfigurasi Sistem</a
+        >
+        <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
+          ><span class="ic">👤</span> Pengguna</a
+        >
+        <a href="rbac.html" class="nav-item" data-rbac="rbac"
+          ><span class="ic">🔐</span> Role &amp; Hak Akses</a
+        >
 
-    <div class="nav-group-label">Onboarding</div>
-    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
-    <a href="manajemen.html" class="nav-item active" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
-
-    <div class="nav-group-label">Konfigurasi</div>
-    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
-    <a href="pengguna.html" class="nav-item" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
-    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
-
-    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
-      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
-    </div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Manajemen Sekolah</b></div>
-      <div class="user-chip">
-        <div class="av" id="uc-avatar">SA</div>
-        <div class="info">
-          <div class="name" id="uc-name">Super Admin</div>
-          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        <div
+          style="
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 10px;
+          "
+        >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              logout();
+              return false;
+            "
+            ><span class="ic">🚪</span> Keluar</a
+          >
         </div>
       </div>
-    </div>
 
-    <div class="content">
-
-      <!-- ===================== VIEW: MANAJEMEN SEKOLAH ===================== -->
-      <div class="page-view active" id="view-manajemen">
-
-        <!-- LIST -->
-        <div id="ms-list-panel">
-          <div class="page-title">
-            <h1>Manajemen Sekolah</h1>
-            <p>Sekolah yang sudah terdaftar -- kelola konfigurasi masing-masing, termasuk override Aturan Reminder &amp; Template dari default platform.</p>
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">
+            <span id="crumb-role">Super Admin</span> /
+            <b id="crumb-current">Manajemen Sekolah</b>
           </div>
-          <div class="card">
-            <table class="accounts">
-              <thead>
-                <tr><th style="width:28%">Nama Sekolah</th><th style="width:12%">NPSN</th><th style="width:24%">Wilayah</th><th style="width:14%">Rekening Penampung</th><th style="width:12%">Status</th><th style="width:10%">Aksi</th></tr>
-              </thead>
-              <tbody id="ms-table-body">
-                <!-- filled by JS -->
-              </tbody>
-            </table>
+          <div class="topbar-right">
+            <a
+              class="btn-prd"
+              href="docs/PRD-manajemen-sekolah.html"
+              target="_blank"
+              rel="noopener"
+              >📄 PRD</a
+            >
+            <div class="user-chip">
+              <div class="av" id="uc-avatar">SA</div>
+              <div class="info">
+                <div class="name" id="uc-name">Super Admin</div>
+                <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- DETAIL -->
-        <div id="ms-detail-panel" style="display:none;">
-          <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;">
-            <div>
-              <h1 id="ms-detail-title">Nama Sekolah</h1>
-              <p id="ms-detail-sub">NPSN -- Wilayah</p>
-            </div>
-            <button class="btn btn-ghost" onclick="closeSchoolDetail()">&larr; Kembali ke Daftar Sekolah</button>
-          </div>
-
-          <div class="channel-tabs" style="margin-bottom:20px;">
-            <div class="channel-tab active" data-mstab="info" onclick="switchMsTab('info')">Info Sekolah</div>
-            <div class="channel-tab" data-mstab="pg" onclick="switchMsTab('pg')">Rekening Penampung</div>
-            <div class="channel-tab" data-mstab="tmpl" onclick="switchMsTab('tmpl')">Reminder &amp; Template</div>
-          </div>
-
-          <!-- TAB: INFO -->
-          <div class="ms-tab-panel" data-mspanel="info">
-            <div class="card">
-              <h3>Info Sekolah</h3>
-              <div class="grid2">
-                <div class="field"><label>Nama Sekolah</label><input type="text" id="ms-info-nama" value=""></div>
-                <div class="field"><label>NPSN</label><input type="text" id="ms-info-npsn" value=""></div>
-                <div class="field"><label>Jenjang</label><select><option>SD / MI</option><option>SMP / MTs</option><option>SMA / MA</option><option>SMK</option></select></div>
-                <div class="field"><label>Status</label><input type="text" id="ms-info-status" disabled style="background:#f5f6f8;"></div>
+        <div class="content">
+          <!-- ===================== VIEW: MANAJEMEN SEKOLAH ===================== -->
+          <div class="page-view active" id="view-manajemen">
+            <!-- LIST -->
+            <div id="ms-list-panel">
+              <div class="page-title">
+                <h1>Manajemen Sekolah</h1>
+                <p>
+                  Sekolah yang sudah terdaftar -- kelola konfigurasi
+                  masing-masing, termasuk override Aturan Reminder &amp;
+                  Template dari default platform.
+                </p>
               </div>
-              <div class="field"><label>Struktur Organisasi</label><input type="text" id="ms-info-org" disabled style="background:#f5f6f8;"></div>
-              <div id="ms-status-history" class="status-history" style="display:none;"></div>
-            </div>
-
-            <div class="card" id="ms-aksi-card">
-              <h3>Aksi Sekolah</h3>
-              <p class="card-desc" id="ms-aksi-desc"></p>
-              <div id="ms-aksi-tunggakan-note" class="note-box warn" style="display:none;"></div>
-              <div class="btn-row">
-                <button class="btn" id="ms-btn-nonaktifkan" style="background:var(--red);color:#fff;" onclick="openNonaktifModal()">Nonaktifkan Sekolah</button>
-                <button class="btn btn-success" id="ms-btn-aktifkan" style="display:none;" onclick="openAktifkanModal()">Aktifkan Kembali</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB: REKENING PENAMPUNG -->
-          <div class="ms-tab-panel" data-mspanel="pg" style="display:none;">
-            <div class="card">
-              <h3>Rekening Penampung <span class="tag-pill pg">BANK</span></h3>
-              <div class="grid3">
-                <div class="field"><label>Nama Bank</label>
-                  <select><option>BCA</option><option>Mandiri</option><option>BNI</option><option>BRI</option><option selected>BSI -- Bank Syariah Indonesia</option><option>Lainnya</option></select>
+              <div class="card">
+                <div class="filter-bar">
+                  <input
+                    type="text"
+                    class="search"
+                    id="ms-list-search"
+                    placeholder="Cari nama sekolah / NPSN..."
+                    oninput="renderSchoolList()"
+                  />
+                  <select
+                    id="ms-list-filter-wilayah"
+                    onchange="renderSchoolList()"
+                  >
+                    <option value="">Semua Wilayah (PWM)</option>
+                  </select>
+                  <select
+                    id="ms-list-filter-status"
+                    onchange="renderSchoolList()"
+                  >
+                    <option value="">Semua Status</option>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                    <option value="Draft">Draft</option>
+                  </select>
                 </div>
-                <div class="field"><label>No Rek</label><input type="text" value="7123456789"></div>
-                <div class="field"><label>Nama Pemilik</label><input type="text" id="ms-pg-owner" value=""></div>
-              </div>
-              <div class="btn-row" style="justify-content:flex-end;">
-                <button class="btn btn-success" onclick="showToast('✓ Rekening Penampung berhasil disimpan')">Simpan</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB: REMINDER & TEMPLATE (override) -->
-          <div class="ms-tab-panel" data-mspanel="tmpl" style="display:none;">
-            <div class="card">
-              <h3>Aturan Reminder &amp; Eskalasi <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
-              <p class="card-desc">Berawal dari salinan Default Platform -- ubah bebas khusus untuk sekolah ini, tidak memengaruhi sekolah lain.</p>
-              <table class="accounts" id="ms-rules-table">
-                <thead>
-                  <tr><th style="width:12%">Offset Hari</th><th style="width:24%">Nama Aturan</th><th style="width:22%">Level Penanganan</th><th style="width:24%">Channel</th><th style="width:10%">Aktif</th><th style="width:8%">Aksi</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><input type="number" value="-7"></td>
-                    <td><input type="text" value="Pengingat Awal"></td>
-                    <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox"> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-                  </tr>
-                  <tr>
-                    <td><input type="number" value="-1"></td>
-                    <td><input type="text" value="Pengingat Terakhir"></td>
-                    <td><select><option selected>Level 1 -- Pengingat</option><option>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-                  </tr>
-                  <tr>
-                    <td><input type="number" value="5"></td>
-                    <td><input type="text" value="Lewat Jatuh Tempo (disesuaikan sekolah ini)"></td>
-                    <td><select><option>Level 1 -- Pengingat</option><option selected>Level 2 -- Peringatan</option><option>Level 3 -- Eskalasi</option></select></td>
-                    <td><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> WA</label><label style="margin-right:8px;font-size:11.5px;"><input type="checkbox" checked> SMS</label><label style="font-size:11.5px;"><input type="checkbox"> Email</label></td>
-                    <td><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></td>
-                    <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-                  </tr>
-                </tbody>
-              </table>
-              <button class="btn-add-row" onclick="addRuleRow('ms-rules-table')">+ Tambah Aturan</button>
-              <div class="hint" style="margin-top:8px;">Perhatikan: offset H+5 di sekolah ini sengaja beda dari default platform (H+3) -- menyesuaikan kebijakan sekolah.</div>
-            </div>
-
-            <div class="card">
-              <h3>Template Pesan Sekolah Ini <span class="tag-pill pg">OVERRIDE SEKOLAH INI</span></h3>
-              <div id="tmpl-root-ms">
-                <div class="channel-tabs">
-                  <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-ms')">WhatsApp</div>
-                  <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-ms')">SMS</div>
-                  <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-ms')">Email</div>
+                <div style="overflow-x: auto">
+                  <table class="accounts">
+                    <thead>
+                      <tr>
+                        <th style="width: 19%">Nama Sekolah</th>
+                        <th style="width: 9%">NPSN</th>
+                        <th style="width: 12%">Wilayah (PWM)</th>
+                        <th style="width: 12%">Daerah (PDM)</th>
+                        <th style="width: 12%">Cabang (PCM)</th>
+                        <th style="width: 11%">Rekening Penampung</th>
+                        <th style="width: 10%">Status</th>
+                        <th style="width: 15%">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ms-table-body">
+                      <!-- filled by JS -->
+                    </tbody>
+                  </table>
                 </div>
-                <div class="channel-panel" data-ch-panel="wa">
-                  <div class="tmpl-card">
-                    <div class="tmpl-head">Level 1 -- Pengingat</div>
-                    <textarea>Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} ({nama_sekolah}). Tagihan SPP Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea>
+              </div>
+            </div>
+
+            <!-- DETAIL -->
+            <div id="ms-detail-panel" style="display: none">
+              <div
+                class="page-title"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div>
+                  <h1>
+                    <span id="ms-detail-title">Nama Sekolah</span>
+                    <span
+                      id="ms-detail-readonly-badge"
+                      class="tag-pill info"
+                      style="
+                        display: none;
+                        vertical-align: middle;
+                        margin-left: 8px;
+                      "
+                      >READ ONLY</span
+                    >
+                  </h1>
+                  <p id="ms-detail-sub">NPSN -- Wilayah</p>
+                </div>
+                <button class="btn btn-ghost" onclick="closeSchoolDetail()">
+                  &larr; Kembali ke Daftar Sekolah
+                </button>
+              </div>
+
+              <div class="stepper" id="ms-stepper">
+                <div
+                  class="step active"
+                  data-mstab="info"
+                  onclick="switchMsTab('info')"
+                >
+                  <div class="circle">1</div>
+                  <div class="label">Info Sekolah</div>
+                </div>
+                <div
+                  class="step"
+                  data-mstab="akun"
+                  onclick="switchMsTab('akun')"
+                >
+                  <div class="circle">2</div>
+                  <div class="label">Akun Awal</div>
+                </div>
+                <div class="step" data-mstab="pg" onclick="switchMsTab('pg')">
+                  <div class="circle">3</div>
+                  <div class="label">Rekening Penampung</div>
+                </div>
+                <div
+                  class="step"
+                  data-mstab="review"
+                  onclick="switchMsTab('review')"
+                >
+                  <div class="circle">4</div>
+                  <div class="label">Review</div>
+                </div>
+              </div>
+              <div
+                class="hint"
+                id="ms-stepper-hint"
+                style="margin-top: -10px; margin-bottom: 16px"
+              >
+                Klik langsung ke step manapun, atau gunakan tombol
+                Lanjut/Kembali -- keempat bagian ini bisa diisi dalam urutan apa
+                pun.
+              </div>
+
+              <!-- Navigasi tab untuk mode Detail (read-only) -- tanpa Review, karena tidak ada yang disimpan -->
+              <div
+                class="channel-tabs"
+                id="ms-tabs"
+                style="display: none; margin-bottom: 20px"
+              >
+                <div
+                  class="channel-tab active"
+                  data-mstab="info"
+                  onclick="switchMsTab('info')"
+                >
+                  Info Sekolah
+                </div>
+                <div
+                  class="channel-tab"
+                  data-mstab="akun"
+                  onclick="switchMsTab('akun')"
+                >
+                  Akun Awal
+                </div>
+                <div
+                  class="channel-tab"
+                  data-mstab="pg"
+                  onclick="switchMsTab('pg')"
+                >
+                  Rekening Penampung
+                </div>
+              </div>
+
+              <!-- TAB: INFO -->
+              <div class="ms-tab-panel" data-mspanel="info">
+                <div class="card">
+                  <h3>Info Sekolah</h3>
+                  <div class="grid2">
+                    <div class="field">
+                      <label>Nama Sekolah</label
+                      ><input
+                        type="text"
+                        id="ms-info-nama"
+                        placeholder="mis. SD Muhammadiyah 1 Surabaya"
+                        value=""
+                      />
+                    </div>
+                    <div class="field">
+                      <label>NPSN</label
+                      ><input
+                        type="text"
+                        id="ms-info-npsn"
+                        placeholder="8 digit"
+                        value=""
+                      />
+                    </div>
+                    <div class="field">
+                      <label>Jenjang</label
+                      ><select id="ms-info-jenjang">
+                        <option>SD / MI</option>
+                        <option>SMP / MTs</option>
+                        <option>SMA / MA</option>
+                        <option>SMK</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>Status</label
+                      ><input
+                        type="text"
+                        id="ms-info-status"
+                        disabled
+                        style="background: #f5f6f8"
+                      />
+                    </div>
                   </div>
-                  <div class="tmpl-card">
-                    <div class="tmpl-head">Level 2 -- Peringatan</div>
-                    <textarea>Bpk/Ibu wali {nama_siswa} ({nama_sekolah}), tagihan SPP sudah lewat jatuh tempo {hari_terlambat} hari. Ditunggu konfirmasinya ya, Bpk/Ibu -- {link_bayar}</textarea>
-                    <div class="hint">Contoh: nada bahasa sekolah ini sengaja dibuat lebih santai dibanding default platform.</div>
+                  <div class="grid3">
+                    <div class="field">
+                      <label>Wilayah (PWM)</label
+                      ><select id="ms-info-wilayah"></select>
+                    </div>
+                    <div class="field">
+                      <label>Daerah (PDM)</label
+                      ><select id="ms-info-daerah"></select>
+                    </div>
+                    <div class="field">
+                      <label>Cabang (PCM)</label
+                      ><select id="ms-info-cabang"></select>
+                    </div>
                   </div>
-                  <div class="tmpl-card">
-                    <div class="tmpl-head">Level 3 -- Eskalasi</div>
-                    <textarea>Pemberitahuan penting: tagihan SPP {nama_siswa} ({nama_sekolah}) menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea>
+                  <div class="field">
+                    <label>Alamat Lengkap</label
+                    ><textarea id="ms-info-alamat"></textarea>
                   </div>
-                </div>
-                <div class="channel-panel" data-ch-panel="sms" style="display:none;">
-                  <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>{nama_sekolah}: SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
-                  <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>{nama_sekolah}: SPP {nama_siswa} telat {hari_terlambat} hari. {link_bayar}</textarea></div>
-                  <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>{nama_sekolah}: Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea></div>
-                </div>
-                <div class="channel-panel" data-ch-panel="email" style="display:none;">
-                  <div class="tmpl-card"><div class="tmpl-head">Level 1 -- Pengingat</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP {nama_sekolah} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea></div>
-                  <div class="tmpl-card"><div class="tmpl-head">Level 2 -- Peringatan</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tagihan SPP {nama_sekolah} telah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}</textarea></div>
-                  <div class="tmpl-card"><div class="tmpl-head">Level 3 -- Eskalasi</div><textarea>Yth. Bpk/Ibu Wali {nama_siswa}, tunggakan SPP {nama_sekolah} sudah {hari_terlambat} hari. Sekolah akan menghubungi Bapak/Ibu.</textarea></div>
+                  <div
+                    id="ms-status-history"
+                    class="status-history"
+                    style="display: none"
+                  ></div>
                 </div>
               </div>
-              <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
-                <button class="btn btn-success" onclick="showToast('✓ Template sekolah ini berhasil disimpan')">Simpan Template Sekolah Ini</button>
+
+              <!-- TAB: AKUN AWAL -->
+              <div
+                class="ms-tab-panel"
+                data-mspanel="akun"
+                style="display: none"
+              >
+                <div class="card">
+                  <h3>Akun Awal -- Admin Sekolah</h3>
+                  <p class="card-desc">
+                    Akun ini menerima <b>link aktivasi</b> (bukan kredensial
+                    langsung) dan bertugas mengundang akun Kepala Sekolah dan
+                    Bendahara dari dalam aplikasi sekolah.
+                  </p>
+                  <table class="accounts" id="ms-accounts-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 28%">Nama</th>
+                        <th style="width: 20%">Peran</th>
+                        <th style="width: 22%">No. WhatsApp</th>
+                        <th style="width: 30%">Email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input type="text" id="ms-admin-nama" /></td>
+                        <td>
+                          <input
+                            type="text"
+                            value="Admin"
+                            disabled
+                            style="background: #f5f6f8; color: var(--muted)"
+                          />
+                        </td>
+                        <td><input type="tel" id="ms-admin-wa" /></td>
+                        <td><input type="email" id="ms-admin-email" /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="hint">
+                    Peran otomatis "Admin" -- pemegang akun ini yang mendapat
+                    kewenangan mengatur RBAC &amp; akun pengguna sekolah, bukan
+                    Kepala Sekolah atau Bendahara (segregation of duties).
+                  </div>
+                </div>
+
+                <div class="card">
+                  <h3>Kontak Sekolah</h3>
+                  <p class="card-desc">
+                    Data kontak resmi sekolah untuk komunikasi administratif
+                    dari Pusat -- <b>bukan</b> akun login.
+                  </p>
+                  <div class="grid2">
+                    <div class="field">
+                      <label>Email Sekolah</label
+                      ><input type="email" id="ms-info-email" />
+                    </div>
+                    <div class="field">
+                      <label>Nama Kontak Person</label
+                      ><input type="text" id="ms-info-kontak-nama" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>No. WhatsApp Kontak Person</label
+                    ><input type="tel" id="ms-info-kontak-wa" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB: REKENING PENAMPUNG -->
+              <div class="ms-tab-panel" data-mspanel="pg" style="display: none">
+                <div class="card">
+                  <h3>
+                    Rekening Penampung <span class="tag-pill pg">BANK</span>
+                  </h3>
+                  <p class="card-desc">
+                    Data rekening ini hanya bersifat informasi -- bukan proses
+                    otomatis. Pencairan dana (disbursement) tetap dilakukan
+                    secara manual oleh admin Muhammadiyah. Boleh terdiri dari 1
+                    rekening atau lebih; minimal harus ada 1 rekening aktif.
+                  </p>
+                  <div class="filter-bar">
+                    <input
+                      type="text"
+                      class="search"
+                      id="ms-rek-search"
+                      placeholder="Cari nama pemilik / no. rekening..."
+                      oninput="renderMsRekeningTable()"
+                    />
+                    <select
+                      id="ms-rek-filter-bank"
+                      onchange="renderMsRekeningTable()"
+                    >
+                      <option value="">Semua Bank</option>
+                    </select>
+                    <select
+                      id="ms-rek-filter-status"
+                      onchange="renderMsRekeningTable()"
+                    >
+                      <option value="">Semua Status</option>
+                      <option value="aktif">Aktif</option>
+                      <option value="nonaktif">Nonaktif</option>
+                    </select>
+                    <button
+                      class="btn btn-primary btn-sm"
+                      id="ms-rek-add-btn"
+                      onclick="openMsRekeningPanel()"
+                    >
+                      + Tambah Rekening
+                    </button>
+                  </div>
+                  <table class="dtab" id="ms-rekening-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 22%">Bank</th>
+                        <th style="width: 18%">No. Rekening</th>
+                        <th style="width: 22%">Nama Pemilik</th>
+                        <th style="width: 18%">Status Verifikasi</th>
+                        <th style="width: 20%">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+
+                  <div
+                    class="card"
+                    id="ms-rekening-panel"
+                    style="
+                      display: none;
+                      background: var(--light);
+                      border-style: dashed;
+                      margin-top: 16px;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <h3 id="ms-rekening-panel-title">
+                      Tambah Rekening Penampung
+                    </h3>
+                    <div class="grid3">
+                      <div class="field">
+                        <label>Nama Bank</label
+                        ><select
+                          id="ms-rek-bank"
+                          onchange="handleMsRekBankChange()"
+                        ></select>
+                      </div>
+                      <div
+                        class="field"
+                        id="ms-rek-bank-lainnya-wrap"
+                        style="display: none"
+                      >
+                        <label>Nama Bank Lainnya</label
+                        ><input
+                          type="text"
+                          id="ms-rek-bank-lainnya"
+                          placeholder="Tulis nama bank"
+                        />
+                      </div>
+                      <div class="field">
+                        <label>Nomor Rekening</label
+                        ><input
+                          type="text"
+                          id="ms-rek-norek"
+                          placeholder="hanya angka, 6-20 digit"
+                        />
+                      </div>
+                      <div class="field">
+                        <label>Nama Pemilik Rekening</label
+                        ><input
+                          type="text"
+                          id="ms-rek-nama"
+                          placeholder="sesuai buku rekening"
+                        />
+                      </div>
+                    </div>
+                    <div class="switch-row">
+                      <div class="txt">
+                        <b>Jadikan rekening utama</b
+                        ><span
+                          >Tujuan pencairan dana aktif -- otomatis menggantikan
+                          rekening utama sebelumnya</span
+                        >
+                      </div>
+                      <label class="toggle"
+                        ><input type="checkbox" id="ms-rek-utama" /><span
+                          class="slider"
+                        ></span
+                      ></label>
+                    </div>
+                    <div class="btn-row">
+                      <button
+                        class="btn btn-ghost"
+                        onclick="closeMsRekeningPanel()"
+                      >
+                        Batal
+                      </button>
+                      <button
+                        class="btn btn-success"
+                        onclick="saveMsRekening()"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB: REVIEW -->
+              <div
+                class="ms-tab-panel"
+                data-mspanel="review"
+                style="display: none"
+              >
+                <div class="card">
+                  <h3>Review Perubahan</h3>
+                  <p class="card-desc">
+                    Tinjau kembali data sekolah ini sebelum menyimpan perubahan.
+                    Tekan "Edit" pada bagian yang ingin diubah untuk langsung
+                    kembali ke step tersebut.
+                  </p>
+
+                  <div class="review-section">
+                    <div class="review-section-head">
+                      <span class="review-section-title">1. Info Sekolah</span>
+                      <button
+                        class="btn btn-outline btn-xs"
+                        onclick="switchMsTab('info')"
+                      >
+                        ✎ Edit
+                      </button>
+                    </div>
+                    <table class="ref-table">
+                      <tr>
+                        <th style="width: 32%">Nama Sekolah</th>
+                        <td id="ms-review-nama"></td>
+                      </tr>
+                      <tr>
+                        <th>NPSN</th>
+                        <td id="ms-review-npsn"></td>
+                      </tr>
+                      <tr>
+                        <th>Jenjang</th>
+                        <td id="ms-review-jenjang"></td>
+                      </tr>
+                      <tr>
+                        <th>Struktur Organisasi</th>
+                        <td id="ms-review-org"></td>
+                      </tr>
+                      <tr>
+                        <th>Alamat Lengkap</th>
+                        <td id="ms-review-alamat"></td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <td id="ms-review-status"></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="review-section">
+                    <div class="review-section-head">
+                      <span class="review-section-title">2. Akun Awal</span>
+                      <button
+                        class="btn btn-outline btn-xs"
+                        onclick="switchMsTab('akun')"
+                      >
+                        ✎ Edit
+                      </button>
+                    </div>
+                    <table class="ref-table">
+                      <tr>
+                        <th style="width: 32%">Akun Awal (Admin)</th>
+                        <td id="ms-review-admin"></td>
+                      </tr>
+                      <tr>
+                        <th>Kontak Sekolah</th>
+                        <td id="ms-review-kontak"></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="review-section">
+                    <div class="review-section-head">
+                      <span class="review-section-title"
+                        >3. Rekening Penampung</span
+                      >
+                      <button
+                        class="btn btn-outline btn-xs"
+                        onclick="switchMsTab('pg')"
+                      >
+                        ✎ Edit
+                      </button>
+                    </div>
+                    <table class="ref-table">
+                      <tr>
+                        <th style="width: 32%">Rekening Penampung</th>
+                        <td id="ms-review-rekening"></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div class="note-box info">
+                    Pastikan seluruh data di atas sudah benar sebelum menekan
+                    "Simpan Perubahan".
+                  </div>
+                </div>
+              </div>
+
+              <div class="btn-row" id="ms-step-nav-row">
+                <button
+                  class="btn btn-ghost"
+                  id="ms-btn-back"
+                  onclick="msStepNav(-1)"
+                  disabled
+                >
+                  &larr; Kembali
+                </button>
+                <button
+                  class="btn btn-primary"
+                  id="ms-btn-next"
+                  onclick="msStepNav(1)"
+                >
+                  Lanjut &rarr;
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
-  </div>
-</div>
 
-<!-- ===================== MODAL: NONAKTIFKAN SEKOLAH ===================== -->
-<div class="modal-overlay" id="nonaktif-modal-overlay" onclick="if(event.target===this) closeNonaktifModal();">
-  <div class="modal-box">
-    <div class="modal-head">
-      <div>
-        <h3 id="nonaktif-modal-title">Nonaktifkan Sekolah</h3>
-        <div class="modal-sub" id="nonaktif-modal-sub"></div>
-      </div>
-      <span class="modal-close" onclick="closeNonaktifModal()">✕</span>
-    </div>
-    <div class="modal-body">
-
-      <div id="nonaktif-tunggakan-block" style="display:none;">
-        <div class="stat-callout">
-          <div class="sc-item">
-            <div class="sc-num" id="nonaktif-jml-siswa">0</div>
-            <div class="sc-label">siswa masih punya tunggakan</div>
+    <!-- ===================== MODAL: NONAKTIFKAN SEKOLAH ===================== -->
+    <div
+      class="modal-overlay"
+      id="nonaktif-modal-overlay"
+      onclick="if (event.target === this) closeNonaktifModal();"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h3 id="nonaktif-modal-title">Nonaktifkan Sekolah</h3>
+            <div class="modal-sub" id="nonaktif-modal-sub"></div>
           </div>
-          <div class="sc-item">
-            <div class="sc-num" id="nonaktif-nominal">Rp0</div>
-            <div class="sc-label">total tunggakan belum lunas</div>
+          <span class="modal-close" onclick="closeNonaktifModal()">✕</span>
+        </div>
+        <div class="modal-body">
+          <div id="nonaktif-tunggakan-block" style="display: none">
+            <div class="stat-callout">
+              <div class="sc-item">
+                <div class="sc-num" id="nonaktif-jml-siswa">0</div>
+                <div class="sc-label">siswa masih punya tunggakan</div>
+              </div>
+              <div class="sc-item">
+                <div class="sc-num" id="nonaktif-nominal">Rp0</div>
+                <div class="sc-label">total tunggakan belum lunas</div>
+              </div>
+            </div>
+            <div class="note-box warn" style="margin-top: 12px">
+              Menonaktifkan sekolah
+              <b>tidak menghapus/write-off tunggakan ini secara otomatis</b>.
+              Write-off hanya berlaku untuk siswa yang <b>pindah sekolah</b> dan
+              tetap memerlukan persetujuan Kepala Sekolah (lihat Penghapusan
+              Piutang) -- bukan mekanisme keringanan tunggakan umum.
+            </div>
+            <div class="note-box info" style="margin-top: 8px">
+              Setelah dinonaktifkan: staf sekolah (Admin/Kepala
+              Sekolah/Bendahara) <b>tidak bisa lagi login</b> ke Portal Sekolah
+              dan <b>tidak ada tagihan baru</b> yang diterbitkan. Wali murid
+              yang masih punya tunggakan <b>tetap bisa login</b> ke App Wali
+              Murid khusus untuk melihat &amp; melunasi tagihan lama -- dana
+              yang masuk tetap diproses lewat mekanisme Host-to-Host seperti
+              biasa.
+            </div>
+          </div>
+
+          <div id="nonaktif-bersih-block" style="display: none">
+            <div class="note-box info">
+              Sekolah ini tidak memiliki tunggakan yang belum lunas. Setelah
+              dinonaktifkan, staf sekolah tidak bisa lagi login ke Portal
+              Sekolah dan tidak ada tagihan baru yang diterbitkan.
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 14px">
+            <label
+              >Alasan Nonaktivasi
+              <span style="color: var(--red)">*</span></label
+            >
+            <textarea
+              id="nonaktif-alasan"
+              rows="3"
+              placeholder="Contoh: Sekolah bergabung/merger dengan SD Muhammadiyah lain, operasional dihentikan per semester ini."
+              oninput="validateNonaktifForm()"
+            ></textarea>
+          </div>
+
+          <label
+            class="confirm-check"
+            id="nonaktif-confirm-check"
+            style="display: none"
+          >
+            <input
+              type="checkbox"
+              id="nonaktif-checkbox"
+              onchange="validateNonaktifForm()"
+            />
+            <span
+              >Saya memahami tunggakan siswa di atas
+              <b>tetap harus ditagih</b> dan <b>tidak terhapus otomatis</b> oleh
+              proses nonaktivasi ini.</span
+            >
+          </label>
+        </div>
+        <div class="btn-row" style="justify-content: flex-end">
+          <button class="btn btn-ghost" onclick="closeNonaktifModal()">
+            Batal
+          </button>
+          <button
+            class="btn"
+            id="nonaktif-confirm-btn"
+            style="background: var(--red); color: #fff"
+            disabled
+            onclick="confirmNonaktifkan()"
+          >
+            Nonaktifkan Sekolah
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== MODAL: AKTIFKAN KEMBALI ===================== -->
+    <div
+      class="modal-overlay"
+      id="aktifkan-modal-overlay"
+      onclick="if (event.target === this) closeAktifkanModal();"
+    >
+      <div class="modal-box" style="max-width: 480px">
+        <div class="modal-head">
+          <div>
+            <h3 id="aktifkan-modal-title">Aktifkan Kembali Sekolah</h3>
+            <div class="modal-sub" id="aktifkan-modal-sub"></div>
+          </div>
+          <span class="modal-close" onclick="closeAktifkanModal()">✕</span>
+        </div>
+        <div class="modal-body">
+          <div class="note-box info">
+            Sekolah akan berstatus <b>Aktif</b> kembali -- staf sekolah bisa
+            login ke Portal Sekolah dan sistem mulai menerbitkan tagihan baru
+            sesuai jadwal invoicing normal.
           </div>
         </div>
-        <div class="note-box warn" style="margin-top:12px;">
-          Menonaktifkan sekolah <b>tidak menghapus/write-off tunggakan ini secara otomatis</b>. Write-off hanya berlaku untuk siswa yang <b>pindah sekolah</b> dan tetap memerlukan persetujuan Kepala Sekolah (lihat Penghapusan Piutang) -- bukan mekanisme keringanan tunggakan umum.
+        <div class="btn-row" style="justify-content: flex-end">
+          <button class="btn btn-ghost" onclick="closeAktifkanModal()">
+            Batal
+          </button>
+          <button class="btn btn-success" onclick="confirmAktifkan()">
+            Aktifkan Kembali
+          </button>
         </div>
-        <div class="note-box info" style="margin-top:8px;">
-          Setelah dinonaktifkan: staf sekolah (Admin/Kepala Sekolah/Bendahara) <b>tidak bisa lagi login</b> ke Portal Sekolah dan <b>tidak ada tagihan baru</b> yang diterbitkan. Wali murid yang masih punya tunggakan <b>tetap bisa login</b> ke App Wali Murid khusus untuk melihat &amp; melunasi tagihan lama -- dana yang masuk tetap diproses lewat mekanisme Host-to-Host seperti biasa.
-        </div>
       </div>
-
-      <div id="nonaktif-bersih-block" style="display:none;">
-        <div class="note-box info">Sekolah ini tidak memiliki tunggakan yang belum lunas. Setelah dinonaktifkan, staf sekolah tidak bisa lagi login ke Portal Sekolah dan tidak ada tagihan baru yang diterbitkan.</div>
-      </div>
-
-      <div class="field" style="margin-top:14px;">
-        <label>Alasan Nonaktivasi <span style="color:var(--red);">*</span></label>
-        <textarea id="nonaktif-alasan" rows="3" placeholder="Contoh: Sekolah bergabung/merger dengan SD Muhammadiyah lain, operasional dihentikan per semester ini." oninput="validateNonaktifForm()"></textarea>
-      </div>
-
-      <label class="confirm-check" id="nonaktif-confirm-check" style="display:none;">
-        <input type="checkbox" id="nonaktif-checkbox" onchange="validateNonaktifForm()">
-        <span>Saya memahami tunggakan siswa di atas <b>tetap harus ditagih</b> dan <b>tidak terhapus otomatis</b> oleh proses nonaktivasi ini.</span>
-      </label>
     </div>
-    <div class="btn-row" style="justify-content:flex-end;">
-      <button class="btn btn-ghost" onclick="closeNonaktifModal()">Batal</button>
-      <button class="btn" id="nonaktif-confirm-btn" style="background:var(--red);color:#fff;" disabled onclick="confirmNonaktifkan()">Nonaktifkan Sekolah</button>
-    </div>
-  </div>
-</div>
 
-<!-- ===================== MODAL: AKTIFKAN KEMBALI ===================== -->
-<div class="modal-overlay" id="aktifkan-modal-overlay" onclick="if(event.target===this) closeAktifkanModal();">
-  <div class="modal-box" style="max-width:480px;">
-    <div class="modal-head">
-      <div>
-        <h3 id="aktifkan-modal-title">Aktifkan Kembali Sekolah</h3>
-        <div class="modal-sub" id="aktifkan-modal-sub"></div>
-      </div>
-      <span class="modal-close" onclick="closeAktifkanModal()">✕</span>
-    </div>
-    <div class="modal-body">
-      <div class="note-box info">Sekolah akan berstatus <b>Aktif</b> kembali -- staf sekolah bisa login ke Portal Sekolah dan sistem mulai menerbitkan tagihan baru sesuai jadwal invoicing normal.</div>
-    </div>
-    <div class="btn-row" style="justify-content:flex-end;">
-      <button class="btn btn-ghost" onclick="closeAktifkanModal()">Batal</button>
-      <button class="btn btn-success" onclick="confirmAktifkan()">Aktifkan Kembali</button>
-    </div>
-  </div>
-</div>
+    <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
 
-<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+    <script src="app.js"></script>
+    <script>
+      const u = requireLogin();
+      if (u) {
+        applyCurrentUserToUi();
+        if (enforcePageAccess("manajemen")) {
+          applyRbacToSidebar();
 
-<script src="app.js"></script>
-<script>
-  const u = requireLogin();
-  if (u) {
-    applyCurrentUserToUi();
-    if (enforcePageAccess('manajemen')) {
-      applyRbacToSidebar();
+          // ---- Manajemen Sekolah: list + detail ----
+          const schoolsData = [
+            {
+              nama: "SD Muhammadiyah 4 Sidoarjo",
+              npsn: "20501234",
+              jenjang: "SD / MI",
+              wilayah: "PWM Jawa Timur",
+              daerah: "PDM Sidoarjo",
+              cabang: "PCM Sidoarjo Kota",
+              alamat: "Jl. Ahmad Dahlan No. 12, Sidoarjo, Jawa Timur",
+              adminNama: "Ahmad Yusuf",
+              adminWa: "085712345678",
+              adminEmail: "admin@sdmuh4sda.sch.id",
+              email: "info@sdmuh4sda.sch.id",
+              kontakNama: "Drs. Slamet Riyadi (Kepala Sekolah)",
+              kontakWa: "081223456789",
+              pg: "BSI H2H -- Terhubung",
+              status: "Aktif",
+              tunggakanSiswa: 3,
+              tunggakanNominal: 4500000,
+              riwayatStatus: null,
+              rekeningList: [
+                {
+                  id: 1,
+                  bank: "BSI -- Bank Syariah Indonesia",
+                  noRekening: "7123456789",
+                  namaPemilik: "SD Muhammadiyah 4 Sidoarjo",
+                  statusVerifikasi: "aktif",
+                  utama: true,
+                },
+              ],
+            },
+            {
+              nama: "SD Muhammadiyah 1 Surabaya",
+              npsn: "20502211",
+              jenjang: "SD / MI",
+              wilayah: "PWM Jawa Timur",
+              daerah: "PDM Surabaya",
+              cabang: "PCM Wonokromo",
+              alamat: "Jl. Raya Wonokromo No. 45, Surabaya, Jawa Timur",
+              adminNama: "Dewi Lestari",
+              adminWa: "081322334455",
+              adminEmail: "admin@sdmuh1sby.sch.id",
+              email: "info@sdmuh1sby.sch.id",
+              kontakNama: "Hj. Siti Fatimah (Kepala Sekolah)",
+              kontakWa: "081398765432",
+              pg: "BSI H2H -- Terhubung",
+              status: "Aktif",
+              tunggakanSiswa: 0,
+              tunggakanNominal: 0,
+              riwayatStatus: null,
+              rekeningList: [
+                {
+                  id: 1,
+                  bank: "BSI -- Bank Syariah Indonesia",
+                  noRekening: "7198765432",
+                  namaPemilik: "SD Muhammadiyah 1 Surabaya",
+                  statusVerifikasi: "aktif",
+                  utama: true,
+                },
+              ],
+            },
+            {
+              nama: "SMP Muhammadiyah 2 Malang",
+              npsn: "20509987",
+              jenjang: "SMP / MTs",
+              wilayah: "PWM Jawa Timur",
+              daerah: "PDM Malang",
+              cabang: "PCM Klojen",
+              alamat: "Jl. Klojen No. 8, Malang, Jawa Timur",
+              adminNama: "Rudi Hartono",
+              adminWa: "081433445566",
+              adminEmail: "admin@smpmuh2malang.sch.id",
+              email: "info@smpmuh2malang.sch.id",
+              kontakNama: "Ahmad Fauzi, S.Pd. (Kepala Sekolah)",
+              kontakWa: "081487654321",
+              pg: "BSI H2H -- Terhubung",
+              status: "Nonaktif",
+              tunggakanSiswa: 2,
+              tunggakanNominal: 1800000,
+              riwayatStatus:
+                "Dinonaktifkan 12 Agu 2026 oleh Siti Aminah (Super Admin) -- Alasan: Sekolah bergabung/merger dengan SMP Muhammadiyah 1 Malang mulai semester depan.",
+              rekeningList: [
+                {
+                  id: 1,
+                  bank: "BSI -- Bank Syariah Indonesia",
+                  noRekening: "7155667788",
+                  namaPemilik: "SMP Muhammadiyah 2 Malang",
+                  statusVerifikasi: "aktif",
+                  utama: true,
+                },
+              ],
+            },
+            {
+              nama: "SMK Muhammadiyah 1 Yogyakarta",
+              npsn: "20403321",
+              jenjang: "SMK",
+              wilayah: "PWM DI Yogyakarta",
+              daerah: "PDM Kota Yogyakarta",
+              cabang: "PCM Danurejan",
+              alamat: "Jl. Danurejan No. 3, Yogyakarta",
+              adminNama: "Fitriani Putri",
+              adminWa: "081544556677",
+              adminEmail: "admin@smkmuh1jogja.sch.id",
+              email: "info@smkmuh1jogja.sch.id",
+              kontakNama: "Bambang Sutrisno, S.T. (Kepala Sekolah)",
+              kontakWa: "081576543210",
+              pg: "BSI H2H -- Pending",
+              status: "Draft",
+              tunggakanSiswa: 0,
+              tunggakanNominal: 0,
+              riwayatStatus: null,
+              rekeningList: [
+                {
+                  id: 1,
+                  bank: "BSI -- Bank Syariah Indonesia",
+                  noRekening: "7101202303",
+                  namaPemilik: "SMK Muhammadiyah 1 Yogyakarta",
+                  statusVerifikasi: "aktif",
+                  utama: true,
+                },
+              ],
+            },
+          ];
 
-      // ---- Manajemen Sekolah: list + detail ----
-      const schoolsData = [
-        { nama: "SD Muhammadiyah 4 Sidoarjo", npsn: "20501234", org: "PWM Jawa Timur / PDM Sidoarjo / PCM Sidoarjo Kota", pg: "BSI H2H -- Terhubung", status: "Aktif", tunggakanSiswa: 3, tunggakanNominal: 4500000, riwayatStatus: null },
-        { nama: "SD Muhammadiyah 1 Surabaya", npsn: "20502211", org: "PWM Jawa Timur / PDM Surabaya / PCM Wonokromo", pg: "BSI H2H -- Terhubung", status: "Aktif", tunggakanSiswa: 0, tunggakanNominal: 0, riwayatStatus: null },
-        { nama: "SMP Muhammadiyah 2 Malang", npsn: "20509987", org: "PWM Jawa Timur / PDM Malang / PCM Klojen", pg: "BSI H2H -- Terhubung", status: "Nonaktif", tunggakanSiswa: 2, tunggakanNominal: 1800000, riwayatStatus: "Dinonaktifkan 12 Agu 2026 oleh Siti Aminah (Super Admin) -- Alasan: Sekolah bergabung/merger dengan SMP Muhammadiyah 1 Malang mulai semester depan." },
-        { nama: "SMK Muhammadiyah 1 Yogyakarta", npsn: "20403321", org: "PWM DI Yogyakarta / PDM Kota Yogyakarta / PCM Danurejan", pg: "BSI H2H -- Pending", status: "Draft", tunggakanSiswa: 0, tunggakanNominal: 0, riwayatStatus: null },
-      ];
+          let msActiveIdx = null;
+          let msReadOnly = false;
+          const BANK_OPTIONS_MS = [
+            "BCA",
+            "Mandiri",
+            "BNI",
+            "BRI",
+            "BSI -- Bank Syariah Indonesia",
+            "Lainnya",
+          ];
 
-      let msActiveIdx = null;
+          // ---- struktur organisasi (PWM/PDM/PCM) -- sama seperti input cascading di Pendaftaran Sekolah ----
+          const ORG_TREE_MS = {
+            "PWM Jawa Timur": {
+              "PDM Surabaya": ["PCM Wonokromo", "PCM Genteng", "PCM Tegalsari"],
+              "PDM Sidoarjo": ["PCM Sidoarjo Kota", "PCM Waru", "PCM Krian"],
+              "PDM Malang": ["PCM Klojen", "PCM Lowokwaru"],
+            },
+            "PWM DKI Jakarta": {
+              "PDM Jakarta Selatan": ["PCM Kebayoran Baru", "PCM Pasar Minggu"],
+              "PDM Jakarta Timur": ["PCM Duren Sawit", "PCM Cakung"],
+            },
+            "PWM Jawa Barat": {
+              "PDM Bandung": ["PCM Coblong", "PCM Sukajadi"],
+              "PDM Bekasi": ["PCM Bekasi Timur", "PCM Bekasi Selatan"],
+            },
+            "PWM DI Yogyakarta": {
+              "PDM Kota Yogyakarta": ["PCM Danurejan", "PCM Gondokusuman"],
+            },
+          };
+          const selMsWilayah = document.getElementById("ms-info-wilayah");
+          const selMsDaerah = document.getElementById("ms-info-daerah");
+          const selMsCabang = document.getElementById("ms-info-cabang");
+          function fillMsDaerah() {
+            const pdms = Object.keys(ORG_TREE_MS[selMsWilayah.value] || {});
+            selMsDaerah.innerHTML = pdms
+              .map((d) => `<option>${d}</option>`)
+              .join("");
+          }
+          function fillMsCabang() {
+            const pcms =
+              (ORG_TREE_MS[selMsWilayah.value] || {})[selMsDaerah.value] || [];
+            selMsCabang.innerHTML = pcms
+              .map((c) => `<option>${c}</option>`)
+              .join("");
+          }
+          function setMsOrgSelects(wilayah, daerah, cabang) {
+            selMsWilayah.innerHTML = Object.keys(ORG_TREE_MS)
+              .map((w) => `<option>${w}</option>`)
+              .join("");
+            selMsWilayah.value = wilayah;
+            fillMsDaerah();
+            selMsDaerah.value = daerah;
+            fillMsCabang();
+            selMsCabang.value = cabang;
+          }
+          selMsWilayah.addEventListener("change", () => {
+            fillMsDaerah();
+            fillMsCabang();
+          });
+          selMsDaerah.addEventListener("change", fillMsCabang);
+          let msRekeningSeq = 2;
+          let msRekeningEditIdx = null;
 
-      function fmtRpMs(n) { return "Rp" + n.toLocaleString('id-ID'); }
+          function fmtRpMs(n) {
+            return "Rp" + n.toLocaleString("id-ID");
+          }
 
-      function renderSchoolList() {
-        const tbody = document.getElementById('ms-table-body');
-        tbody.innerHTML = schoolsData.map((s, i) => `
+          function fillMsListWilayahFilter() {
+            const sel = document.getElementById("ms-list-filter-wilayah");
+            if (!sel) return;
+            const cur = sel.value;
+            const options = [
+              ...new Set(schoolsData.map((s) => s.wilayah)),
+            ].sort();
+            sel.innerHTML =
+              '<option value="">Semua Wilayah (PWM)</option>' +
+              options
+                .map(
+                  (w) =>
+                    `<option value="${w}" ${w === cur ? "selected" : ""}>${w}</option>`,
+                )
+                .join("");
+          }
+          function renderSchoolList() {
+            fillMsListWilayahFilter();
+            const tbody = document.getElementById("ms-table-body");
+            const q = (document.getElementById("ms-list-search").value || "")
+              .trim()
+              .toLowerCase();
+            const wilayahQ = document.getElementById(
+              "ms-list-filter-wilayah",
+            ).value;
+            const statusQ = document.getElementById(
+              "ms-list-filter-status",
+            ).value;
+            const rows = schoolsData
+              .map((s, i) => ({ s, i }))
+              .filter(
+                ({ s }) =>
+                  !q || s.nama.toLowerCase().includes(q) || s.npsn.includes(q),
+              )
+              .filter(({ s }) => !wilayahQ || s.wilayah === wilayahQ)
+              .filter(({ s }) => !statusQ || s.status === statusQ);
+            tbody.innerHTML = rows.length
+              ? rows
+                  .map(
+                    ({ s, i }) => `
           <tr>
             <td><b>${s.nama}</b></td>
             <td>${s.npsn}</td>
-            <td>${s.org}</td>
+            <td>${s.wilayah}</td>
+            <td>${s.daerah}</td>
+            <td>${s.cabang}</td>
             <td>${s.pg}</td>
-            <td><span class="badge-status ${s.status === 'Aktif' ? 'on' : s.status === 'Nonaktif' ? 'warn' : 'off'}"><span class="dot"></span> ${s.status}</span></td>
-            <td><button class="btn btn-ghost" style="padding:6px 12px;font-size:11.5px;" onclick="openSchoolDetail(${i})">Kelola</button></td>
-          </tr>`).join('');
-      }
-
-      function openSchoolDetail(i) {
-        msActiveIdx = i;
-        const s = schoolsData[i];
-        document.getElementById('ms-detail-title').textContent = s.nama;
-        document.getElementById('ms-detail-sub').textContent = `NPSN ${s.npsn} -- ${s.org}`;
-        document.getElementById('ms-info-nama').value = s.nama;
-        document.getElementById('ms-info-npsn').value = s.npsn;
-        document.getElementById('ms-info-status').value = s.status;
-        document.getElementById('ms-info-org').value = s.org;
-        document.getElementById('ms-pg-owner').value = s.nama;
-        document.getElementById('ms-list-panel').style.display = 'none';
-        document.getElementById('ms-detail-panel').style.display = 'block';
-        switchMsTab('info');
-        renderAksiSekolah();
-      }
-
-      function renderAksiSekolah() {
-        const s = schoolsData[msActiveIdx];
-        const btnNon = document.getElementById('ms-btn-nonaktifkan');
-        const btnAkt = document.getElementById('ms-btn-aktifkan');
-        const desc = document.getElementById('ms-aksi-desc');
-        const tgkNote = document.getElementById('ms-aksi-tunggakan-note');
-        const histBox = document.getElementById('ms-status-history');
-
-        if (s.status === 'Draft') {
-          desc.textContent = 'Sekolah ini masih berstatus Draft (belum diaktifkan lewat Pendaftaran Sekolah) -- aksi nonaktifkan/aktifkan hanya berlaku untuk sekolah yang sudah beroperasi.';
-          btnNon.style.display = 'none';
-          btnAkt.style.display = 'none';
-          tgkNote.style.display = 'none';
-        } else if (s.status === 'Aktif') {
-          desc.textContent = 'Menonaktifkan sekolah akan menghentikan login staf ke Portal Sekolah dan menghentikan penerbitan tagihan baru.';
-          btnNon.style.display = 'inline-flex';
-          btnAkt.style.display = 'none';
-          if (s.tunggakanSiswa > 0) {
-            tgkNote.style.display = 'block';
-            tgkNote.innerHTML = `⚠ ${s.tunggakanSiswa} siswa masih punya tunggakan (total ${fmtRpMs(s.tunggakanNominal)}) -- akan ditampilkan saat menonaktifkan.`;
-          } else {
-            tgkNote.style.display = 'none';
+            <td><span class="badge-status ${s.status === "Aktif" ? "on" : s.status === "Nonaktif" ? "warn" : "off"}"><span class="dot"></span> ${s.status}</span></td>
+            <td>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                ${s.status === "Aktif" ? `<button class="btn" style="padding:6px 10px;font-size:11px;background:var(--red);color:#fff;" onclick="quickNonaktifkanSekolah(${i})">Nonaktifkan</button>` : ""}
+                ${s.status === "Nonaktif" ? `<button class="btn btn-success" style="padding:6px 10px;font-size:11px;" onclick="quickAktifkanSekolah(${i})">Aktifkan</button>` : ""}
+                <button class="btn btn-ghost" style="padding:6px 10px;font-size:11px;" onclick="openSchoolDetail(${i})">Kelola</button>
+                <button class="btn btn-outline" style="padding:6px 10px;font-size:11px;" onclick="openSchoolDetail(${i}, true)">Detail</button>
+              </div>
+            </td>
+          </tr>`,
+                  )
+                  .join("")
+              : `<tr><td colspan="8" class="empty-hint">Tidak ada sekolah yang cocok dengan filter.</td></tr>`;
           }
-        } else { // Nonaktif
-          desc.textContent = 'Sekolah ini sedang Nonaktif -- staf tidak bisa login ke Portal Sekolah dan tidak ada tagihan baru diterbitkan.';
-          btnNon.style.display = 'none';
-          btnAkt.style.display = 'inline-flex';
-          tgkNote.style.display = 'none';
+
+          function openSchoolDetail(i, readOnly) {
+            msActiveIdx = i;
+            msReadOnly = !!readOnly;
+            msVisitedSteps = new Set();
+            const s = schoolsData[i];
+            document.getElementById("ms-detail-title").textContent = s.nama;
+            document.getElementById("ms-detail-readonly-badge").style.display =
+              msReadOnly ? "inline-block" : "none";
+            document.getElementById("ms-detail-sub").textContent =
+              `NPSN ${s.npsn} -- ${s.wilayah} / ${s.daerah} / ${s.cabang}`;
+            document.getElementById("ms-info-nama").value = s.nama;
+            document.getElementById("ms-info-npsn").value = s.npsn;
+            document.getElementById("ms-info-status").value = s.status;
+            document.getElementById("ms-info-jenjang").value = s.jenjang;
+            setMsOrgSelects(s.wilayah, s.daerah, s.cabang);
+            document.getElementById("ms-info-alamat").value = s.alamat;
+            document.getElementById("ms-admin-nama").value = s.adminNama;
+            document.getElementById("ms-admin-wa").value = s.adminWa;
+            document.getElementById("ms-admin-email").value = s.adminEmail;
+            document.getElementById("ms-info-email").value = s.email;
+            document.getElementById("ms-info-kontak-nama").value = s.kontakNama;
+            document.getElementById("ms-info-kontak-wa").value = s.kontakWa;
+            document.getElementById("ms-list-panel").style.display = "none";
+            document.getElementById("ms-detail-panel").style.display = "block";
+            switchMsTab("info");
+            renderAksiSekolah();
+            renderMsRekeningTable();
+            applyMsReadOnlyMode();
+          }
+
+          function applyMsReadOnlyMode() {
+            const ro = msReadOnly;
+            // Info Sekolah -- hanya field yang memang bisa diedit di mode Kelola
+            document.getElementById("ms-info-nama").disabled = ro;
+            document.getElementById("ms-info-npsn").disabled = ro;
+            document.getElementById("ms-info-jenjang").disabled = ro;
+            document.getElementById("ms-info-wilayah").disabled = ro;
+            document.getElementById("ms-info-daerah").disabled = ro;
+            document.getElementById("ms-info-cabang").disabled = ro;
+            document.getElementById("ms-info-alamat").disabled = ro;
+            document.getElementById("ms-admin-nama").disabled = ro;
+            document.getElementById("ms-admin-wa").disabled = ro;
+            document.getElementById("ms-admin-email").disabled = ro;
+            document.getElementById("ms-info-email").disabled = ro;
+            document.getElementById("ms-info-kontak-nama").disabled = ro;
+            document.getElementById("ms-info-kontak-wa").disabled = ro;
+            // Navigasi: stepper (mode Kelola) vs tab biasa tanpa Review (mode Detail)
+            document.getElementById("ms-stepper").style.display = ro
+              ? "none"
+              : "flex";
+            document.getElementById("ms-stepper-hint").style.display = ro
+              ? "none"
+              : "";
+            document.getElementById("ms-tabs").style.display = ro
+              ? "flex"
+              : "none";
+            // Rekening Penampung
+            document.getElementById("ms-rek-add-btn").style.display = ro
+              ? "none"
+              : "";
+            // navigasi stepper (Lanjut/Kembali/Simpan Perubahan) bukan bagian dari tampilan read only
+            document.getElementById("ms-step-nav-row").style.display = ro
+              ? "none"
+              : "";
+          }
+
+          function renderAksiSekolah() {
+            const s = schoolsData[msActiveIdx];
+            const btnNon = document.getElementById("ms-btn-nonaktifkan");
+            const btnAkt = document.getElementById("ms-btn-aktifkan");
+            const desc = document.getElementById("ms-aksi-desc");
+            const tgkNote = document.getElementById("ms-aksi-tunggakan-note");
+            const histBox = document.getElementById("ms-status-history");
+
+            if (s.status === "Draft") {
+              desc.textContent =
+                "Sekolah ini masih berstatus Draft (belum diaktifkan lewat Pendaftaran Sekolah) -- aksi nonaktifkan/aktifkan hanya berlaku untuk sekolah yang sudah beroperasi.";
+              btnNon.style.display = "none";
+              btnAkt.style.display = "none";
+              tgkNote.style.display = "none";
+            } else if (s.status === "Aktif") {
+              desc.textContent = "Sekolah ini sedang Aktif.";
+              btnNon.style.display = msReadOnly ? "none" : "inline-flex";
+              btnAkt.style.display = "none";
+              if (s.tunggakanSiswa > 0) {
+                tgkNote.style.display = "block";
+                tgkNote.innerHTML = `⚠ ${s.tunggakanSiswa} siswa masih punya tunggakan (total ${fmtRpMs(s.tunggakanNominal)}).`;
+              } else {
+                tgkNote.style.display = "none";
+              }
+            } else {
+              // Nonaktif
+              desc.textContent =
+                "Sekolah ini sedang Nonaktif -- staf tidak bisa login ke Portal Sekolah dan tidak ada tagihan baru diterbitkan.";
+              btnNon.style.display = "none";
+              btnAkt.style.display = msReadOnly ? "none" : "inline-flex";
+              tgkNote.style.display = "none";
+            }
+
+            if (s.riwayatStatus) {
+              histBox.style.display = "block";
+              histBox.textContent = s.riwayatStatus;
+            } else {
+              histBox.style.display = "none";
+            }
+          }
+
+          function closeSchoolDetail() {
+            document.getElementById("ms-detail-panel").style.display = "none";
+            document.getElementById("ms-list-panel").style.display = "block";
+          }
+
+          let msVisitedSteps = new Set();
+          const MS_STEP_ORDER = ["info", "akun", "pg", "review"];
+          function switchMsTab(tab) {
+            msVisitedSteps.add(tab);
+            document.querySelectorAll("#ms-stepper .step").forEach((t) => {
+              t.classList.toggle("active", t.dataset.mstab === tab);
+              t.classList.toggle(
+                "done",
+                t.dataset.mstab !== tab && msVisitedSteps.has(t.dataset.mstab),
+              );
+            });
+            document.querySelectorAll("#ms-tabs .channel-tab").forEach((t) => {
+              t.classList.toggle("active", t.dataset.mstab === tab);
+            });
+            document.querySelectorAll(".ms-tab-panel").forEach((p) => {
+              p.style.display = p.dataset.mspanel === tab ? "block" : "none";
+            });
+            const idx = MS_STEP_ORDER.indexOf(tab);
+            const btnBack = document.getElementById("ms-btn-back");
+            const btnNext = document.getElementById("ms-btn-next");
+            if (btnBack) btnBack.disabled = idx <= 0;
+            if (btnNext)
+              btnNext.textContent =
+                idx === MS_STEP_ORDER.length - 1
+                  ? "Simpan Perubahan ✓"
+                  : "Lanjut →";
+            if (tab === "review") renderMsReview();
+          }
+          function msStepNav(dir) {
+            const current = MS_STEP_ORDER.find((t) =>
+              document
+                .querySelector(`#ms-stepper .step[data-mstab="${t}"]`)
+                .classList.contains("active"),
+            );
+            const idx = MS_STEP_ORDER.indexOf(current);
+            if (dir > 0 && idx === MS_STEP_ORDER.length - 1) {
+              saveMsPerubahan();
+              return;
+            }
+            const next = idx + dir;
+            if (next < 0 || next >= MS_STEP_ORDER.length) return;
+            switchMsTab(MS_STEP_ORDER[next]);
+          }
+          function renderMsReview() {
+            const s = schoolsData[msActiveIdx];
+            document.getElementById("ms-review-nama").textContent =
+              document.getElementById("ms-info-nama").value;
+            document.getElementById("ms-review-npsn").textContent =
+              document.getElementById("ms-info-npsn").value;
+            document.getElementById("ms-review-jenjang").textContent =
+              document.getElementById("ms-info-jenjang").value;
+            document.getElementById("ms-review-org").textContent =
+              `${document.getElementById("ms-info-wilayah").value} / ${document.getElementById("ms-info-daerah").value} / ${document.getElementById("ms-info-cabang").value}`;
+            document.getElementById("ms-review-alamat").textContent =
+              document.getElementById("ms-info-alamat").value;
+            document.getElementById("ms-review-status").textContent =
+              document.getElementById("ms-info-status").value;
+            document.getElementById("ms-review-admin").textContent =
+              `${document.getElementById("ms-admin-nama").value} -- ${document.getElementById("ms-admin-wa").value} -- ${document.getElementById("ms-admin-email").value}`;
+            document.getElementById("ms-review-kontak").textContent =
+              `${document.getElementById("ms-info-email").value} -- ${document.getElementById("ms-info-kontak-nama").value} -- ${document.getElementById("ms-info-kontak-wa").value}`;
+            document.getElementById("ms-review-rekening").textContent =
+              s.rekeningList
+                .map(
+                  (r) =>
+                    `${r.bank} ${r.noRekening}${r.utama ? " (Utama)" : ""}`,
+                )
+                .join(", ");
+          }
+          function saveMsPerubahan() {
+            const s = schoolsData[msActiveIdx];
+            s.nama = document.getElementById("ms-info-nama").value.trim();
+            s.npsn = document.getElementById("ms-info-npsn").value.trim();
+            s.jenjang = document.getElementById("ms-info-jenjang").value;
+            s.wilayah = document.getElementById("ms-info-wilayah").value;
+            s.daerah = document.getElementById("ms-info-daerah").value;
+            s.cabang = document.getElementById("ms-info-cabang").value;
+            s.alamat = document.getElementById("ms-info-alamat").value.trim();
+            s.adminNama = document.getElementById("ms-admin-nama").value.trim();
+            s.adminWa = document.getElementById("ms-admin-wa").value.trim();
+            s.adminEmail = document
+              .getElementById("ms-admin-email")
+              .value.trim();
+            s.email = document.getElementById("ms-info-email").value.trim();
+            s.kontakNama = document
+              .getElementById("ms-info-kontak-nama")
+              .value.trim();
+            s.kontakWa = document
+              .getElementById("ms-info-kontak-wa")
+              .value.trim();
+            document.getElementById("ms-detail-title").textContent = s.nama;
+            document.getElementById("ms-detail-sub").textContent =
+              `NPSN ${s.npsn} -- ${s.wilayah} / ${s.daerah} / ${s.cabang}`;
+            renderSchoolList();
+            showToast("✓ Perubahan sekolah berhasil disimpan");
+          }
+
+          // ---- Rekening Penampung (per sekolah) -- boleh lebih dari 1 rekening, minimal harus ada 1 ----
+          function msRekeningBadge(status) {
+            return status === "aktif"
+              ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>'
+              : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>';
+          }
+          function fillMsRekeningBankFilter() {
+            const sel = document.getElementById("ms-rek-filter-bank");
+            if (!sel) return;
+            const cur = sel.value;
+            sel.innerHTML =
+              '<option value="">Semua Bank</option>' +
+              BANK_OPTIONS_MS.map(
+                (b) =>
+                  `<option value="${b}" ${b === cur ? "selected" : ""}>${b}</option>`,
+              ).join("");
+          }
+          function renderMsRekeningTable() {
+            if (
+              !document.getElementById("ms-rekening-table") ||
+              msActiveIdx === null
+            )
+              return;
+            fillMsRekeningBankFilter();
+            const list = schoolsData[msActiveIdx].rekeningList;
+            const searchQ = (
+              document.getElementById("ms-rek-search").value || ""
+            )
+              .trim()
+              .toLowerCase();
+            const bankQ = document.getElementById("ms-rek-filter-bank").value;
+            const statusQ = document.getElementById(
+              "ms-rek-filter-status",
+            ).value;
+            const tbody = document.querySelector("#ms-rekening-table tbody");
+            const rows = list
+              .map((r, i) => ({ r, i }))
+              .filter(({ r }) => !bankQ || r.bank === bankQ)
+              .filter(({ r }) => !statusQ || r.statusVerifikasi === statusQ)
+              .filter(
+                ({ r }) =>
+                  !searchQ ||
+                  r.namaPemilik.toLowerCase().includes(searchQ) ||
+                  r.noRekening.includes(searchQ),
+              );
+            tbody.innerHTML = rows.length
+              ? rows
+                  .map(
+                    ({ r, i }) => `
+          <tr>
+            <td>${r.bank}${r.utama ? ' <span class="tag-pill ok">UTAMA</span>' : ""}</td>
+            <td>${r.noRekening}</td>
+            <td>${r.namaPemilik}</td>
+            <td>${msRekeningBadge(r.statusVerifikasi)}</td>
+            <td>
+              ${
+                msReadOnly
+                  ? "--"
+                  : `
+              <div class="row-actions">
+                <button class="icon-btn" onclick="openMsRekeningPanel(${i})" title="Edit">✎</button>
+              </div>
+              ${!r.utama ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setMsRekeningUtama(${i})">Jadikan Utama</button>` : ""}
+              `
+              }
+            </td>
+          </tr>`,
+                  )
+                  .join("")
+              : `<tr><td colspan="5" class="empty-hint">Tidak ada rekening yang cocok dengan filter.</td></tr>`;
+          }
+          function handleMsRekBankChange() {
+            const sel = document.getElementById("ms-rek-bank");
+            const wrap = document.getElementById("ms-rek-bank-lainnya-wrap");
+            if (!sel || !wrap) return;
+            wrap.style.display = sel.value === "Lainnya" ? "block" : "none";
+            if (sel.value !== "Lainnya")
+              document.getElementById("ms-rek-bank-lainnya").value = "";
+          }
+          function openMsRekeningPanel(idx) {
+            const sel = document.getElementById("ms-rek-bank");
+            sel.innerHTML = BANK_OPTIONS_MS.map(
+              (b) => `<option value="${b}">${b}</option>`,
+            ).join("");
+            msRekeningEditIdx = idx === undefined ? null : idx;
+            const panel = document.getElementById("ms-rekening-panel");
+            if (msRekeningEditIdx !== null) {
+              const r =
+                schoolsData[msActiveIdx].rekeningList[msRekeningEditIdx];
+              document.getElementById("ms-rekening-panel-title").textContent =
+                "Edit Rekening Penampung";
+              const isCustomBank = !BANK_OPTIONS_MS.includes(r.bank);
+              document.getElementById("ms-rek-bank").value = isCustomBank
+                ? "Lainnya"
+                : r.bank;
+              document.getElementById("ms-rek-bank-lainnya").value =
+                isCustomBank ? r.bank : "";
+              document.getElementById("ms-rek-norek").value = r.noRekening;
+              document.getElementById("ms-rek-nama").value = r.namaPemilik;
+              document.getElementById("ms-rek-utama").checked = r.utama;
+            } else {
+              document.getElementById("ms-rekening-panel-title").textContent =
+                "Tambah Rekening Penampung";
+              document.getElementById("ms-rek-bank-lainnya").value = "";
+              document.getElementById("ms-rek-norek").value = "";
+              document.getElementById("ms-rek-nama").value = "";
+              document.getElementById("ms-rek-utama").checked = false;
+            }
+            handleMsRekBankChange();
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          function closeMsRekeningPanel() {
+            document.getElementById("ms-rekening-panel").style.display = "none";
+            msRekeningEditIdx = null;
+          }
+          function saveMsRekening() {
+            const list = schoolsData[msActiveIdx].rekeningList;
+            const bankSel = document.getElementById("ms-rek-bank").value;
+            const bankLainnya = document
+              .getElementById("ms-rek-bank-lainnya")
+              .value.trim();
+            const bank = bankSel === "Lainnya" ? bankLainnya : bankSel;
+            const noRekening = document
+              .getElementById("ms-rek-norek")
+              .value.trim();
+            const namaPemilik = document
+              .getElementById("ms-rek-nama")
+              .value.trim();
+            const utama = document.getElementById("ms-rek-utama").checked;
+
+            if (!bankSel) {
+              showToast("Nama Bank wajib dipilih");
+              return;
+            }
+            if (bankSel === "Lainnya" && bankLainnya.length < 3) {
+              showToast("Nama Bank Lainnya wajib diisi, minimal 3 karakter");
+              return;
+            }
+            if (!/^\d{6,20}$/.test(noRekening)) {
+              showToast("Nomor Rekening wajib angka, 6-20 digit");
+              return;
+            }
+            if (namaPemilik.length < 3) {
+              showToast("Nama Pemilik Rekening minimal 3 karakter");
+              return;
+            }
+            const dup = list.some(
+              (r, i) =>
+                i !== msRekeningEditIdx &&
+                r.bank === bank &&
+                r.noRekening === noRekening,
+            );
+            if (dup) {
+              showToast(
+                "Rekening dengan bank & nomor yang sama sudah terdaftar",
+              );
+              return;
+            }
+
+            if (utama) list.forEach((r) => (r.utama = false));
+            const payload = { bank, noRekening, namaPemilik, utama };
+            if (msRekeningEditIdx !== null) {
+              const existing = list[msRekeningEditIdx];
+              list[msRekeningEditIdx] = { ...existing, ...payload };
+            } else {
+              if (!list.length) payload.utama = true;
+              list.push({
+                id: msRekeningSeq++,
+                statusVerifikasi: "aktif",
+                ...payload,
+              });
+            }
+            if (!list.some((r) => r.utama) && list.length) list[0].utama = true;
+            closeMsRekeningPanel();
+            renderMsRekeningTable();
+            showToast("✓ Rekening Penampung berhasil disimpan");
+          }
+          function setMsRekeningUtama(idx) {
+            const list = schoolsData[msActiveIdx].rekeningList;
+            list.forEach((r, i) => (r.utama = i === idx));
+            renderMsRekeningTable();
+            showToast(`✓ ${list[idx].bank} dijadikan rekening utama`);
+          }
+          // ---- Aksi cepat dari daftar sekolah (tanpa buka panel Kelola dulu) ----
+          function quickNonaktifkanSekolah(i) {
+            msActiveIdx = i;
+            openNonaktifModal();
+          }
+          function quickAktifkanSekolah(i) {
+            msActiveIdx = i;
+            openAktifkanModal();
+          }
+
+          // ---- Nonaktifkan Sekolah modal ----
+          function openNonaktifModal() {
+            const s = schoolsData[msActiveIdx];
+            document.getElementById("nonaktif-modal-title").textContent =
+              `Nonaktifkan ${s.nama}`;
+            document.getElementById("nonaktif-modal-sub").textContent =
+              `NPSN ${s.npsn}`;
+            document.getElementById("nonaktif-alasan").value = "";
+
+            const adaTunggakan = s.tunggakanSiswa > 0;
+            document.getElementById("nonaktif-tunggakan-block").style.display =
+              adaTunggakan ? "block" : "none";
+            document.getElementById("nonaktif-bersih-block").style.display =
+              adaTunggakan ? "none" : "block";
+            document.getElementById("nonaktif-confirm-check").style.display =
+              adaTunggakan ? "flex" : "none";
+            document.getElementById("nonaktif-checkbox").checked = false;
+
+            if (adaTunggakan) {
+              document.getElementById("nonaktif-jml-siswa").textContent =
+                s.tunggakanSiswa;
+              document.getElementById("nonaktif-nominal").textContent = fmtRpMs(
+                s.tunggakanNominal,
+              );
+            }
+
+            validateNonaktifForm();
+            document
+              .getElementById("nonaktif-modal-overlay")
+              .classList.add("active");
+          }
+
+          function closeNonaktifModal() {
+            document
+              .getElementById("nonaktif-modal-overlay")
+              .classList.remove("active");
+          }
+
+          function validateNonaktifForm() {
+            const s = schoolsData[msActiveIdx];
+            const alasanOk =
+              document.getElementById("nonaktif-alasan").value.trim().length >
+              0;
+            const adaTunggakan = s && s.tunggakanSiswa > 0;
+            const checkOk = adaTunggakan
+              ? document.getElementById("nonaktif-checkbox").checked
+              : true;
+            document.getElementById("nonaktif-confirm-btn").disabled = !(
+              alasanOk && checkOk
+            );
+          }
+
+          function confirmNonaktifkan() {
+            const s = schoolsData[msActiveIdx];
+            const alasan = document
+              .getElementById("nonaktif-alasan")
+              .value.trim();
+            s.status = "Nonaktif";
+            const tanggal = new Date().toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            });
+            const pelaku = currentUser
+              ? `${currentUser.nama} (${roleById(currentUser.roleId).nama})`
+              : "Admin Pusat";
+            s.riwayatStatus = `Dinonaktifkan ${tanggal} oleh ${pelaku} -- Alasan: ${alasan}`;
+            closeNonaktifModal();
+            renderSchoolList();
+            renderAksiSekolah();
+            document.getElementById("ms-info-status").value = s.status;
+            const msg =
+              s.tunggakanSiswa > 0
+                ? `✓ ${s.nama} berhasil dinonaktifkan. Tunggakan ${s.tunggakanSiswa} siswa tetap dapat ditagih lewat App Wali Murid.`
+                : `✓ ${s.nama} berhasil dinonaktifkan.`;
+            showToast(msg);
+          }
+
+          // ---- Aktifkan Kembali modal ----
+          function openAktifkanModal() {
+            const s = schoolsData[msActiveIdx];
+            document.getElementById("aktifkan-modal-title").textContent =
+              `Aktifkan Kembali ${s.nama}`;
+            document.getElementById("aktifkan-modal-sub").textContent =
+              `NPSN ${s.npsn}`;
+            document
+              .getElementById("aktifkan-modal-overlay")
+              .classList.add("active");
+          }
+
+          function closeAktifkanModal() {
+            document
+              .getElementById("aktifkan-modal-overlay")
+              .classList.remove("active");
+          }
+
+          function confirmAktifkan() {
+            const s = schoolsData[msActiveIdx];
+            s.status = "Aktif";
+            closeAktifkanModal();
+            renderSchoolList();
+            renderAksiSekolah();
+            document.getElementById("ms-info-status").value = s.status;
+            showToast(`✓ ${s.nama} berhasil diaktifkan kembali.`);
+          }
+
+          renderSchoolList();
+
+          // expose to inline onclick="" handlers in the markup above
+          Object.assign(window, {
+            openSchoolDetail,
+            closeSchoolDetail,
+            switchMsTab,
+            renderAksiSekolah,
+            quickNonaktifkanSekolah,
+            quickAktifkanSekolah,
+            openNonaktifModal,
+            closeNonaktifModal,
+            validateNonaktifForm,
+            confirmNonaktifkan,
+            openAktifkanModal,
+            closeAktifkanModal,
+            confirmAktifkan,
+            renderMsRekeningTable,
+            handleMsRekBankChange,
+            openMsRekeningPanel,
+            closeMsRekeningPanel,
+            saveMsRekening,
+            setMsRekeningUtama,
+            msStepNav,
+            saveMsPerubahan,
+          });
         }
-
-        if (s.riwayatStatus) {
-          histBox.style.display = 'block';
-          histBox.textContent = s.riwayatStatus;
-        } else {
-          histBox.style.display = 'none';
-        }
       }
-
-      function closeSchoolDetail() {
-        document.getElementById('ms-detail-panel').style.display = 'none';
-        document.getElementById('ms-list-panel').style.display = 'block';
-      }
-
-      function switchMsTab(tab) {
-        document.querySelectorAll('#ms-detail-panel > .channel-tabs .channel-tab').forEach(t => t.classList.toggle('active', t.dataset.mstab === tab));
-        document.querySelectorAll('.ms-tab-panel').forEach(p => { p.style.display = p.dataset.mspanel === tab ? 'block' : 'none'; });
-      }
-
-      // ---- Nonaktifkan Sekolah modal ----
-      function openNonaktifModal() {
-        const s = schoolsData[msActiveIdx];
-        document.getElementById('nonaktif-modal-title').textContent = `Nonaktifkan ${s.nama}`;
-        document.getElementById('nonaktif-modal-sub').textContent = `NPSN ${s.npsn}`;
-        document.getElementById('nonaktif-alasan').value = '';
-
-        const adaTunggakan = s.tunggakanSiswa > 0;
-        document.getElementById('nonaktif-tunggakan-block').style.display = adaTunggakan ? 'block' : 'none';
-        document.getElementById('nonaktif-bersih-block').style.display = adaTunggakan ? 'none' : 'block';
-        document.getElementById('nonaktif-confirm-check').style.display = adaTunggakan ? 'flex' : 'none';
-        document.getElementById('nonaktif-checkbox').checked = false;
-
-        if (adaTunggakan) {
-          document.getElementById('nonaktif-jml-siswa').textContent = s.tunggakanSiswa;
-          document.getElementById('nonaktif-nominal').textContent = fmtRpMs(s.tunggakanNominal);
-        }
-
-        validateNonaktifForm();
-        document.getElementById('nonaktif-modal-overlay').classList.add('active');
-      }
-
-      function closeNonaktifModal() {
-        document.getElementById('nonaktif-modal-overlay').classList.remove('active');
-      }
-
-      function validateNonaktifForm() {
-        const s = schoolsData[msActiveIdx];
-        const alasanOk = document.getElementById('nonaktif-alasan').value.trim().length > 0;
-        const adaTunggakan = s && s.tunggakanSiswa > 0;
-        const checkOk = adaTunggakan ? document.getElementById('nonaktif-checkbox').checked : true;
-        document.getElementById('nonaktif-confirm-btn').disabled = !(alasanOk && checkOk);
-      }
-
-      function confirmNonaktifkan() {
-        const s = schoolsData[msActiveIdx];
-        const alasan = document.getElementById('nonaktif-alasan').value.trim();
-        s.status = 'Nonaktif';
-        const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-        const pelaku = currentUser ? `${currentUser.nama} (${roleById(currentUser.roleId).nama})` : 'Admin Pusat';
-        s.riwayatStatus = `Dinonaktifkan ${tanggal} oleh ${pelaku} -- Alasan: ${alasan}`;
-        closeNonaktifModal();
-        renderSchoolList();
-        renderAksiSekolah();
-        document.getElementById('ms-info-status').value = s.status;
-        const msg = s.tunggakanSiswa > 0
-          ? `✓ ${s.nama} berhasil dinonaktifkan. Tunggakan ${s.tunggakanSiswa} siswa tetap dapat ditagih lewat App Wali Murid.`
-          : `✓ ${s.nama} berhasil dinonaktifkan.`;
-        showToast(msg);
-      }
-
-      // ---- Aktifkan Kembali modal ----
-      function openAktifkanModal() {
-        const s = schoolsData[msActiveIdx];
-        document.getElementById('aktifkan-modal-title').textContent = `Aktifkan Kembali ${s.nama}`;
-        document.getElementById('aktifkan-modal-sub').textContent = `NPSN ${s.npsn}`;
-        document.getElementById('aktifkan-modal-overlay').classList.add('active');
-      }
-
-      function closeAktifkanModal() {
-        document.getElementById('aktifkan-modal-overlay').classList.remove('active');
-      }
-
-      function confirmAktifkan() {
-        const s = schoolsData[msActiveIdx];
-        s.status = 'Aktif';
-        closeAktifkanModal();
-        renderSchoolList();
-        renderAksiSekolah();
-        document.getElementById('ms-info-status').value = s.status;
-        showToast(`✓ ${s.nama} berhasil diaktifkan kembali.`);
-      }
-
-      renderSchoolList();
-
-      // expose to inline onclick="" handlers in the markup above
-      Object.assign(window, {
-        openSchoolDetail, closeSchoolDetail, switchMsTab, renderAksiSekolah,
-        openNonaktifModal, closeNonaktifModal, validateNonaktifForm, confirmNonaktifkan,
-        openAktifkanModal, closeAktifkanModal, confirmAktifkan,
-      });
-    }
-  }
-</script>
-</body>
+    </script>
+  </body>
 </html>

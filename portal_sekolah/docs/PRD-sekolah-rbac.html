@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Role &amp; Hak Akses -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Role &amp; Hak Akses <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Role &amp; Hak Akses -- tab "Role &amp; Hak Akses" pada menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain -- berbeda dari RBAC Admin Pusat (aplikasi <code>admin_muhammadiyah</code>) yang mendukung role dinamis lintas platform</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>sekolah.html</code> (tab <code>rbac</code>, modal <code>#rbac-perm-modal-overlay-sk</code>), <code>app.js</code> (data <code>rbacPerms</code>, <code>RBAC_MODULES_SEKOLAH</code>, <code>ROLE_DESKRIPSI</code>, fungsi <code>cru</code>/<code>cruFull</code>, <code>renderRbacRoleTable</code>, <code>openRbacPermModalSekolah</code>, <code>saveRbacPermModalSekolah</code>, <code>applyRbacToSidebar</code>, <code>defaultPageFor</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-sekolah-pengguna.html">PRD Pengguna &amp; Akun Sekolah</a> -- peran yang izinnya diatur di sini adalah peran yang dipakai saat mengundang pengguna</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Role &amp; Hak Akses</strong> level sekolah pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini memungkinkan Admin sekolah mengatur hak akses <strong>granular per-aksi</strong> (Create/Read/Update/Delete) untuk tiap modul, bagi tiga role tetap: Kepala Sekolah, Bendahara, dan Admin. Berbeda dari RBAC di Admin Pusat, <strong>role di sini tidak bisa ditambah atau dihapus</strong> -- hanya kombinasi izin per modul untuk ketiga role tetap tersebut yang bisa diubah. Fitur ini <strong>tidak</strong> mengatur siapa memegang peran apa (itu diatur di tab Pengguna &amp; Akun Sekolah lewat field Peran).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>CRUD / C-R-U-D</td><td>Create, Read, Update, Delete -- empat aksi granular yang izinnya diatur terpisah per modul</td></tr>
+              <tr><td>Read (gate akses halaman)</td><td>Izin "Read" pada suatu modul juga berfungsi sebagai gerbang (gate) -- role tanpa Read pada modul tersebut tidak bisa membuka menu/halamannya sama sekali, terlepas dari izin Create/Update/Delete</td></tr>
+              <tr><td>Role tetap</td><td>Kepala Sekolah, Bendahara, Admin -- tiga peran baku yang tidak bisa ditambah/dihapus dari UI ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Tab ini adalah tab terakhir dari lima tab pada menu "Manajemen Sekolah". Perubahan izin di sini langsung berefek ke tampilan sidebar &amp; akses halaman seluruh pengguna sekolah ini yang memegang role terkait (lihat <code>applyRbacToSidebar</code>).</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar 3 role tetap beserta deskripsinya.</li>
+          <li>Melihat detail izin role "Admin" (terkunci, tidak bisa diubah).</li>
+          <li>Mengatur izin granular Create/Read/Update/Delete per modul untuk role "Kepala Sekolah" dan "Bendahara".</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Admin</td><td>Satu-satunya peran dengan akses modul "sekolah" secara default -- satu-satunya yang bisa mengubah izin Kepala Sekolah &amp; Bendahara. Izin Admin sendiri selalu penuh &amp; terkunci.</td></tr>
+              <tr><td>Kepala Sekolah, Bendahara</td><td>Tidak punya akses ke tab ini secara default (tidak bisa mengubah izin siapa pun, termasuk izin sendiri), kecuali izin diubah lebih dulu oleh Admin.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Role "Admin" <strong>selalu memiliki izin penuh (C/R/U/D di semua modul) dan tidak bisa diubah</strong> -- mencegah kondisi di mana tak satu pun pengguna sekolah ini bisa mengelola RBAC.</li>
+          <li>Tidak ada tombol tambah/hapus role di tab ini -- daftar role selalu tepat 3 baris (Kepala Sekolah, Bendahara, Admin).</li>
+          <li>Mencentang Create/Update/Delete pada modul tertentu tidak otomatis mengaktifkan Read pada modul itu (berbeda dari implementasi serupa di RBAC Admin Pusat) -- lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Modul yang diatur di sini (<code>RBAC_MODULES_SEKOLAH</code>) harus selalu sinkron dengan daftar item navigasi sidebar &amp; <code>NAV_ORDER</code> -- penambahan menu baru di Portal Sekolah wajib diikuti penambahan entri modul di RBAC ini.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Role</td><td>Sistem menampilkan 3 baris tetap: Role, Deskripsi, dan tombol Aksi ("Kelola Izin" untuk Kepala Sekolah/Bendahara, "Detail" untuk Admin)</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Lihat Detail Izin Admin (Read-only)</td><td>Tombol "Detail" pada baris Admin membuka modal yang menampilkan seluruh izin C/R/U/D Admin dalam keadaan tercentang &amp; dinonaktifkan (<code>disabled</code>), tanpa tombol Simpan</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Kelola Izin Kepala Sekolah/Bendahara</td><td>Tombol "Kelola Izin" membuka modal berisi tabel Modul x Create/Read/Update/Delete, masing-masing sebagai checkbox yang bisa dicentang/dikosongkan bebas</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Simpan Izin Role</td><td>Tombol "Simpan Izin" menyimpan seluruh kombinasi checkbox C/R/U/D per modul untuk role yang sedang dibuka, menutup modal, memperbarui tabel role, dan menampilkan toast konfirmasi</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Terapkan Izin Langsung ke Sesi Aktif</td><td>Jika role yang diubah izinnya adalah role milik pengguna yang sedang login, sidebar &amp; akses halaman pengguna tersebut diperbarui seketika tanpa perlu logout/login ulang</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Konteks Informasi (Disclaimer)</td><td>Sistem menampilkan teks penjelasan tetap: Admin selalu punya akses penuh termasuk modul ini sendiri; centang Read agar role bisa membuka menu, Create/Update/Delete baru berpengaruh bila Read juga aktif</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Memberi Bendahara akses Create &amp; Update ke modul Blast Notifikasi</strong></p>
+        <ol>
+          <li>Admin menekan "Kelola Izin" pada baris "Bendahara".</li>
+          <li>Sistem menampilkan modal berisi tabel seluruh modul (<code>RBAC_MODULES_SEKOLAH</code>) dengan status izin Bendahara saat ini.</li>
+          <li>Admin mencentang Create dan Update pada baris modul "Blast Notifikasi" (Read sudah tercentang sebelumnya).</li>
+          <li>Admin menekan "Simpan Izin".</li>
+          <li>Sistem menyimpan perubahan, menutup modal, memperbarui tabel role, dan menampilkan toast "&#10003; Izin role "Bendahara" berhasil disimpan".</li>
+        </ol>
+
+        <p><strong>UC-02 -- Melihat detail izin Admin (tanpa bisa mengubah)</strong></p>
+        <ol>
+          <li>Admin menekan "Detail" pada baris "Admin".</li>
+          <li>Sistem menampilkan modal dengan seluruh checkbox C/R/U/D tercentang dan dinonaktifkan, tombol "Simpan Izin" tersembunyi.</li>
+          <li>Admin menutup modal tanpa ada perubahan apa pun yang mungkin tersimpan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Bendahara yang sedang login kehilangan sebagian akses setelah izinnya diubah</strong></p>
+        <ol>
+          <li>Admin mencabut izin Read pada modul "transaksi" untuk role "Bendahara" dan menyimpannya, sementara seorang Bendahara sedang login di sesi lain.</li>
+          <li>Pada sesi Bendahara tersebut, sidebar tidak otomatis memperbarui diri (hanya sesi yang melakukan penyimpanan sendiri yang langsung ter-refresh -- lihat FR-05 &amp; <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 2</a>); Bendahara baru melihat perubahan setelah reload halaman atau login ulang.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Role "Admin" selalu bernilai <code>true</code> pada seluruh aksi C/R/U/D di seluruh modul, dan tidak bisa diubah lewat UI ini</td></tr>
+              <tr><td>BR-02</td><td>Role "Kepala Sekolah" dan "Bendahara" bisa diatur bebas per modul per aksi (C/R/U/D independen satu sama lain, tidak ada validasi saling ketergantungan antar checkbox)</td></tr>
+              <tr><td>BR-03</td><td>Izin "Read" pada suatu modul menentukan apakah item navigasi &amp; halaman modul tersebut tampil di sidebar untuk role itu (lihat <code>applyRbacToSidebar</code>); modul tanpa Read tidak bisa diakses meski Create/Update/Delete tercentang</td></tr>
+              <tr><td>BR-04</td><td>Tidak ada operasi tambah atau hapus role -- daftar role selalu persis 3 entri yang sudah ada</td></tr>
+              <tr><td>BR-05</td><td>Perubahan izin berlaku untuk seluruh pengguna sekolah ini yang memegang role tersebut, bukan per individu pengguna</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Checkbox Create/Read/Update/Delete (per modul)</td><td><code>input[data-act]</code> dalam <code>#rbac-perm-body-sk</code></td><td>Tidak ada nilai wajib</td><td>Boolean bebas, tidak ada validasi silang antar kolom di prototipe saat ini (lihat BR-02 dan Pertanyaan Terbuka No. 1)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>IzinRole</code> (<code>rbacPerms[peran][modulKey]</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>c</code></td><td>boolean</td><td>Tidak (opsional, default bergantung seed data)</td><td>Izin Create pada modul ini</td></tr>
+              <tr><td><code>r</code></td><td>boolean</td><td>Tidak (opsional)</td><td>Izin Read -- juga berfungsi sebagai gate akses menu/halaman (lihat BR-03)</td></tr>
+              <tr><td><code>u</code></td><td>boolean</td><td>Tidak (opsional)</td><td>Izin Update pada modul ini</td></tr>
+              <tr><td><code>d</code></td><td>boolean</td><td>Tidak (opsional)</td><td>Izin Delete pada modul ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Struktur lengkap: <code>rbacPerms</code> adalah map <code>{ [namaRole]: { [modulKey]: IzinRole } }</code> untuk ketiga role tetap (Kepala Sekolah, Bendahara, Admin) dan delapan modul (<code>dashboard</code>, <code>approval</code>, <code>konfigurasi</code>, <code>sekolah</code>, <code>wali</code>, <code>murid</code>, <code>transaksi</code>, <code>blast</code>).</p>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Keamanan</td><td>Role "Admin" tidak bisa diubah izinnya lewat manipulasi UI apa pun (checkbox selalu <code>disabled</code> untuk baris ini)</td><td>100% aksi ubah izin Admin ditolak di level UI</td></tr>
+              <tr><td>NFR-02</td><td>Usability</td><td>Perubahan izin role milik pengguna yang sedang login langsung tercermin di sidebar sesi tersebut tanpa reload halaman</td><td>Sidebar ter-refresh &lt; 100ms setelah simpan</td></tr>
+              <tr><td>NFR-03</td><td>Feedback</td><td>Aksi simpan izin menampilkan toast konfirmasi yang menyebut nama role yang diubah</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-04</td><td>Konsistensi data</td><td>Setiap role selalu memiliki entri izin untuk seluruh modul yang terdaftar di <code>RBAC_MODULES_SEKOLAH</code> (tidak ada modul yang "hilang" nilainya)</td><td>100% modul terisi untuk setiap role setelah setiap penyimpanan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI untuk perubahan izin role.</li>
+          <li>Pengguna lain yang sedang login dengan role yang izinnya baru diubah tidak otomatis mendapat pembaruan real-time di sesi mereka -- hanya sesi milik pelaku perubahan yang langsung ter-refresh (lihat FR-05 &amp; UC-03).</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Admin memahami implikasi mencabut izin Read suatu modul dari role tertentu -- seluruh pengguna role itu langsung tidak bisa membuka modul tersebut setelah sesi mereka ter-refresh.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah perlu dependensi otomatis antar checkbox (mis. mencentang Create/Update/Delete otomatis menyalakan Read, dan mematikan Read otomatis mematikan Create/Update/Delete), seperti pola yang sudah diterapkan di RBAC Admin Pusat (<code>handleCrucChange</code>)?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu mekanisme agar perubahan izin role langsung berefek ke sesi pengguna LAIN yang sedang login (bukan hanya sesi pelaku perubahan), misalnya lewat polling atau WebSocket, dibanding menunggu reload/login ulang?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah perlu audit log (pelaku &amp; waktu) untuk setiap perubahan izin role?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Gate akses</td><td>Mekanisme yang menentukan apakah suatu halaman/menu boleh diakses -- di sini ditentukan oleh izin Read per modul</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

@@ -1,154 +1,320 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>GeekGarden Admin -- Pengguna</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeekGarden Admin -- Pengguna</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app-shell">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="brand">
+          <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+          <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+        </div>
 
-<div class="app" id="app-shell">
+        <a
+          href="dashboard-konsolidasi.html"
+          class="nav-item"
+          data-rbac="dashboard-konsolidasi"
+          ><span class="ic">📊</span> Dashboard Konsolidasi</a
+        >
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="brand">
-      <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
-      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
-    </div>
+        <div class="nav-group-label">Onboarding</div>
+        <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"
+          ><span class="ic">＋</span> Pendaftaran Sekolah</a
+        >
+        <a href="manajemen.html" class="nav-item" data-rbac="manajemen"
+          ><span class="ic">🏫</span> Manajemen Sekolah</a
+        >
 
-    <a href="dashboard-konsolidasi.html" class="nav-item" data-rbac="dashboard-konsolidasi"><span class="ic">📊</span> Dashboard Konsolidasi</a>
+        <div class="nav-group-label">Konfigurasi</div>
+        <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
+          ><span class="ic">⚙</span> Konfigurasi Sistem</a
+        >
+        <a href="pengguna.html" class="nav-item active" data-rbac="pengguna"
+          ><span class="ic">👤</span> Pengguna</a
+        >
+        <a href="rbac.html" class="nav-item" data-rbac="rbac"
+          ><span class="ic">🔐</span> Role &amp; Hak Akses</a
+        >
 
-    <div class="nav-group-label">Onboarding</div>
-    <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"><span class="ic">＋</span> Pendaftaran Sekolah</a>
-    <a href="manajemen.html" class="nav-item" data-rbac="manajemen"><span class="ic">🏫</span> Manajemen Sekolah</a>
-
-    <div class="nav-group-label">Konfigurasi</div>
-    <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"><span class="ic">⚙</span> Konfigurasi Sistem</a>
-    <a href="pengguna.html" class="nav-item active" data-rbac="pengguna"><span class="ic">👤</span> Pengguna</a>
-    <a href="rbac.html" class="nav-item" data-rbac="rbac"><span class="ic">🔐</span> Role &amp; Hak Akses</a>
-
-    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.12);padding-top:10px;">
-      <a href="#" class="nav-item" onclick="logout(); return false;"><span class="ic">🚪</span> Keluar</a>
-    </div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Pengguna</b></div>
-      <div class="user-chip">
-        <div class="av" id="uc-avatar">SA</div>
-        <div class="info">
-          <div class="name" id="uc-name">Super Admin</div>
-          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+        <div
+          style="
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 10px;
+          "
+        >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              logout();
+              return false;
+            "
+            ><span class="ic">🚪</span> Keluar</a
+          >
         </div>
       </div>
-    </div>
 
-    <div class="content">
-
-      <!-- ===================== VIEW: PENGGUNA ===================== -->
-      <div class="page-view active" id="view-pengguna">
-        <div class="page-title">
-          <h1>Pengguna</h1>
-          <p>Kelola akun pengguna yang bisa login ke platform ini, beserta peran (role) &amp; cakupan aksesnya. Hak akses tiap role diatur di menu Role &amp; Hak Akses.</p>
-        </div>
-
-        <div class="card">
-          <h3>Daftar Pengguna Admin</h3>
-          <p class="card-desc">Akun yang bisa login ke portal Admin Pusat Muhammadiyah ini, beserta peran &amp; cakupan aksesnya.</p>
-          <table class="accounts">
-            <thead>
-              <tr><th style="width:19%">Nama</th><th style="width:25%">Email</th><th style="width:22%">Role</th><th style="width:15%">Cakupan</th><th style="width:11%">Status</th><th style="width:8%">Aksi</th></tr>
-            </thead>
-            <tbody id="rbac-users-body"></tbody>
-          </table>
-          <button class="btn-add-row" onclick="addUserRow()">+ Tambah Pengguna</button>
-          <div class="btn-row" style="justify-content:flex-end;">
-            <button class="btn btn-success" onclick="saveUsers()">Simpan Pengguna</button>
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">
+            <span id="crumb-role">Super Admin</span> /
+            <b id="crumb-current">Pengguna</b>
           </div>
-          <div class="note-box info">💡 Pengguna baru yang ditambahkan mendapat password default <code>demo123</code> (khusus mode demo prototipe ini -- pada implementasi produksi, password diatur lewat email undangan/reset, bukan diketik admin).</div>
+          <div class="topbar-right">
+            <a
+              class="btn-prd"
+              href="docs/PRD-pengguna.html"
+              target="_blank"
+              rel="noopener"
+              >📄 PRD</a
+            >
+            <div class="user-chip">
+              <div class="av" id="uc-avatar">SA</div>
+              <div class="info">
+                <div class="name" id="uc-name">Super Admin</div>
+                <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- ===================== VIEW: PENGGUNA ===================== -->
+          <div class="page-view active" id="view-pengguna">
+            <div class="page-title">
+              <h1>Pengguna</h1>
+              <p>
+                Kelola akun pengguna yang bisa login ke platform ini, beserta
+                perannya (role). Hak akses tiap role diatur di menu Role &amp;
+                Hak Akses.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Daftar Pengguna Admin</h3>
+              <p class="card-desc">
+                Akun yang bisa login ke portal Admin Pusat Muhammadiyah ini,
+                beserta perannya. Hak akses tiap role diatur di menu Role &amp;
+                Hak Akses.
+              </p>
+              <div class="filter-bar">
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="openUserPanel()"
+                >
+                  + Tambah Pengguna
+                </button>
+              </div>
+              <table class="dtab" id="users-table">
+                <thead>
+                  <tr>
+                    <th style="width: 22%">Nama</th>
+                    <th style="width: 30%">Email</th>
+                    <th style="width: 20%">Role</th>
+                    <th style="width: 13%">Status</th>
+                    <th style="width: 15%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="rbac-users-body"></tbody>
+              </table>
+
+              <div
+                class="card"
+                id="user-panel"
+                style="
+                  display: none;
+                  background: var(--light);
+                  border-style: dashed;
+                  margin-top: 16px;
+                  margin-bottom: 0;
+                "
+              >
+                <h3 id="user-panel-title">Tambah Pengguna</h3>
+                <div class="grid2">
+                  <div class="field">
+                    <label>Nama Lengkap</label
+                    ><input
+                      type="text"
+                      id="user-nama"
+                      placeholder="Nama lengkap"
+                    />
+                  </div>
+                  <div class="field">
+                    <label>Email</label
+                    ><input
+                      type="email"
+                      id="user-email"
+                      placeholder="nama@muhammadiyah.id"
+                    />
+                  </div>
+                </div>
+                <div class="grid2">
+                  <div class="field">
+                    <label>Role</label
+                    ><select id="user-role"></select>
+                  </div>
+                  <div class="field">
+                    <label>Status</label
+                    ><select id="user-status">
+                      <option>Aktif</option>
+                      <option>Nonaktif</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-ghost" onclick="closeUserPanel()">
+                    Batal
+                  </button>
+                  <button class="btn btn-success" onclick="saveUserPanel()">
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-</div>
 
-<div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+    <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
 
-<script src="app.js"></script>
-<script>
-  const u = requireLogin();
-  if (u) {
-    applyCurrentUserToUi();
-    if (enforcePageAccess('pengguna')) {
-      applyRbacToSidebar();
+    <script src="app.js"></script>
+    <script>
+      const u = requireLogin();
+      if (u) {
+        applyCurrentUserToUi();
+        if (enforcePageAccess("pengguna")) {
+          applyRbacToSidebar();
 
-      // ---- Pengguna ----
-      function userRowHtml(u) {
-        const roleOptions = rolesData.map(r => `<option value="${r.id}" ${r.id === u.roleId ? 'selected' : ''}>${r.nama}</option>`).join('');
-        return `<tr data-user-id="${u.id}">
-          <td><input type="text" value="${u.nama}"></td>
-          <td><input type="email" value="${u.email}"></td>
-          <td><select>${roleOptions}</select></td>
-          <td><input type="text" value="${u.cakupan}"></td>
-          <td><select><option ${u.status === 'Aktif' ? 'selected' : ''}>Aktif</option><option ${u.status === 'Nonaktif' ? 'selected' : ''}>Nonaktif</option></select></td>
-          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
-        </tr>`;
-      }
-      function renderUsersTable() {
-        document.getElementById('rbac-users-body').innerHTML = usersData.map(userRowHtml).join('');
-      }
-      function addUserRow() {
-        const tbody = document.getElementById('rbac-users-body');
-        const tr = document.createElement('tr');
-        const roleOptions = rolesData.map(r => `<option value="${r.id}">${r.nama}</option>`).join('');
-        tr.innerHTML = `
-          <td><input type="text" placeholder="Nama lengkap"></td>
-          <td><input type="email" placeholder="nama@muhammadiyah.id"></td>
-          <td><select>${roleOptions}</select></td>
-          <td><input type="text" placeholder="mis. Nasional / PWM ..."></td>
-          <td><select><option selected>Aktif</option><option>Nonaktif</option></select></td>
-          <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>`;
-        tbody.appendChild(tr);
-      }
-      function saveUsers() {
-        const rows = document.querySelectorAll('#rbac-users-body tr');
-        const updated = [];
-        rows.forEach(row => {
-          const existingId = row.dataset.userId ? Number(row.dataset.userId) : null;
-          const inputs = row.querySelectorAll('input');
-          const selects = row.querySelectorAll('select');
-          const nama = inputs[0].value.trim();
-          const email = inputs[1].value.trim();
-          const cakupan = inputs[2].value.trim();
-          const roleId = Number(selects[0].value);
-          const status = selects[1].value;
-          if (!nama || !email) return; // skip incomplete rows
-          const existing = existingId ? usersData.find(u => u.id === existingId) : null;
-          updated.push({
-            id: existing ? existing.id : userSeq++,
-            nama, email, cakupan, roleId, status,
-            password: existing ? existing.password : 'demo123',
+          // ---- Pengguna -- Create/Update lewat panel, Delete langsung per baris (konfirmasi) ----
+          let userEditIdx = null;
+          function userRoleOptionsHtml(selectedRoleId) {
+            return rolesData
+              .map(
+                (r) =>
+                  `<option value="${r.id}" ${r.id === selectedRoleId ? "selected" : ""}>${r.nama}</option>`,
+              )
+              .join("");
+          }
+          function renderUsersTable() {
+            const tbody = document.getElementById("rbac-users-body");
+            tbody.innerHTML = usersData.length
+              ? usersData
+                  .map((u, i) => {
+                    const role = roleById(u.roleId);
+                    return `<tr>
+            <td>${u.nama}</td>
+            <td>${u.email}</td>
+            <td>${role ? role.nama : "--"}</td>
+            <td>${u.status === "Aktif" ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
+            <td>
+              <div class="row-actions">
+                <button class="icon-btn" onclick="openUserPanel(${i})" title="Edit">✎</button>
+              </div>
+            </td>
+          </tr>`;
+                  })
+                  .join("")
+              : `<tr><td colspan="5" class="empty-hint">Belum ada pengguna.</td></tr>`;
+          }
+          function openUserPanel(idx) {
+            userEditIdx = idx === undefined ? null : idx;
+            const panel = document.getElementById("user-panel");
+            const sel = document.getElementById("user-role");
+            if (userEditIdx !== null) {
+              const u = usersData[userEditIdx];
+              document.getElementById("user-panel-title").textContent =
+                "Edit Pengguna";
+              document.getElementById("user-nama").value = u.nama;
+              document.getElementById("user-email").value = u.email;
+              sel.innerHTML = userRoleOptionsHtml(u.roleId);
+              document.getElementById("user-status").value = u.status;
+            } else {
+              document.getElementById("user-panel-title").textContent =
+                "Tambah Pengguna";
+              document.getElementById("user-nama").value = "";
+              document.getElementById("user-email").value = "";
+              sel.innerHTML = userRoleOptionsHtml(
+                rolesData[0] ? rolesData[0].id : null,
+              );
+              document.getElementById("user-status").value = "Aktif";
+            }
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          function closeUserPanel() {
+            document.getElementById("user-panel").style.display = "none";
+            userEditIdx = null;
+          }
+          function saveUserPanel() {
+            const nama = document.getElementById("user-nama").value.trim();
+            const email = document.getElementById("user-email").value.trim();
+            const roleId = Number(document.getElementById("user-role").value);
+            const status = document.getElementById("user-status").value;
+
+            if (nama.length < 3) {
+              showToast("Nama minimal 3 karakter");
+              return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              showToast("Email tidak valid");
+              return;
+            }
+            const dup = usersData.some(
+              (u, i) =>
+                i !== userEditIdx &&
+                u.email.toLowerCase() === email.toLowerCase(),
+            );
+            if (dup) {
+              showToast("Email ini sudah dipakai pengguna lain");
+              return;
+            }
+
+            if (userEditIdx !== null) {
+              const existing = usersData[userEditIdx];
+              usersData[userEditIdx] = {
+                ...existing,
+                nama,
+                email,
+                roleId,
+                status,
+              };
+              if (currentUser && currentUser.id === existing.id) {
+                currentUser = usersData[userEditIdx];
+                saveSession(currentUser);
+                applyCurrentUserToUi();
+                applyRbacToSidebar();
+              }
+            } else {
+              usersData.push({
+                id: userSeq++,
+                nama,
+                email,
+                roleId,
+                status,
+                password: "demo123",
+              });
+            }
+            closeUserPanel();
+            renderUsersTable();
+            showToast("✓ Pengguna berhasil disimpan");
+          }
+          renderUsersTable();
+
+          // expose to inline onclick="" handlers in the markup above
+          Object.assign(window, {
+            openUserPanel,
+            closeUserPanel,
+            saveUserPanel,
           });
-        });
-        usersData.length = 0;
-        usersData.push(...updated);
-        renderUsersTable();
-        if (currentUser) {
-          const stillExists = usersData.find(u => u.id === currentUser.id);
-          if (stillExists) { currentUser = stillExists; saveSession(currentUser); applyCurrentUserToUi(); applyRbacToSidebar(); }
         }
-        showToast('✓ Pengguna berhasil disimpan');
       }
-
-      renderUsersTable();
-
-      // expose to inline onclick="" handlers in the markup above
-      Object.assign(window, { addUserRow, saveUsers });
-    }
-  }
-</script>
-</body>
+    </script>
+  </body>
 </html>

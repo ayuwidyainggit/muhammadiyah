@@ -185,7 +185,7 @@
 </tr>
 <tr>
 <td>Versi dokumen</td>
-<td>v0.1</td>
+<td>v0.2</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -234,18 +234,24 @@
 <td>Tim Produk GeekGarden</td>
 <td>Draft awal berdasarkan prototipe <code>rbac.html</code> (CRUD role penuh: tambah, ubah, hapus role &amp; matriks hak akses modul)</td>
 </tr>
+<tr>
+<td>v0.2</td>
+<td>02-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Hapus kolom Icon yang dapat diedit pada matriks Role &amp; Hak Akses di <code>rbac.html</code> -- ikon role tidak lagi ditampilkan/diubah lewat UI ini (nilai ikon lama tetap dipertahankan di data untuk ditampilkan di menu Pengguna)</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
 <h2>2. Ringkasan &amp; Latar Belakang</h2>
 <h3>2.1 Ringkasan</h3>
-<p>Role &amp; Hak Akses memungkinkan Super Admin mendefinisikan role (peran) baru, mengubah nama/ikon/deskripsi role yang ada, menghapus role yang tidak dipakai, dan mengatur modul apa saja yang boleh diakses tiap role lewat matriks checkbox. Fitur ini adalah fondasi kontrol akses seluruh platform.</p>
+<p>Role &amp; Hak Akses memungkinkan Super Admin mendefinisikan role (peran) baru, mengubah nama/deskripsi role yang ada, menghapus role yang tidak dipakai, dan mengatur modul apa saja yang boleh diakses tiap role lewat matriks checkbox. Fitur ini adalah fondasi kontrol akses seluruh platform.</p>
 <h3>2.2 Problem Statement</h3>
 <p><strong>Super Admin</strong> mengalami <strong>keterbatasan dalam menyesuaikan struktur peran &amp; hak akses platform sesuai kebutuhan organisasi yang terus berkembang</strong> saat <strong>role dan permission-nya hardcoded/tetap</strong>, yang menyebabkan <strong>platform tidak bisa mengakomodasi peran baru (misal: Admin Keuangan Wilayah) tanpa perubahan kode oleh tim developer</strong>.</p>
 <h3>2.3 Kondisi Saat Ini (As-Is)</h3>
 <p>Daftar role (Super Admin, Admin Wilayah, Staff Keuangan Pusat, Viewer) dan hak aksesnya didefinisikan secara tetap di kode aplikasi; penambahan atau penghapusan role, maupun penyesuaian hak akses modulnya, memerlukan perubahan kode dan rilis ulang oleh tim developer.</p>
 <h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
-<p>Super Admin dapat menambah role baru, mengubah nama/ikon/deskripsi, mencentang/mencentang-ulang modul yang boleh diakses tiap role, dan menghapus role yang sudah tidak terpakai -- semua lewat UI, tanpa menyentuh kode maupun menunggu rilis baru.</p>
+<p>Super Admin dapat menambah role baru, mengubah nama/deskripsi, mencentang/mencentang-ulang modul yang boleh diakses tiap role, dan menghapus role yang sudah tidak terpakai -- semua lewat UI, tanpa menyentuh kode maupun menunggu rilis baru.</p>
 <h3>2.5 Kenapa Sekarang?</h3>
 <p>Semakin banyak modul yang ditambahkan ke platform (Dashboard, Pendaftaran, Manajemen Sekolah, Konfigurasi Sistem, Pengguna, Role &amp; Hak Akses), kebutuhan kombinasi hak akses antar role juga makin beragam antar wilayah/klien, sehingga pengelolaan role harus fleksibel dan mandiri (self-service).</p>
 <hr />
@@ -386,11 +392,11 @@
 <td>Hak akses granular per-aksi (create/read/update/delete)</td>
 </tr>
 <tr>
-<td>Tambah role baru (ikon, nama, deskripsi, hak akses awal)</td>
+<td>Tambah role baru (nama, deskripsi, hak akses awal)</td>
 <td>Role hierarki/pewarisan izin</td>
 </tr>
 <tr>
-<td>Edit nama/ikon/deskripsi/hak akses role existing (kecuali Super Admin dikunci)</td>
+<td>Edit nama/deskripsi/hak akses role existing (kecuali Super Admin dikunci)</td>
 <td>Pembatasan akses berbasis cakupan wilayah otomatis dari modul ini</td>
 </tr>
 <tr>
@@ -429,7 +435,7 @@
 </tr>
 <tr>
 <td>US-02</td>
-<td>Sebagai Super Admin, saya ingin menambahkan role baru dengan nama, ikon, deskripsi, dan hak akses modul tertentu, supaya saya bisa mengakomodasi struktur organisasi baru tanpa menunggu developer.</td>
+<td>Sebagai Super Admin, saya ingin menambahkan role baru dengan nama, deskripsi, dan hak akses modul tertentu, supaya saya bisa mengakomodasi struktur organisasi baru tanpa menunggu developer.</td>
 <td>Must</td>
 <td>Given saya menekan "+ Tambah Role", When saya mengisi nama role, mencentang modul yang diizinkan, dan menekan "Simpan Role &amp; Hak Akses", Then role baru tersimpan dan langsung tersedia sebagai pilihan role di menu Pengguna</td>
 </tr>
@@ -470,7 +476,7 @@
 <tr>
 <td>FR-01</td>
 <td>Matriks Role x Modul</td>
-<td>Sistem harus menampilkan tabel dengan setiap role sebagai baris (kolom Icon, Nama Role, Deskripsi, lalu satu kolom checkbox per modul platform) dan kolom Aksi di ujung kanan</td>
+<td>Sistem harus menampilkan tabel dengan setiap role sebagai baris (kolom Nama Role, Deskripsi, lalu satu kolom checkbox per modul platform) dan kolom Aksi di ujung kanan</td>
 <td>US-01</td>
 <td>Must</td>
 <td>Daftar modul: Dashboard Konsolidasi, Pendaftaran Sekolah, Manajemen Sekolah, Konfigurasi Sistem, Pengguna, Role &amp; Hak Akses</td>
@@ -478,7 +484,7 @@
 <tr>
 <td>FR-02</td>
 <td>Role Super Admin Terkunci</td>
-<td>Sistem harus mengunci baris Super Admin: field ikon &amp; nama tidak bisa diubah, seluruh checkbox tercentang &amp; disabled, dan tombol hapus tidak ditampilkan</td>
+<td>Sistem harus mengunci baris Super Admin: field nama tidak bisa diubah, seluruh checkbox tercentang &amp; disabled, dan tombol hapus tidak ditampilkan</td>
 <td>US-01</td>
 <td>Must</td>
 <td>Mencegah kondisi di mana tidak ada satu pun role yang bisa mengelola modul Role &amp; Hak Akses</td>
@@ -486,7 +492,7 @@
 <tr>
 <td>FR-03</td>
 <td>Tambah Role</td>
-<td>Sistem harus menyediakan tombol "+ Tambah Role" yang menambah baris baru dengan field kosong (ikon, nama, deskripsi) dan seluruh checkbox modul dalam keadaan tidak tercentang</td>
+<td>Sistem harus menyediakan tombol "+ Tambah Role" yang menambah baris baru dengan field kosong (nama, deskripsi) dan seluruh checkbox modul dalam keadaan tidak tercentang</td>
 <td>US-02</td>
 <td>Must</td>
 <td>Baris baru belum tersimpan permanen sampai tombol "Simpan Role &amp; Hak Akses" ditekan</td>
@@ -494,7 +500,7 @@
 <tr>
 <td>FR-04</td>
 <td>Edit Role</td>
-<td>Sistem harus mengizinkan Super Admin mengubah ikon, nama, deskripsi, dan checkbox hak akses modul untuk role selain Super Admin</td>
+<td>Sistem harus mengizinkan Super Admin mengubah nama, deskripsi, dan checkbox hak akses modul untuk role selain Super Admin</td>
 <td>US-03</td>
 <td>Must</td>
 <td>Perubahan baru berlaku setelah disimpan</td>
@@ -640,7 +646,7 @@
 <h2>8. Alur Pengguna &amp; Desain</h2>
 <ul>
 <li>Alur utama: Login (sebagai Super Admin) → Menu "Role &amp; Hak Akses" → lihat matriks → (tambah baris role baru / ubah checkbox / hapus baris) → "Simpan Role &amp; Hak Akses" → toast konfirmasi atau penolakan.</li>
-<li>Wireframe: mengikuti struktur <code>rbac.html</code> (tabel matriks dengan kolom Icon/Nama Role/Deskripsi/[modul...]/Aksi, tombol tambah di bawah tabel).</li>
+<li>Wireframe: mengikuti struktur <code>rbac.html</code> (tabel matriks dengan kolom Nama Role/Deskripsi/[modul...]/Aksi, tombol tambah di bawah tabel).</li>
 <li>Edge case yang wajib ditangani: mencoba menghapus role yang sedang dipakai pengguna yang sedang login, menyimpan dengan nama role kosong (baris diabaikan), mencoba mencentang izin pada baris Super Admin (diabaikan karena disabled).</li>
 </ul>
 <hr />
@@ -675,7 +681,7 @@
 <hr />
 <h2>10. Kebutuhan Data</h2>
 <ul>
-<li>Entitas utama: Role (id, ikon, nama, deskripsi, perms per modul), Modul/Permission Key (daftar modul platform yang bisa diberi izin).</li>
+<li>Entitas utama: Role (id, nama, deskripsi, perms per modul, serta ikon yang tersimpan di data namun tidak lagi ditampilkan/diedit lewat UI matriks ini -- hanya dipakai sebagai atribut tampilan di menu Pengguna), Modul/Permission Key (daftar modul platform yang bisa diberi izin).</li>
 <li>Retensi data: role yang dihapus idealnya tercatat di audit log historis, meski entitasnya sendiri dihapus dari daftar aktif.</li>
 <li>Laporan yang dibutuhkan: daftar role beserta jumlah pengguna yang memakainya, daftar modul dan role mana saja yang punya akses.</li>
 </ul>

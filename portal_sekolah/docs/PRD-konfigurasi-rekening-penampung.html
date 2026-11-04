@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Konfigurasi Rekening Penampung -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864;
+        --navy-dark: #14243f;
+        --navy-soft: #2c4a7c;
+        --accent: #2e7d32;
+        --accent-light: #e8f5e9;
+        --red: #b71c1c;
+        --red-light: #fdecea;
+        --muted: #5b6674;
+        --border: #e3e7ee;
+        --bg: #f5f6f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: var(--bg);
+        color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark);
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .doc-topbar a {
+        color: #cfe0ff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .doc-topbar a:hover {
+        text-decoration: underline;
+      }
+      .doc-topbar .brand {
+        font-size: 13.5px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .doc-wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+      .doc-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 36px 40px;
+        box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 800;
+        margin: 0 0 18px;
+        border-bottom: 3px solid var(--navy);
+        padding-bottom: 12px;
+      }
+      h2 {
+        color: var(--navy);
+        font-size: 19px;
+        font-weight: 800;
+        margin: 36px 0 12px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+        padding-top: 18px;
+        scroll-margin-top: 72px;
+      }
+      h2 a.sec-link {
+        color: inherit;
+        text-decoration: none;
+      }
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      h3 {
+        color: var(--navy-soft);
+        font-size: 15.5px;
+        font-weight: 700;
+        margin: 22px 0 10px;
+        scroll-margin-top: 72px;
+      }
+      p {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 12px;
+      }
+      ul,
+      ol {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 14px;
+        padding-left: 22px;
+      }
+      li {
+        margin-bottom: 4px;
+      }
+      strong {
+        color: var(--navy);
+        font-weight: 700;
+      }
+      code {
+        background: #eef1f6;
+        color: #b71c1c;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12.5px;
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 28px 0;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        margin: 10px 0 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12.8px;
+        min-width: 560px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--navy);
+        color: #fff;
+        font-weight: 700;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfd;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .badge.prd {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      a.xref {
+        color: var(--navy-soft);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-color: var(--border);
+      }
+      a.xref:hover {
+        color: var(--navy);
+        text-decoration-color: var(--navy-soft);
+      }
+      input[type="checkbox"] {
+        transform: translateY(1px);
+      }
+      .doc-meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .fab-prd {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 13px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        z-index: 999;
+      }
+      .fab-prd:hover {
+        background: var(--navy-soft);
+      }
+      @media print {
+        .doc-topbar,
+        .fab-prd {
+          display: none;
+        }
+        .doc-card {
+          box-shadow: none;
+          border: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>
+          PRD: Konfigurasi Rekening Penampung
+          <span class="badge prd">Portal Sekolah</span>
+        </h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Atribut</th>
+                <th>Isi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nama produk / fitur</td>
+                <td>
+                  Konfigurasi Rekening Penampung -- tab "Rekening Penampung"
+                  pada menu Konfigurasi
+                </td>
+              </tr>
+              <tr>
+                <td>Aplikasi</td>
+                <td>
+                  Portal Sekolah -- Platform Invoicing &amp; Payment SPP
+                  (GeekGarden)
+                </td>
+              </tr>
+              <tr>
+                <td>Lingkup pengguna</td>
+                <td>
+                  Satu sekolah (SD Muhammadiyah 4 Sidoarjo), tidak memengaruhi
+                  sekolah lain
+                </td>
+              </tr>
+              <tr>
+                <td>Versi dokumen</td>
+                <td>v1.1</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>Draft</td>
+              </tr>
+              <tr>
+                <td>Penulis</td>
+                <td>Tim Produk GeekGarden</td>
+              </tr>
+              <tr>
+                <td>Tanggal dibuat</td>
+                <td>02-11-2026</td>
+              </tr>
+              <tr>
+                <td>Dokumen sumber kode</td>
+                <td>
+                  <code>konfigurasi.html</code> (tab <code>rekening</code>),
+                  <code>app.js</code> (fungsi <code>renderRekeningTable</code>,
+                  <code>openRekeningPanel</code>, <code>saveRekening</code>,
+                  <code>toggleRekeningStatus</code>,
+                  <code>setRekeningUtama</code>, <code>removeRekening</code>,
+                  <code>handleRekBankChange</code>)
+                </td>
+              </tr>
+              <tr>
+                <td>Dokumen terkait</td>
+                <td>
+                  PRD Konfigurasi Sistem (Admin Pusat) -- rekening penampung
+                  pusat &amp; VA, berbeda lingkup dengan dokumen ini
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Versi</th>
+                <th>Tanggal</th>
+                <th>Penulis</th>
+                <th>Perubahan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v1.0</td>
+                <td>02-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>Draft awal.</td>
+              </tr>
+              <tr>
+                <td>v1.1</td>
+                <td>02-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Menambahkan field teks "Nama Bank Lainnya" yang muncul saat
+                  dropdown Nama Bank diisi "Lainnya"; nilai teks ini yang
+                  disimpan sebagai Nama Bank rekening (lihat FR-03, FR-14,
+                  BR-01a).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>
+          Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk
+          fitur <strong>Konfigurasi Rekening Penampung</strong> di level sekolah
+          pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA
+          pada tahap implementasi dan pengujian.
+        </p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>
+          Fitur ini memungkinkan pengguna sekolah (Bendahara/Admin
+          Sekolah/Kepala Sekolah sesuai hak akses) mencatat satu atau lebih
+          rekening bank milik sekolah sebagai
+          <strong>data referensi tujuan pencairan dana (disbursement)</strong>.
+          Data ini bersifat <strong>informasi saja</strong>. Proses pencairan
+          dana yang sesungguhnya dilakukan
+          <strong>secara manual oleh admin Muhammadiyah Pusat</strong>, di luar
+          sistem ini. Fitur ini <strong>tidak</strong> mengatur kanal Virtual
+          Account (VA) pembayaran yang dilihat wali murid saat membayar tagihan
+          (itu adalah tanggung jawab modul Konfigurasi Sistem di Admin Pusat)
+          dan <strong>tidak</strong> mengatur jadwal otomatis pencairan dana.
+        </p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Rekening Penampung</td>
+                <td>
+                  Rekening bank milik sekolah yang dicatat sebagai tujuan
+                  pencairan dana SPP
+                </td>
+              </tr>
+              <tr>
+                <td>Disbursement</td>
+                <td>
+                  Proses pencairan dana dari penampungan pusat ke rekening
+                  sekolah. Dilakukan manual oleh admin Muhammadiyah
+                </td>
+              </tr>
+              <tr>
+                <td>Rekening Utama</td>
+                <td>
+                  Satu rekening yang ditandai sebagai tujuan pencairan aktif
+                  saat ini di antara seluruh rekening sekolah
+                </td>
+              </tr>
+              <tr>
+                <td>Status Aktif/Nonaktif</td>
+                <td>
+                  Status penggunaan rekening; tidak eksklusif. Boleh lebih dari
+                  satu rekening berstatus Aktif
+                </td>
+              </tr>
+              <tr></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p>
+          <a class="xref" href="#sec-3">Bagian 3</a> menjelaskan deskripsi umum,
+          <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional rinci
+          per aksi, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis
+          &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data,
+          <a class="xref" href="#sec-7">bagian 7</a> kebutuhan antarmuka,
+          <a class="xref" href="#sec-8">bagian 8</a> kebutuhan non-fungsional,
+          <a class="xref" href="#sec-9">bagian 9</a> batasan &amp; asumsi, dan
+          <a class="xref" href="#sec-10">bagian 10</a>
+          pertanyaan terbuka.
+        </p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>
+          Tab ini adalah salah satu dari tiga tab pada menu "Konfigurasi" di
+          Portal Sekolah (bersama "Aturan Reminder" dan "Template Pesan").
+        </p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>
+            Menampilkan daftar rekening penampung milik sekolah dengan filter
+            &amp; pencarian.
+          </li>
+          <li>Menambah rekening penampung baru.</li>
+          <li>Mengubah data rekening penampung yang sudah ada.</li>
+          <li>
+            Mengaktifkan / menonaktifkan status rekening (boleh lebih dari satu
+            rekening Aktif).
+          </li>
+          <li>
+            Menandai satu rekening sebagai "Utama" (tujuan pencairan aktif).
+          </li>
+          <li>Menghapus rekening penampung.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Peran (RBAC)</th>
+                <th>Interaksi dengan fitur ini</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Admin Sekolah / Bendahara</td>
+                <td>
+                  Pengguna utama. Menambah, mengubah,
+                  mengaktifkan/menonaktifkan, menghapus, dan menetapkan rekening
+                  utama. Dapat disesuaikan di fitur RBAC.
+                </td>
+              </tr>
+              <tr>
+                <td>Kepala Sekolah</td>
+                <td>
+                  Dapat melihat daftar rekening sebagai referensi/pengawasan.
+                  Dapat disesuaikan di fitur RBAC.
+                </td>
+              </tr>
+              <tr>
+                <td>Admin Muhammadiyah (di luar Portal Sekolah)</td>
+                <td>
+                  Melakukan pencairan dana secara manual berdasarkan data
+                  rekening yang tercatat di sini.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>
+            Data rekening di tab ini
+            <strong>tidak otomatis memicu transfer dana apa pun</strong>
+            Murni pencatatan referensi.
+          </li>
+          <li>
+            Minimal harus selalu ada 1 rekening penampung tercatat (tidak boleh
+            dihapus sampai kosong). Error message
+            <strong
+              >"Tidak bisa menghapus rekening terakhir. Setiap sekolah harus
+              punya minimal 1 rekening penampung."</strong
+            >
+          </li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>
+            Diasumsikan admin Muhammadiyah memeriksa data rekening ini secara
+            manual (di luar sistem) sebelum melakukan pencairan dana.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Fungsi</th>
+                <th>Deskripsi</th>
+                <th>Prioritas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-01</td>
+                <td>Lihat Daftar Rekening Penampung</td>
+                <td>
+                  Sistem menampilkan tabel berisi Bank, No. Rekening, Nama
+                  Pemilik, Status Verifikasi (Aktif/Nonaktif), dan Aksi, dengan
+                  penanda <code>UTAMA</code> pada bank rekening yang berstatus
+                  utama
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-02</td>
+                <td>Cari &amp; Filter Rekening</td>
+                <td>
+                  Sistem menyediakan input pencarian (nama pemilik / nomor
+                  rekening), filter Bank, dan filter Status
+                  (Semua/Aktif/Nonaktif), yang langsung memperbarui tabel saat
+                  diubah
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-03</td>
+                <td>Tambah Rekening Penampung</td>
+                <td>
+                  Sistem menyediakan tombol "+ Tambah Rekening" yang membuka
+                  panel form berisi Nama Bank (dropdown), Nomor Rekening, Nama
+                  Pemilik Rekening, dan toggle "Jadikan rekening utama". Jika
+                  Nama Bank diisi "Lainnya", sistem menampilkan field teks
+                  tambahan "Nama Bank Lainnya" untuk menuliskan nama bank yang
+                  sebenarnya (lihat FR-14)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-04</td>
+                <td>Simpan Rekening Baru</td>
+                <td>
+                  Saat tombol "Simpan" ditekan pada mode tambah, sistem
+                  memvalidasi input (<a class="xref" href="#sec-5"
+                    >lihat bagian 5</a
+                  >), lalu menyimpan rekening baru dengan status awal
+                  <strong>Aktif</strong>
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-05</td>
+                <td>Ubah Rekening Penampung</td>
+                <td>
+                  Tombol edit (&#9998;) pada setiap baris membuka panel form
+                  yang sama dalam mode edit, terisi data rekening terkait (Bank,
+                  No. Rekening, Nama Pemilik, status Utama); status
+                  Aktif/Nonaktif tidak diubah lewat form ini
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-06</td>
+                <td>Aktifkan / Nonaktifkan Rekening</td>
+                <td>
+                  Setiap baris memiliki tombol toggle: "Nonaktifkan" jika status
+                  saat ini Aktif, atau "Aktifkan" jika status saat ini Nonaktif.
+                  Menekan tombol membalik status rekening tersebut saja, tanpa
+                  memengaruhi status rekening lain
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-07</td>
+                <td>Lebih dari Satu Rekening Aktif</td>
+                <td>
+                  Sistem <strong>tidak membatasi</strong> jumlah rekening
+                  berstatus Aktif -- beberapa rekening boleh Aktif secara
+                  bersamaan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-08</td>
+                <td>Tandai Rekening Utama</td>
+                <td>
+                  Tombol "Jadikan Utama" pada baris yang belum utama akan
+                  menjadikan rekening tersebut sebagai satu-satunya rekening
+                  berstatus utama (rekening utama sebelumnya otomatis tidak lagi
+                  utama)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-09</td>
+                <td>Cegah Nonaktifkan Rekening Utama</td>
+                <td>
+                  Jika pengguna menekan "Nonaktifkan" pada rekening yang sedang
+                  berstatus Utama, sistem menolak aksi dan menampilkan pesan
+                  agar pengguna memindahkan status utama ke rekening lain
+                  terlebih dahulu
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-10</td>
+                <td>Hapus Rekening Penampung</td>
+                <td>
+                  Tombol hapus (&#10005;) menghapus rekening dari daftar; jika
+                  rekening yang dihapus adalah rekening utama, sistem otomatis
+                  menjadikan rekening pertama yang tersisa sebagai utama
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-11</td>
+                <td>Minimal Satu Rekening</td>
+                <td>
+                  Sistem menolak penghapusan rekening terakhir (jumlah rekening
+                  tersisa = 0) dan menampilkan pesan "Minimal harus ada 1
+                  rekening penampung"
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-12</td>
+                <td>Cegah Duplikasi Rekening</td>
+                <td>
+                  Sistem menolak penyimpanan jika kombinasi Bank + Nomor
+                  Rekening sudah terdaftar pada rekening lain, dan menampilkan
+                  pesan kesalahan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-13</td>
+                <td>Konteks Informasi (Disclaimer)</td>
+                <td>
+                  Sistem menampilkan teks penjelasan tetap pada bagian atas tab:
+                  data rekening hanya bersifat informasi, pencairan dana tetap
+                  dilakukan manual oleh admin Muhammadiyah
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-14</td>
+                <td>Nama Bank Lainnya</td>
+                <td>
+                  Saat opsi "Lainnya" dipilih pada dropdown Nama Bank, sistem
+                  menampilkan field teks "Nama Bank Lainnya" yang wajib diisi
+                  (minimal 3 karakter); nilai yang diketik pada field ini
+                  disimpan dan ditampilkan sebagai Nama Bank rekening tersebut
+                  (bukan literal "Lainnya"). Saat mode edit dibuka untuk
+                  rekening dengan nama bank kustom, dropdown otomatis terpilih
+                  "Lainnya" dan field ini terisi ulang dengan nama bank yang
+                  tersimpan
+                </td>
+                <td>Must</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Menambah rekening penampung baru</strong></p>
+        <ol>
+          <li>Pengguna membuka tab "Rekening Penampung".</li>
+          <li>Pengguna menekan "+ Tambah Rekening".</li>
+          <li>
+            Sistem menampilkan panel form kosong dengan judul "Tambah Rekening
+            Penampung".
+          </li>
+          <li>
+            Pengguna mengisi Nama Bank (jika memilih "Lainnya", field teks "Nama
+            Bank Lainnya" muncul dan wajib diisi), Nomor Rekening, Nama Pemilik
+            Rekening, dan (opsional) mencentang "Jadikan rekening utama".
+          </li>
+          <li>Pengguna menekan "Simpan".</li>
+          <li>
+            Sistem memvalidasi input; jika valid, rekening baru ditambahkan
+            dengan status Aktif, panel ditutup, tabel diperbarui, dan toast
+            "&#10003; Rekening Penampung berhasil disimpan" ditampilkan.
+          </li>
+        </ol>
+
+        <p><strong>UC-02 -- Menonaktifkan rekening yang bukan utama</strong></p>
+        <ol>
+          <li>
+            Pengguna menekan tombol "Nonaktifkan" pada baris rekening yang bukan
+            utama.
+          </li>
+          <li>Sistem mengubah status rekening tersebut menjadi Nonaktif.</li>
+          <li>
+            Tabel diperbarui; tombol pada baris tersebut berganti menjadi
+            "Aktifkan"; toast konfirmasi ditampilkan.
+          </li>
+        </ol>
+
+        <p>
+          <strong
+            >UC-03 -- Mencoba menonaktifkan rekening utama (ditolak)</strong
+          >
+        </p>
+        <ol>
+          <li>
+            Pengguna menekan tombol "Nonaktifkan" pada baris rekening yang
+            berstatus Utama.
+          </li>
+          <li>
+            Sistem menolak aksi dan menampilkan toast: "Rekening utama tidak
+            bisa dinonaktifkan -- jadikan rekening lain sebagai utama terlebih
+            dahulu".
+          </li>
+          <li>Status rekening tidak berubah.</li>
+        </ol>
+
+        <p><strong>UC-04 -- Memindahkan rekening utama</strong></p>
+        <ol>
+          <li>
+            Pengguna menekan "Jadikan Utama" pada rekening lain (bukan utama
+            saat ini).
+          </li>
+          <li>
+            Sistem menjadikan rekening tersebut sebagai satu-satunya rekening
+            utama; rekening utama sebelumnya kehilangan penanda
+            <code>UTAMA</code> (status Aktif/Nonaktif-nya tidak berubah).
+          </li>
+          <li>Toast "&#10003; [Bank] dijadikan rekening utama" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-05 -- Menghapus rekening</strong></p>
+        <ol>
+          <li>Pengguna menekan tombol hapus (&#10005;) pada sebuah baris.</li>
+          <li>
+            Jika jumlah rekening saat ini lebih dari 1, sistem menghapus baris
+            tersebut; jika baris yang dihapus adalah rekening utama, sistem
+            otomatis menjadikan rekening urutan pertama sebagai utama.
+          </li>
+          <li>
+            Jika jumlah rekening saat ini hanya 1, sistem menolak penghapusan
+            dan menampilkan toast peringatan.
+          </li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Aturan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BR-01</td>
+                <td>
+                  Nama Bank wajib dipilih dari daftar tetap (BCA, Mandiri, BNI,
+                  BRI, BSI -- Bank Syariah Indonesia, Lainnya)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-01a</td>
+                <td>
+                  Jika Nama Bank dipilih "Lainnya", field teks "Nama Bank
+                  Lainnya" wajib diisi minimal 3 karakter; nilai inilah yang
+                  disimpan sebagai Nama Bank rekening (lihat
+                  <a class="xref" href="#sec-4">FR-14 pada bagian 4</a>)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-02</td>
+                <td>
+                  Nomor Rekening wajib berupa digit saja, panjang 6-20 karakter
+                </td>
+              </tr>
+              <tr>
+                <td>BR-03</td>
+                <td>Nama Pemilik Rekening wajib minimal 3 karakter</td>
+              </tr>
+              <tr>
+                <td>BR-04</td>
+                <td>
+                  Kombinasi Bank + Nomor Rekening harus unik di antara seluruh
+                  rekening sekolah ini
+                </td>
+              </tr>
+              <tr>
+                <td>BR-05</td>
+                <td>
+                  Hanya satu rekening yang boleh berstatus "Utama" pada satu
+                  waktu; menandai rekening lain sebagai utama otomatis melepas
+                  status utama dari rekening sebelumnya
+                </td>
+              </tr>
+              <tr>
+                <td>BR-06</td>
+                <td>
+                  Status Aktif/Nonaktif <strong>tidak eksklusif</strong> --
+                  boleh lebih dari satu rekening berstatus Aktif secara
+                  bersamaan
+                </td>
+              </tr>
+              <tr>
+                <td>BR-07</td>
+                <td>
+                  Rekening yang berstatus Utama tidak dapat dinonaktifkan secara
+                  langsung; harus memindahkan status utama ke rekening lain
+                  dahulu
+                </td>
+              </tr>
+              <tr>
+                <td>BR-08</td>
+                <td>
+                  Jumlah rekening penampung tidak boleh menjadi 0 -- penghapusan
+                  rekening terakhir ditolak
+                </td>
+              </tr>
+              <tr>
+                <td>BR-09</td>
+                <td>
+                  Rekening baru yang ditambahkan selalu berawal dengan status
+                  Aktif
+                </td>
+              </tr>
+              <tr>
+                <td>BR-10</td>
+                <td>
+                  Jika tidak ada rekening yang ditandai utama setelah suatu
+                  operasi (mis. rekening utama dihapus), sistem otomatis
+                  menjadikan rekening pertama dalam daftar sebagai utama
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">
+          5.1 Rekomendasi Validasi per Field (Form Tambah/Edit Rekening)
+        </h3>
+        <p>
+          Rincian aturan input untuk setiap field pada panel form
+          <code>#rekening-panel</code>, sebagai acuan implementasi validasi
+          front-end maupun back-end.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Elemen</th>
+                <th>Wajib?</th>
+                <th>Tipe Karakter</th>
+                <th>Panjang Min</th>
+                <th>Panjang Maks</th>
+                <th>Catatan Validasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nama Bank</td>
+                <td><code>#rek-bank</code></td>
+                <td><strong>Ya</strong></td>
+                <td>Enum (dropdown daftar tetap, bukan free text)</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  Harus salah satu dari: BCA, Mandiri, BNI, BRI, BSI -- Bank
+                  Syariah Indonesia, Lainnya (lihat BR-01)
+                </td>
+              </tr>
+              <tr>
+                <td>Nama Bank Lainnya</td>
+                <td><code>#rek-bank-lainnya</code></td>
+                <td>
+                  <strong>Ya, kondisional</strong> -- hanya saat Nama Bank =
+                  "Lainnya"
+                </td>
+                <td>
+                  Alphanumerik (huruf, angka, spasi, dan tanda baca umum
+                  <code>. - &amp;</code>)
+                </td>
+                <td>3</td>
+                <td>50</td>
+                <td>
+                  Nilai inilah yang disimpan sebagai Nama Bank rekening (lihat
+                  BR-01a); tidak boleh hanya berisi spasi
+                </td>
+              </tr>
+              <tr>
+                <td>Nomor Rekening</td>
+                <td><code>#rek-norek</code></td>
+                <td><strong>Ya</strong></td>
+                <td>Numerik (digit 0-9 saja, tanpa spasi/simbol)</td>
+                <td>6</td>
+                <td>20</td>
+                <td>
+                  Regex <code>^\d{6,20}$</code>; kombinasi dengan Nama Bank
+                  harus unik (lihat BR-02, BR-04)
+                </td>
+              </tr>
+              <tr>
+                <td>Nama Pemilik Rekening</td>
+                <td><code>#rek-nama</code></td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  Alphanumerik (huruf, angka, spasi, dan tanda baca umum
+                  <code>. - &amp;</code> untuk nama badan/yayasan)
+                </td>
+                <td>3</td>
+                <td>100</td>
+                <td>
+                  Tidak boleh hanya berisi spasi atau karakter simbol saja
+                  (lihat BR-03)
+                </td>
+              </tr>
+              <tr>
+                <td>Jadikan Rekening Utama</td>
+                <td><code>#rek-utama</code></td>
+                <td>Tidak (opsional)</td>
+                <td>Boolean (toggle aktif/nonaktif)</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  Default tidak tercentang; jika dicentang, melepas status utama
+                  dari rekening lain (lihat BR-05)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p>
+          <strong>Entitas: <code>RekeningPenampung</code></strong>
+        </p>
+        <p>
+          Tipe data, kewajiban pengisian, tipe karakter, serta panjang min/maks
+          pada tabel di bawah ini disamakan dengan
+          <a class="xref" href="#sec-5-1"
+            >bagian 5.1 Rekomendasi Validasi per Field</a
+          >, supaya aturan input di form dan skema data entitas selalu
+          konsisten.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Tipe Data</th>
+                <th>Wajib Diisi Pengguna?</th>
+                <th>Tipe Karakter</th>
+                <th>Panjang Min</th>
+                <th>Panjang Maks</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>integer</td>
+                <td>Tidak (dibuat sistem)</td>
+                <td>Numerik (auto-increment)</td>
+                <td>--</td>
+                <td>--</td>
+                <td>Pengenal unik, auto-increment per sekolah</td>
+              </tr>
+              <tr>
+                <td><code>bank</code></td>
+                <td>string</td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  Enum (dropdown daftar tetap), atau Alphanumerik saat diisi
+                  lewat field "Nama Bank Lainnya"
+                </td>
+                <td>3 <em>(jika "Lainnya")</em></td>
+                <td>50 <em>(jika "Lainnya", rekomendasi)</em></td>
+                <td>
+                  Salah satu dari daftar tetap bank, atau nama bank kustom hasil
+                  input "Nama Bank Lainnya" (lihat BR-01, BR-01a,
+                  <a class="xref" href="#sec-5-1">5.1</a>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>noRekening</code></td>
+                <td>string</td>
+                <td><strong>Ya</strong></td>
+                <td>Numerik (digit 0-9 saja, tanpa spasi/simbol)</td>
+                <td>6</td>
+                <td>20</td>
+                <td>
+                  Regex <code>^\d{6,20}$</code>; unik per kombinasi dengan
+                  <code>bank</code> (lihat BR-02, BR-04,
+                  <a class="xref" href="#sec-5-1">5.1</a>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>namaPemilik</code></td>
+                <td>string</td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  Alphanumerik (huruf, angka, spasi, dan tanda baca umum
+                  <code>. - &amp;</code> untuk nama badan/yayasan)
+                </td>
+                <td>3</td>
+                <td>100 <em>(rekomendasi)</em></td>
+                <td>
+                  Tidak boleh hanya berisi spasi atau karakter simbol saja
+                  (lihat BR-03, <a class="xref" href="#sec-5-1">5.1</a>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>statusVerifikasi</code></td>
+                <td>enum</td>
+                <td>Tidak (diatur sistem)</td>
+                <td>Enum</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  <code>aktif</code> | <code>nonaktif</code> -- default
+                  <code>aktif</code> saat dibuat; tidak eksklusif
+                </td>
+              </tr>
+              <tr>
+                <td><code>utama</code></td>
+                <td>boolean</td>
+                <td>
+                  Tidak langsung -- hasil toggle opsional "Jadikan Rekening
+                  Utama" pada form
+                </td>
+                <td>Boolean</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  Hanya satu rekening per sekolah yang bernilai
+                  <code>true</code> (lihat BR-05,
+                  <a class="xref" href="#sec-5-1">5.1</a>)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <em
+            >Catatan: field <code>jadwalDisbursement</code> dan
+            <code>vaAktif</code> yang pernah ada pada iterasi sebelumnya
+            <strong>sudah dihapus</strong> dari entitas ini -- jadwal pencairan
+            dan kanal VA tidak lagi menjadi tanggung jawab tab ini.</em
+          >
+        </p>
+        <hr />
+
+        <h2 id="sec-8">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Requirement</th>
+                <th>Target terukur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NFR-01</td>
+                <td>Validasi</td>
+                <td>
+                  Seluruh input form divalidasi sebelum data tersimpan (<a
+                    class="xref"
+                    href="#sec-5"
+                    >lihat bagian 5</a
+                  >)
+                </td>
+                <td>100% percobaan simpan tidak valid ditolak</td>
+              </tr>
+              <tr>
+                <td>NFR-02</td>
+                <td>Usability</td>
+                <td>
+                  Perubahan status (toggle Aktif/Nonaktif, Jadikan Utama, Hapus)
+                  langsung tercermin di tabel tanpa reload halaman
+                </td>
+                <td>Update tabel &lt; 100ms setelah aksi</td>
+              </tr>
+              <tr>
+                <td>NFR-03</td>
+                <td>Feedback</td>
+                <td>
+                  Setiap aksi simpan/ubah status/hapus menampilkan toast
+                  konfirmasi atau pesan kesalahan yang jelas
+                </td>
+                <td>100% aksi memberi feedback visual</td>
+              </tr>
+              <tr>
+                <td>NFR-04</td>
+                <td>Konsistensi data</td>
+                <td>
+                  Status "Utama" harus selalu unik (maksimal satu
+                  <code>true</code>) dan selalu ada (minimal satu rekening)
+                  setelah setiap operasi
+                </td>
+                <td>100% invariant terjaga setelah setiap aksi</td>
+              </tr>
+              <tr>
+                <td>NFR-05</td>
+                <td>Auditability</td>
+                <td>
+                  Perubahan status Aktif/Nonaktif dan rekening utama idealnya
+                  tercatat pelaku &amp; waktu (<a class="xref" href="#sec-10"
+                    >lihat Pertanyaan Terbuka No. 1</a
+                  >)
+                </td>
+                <td>-- (belum diimplementasikan di prototipe)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-9">9. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Untuk hapus menggunakan soft delete.</li>
+          <li>
+            Tab ini tidak melakukan validasi atau pengecekan apa pun terhadap
+            proses pencairan dana aktual; proses tersebut murni manual dan
+            berada di luar sistem Portal Sekolah.
+          </li>
+          <li>
+            Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI
+            untuk perubahan rekening, status, atau kepemilikan utama.
+          </li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>
+            Admin Muhammadiyah memverifikasi kebenaran data rekening secara
+            manual (di luar sistem) sebelum melakukan pencairan dana ke rekening
+            tersebut.
+          </li>
+          <li>
+            Status "Aktif" pada rekening tidak berarti rekening tersebut sedang
+            menerima pencairan -- hanya menandai rekening tersebut masih
+            berlaku/dipakai sekolah; penentuan tujuan pencairan yang
+            sesungguhnya mengacu pada rekening berstatus "Utama".
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-10">10. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Pertanyaan</th>
+                <th>Ditujukan ke</th>
+                <th>Jawaban</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>
+                  Apakah perlu audit log (pelaku &amp; waktu) untuk setiap
+                  perubahan status Aktif/Nonaktif dan penetapan rekening Utama?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>
+                  Apakah admin Muhammadiyah memerlukan tampilan tersendiri untuk
+                  melihat seluruh rekening penampung antar sekolah sebagai
+                  referensi pencairan dana, atau cukup lewat sistem di luar
+                  Portal Sekolah?
+                </td>
+                <td>Solution Architect</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>
+                  Apakah data rekening di tab ini perlu persetujuan (approval)
+                  dari admin Muhammadiyah sebelum berlaku, atau cukup tercatat
+                  langsung oleh sekolah?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-11">11. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Disbursement</td>
+                <td>
+                  Pencairan dana dari penampungan pusat ke rekening sekolah,
+                  dilakukan manual oleh admin Muhammadiyah
+                </td>
+              </tr>
+              <tr>
+                <td>Utama</td>
+                <td>
+                  Status pada satu rekening yang menandainya sebagai tujuan
+                  pencairan dana aktif saat ini
+                </td>
+              </tr>
+              <tr>
+                <td>Aktif/Nonaktif</td>
+                <td>
+                  Status pemakaian rekening; tidak eksklusif, bisa lebih dari
+                  satu rekening Aktif
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen"
+      >📄 Dokumen</a
+    >
+  </body>
+</html>

@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Konfigurasi Template Pesan -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864;
+        --navy-dark: #14243f;
+        --navy-soft: #2c4a7c;
+        --accent: #2e7d32;
+        --accent-light: #e8f5e9;
+        --red: #b71c1c;
+        --red-light: #fdecea;
+        --muted: #5b6674;
+        --border: #e3e7ee;
+        --bg: #f5f6f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: var(--bg);
+        color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark);
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .doc-topbar a {
+        color: #cfe0ff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .doc-topbar a:hover {
+        text-decoration: underline;
+      }
+      .doc-topbar .brand {
+        font-size: 13.5px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .doc-wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+      .doc-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 36px 40px;
+        box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 800;
+        margin: 0 0 18px;
+        border-bottom: 3px solid var(--navy);
+        padding-bottom: 12px;
+      }
+      h2 {
+        color: var(--navy);
+        font-size: 19px;
+        font-weight: 800;
+        margin: 36px 0 12px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+        padding-top: 18px;
+        scroll-margin-top: 72px;
+      }
+      h2 a.sec-link {
+        color: inherit;
+        text-decoration: none;
+      }
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      h3 {
+        color: var(--navy-soft);
+        font-size: 15.5px;
+        font-weight: 700;
+        margin: 22px 0 10px;
+        scroll-margin-top: 72px;
+      }
+      p {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 12px;
+      }
+      ul,
+      ol {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 14px;
+        padding-left: 22px;
+      }
+      li {
+        margin-bottom: 4px;
+      }
+      strong {
+        color: var(--navy);
+        font-weight: 700;
+      }
+      code {
+        background: #eef1f6;
+        color: #b71c1c;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12.5px;
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 28px 0;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        margin: 10px 0 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12.8px;
+        min-width: 560px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--navy);
+        color: #fff;
+        font-weight: 700;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfd;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .badge.prd {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      .badge.warn {
+        background: #fff3e0;
+        color: #b26a00;
+      }
+      a.xref {
+        color: var(--navy-soft);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-color: var(--border);
+      }
+      a.xref:hover {
+        color: var(--navy);
+        text-decoration-color: var(--navy-soft);
+      }
+      input[type="checkbox"] {
+        transform: translateY(1px);
+      }
+      .doc-meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .note-flag {
+        background: var(--red-light);
+        border: 1px solid #f3c6c2;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 12px 0 20px;
+        font-size: 13px;
+        color: #7a1414;
+      }
+      .note-flag strong {
+        color: var(--red);
+      }
+      .fab-prd {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 13px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        z-index: 999;
+      }
+      .fab-prd:hover {
+        background: var(--navy-soft);
+      }
+      @media print {
+        .doc-topbar,
+        .fab-prd {
+          display: none;
+        }
+        .doc-card {
+          box-shadow: none;
+          border: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>
+          PRD: Konfigurasi Template Pesan
+          <span class="badge prd">Portal Sekolah</span>
+        </h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Atribut</th>
+                <th>Isi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nama produk / fitur</td>
+                <td>
+                  Konfigurasi Template Pesan -- tab "Template Pesan" pada menu
+                  Konfigurasi
+                </td>
+              </tr>
+              <tr>
+                <td>Aplikasi</td>
+                <td>
+                  Portal Sekolah -- Platform Invoicing &amp; Payment SPP
+                  (GeekGarden)
+                </td>
+              </tr>
+              <tr>
+                <td>Lingkup pengguna</td>
+                <td>
+                  Satu sekolah (SD Muhammadiyah 4 Sidoarjo), tidak memengaruhi
+                  sekolah lain
+                </td>
+              </tr>
+              <tr>
+                <td>Versi dokumen</td>
+                <td>v1.0</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>Draft</td>
+              </tr>
+              <tr>
+                <td>Penulis</td>
+                <td>Tim Produk GeekGarden</td>
+              </tr>
+              <tr>
+                <td>Tanggal dibuat</td>
+                <td>02-11-2026</td>
+              </tr>
+              <tr>
+                <td>Dokumen sumber kode</td>
+                <td>
+                  <code>konfigurasi.html</code> (tab <code>template</code>),
+                  <code>app.js</code> (fungsi <code>switchChannel</code>,
+                  <code>saveTemplatePesan</code>) -- catatan: fungsi
+                  <code>renderTemplatePesan</code> dan konstanta
+                  <code>templatePesanData</code> pada <code>app.js</code>
+                  tidak terhubung ke markup tab ini (lihat
+                  <a class="xref" href="#sec-9">Batasan, bagian 9</a>)
+                </td>
+              </tr>
+              <tr>
+                <td>Dokumen terkait</td>
+                <td>
+                  PRD Konfigurasi Aturan Reminder &amp; Eskalasi -- kombinasi
+                  Level Penanganan &amp; Channel yang sama dipakai di sini;
+                  PRD Konfigurasi Sistem (Admin Pusat) -- Template Default
+                  Platform sebagai sumber salinan awal tiap sekolah
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Versi</th>
+                <th>Tanggal</th>
+                <th>Penulis</th>
+                <th>Perubahan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v1.0</td>
+                <td>02-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Draft awal berdasarkan implementasi prototipe terkini: 4
+                  channel (WhatsApp, Email, Push Notif, Notif Aplikasi) &times;
+                  3 Level Penanganan, masing-masing diedit lewat satu textarea
+                  bebas dengan placeholder <code>{nama_siswa}</code>,
+                  <code>{nominal}</code>, <code>{tanggal_jatuh_tempo}</code>,
+                  <code>{hari_terlambat}</code>, <code>{link_bayar}</code>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>
+          Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk
+          fitur <strong>Konfigurasi Template Pesan</strong> di level sekolah
+          pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan
+          QA pada tahap implementasi dan pengujian.
+        </p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>
+          Fitur ini memungkinkan pengguna sekolah (Bendahara/Admin Sekolah
+          sesuai hak akses) menyesuaikan redaksi pesan notifikasi tagihan SPP
+          yang dikirim ke wali murid, untuk setiap kombinasi
+          <strong>channel</strong> (WhatsApp, Email, Push Notif, Notif
+          Aplikasi) dan <strong>Level Penanganan</strong> (1 -- Pengingat, 2 --
+          Peringatan, 3 -- Eskalasi) -- total <strong>12 template</strong> per
+          sekolah. Perubahan hanya berlaku untuk sekolah ini
+          (<strong>override</strong>), tidak memengaruhi Template Default
+          Platform maupun sekolah lain. Fitur ini <strong>tidak</strong>
+          mengatur kapan (offset hari) atau lewat channel apa suatu notifikasi
+          dipicu -- itu tanggung jawab tab "Aturan Reminder" -- dan
+          <strong>tidak</strong> mengatur nomor WA pengirim atau penerima
+          tembusan (CC) -- itu tanggung jawab tab "Notifikasi".
+        </p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Template Pesan</td>
+                <td>
+                  Teks baku notifikasi yang dikirim ke wali murid, berisi
+                  placeholder yang disubstitusi otomatis saat pengiriman
+                </td>
+              </tr>
+              <tr>
+                <td>Placeholder / Variabel</td>
+                <td>
+                  Teks berformat <code>{nama_variabel}</code> dalam template
+                  yang digantikan sistem dengan data nyata saat pesan benar-
+                  benar dikirim ke wali murid
+                </td>
+              </tr>
+              <tr>
+                <td>Level Penanganan</td>
+                <td>
+                  Tingkat eskalasi notifikasi -- 1 (Pengingat), 2
+                  (Peringatan), 3 (Eskalasi) -- sama dengan Level pada tab
+                  Aturan Reminder
+                </td>
+              </tr>
+              <tr>
+                <td>Channel</td>
+                <td>Kanal pengiriman -- WhatsApp, Email, Push Notif, Notif Aplikasi</td>
+              </tr>
+              <tr>
+                <td>Override Sekolah Ini</td>
+                <td>
+                  Penyesuaian khusus satu sekolah yang tidak memengaruhi
+                  Template Default Platform atau sekolah lain
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p>
+          <a class="xref" href="#sec-3">Bagian 3</a> menjelaskan deskripsi
+          umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan
+          fungsional rinci per aksi, <a class="xref" href="#sec-5">bagian 5</a>
+          aturan bisnis &amp; validasi, <a class="xref" href="#sec-6"
+            >bagian 6</a
+          >
+          model data &amp; variabel placeholder,
+          <a class="xref" href="#sec-7">bagian 7</a> kebutuhan antarmuka,
+          <a class="xref" href="#sec-8">bagian 8</a> kebutuhan non-fungsional,
+          <a class="xref" href="#sec-9">bagian 9</a> batasan &amp; asumsi, dan
+          <a class="xref" href="#sec-10">bagian 10</a> pertanyaan terbuka.
+        </p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>
+          Tab ini adalah salah satu dari tiga tab pada menu "Konfigurasi" di
+          Portal Sekolah (bersama "Rekening Penampung" dan "Aturan
+          Reminder"), diakses lewat <code>konfigurasi.html?tab=template</code
+          >.
+        </p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>
+            Menampilkan 12 template pesan (4 channel &times; 3 Level
+            Penanganan), dikelompokkan per channel lewat tab channel.
+          </li>
+          <li>Berpindah antar channel tanpa reload halaman.</li>
+          <li>
+            Mengubah isi (redaksi) template per kombinasi channel &amp; level.
+          </li>
+          <li>
+            Menyimpan seluruh 12 template sekaligus lewat satu tombol "Simpan
+            Template".
+          </li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Peran (RBAC <code>data-rbac="konfigurasi"</code>)</th>
+                <th>Interaksi dengan fitur ini</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bendahara</td>
+                <td>
+                  Pengguna utama -- berhak membuka tab Konfigurasi
+                  (<code>rbacPerms.Bendahara.konfigurasi = true</code>),
+                  mengubah &amp; menyimpan template pesan
+                </td>
+              </tr>
+              <tr>
+                <td>Admin</td>
+                <td>
+                  Berhak membuka tab Konfigurasi
+                  (<code>rbacPerms.Admin.konfigurasi = true</code>), mengubah
+                  &amp; menyimpan template pesan
+                </td>
+              </tr>
+              <tr>
+                <td>Kepala Sekolah</td>
+                <td>
+                  Tidak memiliki akses ke menu Konfigurasi pada prototipe ini
+                  (<code>rbacPerms["Kepala Sekolah"].konfigurasi = false</code
+                  >), meski Level 3 -- Eskalasi menyebut "ditembuskan ke
+                  Kepala Sekolah" sebagai penerima notifikasi, bukan sebagai
+                  pengguna tab ini
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>
+            Perubahan template pada tab ini
+            <strong>hanya berlaku untuk sekolah ini</strong>, tidak
+            memengaruhi Template Default Platform maupun sekolah lain.
+          </li>
+          <li>
+            Tab ini tidak mengatur pemicu pengiriman (offset hari, channel
+            yang aktif per aturan) -- itu diatur di tab "Aturan Reminder" --
+            maupun nomor pengirim/penerima tembusan -- itu diatur di tab
+            "Notifikasi".
+          </li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>
+            Diasumsikan template di tab ini berawal sebagai salinan dari
+            Template Default Platform, serupa dengan konsep pada tab "Aturan
+            Reminder" (<a class="xref" href="#sec-9">lihat bagian 9</a>).
+          </li>
+          <li>
+            Diasumsikan proses substitusi placeholder (mengganti
+            <code>{nama_siswa}</code> dsb. dengan data nyata) dilakukan oleh
+            sistem pengiriman notifikasi saat pesan benar-benar dikirim, bukan
+            oleh tab konfigurasi ini.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Fungsi</th>
+                <th>Deskripsi</th>
+                <th>Prioritas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-01</td>
+                <td>Lihat Template per Channel &amp; Level</td>
+                <td>
+                  Saat tab "Template Pesan" dibuka, sistem menampilkan 4 tab
+                  channel (WhatsApp, Email, Push Notif, Notif Aplikasi) --
+                  WhatsApp aktif secara default -- dan menampilkan 3 kartu
+                  template (Level 1 -- Pengingat, Level 2 -- Peringatan, Level
+                  3 -- Eskalasi) untuk channel yang sedang aktif, masing-
+                  masing berisi textarea berisi teks template yang sudah
+                  tersimpan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-02</td>
+                <td>Ganti Channel Aktif</td>
+                <td>
+                  Menekan salah satu tab channel langsung menampilkan 3 kartu
+                  template channel tersebut dan menyembunyikan channel lain,
+                  tanpa reload halaman (<code>switchChannel()</code>)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-03</td>
+                <td>Edit Isi Template</td>
+                <td>
+                  Pengguna dapat mengetik ulang isi template pada textarea
+                  mana pun, di salah satu atau beberapa dari 12 kombinasi
+                  channel &times; level, sebelum menekan "Simpan Template"
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-04</td>
+                <td>Konteks Khusus Channel Push Notif &amp; Notif Aplikasi</td>
+                <td>
+                  Kartu Level 1 pada channel Push Notif menampilkan catatan
+                  "Push Notif tampil sebagai notifikasi singkat di perangkat
+                  wali murid (mis. lock screen) -- jaga teks tetap ringkas";
+                  kartu Level 1 pada channel Notif Aplikasi menampilkan
+                  catatan "Notif Aplikasi tampil di halaman Notifikasi pada
+                  App Wali Murid, tidak terikat batas panjang pesan seperti
+                  Push Notif"
+                </td>
+                <td>Should</td>
+              </tr>
+              <tr>
+                <td>FR-05</td>
+                <td>Simpan Seluruh Template Sekaligus</td>
+                <td>
+                  Tombol "Simpan Template" di bawah panel memvalidasi dan
+                  menyimpan ke-12 kombinasi channel &times; level sekaligus --
+                  bukan per channel yang sedang aktif saja
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-06</td>
+                <td>Validasi Template Tidak Boleh Kosong</td>
+                <td>
+                  Sistem menolak penyimpanan jika salah satu dari 12 template
+                  kosong setelah teks di-trim, dan menampilkan pesan kesalahan
+                  yang menyebut channel &amp; level yang bermasalah
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-07</td>
+                <td>Validasi Wajib <code>{nama_siswa}</code></td>
+                <td>
+                  Sistem menolak penyimpanan jika salah satu dari 12 template
+                  tidak mencantumkan placeholder <code>{nama_siswa}</code>
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-08</td>
+                <td>Validasi Wajib <code>{link_bayar}</code> di Level 1 &amp; 2</td>
+                <td>
+                  Sistem menolak penyimpanan jika template Level 1 atau Level
+                  2 (channel apa pun) tidak mencantumkan placeholder
+                  <code>{link_bayar}</code>, supaya wali murid bisa langsung
+                  menindaklanjuti pembayaran (lihat catatan pengecualian pada
+                  <a class="xref" href="#sec-10">Pertanyaan Terbuka No. 2</a>)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-09</td>
+                <td>Feedback Simpan</td>
+                <td>
+                  Sistem menampilkan toast "&#10003; Template pesan sekolah
+                  ini berhasil disimpan" saat seluruh validasi lolos, atau
+                  toast pesan kesalahan spesifik saat validasi gagal
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-10</td>
+                <td>Konteks Informasi (Disclaimer)</td>
+                <td>
+                  Sistem menampilkan teks penjelasan tetap pada bagian atas
+                  tab: "Template per channel &amp; level -- Level 1 &amp; 2
+                  wajib mencantumkan link bayar supaya wali murid bisa
+                  langsung menindaklanjuti", disertai tanda
+                  <code>OVERRIDE SEKOLAH INI</code>
+                </td>
+                <td>Must</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Mengubah &amp; menyimpan template (berhasil)</strong></p>
+        <ol>
+          <li>Pengguna membuka tab "Template Pesan".</li>
+          <li>
+            Channel "WhatsApp" tampil aktif secara default, menampilkan 3
+            kartu template (Level 1, 2, 3).
+          </li>
+          <li>
+            Pengguna mengubah redaksi salah satu atau beberapa textarea, baik
+            pada channel WhatsApp maupun channel lain (dengan berpindah
+            channel tab terlebih dahulu).
+          </li>
+          <li>Pengguna menekan tombol "Simpan Template".</li>
+          <li>
+            Sistem memvalidasi seluruh 12 kombinasi channel &amp; level
+            (<a class="xref" href="#sec-5">lihat bagian 5</a>); karena semua
+            valid, sistem menyimpan perubahan dan menampilkan toast
+            "&#10003; Template pesan sekolah ini berhasil disimpan".
+          </li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba menyimpan template kosong (ditolak)</strong></p>
+        <ol>
+          <li>
+            Pengguna mengosongkan salah satu textarea (mis. WhatsApp Level 2)
+            lalu menekan "Simpan Template".
+          </li>
+          <li>
+            Sistem mendeteksi template kosong pada kombinasi tersebut dan
+            menolak penyimpanan.
+          </li>
+          <li>
+            Sistem menampilkan toast "Template WhatsApp Level 2 -- Peringatan
+            tidak boleh kosong"; tidak ada perubahan apa pun yang tersimpan,
+            termasuk pada kombinasi lain yang sudah valid.
+          </li>
+        </ol>
+
+        <p>
+          <strong
+            >UC-03 -- Mencoba menyimpan tanpa <code>{link_bayar}</code> di
+            Level 1/2 (ditolak)</strong
+          >
+        </p>
+        <ol>
+          <li>
+            Pengguna menghapus placeholder <code>{link_bayar}</code> dari
+            template Email Level 1 lalu menekan "Simpan Template".
+          </li>
+          <li>
+            Sistem mendeteksi template Level 1 tersebut tidak mencantumkan
+            <code>{link_bayar}</code> dan menolak penyimpanan.
+          </li>
+          <li>
+            Sistem menampilkan toast "Template Email Level 1 -- Pengingat
+            wajib mencantumkan <code>{link_bayar}</code> supaya wali murid
+            bisa langsung bayar".
+          </li>
+        </ol>
+
+        <p><strong>UC-04 -- Berpindah channel</strong></p>
+        <ol>
+          <li>Pengguna menekan channel tab "Push Notif".</li>
+          <li>
+            Sistem langsung menampilkan 3 kartu template untuk channel Push
+            Notif tanpa reload halaman; channel tab lain menjadi tidak aktif.
+          </li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Aturan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BR-01</td>
+                <td>
+                  Tiap kombinasi channel &amp; level (12 total) wajib memiliki
+                  isi template; tidak boleh berupa string kosong setelah
+                  di-<code>trim</code>
+                </td>
+              </tr>
+              <tr>
+                <td>BR-02</td>
+                <td>
+                  Tiap template wajib mencantumkan placeholder
+                  <code>{nama_siswa}</code>, apa pun channel &amp; levelnya
+                </td>
+              </tr>
+              <tr>
+                <td>BR-03</td>
+                <td>
+                  Template Level 1 (Pengingat) dan Level 2 (Peringatan) --
+                  pada channel apa pun -- wajib mencantumkan placeholder
+                  <code>{link_bayar}</code> supaya wali murid bisa langsung
+                  menindaklanjuti pembayaran
+                </td>
+              </tr>
+              <tr>
+                <td>BR-04</td>
+                <td>
+                  Template Level 3 (Eskalasi) tidak wajib mencantumkan
+                  <code>{link_bayar}</code> -- bersifat pemberitahuan
+                  eskalasi, bukan permintaan bayar langsung
+                </td>
+              </tr>
+              <tr>
+                <td>BR-05</td>
+                <td>
+                  Penyimpanan bersifat atomik untuk seluruh 12 kombinasi
+                  channel &times; level sekaligus -- jika satu kombinasi
+                  gagal validasi, seluruh proses simpan dibatalkan (tidak ada
+                  kombinasi lain yang ikut tersimpan)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-06</td>
+                <td>
+                  Placeholder lain (<code>{nominal}</code>,
+                  <code>{tanggal_jatuh_tempo}</code>,
+                  <code>{hari_terlambat}</code>) bersifat opsional -- boleh
+                  dipakai atau tidak sesuai kebutuhan redaksi masing-masing
+                  template
+                </td>
+              </tr>
+              <tr>
+                <td>BR-07</td>
+                <td>
+                  Perubahan template bersifat khusus sekolah ini (override) --
+                  tidak memengaruhi Template Default Platform maupun sekolah
+                  lain
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note-flag">
+          <strong>Catatan konsistensi data default:</strong> Teks default
+          Level 1 &amp; 2 pada channel <strong>Push Notif</strong> yang
+          tersimpan saat ini (mis. <code>"Tagihan SPP {nama_siswa} Rp{nominal}
+          jatuh tempo {tanggal_jatuh_tempo}."</code>) <strong>tidak
+          mencantumkan</strong> <code>{link_bayar}</code>, sehingga secara
+          literal melanggar BR-03 di atas. Perlu dikonfirmasi apakah Push
+          Notif memang dikecualikan dari aturan ini karena batasan panjang
+          pesan (lihat
+          <a class="xref" href="#sec-10">Pertanyaan Terbuka No. 2</a>).
+        </div>
+
+        <h3 id="sec-5-1">
+          5.1 Rekomendasi Validasi per Field (Textarea Template)
+        </h3>
+        <p>
+          Rincian aturan input untuk setiap textarea
+          <code>#tmpl-konfig-{channel}-{level}</code>, sebagai acuan
+          implementasi validasi front-end maupun back-end.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Wajib?</th>
+                <th>Tipe Karakter</th>
+                <th>Panjang Min</th>
+                <th>Panjang Maks</th>
+                <th>Catatan Validasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Isi Template (semua channel &amp; level)</td>
+                <td><strong>Ya</strong></td>
+                <td>Teks bebas, termasuk placeholder <code>{...}</code></td>
+                <td>1 (tidak boleh kosong/hanya spasi)</td>
+                <td>Tidak dibatasi di UI saat ini</td>
+                <td>Wajib mencantumkan <code>{nama_siswa}</code> (BR-02)</td>
+              </tr>
+              <tr>
+                <td>Isi Template -- Level 1 &amp; Level 2</td>
+                <td><strong>Ya, tambahan</strong></td>
+                <td>--</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  Wajib juga mencantumkan <code>{link_bayar}</code> (BR-03);
+                  lihat catatan pengecualian Push Notif di atas
+                </td>
+              </tr>
+              <tr>
+                <td>Isi Template -- Level 3</td>
+                <td>Tidak ada tambahan</td>
+                <td>--</td>
+                <td>--</td>
+                <td>--</td>
+                <td>
+                  Hanya wajib memenuhi aturan umum (tidak kosong +
+                  <code>{nama_siswa}</code>); <code>{link_bayar}</code>
+                  opsional (BR-04)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p>
+          <strong>Entitas: <code>TemplatePesanSekolah</code></strong>
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Tipe Data</th>
+                <th>Wajib Diisi Pengguna?</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sekolahId</code></td>
+                <td>integer/string</td>
+                <td>Tidak (konteks sesi)</td>
+                <td>Pengenal sekolah pemilik override ini</td>
+              </tr>
+              <tr>
+                <td><code>channel</code></td>
+                <td>enum</td>
+                <td>Tidak (ditentukan tab yang aktif)</td>
+                <td>
+                  <code>wa</code> | <code>email</code> | <code>push</code> |
+                  <code>inapp</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>level</code></td>
+                <td>enum</td>
+                <td>Tidak (ditentukan posisi kartu)</td>
+                <td>
+                  <code>1</code> (Pengingat) | <code>2</code> (Peringatan) |
+                  <code>3</code> (Eskalasi) -- sama dengan Level pada tab
+                  Aturan Reminder
+                </td>
+              </tr>
+              <tr>
+                <td><code>isiPesan</code></td>
+                <td>string</td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  Teks template berisi placeholder (lihat
+                  <a class="xref" href="#sec-5-1">5.1</a> dan BR-01, BR-02,
+                  BR-03)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>6.1 Variabel Placeholder</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Placeholder</th>
+                <th>Arti</th>
+                <th>Contoh Nilai Substitusi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>{nama_siswa}</code></td>
+                <td>Nama lengkap siswa yang ditagih</td>
+                <td>Ahmad Fauzan</td>
+              </tr>
+              <tr>
+                <td><code>{nominal}</code></td>
+                <td>
+                  Nominal tagihan dalam angka (literal "Rp" ditulis manual di
+                  template, bukan bagian dari placeholder)
+                </td>
+                <td>350000</td>
+              </tr>
+              <tr>
+                <td><code>{tanggal_jatuh_tempo}</code></td>
+                <td>Tanggal jatuh tempo tagihan</td>
+                <td>10 November 2026</td>
+              </tr>
+              <tr>
+                <td><code>{hari_terlambat}</code></td>
+                <td>
+                  Jumlah hari keterlambatan terhitung dari tanggal jatuh tempo
+                  -- dipakai pada template Level 2 &amp; 3
+                </td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><code>{link_bayar}</code></td>
+                <td>
+                  Tautan langsung ke halaman pembayaran tagihan -- wajib pada
+                  Level 1 &amp; 2 (BR-03)
+                </td>
+                <td>https://bayar.geekgarden.id/inv/AB12CD</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Antarmuka (UI)</h2>
+        <ul>
+          <li>
+            Baris tab channel horizontal berisi 4 opsi: WhatsApp, Email, Push
+            Notif, Notif Aplikasi -- tab aktif ditandai warna navy, channel
+            lain disembunyikan (<code>display:none</code>) sampai dipilih.
+          </li>
+          <li>
+            Setiap channel menampilkan 3 kartu template bertumpuk vertikal,
+            urut Level 1 &rarr; Level 2 &rarr; Level 3, masing-masing berjudul
+            label level beserta rentang waktu pemicunya (mis. "Level 1 --
+            Pengingat (H-7 / H-3 / H-1)").
+          </li>
+          <li>
+            Tiap kartu berisi satu textarea yang bisa diubah bebas ukurannya
+            (tinggi minimal 56px) dan satu catatan konteks tambahan khusus
+            pada kartu Level 1 channel Push Notif &amp; Notif Aplikasi (lihat
+            FR-04).
+          </li>
+          <li>
+            Satu tombol "Simpan Template" di pojok kanan bawah panel,
+            berlaku untuk seluruh 4 channel sekaligus -- bukan tombol simpan
+            per channel.
+          </li>
+          <li>
+            Belum ada pratinjau (preview) tampilan pesan dengan data contoh
+            nyata (substitusi placeholder) maupun penghitung jumlah karakter
+            per textarea pada tab ini di prototipe saat ini.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-8">8. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Requirement</th>
+                <th>Target terukur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NFR-01</td>
+                <td>Validasi</td>
+                <td>
+                  Seluruh 12 kombinasi channel &times; level divalidasi
+                  sebelum data tersimpan (<a class="xref" href="#sec-5"
+                    >lihat bagian 5</a
+                  >)
+                </td>
+                <td>100% percobaan simpan tidak valid ditolak dengan pesan spesifik</td>
+              </tr>
+              <tr>
+                <td>NFR-02</td>
+                <td>Usability</td>
+                <td>
+                  Berpindah channel tab menampilkan kartu channel tersebut
+                  tanpa reload halaman atau permintaan data baru
+                </td>
+                <td>Perpindahan tab &lt; 100ms</td>
+              </tr>
+              <tr>
+                <td>NFR-03</td>
+                <td>Feedback</td>
+                <td>
+                  Setiap aksi simpan menampilkan toast konfirmasi sukses atau
+                  pesan kesalahan yang jelas
+                </td>
+                <td>100% aksi simpan memberi feedback visual</td>
+              </tr>
+              <tr>
+                <td>NFR-04</td>
+                <td>Isolasi data</td>
+                <td>
+                  Perubahan template pada sekolah ini tidak memengaruhi
+                  Template Default Platform maupun template sekolah lain
+                  (BR-07)
+                </td>
+                <td>100% perubahan ter-scope ke <code>sekolahId</code> ini saja</td>
+              </tr>
+              <tr>
+                <td>NFR-05</td>
+                <td>Konsistensi variabel</td>
+                <td>
+                  Nama placeholder yang sama (<a class="xref" href="#sec-6"
+                    >lihat 6.1</a
+                  >) dipakai konsisten di seluruh channel supaya pengguna
+                  tidak salah ketik nama variabel saat mengubah redaksi
+                </td>
+                <td>-- (belum ada validasi ejaan nama placeholder di prototipe)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-9">9. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>
+            <strong
+              >Catatan implementasi penting:</strong
+            >
+            pada kode prototipe saat ini, fungsi penyimpanan
+            (<code>saveTemplatePesan()</code> di <code>app.js</code>) membaca
+            elemen dengan selektor <code>#tmpl-root-konfig .tmpl-text</code>,
+            tetapi textarea yang benar-benar tampil di tab ini
+            (<code>#tmpl-konfig-wa-1</code>, dst.) tidak memiliki class
+            <code>tmpl-text</code>. Akibatnya menekan "Simpan Template" saat
+            ini selalu menampilkan toast sukses tanpa benar-benar membaca,
+            memvalidasi, atau menyimpan perubahan apa pun yang diketik
+            pengguna ke textarea yang terlihat di halaman. Perlu disambungkan
+            ulang pada tahap implementasi nyata (<a class="xref" href="#sec-10"
+              >lihat Pertanyaan Terbuka No. 1</a
+            >).
+          </li>
+          <li>
+            Konstanta <code>templatePesanData</code> pada <code>app.js</code>
+            memakai struktur channel <code>wa</code>/<code>sms</code>/<code
+              >email</code
+            >
+            (3 channel, tanpa Push Notif &amp; Notif Aplikasi) dan tidak
+            dipakai untuk mengisi textarea pada tab ini -- isi textarea saat
+            ini bersumber langsung dari teks statis di markup
+            <code>konfigurasi.html</code>.
+          </li>
+          <li>
+            Data template tersimpan di memori sisi klien (prototipe), tidak
+            ada backend/API nyata maupun riwayat perubahan (audit trail).
+          </li>
+          <li>
+            Tidak ada pratinjau (preview) tampilan pesan dengan data contoh
+            nyata sebelum disimpan.
+          </li>
+          <li>
+            Tidak ada validasi format khusus untuk channel Email, meski
+            secara teknis Email mendukung format lebih kaya (mis. HTML)
+            dibanding WhatsApp/Push Notif/Notif Aplikasi.
+          </li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>
+            Template di tab ini berawal sebagai salinan dari Template Default
+            Platform, serupa dengan konsep pada tab "Aturan Reminder", lalu
+            sekolah dapat mengubahnya bebas tanpa memengaruhi sekolah lain.
+          </li>
+          <li>
+            Proses substitusi placeholder dengan data nyata dilakukan oleh
+            sistem pengiriman notifikasi saat pesan benar-benar dikirim, bukan
+            oleh tab konfigurasi ini.
+          </li>
+          <li>
+            Pemicu pengiriman (offset hari), channel yang aktif per aturan,
+            nomor WA pengirim, dan penerima tembusan diatur di tab lain
+            (Aturan Reminder &amp; Notifikasi), bukan di tab ini.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-10">10. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Pertanyaan</th>
+                <th>Ditujukan ke</th>
+                <th>Jawaban</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>
+                  Apakah fungsi "Simpan Template" perlu disambungkan ulang
+                  agar benar-benar membaca &amp; memvalidasi isi ke-12
+                  textarea yang tampil di halaman ini (lihat
+                  <a class="xref" href="#sec-9">Batasan, bagian 9</a>)?
+                </td>
+                <td>Tech Lead / Developer</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>
+                  Apakah channel Push Notif memang dikecualikan dari aturan
+                  wajib <code>{link_bayar}</code> pada Level 1 &amp; 2 (karena
+                  batasan panjang pesan), atau template default-nya justru
+                  harus diperbaiki agar tetap menyertakan tautan singkat?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>
+                  Apakah dibutuhkan fitur pratinjau (preview) pesan dengan
+                  data contoh sebelum template disimpan?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>
+                  Apakah perlu tombol "Kembalikan ke Default Platform" per
+                  template/channel (reset ke teks bawaan), mengingat tab
+                  "Aturan Reminder" memakai konsep "salinan dari Default
+                  Platform"?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>
+                  Apakah perlu audit log (pelaku &amp; waktu) untuk setiap
+                  perubahan template pesan?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-11">11. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Template Pesan</td>
+                <td>
+                  Teks notifikasi yang dikirim ke wali murid, berisi
+                  placeholder yang disubstitusi otomatis saat pengiriman
+                </td>
+              </tr>
+              <tr>
+                <td>Placeholder / Variabel</td>
+                <td>
+                  Teks berformat <code>{nama_variabel}</code> dalam template
+                  yang digantikan sistem dengan data nyata saat pesan dikirim
+                </td>
+              </tr>
+              <tr>
+                <td>Level Penanganan</td>
+                <td>
+                  Tingkat eskalasi notifikasi (1 Pengingat, 2 Peringatan, 3
+                  Eskalasi) sesuai tab Aturan Reminder
+                </td>
+              </tr>
+              <tr>
+                <td>Override Sekolah Ini</td>
+                <td>
+                  Penyesuaian khusus satu sekolah yang tidak memengaruhi
+                  Template Default Platform atau sekolah lain
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen"
+      >📄 Dokumen</a
+    >
+  </body>
+</html>

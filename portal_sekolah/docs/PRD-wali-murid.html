@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Akun Wali Murid (Mobile) -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Akun Wali Murid (Mobile) <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Akun Wali Murid (Mobile) -- halaman <code>wali.html</code>, nav-child "Akun Wali Murid" di bawah menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>wali.html</code>, <code>app.js</code> (data <code>waliAccounts</code>, fungsi <code>renderWaliTable</code>, <code>openDaftarWaliPanel</code>, <code>daftarkanWali</code>, <code>approveWali</code>, <code>rejectWali</code>, <code>toggleWaliStatus</code>, <code>renderWaliSiswaSearchList</code>, <code>selectWaliSiswaFromSearch</code>, <code>addWaliSiswaFromSearch</code>, <code>applyWaliUiForRole</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-manajemen-murid.html">PRD Manajemen Murid</a> -- siswa yang dihubungkan ke akun wali di sini diambil dari data siswa aktif; <a class="xref" href="PRD-sekolah-rbac.html">PRD Role &amp; Hak Akses</a> -- izin modul <code>wali</code> menentukan siapa bisa membuka halaman ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Akun Wali Murid (Mobile)</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini mengelola akun wali murid yang dipakai untuk <strong>login SSO ke aplikasi mobile App Wali Murid</strong>. Akun bisa didaftarkan langsung oleh Admin sekolah (wali datang tatap muka, identitas sudah diverifikasi) atau didaftarkan sendiri oleh wali murid lewat aplikasi mobile (<em>self-register</em>, wajib disetujui Kepala Sekolah dulu sebelum bisa SSO). Satu akun wali murid bisa terhubung ke lebih dari satu siswa (kakak-adik). Fitur ini <strong>tidak</strong> mengelola data siswa itu sendiri (lihat <a class="xref" href="PRD-manajemen-murid.html">PRD Manajemen Murid</a>) dan <strong>tidak</strong> mengelola akun staf internal sekolah (lihat <a class="xref" href="PRD-sekolah-pengguna.html">PRD Pengguna &amp; Akun Sekolah</a>).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>SSO</td><td>Single Sign-On -- status "Aktif" pada akun wali murid yang memberinya hak login ke App Wali Murid</td></tr>
+              <tr><td>Self-register</td><td>Metode pendaftaran akun oleh wali murid sendiri lewat aplikasi mobile, tanpa verifikasi tatap muka</td></tr>
+              <tr><td>Didaftarkan Admin</td><td>Metode pendaftaran akun oleh Admin sekolah untuk wali yang datang langsung &amp; sudah diverifikasi identitasnya -- langsung Aktif tanpa antrean approval</td></tr>
+              <tr><td>Segregation of Duties</td><td>Prinsip pemisahan tugas -- pihak yang mendaftarkan akun (Admin) sengaja dipisah dari pihak yang menyetujui akun self-register (Kepala Sekolah)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child di bawah grup "Manajemen Sekolah" pada sidebar, bersisian dengan Manajemen Murid -- keduanya saling bergantung karena akun wali murid dihubungkan ke data siswa yang dikelola di menu tersebut.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar akun wali murid dengan pencarian nama wali/nama anak.</li>
+          <li>Mendaftarkan akun wali murid baru (oleh Admin) beserta siswa terkaitnya -- bisa lebih dari satu siswa.</li>
+          <li>Menyetujui atau menolak akun self-register yang menunggu approval (oleh Kepala Sekolah).</li>
+          <li>Mengaktifkan/menonaktifkan akun wali murid (oleh Admin).</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Admin</td><td>Mendaftarkan akun baru &amp; siswa terkaitnya, mengaktifkan/menonaktifkan akun -- <strong>tidak</strong> ikut menyetujui/menolak akun self-register (segregation of duties).</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Menyetujui atau menolak akun self-register yang menunggu approval -- <strong>tidak</strong> bisa mendaftarkan akun baru atau mengaktifkan/menonaktifkan akun (tombol &amp; panel disembunyikan untuk peran ini, lihat <code>applyWaliUiForRole</code>).</td></tr>
+              <tr><td>Bendahara</td><td>Tidak punya akses ke halaman ini secara default, kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Hanya Admin yang bisa melihat tombol "+ Daftarkan Akun Wali Murid" dan panel pendaftaran/edit -- Kepala Sekolah tidak melihatnya sama sekali.</li>
+          <li>Akun yang ditolak tidak bisa SSO sampai didaftarkan ulang dan disetujui kembali.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Pencarian siswa saat mendaftarkan akun hanya mencakup siswa berstatus <code>aktif</code> di data Manajemen Murid.</li>
+          <li>Riwayat approval/penolakan disebut tercatat untuk audit, namun struktur datanya belum eksplisit di luar field <code>alasanTolak</code> (lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>).</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Akun Wali Murid</td><td>Sistem menampilkan tabel berisi Nama, Kontak, Siswa Terkait, Metode (Self-register/Oleh Admin), Status, dan Aksi</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Cari Akun</td><td>Sistem menyediakan pencarian nama wali murid dan pencarian terpisah nama anak/siswa, keduanya bisa dipakai bersamaan</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Daftarkan Akun Baru (Admin)</td><td>Tombol "+ Daftarkan Akun Wali Murid" (khusus Admin) membuka panel form Nama Wali Murid, No. WhatsApp, Email, dan pencarian Siswa Terkait</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Cari &amp; Pilih Siswa Terkait</td><td>Satu kolom pencarian Nama/NIS menampilkan dropdown siswa aktif yang cocok; memilih salah satu menampilkan NIS, Kelas, dan Kategori Sekolah secara otomatis (autofill, read-only) di field terpisah</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Tambah Siswa ke Daftar Terkait</td><td>Tombol "+ Tambah ke Daftar" menambahkan siswa yang sedang terpilih ke daftar siswa terkait akun ini (ditampilkan sebagai chip, bisa dihapus); bisa diulang untuk menambahkan lebih dari satu siswa</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Simpan Akun Baru</td><td>Tombol "Daftarkan &amp; Aktifkan" memvalidasi Nama, No. WhatsApp, dan minimal 1 siswa terkait; jika valid, akun baru tersimpan berstatus Aktif dengan metode "didaftarkan_admin"</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Edit Siswa Terkait Akun</td><td>Tombol edit pada akun yang sudah ada membuka panel yang sama dalam mode edit, memungkinkan menambah/melepas siswa terkait tanpa menonaktifkan akun</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Setujui Akun Self-register (Kepala Sekolah)</td><td>Untuk akun berstatus "Menunggu Approval", tombol "Setujui" (khusus Kepala Sekolah) mengubah status jadi Aktif</td><td>Must</td></tr>
+              <tr><td>FR-09</td><td>Tolak Akun Self-register (Kepala Sekolah)</td><td>Tombol "Tolak" meminta alasan penolakan (wajib diisi), lalu mengubah status jadi Ditolak dan menyimpan alasannya</td><td>Must</td></tr>
+              <tr><td>FR-10</td><td>Nonaktifkan/Aktifkan Akun (Admin)</td><td>Tombol "Nonaktifkan" (dengan dialog konfirmasi) atau "Aktifkan Kembali" sesuai status akun saat ini</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Admin mendaftarkan akun wali murid dengan 2 anak</strong></p>
+        <ol>
+          <li>Admin menekan "+ Daftarkan Akun Wali Murid", mengisi Nama Wali Murid &amp; No. WhatsApp.</li>
+          <li>Admin mengetik nama anak pertama di kolom pencarian, memilih dari dropdown -- NIS/Kelas/Kategori Sekolah tampil otomatis -- menekan "+ Tambah ke Daftar".</li>
+          <li>Admin mengulangi langkah 2 untuk anak kedua (kakak-adik).</li>
+          <li>Admin menekan "Daftarkan &amp; Aktifkan".</li>
+          <li>Sistem memvalidasi; jika valid, akun baru tersimpan berstatus Aktif, panel ditutup, toast "&#10003; Akun [nama] didaftarkan &amp; langsung Aktif -- bisa SSO ke aplikasi mobile" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-02 -- Kepala Sekolah menolak akun self-register yang datanya tidak cocok</strong></p>
+        <ol>
+          <li>Kepala Sekolah menekan "Tolak" pada akun berstatus "Menunggu Approval".</li>
+          <li>Sistem meminta alasan penolakan (prompt teks).</li>
+          <li>Kepala Sekolah mengisi alasan dan mengonfirmasi; status akun berubah jadi "Ditolak", alasan tersimpan, toast "Akun [nama] ditolak -- tidak bisa SSO sampai didaftarkan ulang" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mencoba mendaftarkan akun tanpa siswa terkait (ditolak)</strong></p>
+        <ol>
+          <li>Admin mengisi Nama Wali Murid &amp; No. WhatsApp tanpa menambahkan siswa apa pun, lalu menekan "Daftarkan &amp; Aktifkan".</li>
+          <li>Sistem menolak dan menampilkan toast "Nama, No. WhatsApp, dan minimal 1 Siswa Terkait wajib diisi" -- akun tidak tersimpan.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Nama Wali Murid dan No. WhatsApp wajib diisi; Email opsional</td></tr>
+              <tr><td>BR-02</td><td>Minimal 1 siswa terkait wajib ditambahkan sebelum akun bisa disimpan</td></tr>
+              <tr><td>BR-03</td><td>Siswa terkait hanya bisa dipilih dari siswa berstatus <code>aktif</code> -- siswa lulus/pindah tidak muncul di pencarian</td></tr>
+              <tr><td>BR-04</td><td>Siswa yang sama (kombinasi nama + kelas) tidak boleh ditambahkan dua kali ke daftar terkait akun yang sama</td></tr>
+              <tr><td>BR-05</td><td>Akun yang didaftarkan Admin (metode <code>didaftarkan_admin</code>) langsung berstatus Aktif, tidak melalui antrean approval</td></tr>
+              <tr><td>BR-06</td><td>Akun self-register (metode <code>self_register</code>) wajib berstatus "Menunggu Approval" dan hanya bisa diaktifkan lewat persetujuan Kepala Sekolah</td></tr>
+              <tr><td>BR-07</td><td>Hanya Kepala Sekolah yang bisa menyetujui/menolak akun -- Admin yang mendaftarkan akun (termasuk akun yang dia daftarkan sendiri) tidak memiliki tombol Setujui/Tolak (segregation of duties)</td></tr>
+              <tr><td>BR-08</td><td>Alasan penolakan wajib diisi (tidak boleh kosong) saat menolak akun self-register</td></tr>
+              <tr><td>BR-09</td><td>Akun berstatus Ditolak tidak bisa langsung diaktifkan kembali -- wajib didaftarkan ulang dari awal</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama Wali Murid</td><td><code>#wali-nama</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01)</td></tr>
+              <tr><td>No. WhatsApp</td><td><code>#wali-wa</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01)</td></tr>
+              <tr><td>Email</td><td><code>#wali-email</code></td><td>Tidak</td><td>Opsional, tanpa validasi format eksplisit di prototipe saat ini</td></tr>
+              <tr><td>Siswa Terkait</td><td><code>#wali-siswa-chips</code> (hasil pencarian via <code>#wali-siswa-nama-search</code>)</td><td><strong>Ya, minimal 1</strong></td><td>Hanya siswa status <code>aktif</code>; dicegah duplikat per akun (lihat BR-02, BR-03, BR-04)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>AkunWaliMurid</code> (<code>waliAccounts</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>integer</td><td>Tidak (dibuat sistem)</td><td>Pengenal unik, auto-increment per sekolah</td></tr>
+              <tr><td><code>nama</code></td><td>string</td><td><strong>Ya</strong></td><td>Nama wali murid (lihat BR-01)</td></tr>
+              <tr><td><code>wa</code></td><td>string</td><td><strong>Ya</strong></td><td>Nomor WhatsApp wali murid (lihat BR-01)</td></tr>
+              <tr><td><code>email</code></td><td>string</td><td>Tidak</td><td>Opsional</td></tr>
+              <tr><td><code>siswaList</code></td><td>array dari <code>{ nama, kelas }</code></td><td><strong>Ya, minimal 1 elemen</strong></td><td>Siswa yang terhubung ke akun ini (lihat BR-02, BR-03, BR-04)</td></tr>
+              <tr><td><code>metode</code></td><td>enum (string)</td><td>Tidak (diatur sistem)</td><td><code>self_register</code> | <code>didaftarkan_admin</code> (lihat BR-05, BR-06)</td></tr>
+              <tr><td><code>status</code></td><td>enum (string)</td><td>Tidak (diatur sistem)</td><td><code>menunggu_approval</code> | <code>aktif</code> | <code>ditolak</code> | <code>nonaktif</code></td></tr>
+              <tr><td><code>tanggalDaftar</code></td><td>string (tanggal)</td><td>Tidak (dibuat sistem)</td><td>Tanggal akun didaftarkan</td></tr>
+              <tr><td><code>alasanTolak</code></td><td>string</td><td>Tidak (diisi Kepala Sekolah saat menolak)</td><td>Hanya ada jika status <code>ditolak</code> (lihat BR-08)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Validasi</td><td>Seluruh input form divalidasi sebelum data tersimpan</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-02</td><td>Usability</td><td>Pencarian siswa menampilkan NIS/Kelas/Kategori Sekolah otomatis setelah dipilih, mengurangi kesalahan input manual</td><td>0% field Kelas/Kategori diisi manual oleh pengguna</td></tr>
+              <tr><td>NFR-03</td><td>Keamanan/Governance</td><td>Pihak yang mendaftarkan akun self-register tidak sama dengan pihak yang menyetujuinya (segregation of duties)</td><td>100% akun self-register disetujui oleh peran Kepala Sekolah, bukan Admin</td></tr>
+              <tr><td>NFR-04</td><td>Feedback</td><td>Setiap aksi (daftar/setujui/tolak/toggle status) menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Tidak ada riwayat lengkap (audit trail terstruktur) untuk approval/penolakan -- hanya field <code>alasanTolak</code> untuk kasus ditolak.</li>
+          <li>Tidak ada batas jumlah siswa yang bisa dihubungkan ke satu akun wali murid.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Verifikasi identitas wali murid yang didaftarkan langsung oleh Admin (tatap muka) dilakukan di luar sistem -- sistem mempercayai keputusan Admin sepenuhnya untuk metode ini.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah perlu riwayat approval terstruktur (pelaku, waktu, status sebelumnya) untuk keperluan audit, dibanding hanya menyebut "tercatat untuk audit" di catatan info tanpa struktur data eksplisit?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah akun yang ditolak perlu bisa diajukan ulang secara otomatis (re-submit) tanpa mengisi ulang semua data dari awal?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah perlu notifikasi otomatis (WA/push) ke wali murid saat akunnya disetujui/ditolak, di luar yang sudah ada di app mobile?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Chip</td><td>Elemen visual kecil yang menampilkan satu siswa terkait yang sudah ditambahkan ke daftar, lengkap dengan tombol hapus</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

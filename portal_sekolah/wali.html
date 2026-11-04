@@ -28,7 +28,6 @@
     <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
     <div class="nav-children" data-nav-children="konfigurasi">
       <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
-      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
@@ -37,10 +36,12 @@
       <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
       <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child active" data-rbac="wali" href="wali.html" id="nav-self">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item active" data-rbac="wali" href="wali.html" id="nav-self"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
@@ -96,31 +97,29 @@
               <div class="field"><label>Email</label><input type="email" id="wali-email" placeholder="nama@email.com (opsional)"></div>
               <div class="field" style="grid-column:1 / -1;">
                 <label>Siswa Terkait (bisa pilih lebih dari satu)</label>
-                <div class="grid3" style="margin-bottom:8px;">
+                <div class="search-select" style="margin-bottom:8px;">
+                  <input type="text" id="wali-siswa-nama-search" placeholder="Cari nama atau NIS siswa..." autocomplete="off"
+                    oninput="onWaliSiswaSearchInput()" onfocus="renderWaliSiswaSearchList()" onblur="setTimeout(hideWaliSiswaSearchList, 150)">
+                  <input type="hidden" id="wali-siswa-nama-value">
+                  <div id="wali-siswa-search-list" class="search-select-list" style="display:none;"></div>
+                </div>
+                <div class="grid3" id="wali-siswa-autofill-wrap" style="display:none;margin-bottom:8px;">
                   <div class="field" style="margin-bottom:0;">
-                    <label style="font-size:11px;font-weight:600;">Kategori Kelas</label>
-                    <select id="wali-siswa-kategori" onchange="onWaliKategoriChange()">
-                      <!-- filled by JS -->
-                    </select>
+                    <label style="font-size:11px;font-weight:600;">NIS</label>
+                    <input type="text" id="wali-siswa-nis-autofill" disabled>
                   </div>
                   <div class="field" style="margin-bottom:0;">
-                    <label style="font-size:11px;font-weight:600;">Cari Kelas</label>
-                    <input type="text" id="wali-siswa-kelas-search" list="wali-kelas-datalist" placeholder="mis. 5B" autocomplete="off" oninput="onWaliKelasInputChange()" onchange="onWaliKelasInputChange()">
-                    <datalist id="wali-kelas-datalist"></datalist>
+                    <label style="font-size:11px;font-weight:600;">Kelas</label>
+                    <input type="text" id="wali-siswa-kelas-autofill" disabled>
                   </div>
                   <div class="field" style="margin-bottom:0;">
-                    <label style="font-size:11px;font-weight:600;">Nama Siswa</label>
-                    <div class="search-select">
-                      <input type="text" id="wali-siswa-nama-search" placeholder="Cari nama siswa..." autocomplete="off"
-                        oninput="renderWaliSiswaSearchList()" onfocus="renderWaliSiswaSearchList()" onblur="setTimeout(hideWaliSiswaSearchList, 150)">
-                      <input type="hidden" id="wali-siswa-nama-value">
-                      <div id="wali-siswa-search-list" class="search-select-list" style="display:none;"></div>
-                    </div>
+                    <label style="font-size:11px;font-weight:600;">Kategori Sekolah</label>
+                    <input type="text" id="wali-siswa-kategori-autofill" disabled>
                   </div>
                 </div>
                 <button type="button" class="btn btn-outline btn-sm" onclick="addWaliSiswaFromSearch()">+ Tambah ke Daftar</button>
                 <div id="wali-siswa-chips" style="margin-top:10px;"></div>
-                <div class="hint">Pilih Kategori Kelas &amp; Kelas untuk mempersempit pencarian, ketik untuk mencari lalu klik nama siswa dari dropdown yang muncul, kemudian klik "+ Tambah ke Daftar" -- ulangi untuk menambahkan kakak-adik atau siswa lain yang terhubung ke akun wali ini.</div>
+                <div class="hint">Ketik nama atau NIS siswa, klik salah satu dari dropdown yang muncul -- NIS, Kelas &amp; Kategori Sekolah otomatis terisi di field terpisah di bawah -- lalu klik "+ Tambah ke Daftar". Ulangi untuk menambahkan kakak-adik atau siswa lain yang terhubung ke akun wali ini.</div>
               </div>
             </div>
             <div class="btn-row">
@@ -131,6 +130,8 @@
 
           <div class="note-box info" style="margin-top:14px;">Akun yang ditolak tidak bisa SSO ke aplikasi mobile sampai didaftarkan ulang dan disetujui kembali oleh Kepala Sekolah. Riwayat approval/penolakan tercatat untuk audit.</div>
         </div>
+
+        <a class="fab-prd" href="docs/PRD-wali-murid.html" target="_blank" title="Lihat dokumen PRD Akun Wali Murid">📄 Lihat PRD</a>
       </div>
 
     </div>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Manajemen Murid -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Manajemen Murid <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Manajemen Murid -- halaman <code>murid.html</code>, nav-child "Manajemen Murid" di bawah menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>murid.html</code>, <code>app.js</code> (data <code>studentsData</code>, fungsi <code>renderStudentList</code>, <code>onMuridKategoriFilterChange</code>, <code>openTambahMuridPanel</code>, <code>simpanMuridBaru</code>, <code>addTmKontakRow</code>/<code>removeTmKontakRow</code>, <code>openStudentDetail</code>, <code>saveStudentInfo</code>, <code>renderGuardianTable</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-sekolah-kelas.html">PRD Kelas</a> &amp; <a class="xref" href="PRD-sekolah-kategori.html">PRD Kategori Sekolah</a> -- sumber dropdown Kelas/Kategori; <a class="xref" href="PRD-wali-murid.html">PRD Akun Wali Murid</a> -- pengubahan/penambahan kontak wali murid selanjutnya dilakukan di sana, bukan di halaman ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Manajemen Murid</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini mengelola data pokok siswa (Nama, NIS, Kelas, Periode Tahun Ajaran, Status) untuk keperluan penagihan SPP, beserta pencatatan kontak wali murid saat siswa pertama kali ditambahkan. Fitur ini <strong>tidak</strong> mengelola akun login wali murid untuk aplikasi mobile (itu domain <a class="xref" href="PRD-wali-murid.html">Akun Wali Murid</a>) -- kontak yang dicatat di sini bersifat informasi pendamping data siswa saja, dan setelah tersimpan hanya bisa <strong>dilihat</strong>, tidak diubah dari halaman ini.</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>NIS</td><td>Nomor Induk Siswa -- pengenal unik siswa di sekolah ini</td></tr>
+              <tr><td>Kontak yang Dapat Dihubungi</td><td>Satu atau lebih orang (umumnya orang tua/wali) yang dicatat sebagai kontak siswa saat ditambahkan -- bukan akun login, hanya data referensi</td></tr>
+              <tr><td>Status siswa</td><td><code>aktif</code> (masih bersekolah), <code>lulus</code>, atau <code>pindah</code> (pindah sekolah)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child di bawah grup "Manajemen Sekolah", bersisian dengan Akun Wali Murid. Data Kelas &amp; Kategori yang dipakai di filter dan form bersumber dari tab Kelas/Kategori Sekolah (lihat <a class="xref" href="PRD-sekolah-kelas.html">PRD Kelas</a>).</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar siswa setelah filter wajib (Periode, Kategori Sekolah, Kelas) dipilih, dengan pencarian/filter tambahan opsional (Nama, NIS, Status).</li>
+          <li>Menambah siswa baru beserta satu atau lebih kontak yang dapat dihubungi.</li>
+          <li>Melihat &amp; mengubah data pokok siswa yang sudah ada lewat halaman Detail.</li>
+          <li>Melihat (read-only) kontak wali murid yang tercatat untuk siswa tersebut.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Admin, Bendahara</td><td>Punya akses modul "murid" secara default -- menambah siswa, mengubah data pokok siswa.</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default, kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Daftar siswa <strong>sengaja tidak menampilkan apa pun secara default</strong> -- Periode Tahun Ajaran, Kategori Sekolah, dan Kelas wajib dipilih dulu sebelum satu baris pun muncul.</li>
+          <li>Kontak wali murid di halaman Detail bersifat <strong>hanya lihat</strong> -- tidak ada tombol tambah/ubah/hapus kontak di sana.</li>
+          <li>NIS wajib unik di antara seluruh siswa sekolah ini.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Filter Kategori Sekolah dan Kelas bersifat cascading -- Kelas hanya bisa dipilih setelah Kategori Sekolah dipilih, dan pilihannya otomatis terbatas ke kelas-kelas dalam kategori tersebut.</li>
+          <li>Pengubahan/penambahan kontak wali murid setelah siswa tersimpan dilakukan lewat menu Akun Wali Murid, bukan lewat halaman Detail siswa ini.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Filter Wajib Sebelum Tampil</td><td>Sistem menampilkan pesan "Pilih Periode Tahun Ajaran, Kategori Sekolah, dan Kelas terlebih dahulu" dan tabel tetap kosong sampai ketiga filter wajib terisi</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Filter Kategori Sekolah &rarr; Kelas (Cascading)</td><td>Memilih Kategori Sekolah mengisi ulang dropdown Kelas agar hanya menampilkan kelas-kelas dalam kategori tersebut; dropdown Kelas nonaktif sebelum Kategori Sekolah dipilih</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Filter Opsional</td><td>Setelah ketiga filter wajib terisi, sistem menyediakan pencarian Nama (opsional), pencarian NIS (opsional), dan filter Status (Semua/aktif/lulus/pindah) untuk mempersempit hasil</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Lihat Daftar Siswa</td><td>Sistem menampilkan tabel berisi Nama Siswa, NIS, Kelas (dengan nama kategori), Periode, Status, ringkasan Wali Murid, dan Aksi</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Tambah Siswa Baru</td><td>Tombol "+ Tambah Siswa" membuka panel form Nama Siswa, NIS, Kelas, Periode Tahun Ajaran, Status, dan tabel Kontak yang Dapat Dihubungi (baris dinamis)</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Tambah/Hapus Baris Kontak (dinamis)</td><td>Tombol "+ Tambah Kontak" menambah baris kontak baru (Nama, Relasi, No. WhatsApp, No. HP Alt, Email); setiap baris punya tombol hapus kecuali saat hanya tersisa 1 baris</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Simpan Siswa Baru</td><td>Tombol "Tambah Siswa" memvalidasi Nama Siswa &amp; NIS wajib diisi, NIS tidak duplikat, dan minimal 1 baris kontak terisi lengkap (Nama &amp; No. WhatsApp); baris kontak yang kosong diabaikan otomatis</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Lihat &amp; Ubah Detail Siswa</td><td>Tombol "Detail" membuka halaman Detail berisi Info Siswa (Nama, NIS, Kelas, Periode, Status -- bisa diubah &amp; disimpan) dan tabel Wali Murid (read-only)</td><td>Must</td></tr>
+              <tr><td>FR-09</td><td>Simpan Perubahan Info Siswa</td><td>Tombol "Simpan Info Siswa" menampilkan dialog konfirmasi sebelum menyimpan perubahan Nama/NIS/Kelas/Periode/Status</td><td>Must</td></tr>
+              <tr><td>FR-10</td><td>Lihat Kontak Wali Murid (Read Only)</td><td>Tabel Wali Murid di halaman Detail menampilkan seluruh kontak tersimpan (Nama, No. WhatsApp, No. HP Alt, Email, Relasi, Kontak Utama) dalam keadaan dinonaktifkan (<code>disabled</code>), tanpa tombol tambah/ubah/hapus</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Melihat daftar siswa kelas 5A periode aktif</strong></p>
+        <ol>
+          <li>Pengguna membuka halaman Manajemen Murid -- tabel kosong dengan pesan filter wajib.</li>
+          <li>Pengguna memilih Periode "2026/2027".</li>
+          <li>Pengguna memilih Kategori Sekolah "Reguler" -- dropdown Kelas otomatis terisi kelas-kelas kategori Reguler.</li>
+          <li>Pengguna memilih Kelas "5A" -- tabel langsung menampilkan seluruh siswa kelas 5A periode 2026/2027.</li>
+        </ol>
+
+        <p><strong>UC-02 -- Menambah siswa baru dengan 2 kontak</strong></p>
+        <ol>
+          <li>Pengguna menekan "+ Tambah Siswa", mengisi Nama Siswa, NIS, Kelas, Periode, Status.</li>
+          <li>Pengguna mengisi baris kontak pertama (Nama, Relasi, No. WhatsApp), menekan "+ Tambah Kontak" untuk menambah baris kedua, mengisi kontak kedua.</li>
+          <li>Pengguna menekan "Tambah Siswa".</li>
+          <li>Sistem memvalidasi; jika valid, siswa baru tersimpan beserta kedua kontak, toast "&#10003; Siswa [nama] beserta 2 kontak berhasil ditambahkan" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mencoba menambah siswa dengan NIS yang sudah dipakai (ditolak)</strong></p>
+        <ol>
+          <li>Pengguna mengisi NIS yang sudah dipakai siswa lain, lalu menekan "Tambah Siswa".</li>
+          <li>Sistem menolak dan menampilkan toast "NIS [nis] sudah dipakai siswa lain" -- data tidak tersimpan.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Periode Tahun Ajaran, Kategori Sekolah, dan Kelas wajib dipilih sebelum daftar siswa ditampilkan -- default halaman kosong</td></tr>
+              <tr><td>BR-02</td><td>Dropdown Kelas pada filter hanya berisi kelas yang <code>kategoriId</code>-nya cocok dengan Kategori Sekolah yang terpilih (cascading)</td></tr>
+              <tr><td>BR-03</td><td>Nama Siswa dan NIS wajib diisi saat menambah siswa baru</td></tr>
+              <tr><td>BR-04</td><td>NIS wajib unik di antara seluruh siswa sekolah ini</td></tr>
+              <tr><td>BR-05</td><td>Minimal 1 baris Kontak yang Dapat Dihubungi wajib terisi lengkap (Nama &amp; No. WhatsApp) sebelum siswa bisa disimpan; baris yang tidak lengkap (kosong) diabaikan, tidak dihitung sebagai error maupun tersimpan sebagai kontak kosong</td></tr>
+              <tr><td>BR-06</td><td>Kontak yang Dapat Dihubungi tidak memiliki konsep "utama" saat ditambahkan lewat form Tambah Siswa Baru -- seluruh kontak yang diisi lengkap tersimpan setara</td></tr>
+              <tr><td>BR-07</td><td>Setelah siswa tersimpan, kontak wali murid di halaman Detail bersifat hanya lihat -- tidak ada operasi tambah/ubah/hapus dari halaman ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama Siswa</td><td><code>#tm-nama</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-03)</td></tr>
+              <tr><td>NIS</td><td><code>#tm-nis</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong; wajib unik di antara seluruh siswa (lihat BR-03, BR-04)</td></tr>
+              <tr><td>Kelas</td><td><code>#tm-kelas</code></td><td><strong>Ya</strong> (selalu terisi default)</td><td>Salah satu dari master Kelas yang ada</td></tr>
+              <tr><td>Periode Tahun Ajaran</td><td><code>#tm-periode</code></td><td><strong>Ya</strong> (selalu terisi default)</td><td>Salah satu dari master Periode Tahun Ajaran yang ada</td></tr>
+              <tr><td>Status</td><td><code>#tm-status</code></td><td><strong>Ya</strong> (default <code>aktif</code>)</td><td><code>aktif</code> | <code>pindah</code> saat menambah siswa baru (opsi <code>lulus</code> hanya tersedia saat mengubah lewat Detail)</td></tr>
+              <tr><td>Kontak -- Nama &amp; No. WhatsApp (per baris)</td><td><code>input</code> dalam <code>#tm-kontak-body</code></td><td><strong>Ya, minimal 1 baris lengkap</strong></td><td>Baris dianggap valid hanya jika Nama <em>dan</em> No. WhatsApp terisi; baris lain (No. HP Alt, Email) opsional (lihat BR-05)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>Siswa</code> (<code>studentsData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>nama</code></td><td>string</td><td><strong>Ya</strong></td><td>Nama siswa (lihat BR-03)</td></tr>
+              <tr><td><code>nis</code></td><td>string</td><td><strong>Ya</strong></td><td>Wajib unik (lihat BR-04)</td></tr>
+              <tr><td><code>kelas</code></td><td>string (foreign key ke kode <code>Kelas</code>)</td><td><strong>Ya</strong></td><td>Lihat <a class="xref" href="PRD-sekolah-kelas.html">PRD Kelas</a></td></tr>
+              <tr><td><code>periode</code></td><td>string (foreign key ke nama <code>PeriodeTahunAjaran</code>)</td><td><strong>Ya</strong></td><td>Periode saat siswa duduk di kelas yang tercatat</td></tr>
+              <tr><td><code>status</code></td><td>enum (string)</td><td><strong>Ya</strong></td><td><code>aktif</code> | <code>lulus</code> | <code>pindah</code></td></tr>
+              <tr><td><code>guardians</code></td><td>array dari <code>{ nama, wa, hp, email, relasi, primary }</code></td><td><strong>Ya, minimal 1 elemen</strong></td><td>Diisi saat siswa dibuat (lihat BR-05, BR-06); field <code>primary</code> bersifat vestigial untuk entri baru (selalu tidak diset, hanya dibaca read-only di tabel Detail)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Performa/UX</td><td>Daftar siswa tidak dimuat/ditampilkan sebelum filter wajib lengkap, mencegah render data besar yang tidak perlu secara default</td><td>0 baris data ditampilkan sebelum ketiga filter wajib terisi</td></tr>
+              <tr><td>NFR-02</td><td>Validasi</td><td>Seluruh input form Tambah Siswa divalidasi sebelum data tersimpan</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-03</td><td>Feedback</td><td>Setiap aksi tambah/simpan menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-04</td><td>Konsistensi data</td><td>Siswa yang baru ditambah langsung tersedia di seluruh filter &amp; pencarian terkait (Nama/NIS/Status) tanpa reload halaman</td><td>Update tabel &lt; 100ms setelah aksi</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI untuk perubahan data siswa.</li>
+          <li>Tidak ada cara menghapus siswa dari halaman ini -- hanya mengubah Status jadi <code>lulus</code>/<code>pindah</code>.</li>
+          <li>Kontak wali murid yang tercatat lewat form Tambah Siswa Baru tidak otomatis menjadi akun login (lihat <a class="xref" href="PRD-wali-murid.html">PRD Akun Wali Murid</a> untuk proses itu).</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Pengguna memahami bahwa kontak yang dicatat di sini bersifat informasi pendamping saja -- pendaftaran akun App Wali Murid tetap harus dilakukan terpisah lewat menu Akun Wali Murid.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah perlu jembatan otomatis dari Kontak yang Dapat Dihubungi (dicatat saat Tambah Siswa) menjadi draf akun di menu Akun Wali Murid, supaya Admin tidak perlu input ulang data yang sama dua kali?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu fitur kenaikan kelas massal (ubah Kelas &amp; Periode untuk banyak siswa sekaligus) dibanding satu-satu lewat halaman Detail?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah perlu audit log (pelaku &amp; waktu) untuk setiap perubahan data siswa?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Cascading filter</td><td>Filter berjenjang -- pilihan pada filter pertama (Kategori Sekolah) membatasi pilihan yang tersedia di filter berikutnya (Kelas)</td></tr>
+              <tr><td>Vestigial</td><td>Sisa struktur data dari desain sebelumnya yang masih ada tapi tidak lagi punya fungsi aktif -- di sini: field <code>primary</code> pada kontak</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

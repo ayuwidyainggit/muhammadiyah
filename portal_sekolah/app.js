@@ -82,10 +82,52 @@
   // Bendahara -- serta mendaftarkan akun mobile Wali Murid, tapi TIDAK menyetujuinya sendiri.
   // Bendahara sengaja tidak pegang RBAC akun supaya yang mengendalikan uang tidak sekaligus
   // mengendalikan siapa yang punya akses (segregation of duties).
+  //
+  // Izin bersifat granular per-aksi: Create, Read, Update, Delete. "Read" juga berfungsi sebagai
+  // gate akses menu/halaman (lihat defaultPageFor/applyRbacToSidebar) -- sama seperti pola di
+  // Admin Pusat (app.js miliknya, fungsi cru/cruFull).
+  function cru(c, r, u, d) { return { c, r, u, d }; }
+  function cruFull(v) { return cru(v, v, v, v); }
+
+  // Daftar modul untuk tampilan tab "Role & Hak Akses" (sekolah.html?tab=rbac) -- urutan &
+  // key-nya sama persis dengan key di rbacPerms/NAV_ORDER di bawah.
+  const RBAC_MODULES_SEKOLAH = [
+    { key: 'dashboard', label: 'Dashboard', icon: '🏠' },
+    { key: 'approval', label: 'Approval Write-off', icon: '✅' },
+    { key: 'konfigurasi', label: 'Konfigurasi', icon: '⚙' },
+    { key: 'sekolah', label: 'Manajemen Sekolah', icon: '🏫' },
+    { key: 'wali', label: 'Akun Wali Murid', icon: '📱' },
+    { key: 'murid', label: 'Manajemen Murid', icon: '🧑‍🎓' },
+    { key: 'periode', label: 'Periode Tahun Ajaran', icon: '🗓️' },
+    { key: 'transaksi', label: 'Transaksi & Invoice', icon: '💳' },
+    { key: 'blast', label: 'Blast Notifikasi', icon: '📣' },
+  ];
+  // Role bersifat tetap (tidak bisa tambah/hapus role baru) -- hanya izin per modulnya yang
+  // bisa diatur Admin lewat modal "Kelola Izin". Admin dikunci (tidak bisa diubah izinnya
+  // sendiri) karena hanya Admin yang punya akses modul "sekolah" -- kalau izin ini bisa
+  // diubah sendiri, Admin bisa tidak sengaja mengunci diri sendiri dari RBAC ini.
+  const ROLE_DESKRIPSI = {
+    "Kepala Sekolah": "Melihat ringkasan sekolah & menyetujui write-off; menyetujui/menolak akun Wali Murid yang mendaftar sendiri.",
+    "Bendahara": "Mengelola tagihan, transaksi, notifikasi & konfigurasi sekolah -- tidak bisa menyetujui write-off maupun mengatur akun/RBAC.",
+    "Admin": "Mengelola RBAC, akun staf sekolah, dan pendaftaran akun Wali Murid -- tidak ikut menyetujui write-off (segregation of duties). Izin Admin selalu penuh & tidak bisa diubah.",
+  };
+  // "periode" (Periode Tahun Ajaran) mengikuti akses "transaksi" yang sudah ada sebelumnya --
+  // dulu master data ini ada di tab Tagihan milik Transaksi & Invoice, jadi Bendahara & Admin
+  // (dua role yang sebelumnya bisa akses transaksi) tetap bisa kelola periode setelah dipindah
+  // jadi halaman tersendiri (periode.html).
   const rbacPerms = {
-    "Kepala Sekolah": { dashboard: true, approval: true, konfigurasi: false, sekolah: false, wali: true, murid: false, transaksi: false, blast: false },
-    "Bendahara": { dashboard: true, approval: false, konfigurasi: true, sekolah: false, wali: false, murid: true, transaksi: true, blast: true },
-    "Admin": { dashboard: true, approval: false, konfigurasi: true, sekolah: true, wali: true, murid: true, transaksi: true, blast: true },
+    "Kepala Sekolah": {
+      dashboard: cruFull(true), approval: cruFull(true), konfigurasi: cruFull(false), sekolah: cruFull(false),
+      wali: cruFull(true), murid: cruFull(false), periode: cruFull(false), transaksi: cruFull(false), blast: cruFull(false),
+    },
+    "Bendahara": {
+      dashboard: cruFull(true), approval: cruFull(false), konfigurasi: cruFull(true), sekolah: cruFull(false),
+      wali: cruFull(false), murid: cruFull(true), periode: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
+    },
+    "Admin": {
+      dashboard: cruFull(true), approval: cruFull(false), konfigurasi: cruFull(true), sekolah: cruFull(true),
+      wali: cruFull(true), murid: cruFull(true), periode: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
+    },
   };
 
   // Master Periode Tahun Ajaran -- hanya 1 yang boleh aktif di satu waktu.
@@ -627,11 +669,11 @@
   function getSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); } catch (e) { return null; } }
   function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
 
-  const NAV_ORDER = ['dashboard', 'approval', 'konfigurasi', 'sekolah', 'wali', 'murid', 'transaksi', 'blast'];
-  const PAGE_FOR_KEY = { dashboard: 'dashboard.html', approval: 'approval.html', konfigurasi: 'konfigurasi.html', sekolah: 'sekolah.html', wali: 'wali.html', murid: 'murid.html', transaksi: 'transaksi.html', blast: 'blast.html' };
+  const NAV_ORDER = ['dashboard', 'approval', 'konfigurasi', 'sekolah', 'wali', 'murid', 'periode', 'transaksi', 'blast'];
+  const PAGE_FOR_KEY = { dashboard: 'dashboard.html', approval: 'approval.html', konfigurasi: 'konfigurasi.html', sekolah: 'sekolah.html', wali: 'wali.html', murid: 'murid.html', periode: 'periode.html', transaksi: 'transaksi.html', blast: 'blast.html' };
   function defaultPageFor(peran) {
     const perms = rbacPerms[peran] || {};
-    const key = NAV_ORDER.find(k => perms[k]);
+    const key = NAV_ORDER.find(k => perms[k] && perms[k].r);
     return PAGE_FOR_KEY[key] || 'dashboard.html';
   }
   // called at the top of every protected page: redirects to index.html if not logged in,
@@ -677,12 +719,32 @@
     document.getElementById('dash-view-bendahara').style.display = isKepsek ? 'none' : 'block';
     if (isKepsek) { renderDashboardKepsek(); } else { renderDashboardKpi(); renderReconciliation(); }
   }
+  function canRead(perms, key) { return !!(perms[key] && perms[key].r); }
   function applyRbacToSidebar() {
     const perms = rbacPerms[currentUser.peran] || {};
     navItems.forEach(item => {
       const key = item.dataset.rbac;
       if (!key) return;
-      item.style.display = perms[key] ? 'flex' : 'none';
+      item.style.display = canRead(perms, key) ? 'flex' : 'none';
+    });
+    // Child tanpa data-rbac sendiri (mis. tab Profil/Kategori/Kelas/Pengguna di bawah
+    // Manajemen Sekolah) ikut izin parent-nya. Child yang PUNYA data-rbac sendiri (mis.
+    // Akun Wali Murid / Manajemen Murid) sudah diatur baris di atas -- tetap tampil sesuai
+    // izinnya sendiri walau parent-nya ("sekolah") disembunyikan untuk role itu (lihat
+    // Kepala Sekolah & Bendahara). Header grup sendiri ikut ditampilkan selama parent ATAU
+    // minimal satu child mandiri tadi masih boleh diakses, supaya child tidak "nyangkut"
+    // tanpa header saat role tidak punya izin modul induknya sendiri.
+    document.querySelectorAll('.nav-parent[data-nav-group]').forEach(parent => {
+      const key = parent.dataset.navGroup;
+      const children = document.querySelector(`.nav-children[data-nav-children="${key}"]`);
+      if (!children) return;
+      const parentAllowed = canRead(perms, parent.dataset.rbac);
+      const independentChildren = [...children.querySelectorAll('.nav-item[data-rbac]')];
+      const anyIndependentChildVisible = independentChildren.some(c => canRead(perms, c.dataset.rbac));
+      parent.style.display = (parentAllowed || anyIndependentChildVisible) ? 'flex' : 'none';
+      [...children.querySelectorAll('.nav-item')].forEach(child => {
+        if (!child.dataset.rbac) child.style.display = parentAllowed ? '' : 'none';
+      });
     });
     document.querySelectorAll('.nav-group-label').forEach(label => {
       let sib = label.nextElementSibling, anyVisible = false;
@@ -704,21 +766,34 @@
   // (bukan SPA), expand/collapse-nya dihitung ulang tiap load dari file halaman saat ini + query
   // ?tab=, bukan disimpan di state. Grup yang sedang dibuka otomatis expand & anak aktif ditandai.
   function initNavGroups() {
+    // nav-self dipasang di file statis masing-masing halaman pada item yang mewakili
+    // halaman itu sendiri -- bisa di parent (mis. sekolah.html sendiri) atau di salah satu
+    // child yang merupakan halaman tersendiri (mis. wali.html / murid.html), bukan sekadar
+    // tab ?tab= di dalam parent.
+    const selfItem = document.getElementById('nav-self');
     document.querySelectorAll('.nav-parent[data-nav-group]').forEach(parent => {
       const key = parent.dataset.navGroup;
       const children = document.querySelector(`.nav-children[data-nav-children="${key}"]`);
       if (!children) return;
       if (parent.style.display === 'none') { children.style.display = 'none'; return; }
       children.style.display = '';
-      const isCurrentGroup = parent.id === 'nav-self';
+      const selfIsParent = parent.id === 'nav-self';
+      const selfChild = (!selfIsParent && selfItem && children.contains(selfItem)) ? selfItem : null;
+      const isCurrentGroup = selfIsParent || !!selfChild;
       children.classList.toggle('open', isCurrentGroup);
       parent.classList.toggle('expanded', isCurrentGroup);
       const childEls = [...children.querySelectorAll('.nav-child')];
-      if (isCurrentGroup) {
+      if (selfIsParent) {
+        const tabChildEls = childEls.filter(child => child.dataset.navTab);
         const currentTab = new URLSearchParams(location.search).get('tab');
         childEls.forEach(child => {
-          child.classList.toggle('active', currentTab ? child.dataset.navTab === currentTab : child === childEls[0]);
+          const active = child.dataset.navTab
+            ? (currentTab ? child.dataset.navTab === currentTab : child === tabChildEls[0])
+            : false;
+          child.classList.toggle('active', active);
         });
+      } else if (selfChild) {
+        childEls.forEach(child => child.classList.toggle('active', child === selfChild));
       } else {
         childEls.forEach(child => child.classList.remove('active'));
       }
@@ -768,13 +843,13 @@
 
   // ---- Rekening Penampung ----
   // Bisa lebih dari satu rekening (mis. riwayat ganti bank) -- hanya SATU yang boleh ditandai
-  // "utama" sebagai tujuan pencairan dana aktif, terpisah dari kanal VA yang dilihat wali murid.
+  // "utama" sebagai tujuan pencairan dana aktif. Data ini hanya informasi -- pencairan dana
+  // dilakukan secara manual oleh admin Muhammadiyah.
   const BANK_OPTIONS = ["BCA", "Mandiri", "BNI", "BRI", "BSI -- Bank Syariah Indonesia", "Lainnya"];
-  const JADWAL_DISBURSEMENT_LABEL = { harian: "Harian (T+1)", mingguan: "Mingguan", manual: "Sesuai permintaan (manual)" };
   let rekeningSeq = 1;
   let rekeningEditIdx = null;
   const rekeningPenampungData = [
-    { id: rekeningSeq++, bank: "BSI -- Bank Syariah Indonesia", noRekening: "7123456789", namaPemilik: "SD Muhammadiyah 4 Sidoarjo", jadwalDisbursement: "harian", statusVerifikasi: "terverifikasi", vaAktif: true, utama: true },
+    { id: rekeningSeq++, bank: "BSI -- Bank Syariah Indonesia", noRekening: "7123456789", namaPemilik: "SD Muhammadiyah 4 Sidoarjo", statusVerifikasi: "aktif", utama: true },
   ];
   function fillRekeningBankFilter() {
     const sel = document.getElementById('rekening-filter-bank');
@@ -799,17 +874,25 @@
         <td>${r.bank}${r.utama ? ' <span class="tag-pill ok">UTAMA</span>' : ''}</td>
         <td>${r.noRekening}</td>
         <td>${r.namaPemilik}</td>
-        <td>${JADWAL_DISBURSEMENT_LABEL[r.jadwalDisbursement]}</td>
         <td>${statusBadge(r.statusVerifikasi)}</td>
-        <td>${r.vaAktif ? '<span class="tag-pill ok">VA Aktif</span>' : '<span style="color:var(--muted);font-size:11px;">--</span>'}</td>
         <td>
           <div class="row-actions">
             <button class="icon-btn" onclick="openRekeningPanel(${i})" title="Edit">✎</button>
             <button class="icon-btn icon-btn-red" onclick="removeRekening(${i})" title="Hapus">✕</button>
+            ${r.statusVerifikasi === 'aktif'
+              ? `<button class="btn btn-outline btn-xs" onclick="toggleRekeningStatus(${i})">Nonaktifkan</button>`
+              : `<button class="btn btn-success btn-xs" onclick="toggleRekeningStatus(${i})">Aktifkan</button>`}
           </div>
-          ${!r.utama ? `<button class="btn btn-outline btn-sm" style="width:100%;" onclick="setRekeningUtama(${i})">Jadikan Utama</button>` : ''}
+          ${!r.utama ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setRekeningUtama(${i})">Jadikan Utama</button>` : ''}
         </td>
-      </tr>`).join('') : `<tr><td colspan="7" class="empty-hint">Tidak ada rekening yang cocok dengan filter.</td></tr>`;
+      </tr>`).join('') : `<tr><td colspan="5" class="empty-hint">Tidak ada rekening yang cocok dengan filter.</td></tr>`;
+  }
+  function handleRekBankChange() {
+    const sel = document.getElementById('rek-bank');
+    const wrap = document.getElementById('rek-bank-lainnya-wrap');
+    if (!sel || !wrap) return;
+    wrap.style.display = sel.value === 'Lainnya' ? 'block' : 'none';
+    if (sel.value !== 'Lainnya') document.getElementById('rek-bank-lainnya').value = '';
   }
   function openRekeningPanel(idx) {
     const sel = document.getElementById('rek-bank');
@@ -819,22 +902,20 @@
     if (rekeningEditIdx !== null) {
       const r = rekeningPenampungData[rekeningEditIdx];
       document.getElementById('rekening-panel-title').textContent = 'Edit Rekening Penampung';
-      document.getElementById('rek-bank').value = r.bank;
+      const isCustomBank = !BANK_OPTIONS.includes(r.bank);
+      document.getElementById('rek-bank').value = isCustomBank ? 'Lainnya' : r.bank;
+      document.getElementById('rek-bank-lainnya').value = isCustomBank ? r.bank : '';
       document.getElementById('rek-norek').value = r.noRekening;
       document.getElementById('rek-nama').value = r.namaPemilik;
-      document.getElementById('rek-jadwal').value = r.jadwalDisbursement;
-      document.getElementById('rek-status').value = r.statusVerifikasi;
-      document.getElementById('rek-va-aktif').checked = r.vaAktif;
       document.getElementById('rek-utama').checked = r.utama;
     } else {
       document.getElementById('rekening-panel-title').textContent = 'Tambah Rekening Penampung';
+      document.getElementById('rek-bank-lainnya').value = '';
       document.getElementById('rek-norek').value = '';
       document.getElementById('rek-nama').value = '';
-      document.getElementById('rek-jadwal').value = 'harian';
-      document.getElementById('rek-status').value = 'menunggu_verifikasi';
-      document.getElementById('rek-va-aktif').checked = false;
       document.getElementById('rek-utama').checked = false;
     }
+    handleRekBankChange();
     panel.style.display = 'block';
     panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -843,46 +924,70 @@
     rekeningEditIdx = null;
   }
   function saveRekening() {
-    const bank = document.getElementById('rek-bank').value;
+    const bankSel = document.getElementById('rek-bank').value;
+    const bankLainnya = document.getElementById('rek-bank-lainnya').value.trim();
+    const bank = bankSel === 'Lainnya' ? bankLainnya : bankSel;
     const noRekening = document.getElementById('rek-norek').value.trim();
     const namaPemilik = document.getElementById('rek-nama').value.trim();
-    const jadwalDisbursement = document.getElementById('rek-jadwal').value;
-    const statusVerifikasi = document.getElementById('rek-status').value;
-    const vaAktif = document.getElementById('rek-va-aktif').checked;
     const utama = document.getElementById('rek-utama').checked;
 
-    if (!bank) { showToast('Nama Bank wajib dipilih'); return; }
+    if (!bankSel) { showToast('Nama Bank wajib dipilih'); return; }
+    if (bankSel === 'Lainnya' && bankLainnya.length < 3) { showToast('Nama Bank Lainnya wajib diisi, minimal 3 karakter'); return; }
     if (!/^\d{6,20}$/.test(noRekening)) { showToast('Nomor Rekening wajib angka, 6-20 digit'); return; }
     if (namaPemilik.length < 3) { showToast('Nama Pemilik Rekening minimal 3 karakter'); return; }
     const dup = rekeningPenampungData.some((r, i) => i !== rekeningEditIdx && r.bank === bank && r.noRekening === noRekening);
     if (dup) { showToast('Rekening dengan bank & nomor yang sama sudah terdaftar'); return; }
 
     if (utama) rekeningPenampungData.forEach(r => r.utama = false);
-    const payload = { bank, noRekening, namaPemilik, jadwalDisbursement, statusVerifikasi, vaAktif, utama };
+    const payload = { bank, noRekening, namaPemilik, utama };
+    const commitSaveRekening = () => {
+      if (rekeningEditIdx !== null) {
+        const existing = rekeningPenampungData[rekeningEditIdx];
+        rekeningPenampungData[rekeningEditIdx] = { ...existing, ...payload };
+      } else {
+        if (!rekeningPenampungData.length) payload.utama = true;
+        rekeningPenampungData.push({ id: rekeningSeq++, statusVerifikasi: 'aktif', ...payload });
+      }
+      if (!rekeningPenampungData.some(r => r.utama) && rekeningPenampungData.length) rekeningPenampungData[0].utama = true;
+      closeRekeningPanel();
+      renderRekeningTable();
+      showToast('✓ Rekening Penampung berhasil disimpan');
+    };
     if (rekeningEditIdx !== null) {
-      const id = rekeningPenampungData[rekeningEditIdx].id;
-      rekeningPenampungData[rekeningEditIdx] = { id, ...payload };
+      confirmAction({ title: 'Simpan Perubahan Rekening', message: `Simpan perubahan data rekening ${bank} ini?`, confirmLabel: 'Ya, Simpan' }, commitSaveRekening);
     } else {
-      if (!rekeningPenampungData.length) payload.utama = true;
-      rekeningPenampungData.push({ id: rekeningSeq++, ...payload });
+      commitSaveRekening();
     }
-    if (!rekeningPenampungData.some(r => r.utama) && rekeningPenampungData.length) rekeningPenampungData[0].utama = true;
-    closeRekeningPanel();
-    renderRekeningTable();
-    showToast('✓ Rekening Penampung berhasil disimpan');
   }
   function setRekeningUtama(idx) {
     rekeningPenampungData.forEach((r, i) => r.utama = (i === idx));
     renderRekeningTable();
     showToast(`✓ ${rekeningPenampungData[idx].bank} dijadikan rekening utama`);
   }
+  function toggleRekeningStatus(idx) {
+    const r = rekeningPenampungData[idx];
+    if (r.statusVerifikasi === 'aktif' && r.utama) { showToast('Rekening utama tidak bisa dinonaktifkan -- jadikan rekening lain sebagai utama terlebih dahulu'); return; }
+    const commitToggle = () => {
+      r.statusVerifikasi = r.statusVerifikasi === 'aktif' ? 'nonaktif' : 'aktif';
+      renderRekeningTable();
+      showToast(r.statusVerifikasi === 'aktif' ? `✓ ${r.bank} diaktifkan` : `✓ ${r.bank} berhasil dinonaktifkan`);
+    };
+    if (r.statusVerifikasi === 'aktif') {
+      confirmAction({ title: 'Nonaktifkan Rekening', message: `Nonaktifkan rekening ${r.bank} -- ${r.noRekening}?`, confirmLabel: 'Ya, Nonaktifkan', danger: true }, commitToggle);
+    } else {
+      commitToggle();
+    }
+  }
   function removeRekening(idx) {
     if (rekeningPenampungData.length <= 1) { showToast('Minimal harus ada 1 rekening penampung'); return; }
-    const wasUtama = rekeningPenampungData[idx].utama;
-    rekeningPenampungData.splice(idx, 1);
-    if (wasUtama && rekeningPenampungData.length) rekeningPenampungData[0].utama = true;
-    renderRekeningTable();
-    showToast('Rekening dihapus');
+    const r = rekeningPenampungData[idx];
+    confirmAction({ title: 'Hapus Rekening Penampung', message: `Hapus rekening ${r.bank} -- ${r.noRekening}? Tindakan ini tidak bisa dibatalkan.`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      const wasUtama = r.utama;
+      rekeningPenampungData.splice(idx, 1);
+      if (wasUtama && rekeningPenampungData.length) rekeningPenampungData[0].utama = true;
+      renderRekeningTable();
+      showToast('✓ Rekening berhasil dihapus');
+    });
   }
 
   // ---- Notifikasi: Penerima Tembusan (CC) ----
@@ -949,33 +1054,71 @@
     const waNorm = wa.replace(/[\s-]/g, '');
     const dup = notifikasiCcData.some((c, i) => i !== notifCcEditIdx && c.wa.replace(/[\s-]/g, '') === waNorm);
     if (dup) { showToast('Nomor WhatsApp ini sudah terdaftar sebagai penerima tembusan'); return; }
+    const commitSaveNotifCc = () => {
+      if (notifCcEditIdx !== null) {
+        const id = notifikasiCcData[notifCcEditIdx].id;
+        notifikasiCcData[notifCcEditIdx] = { id, nama, peran, wa, aktif };
+      } else {
+        notifikasiCcData.push({ id: notifCcSeq++, nama, peran, wa, aktif });
+      }
+      closeNotifCcPanel();
+      renderNotifCcTable();
+      showToast('✓ Penerima tembusan berhasil disimpan');
+    };
     if (notifCcEditIdx !== null) {
-      const id = notifikasiCcData[notifCcEditIdx].id;
-      notifikasiCcData[notifCcEditIdx] = { id, nama, peran, wa, aktif };
+      confirmAction({ title: 'Simpan Perubahan Penerima Tembusan', message: `Simpan perubahan data penerima tembusan ${nama}?`, confirmLabel: 'Ya, Simpan' }, commitSaveNotifCc);
     } else {
-      notifikasiCcData.push({ id: notifCcSeq++, nama, peran, wa, aktif });
+      commitSaveNotifCc();
     }
-    closeNotifCcPanel();
-    renderNotifCcTable();
-    showToast('✓ Penerima tembusan berhasil disimpan');
   }
   function removeNotifCc(idx) {
-    notifikasiCcData.splice(idx, 1);
-    renderNotifCcTable();
-    showToast('Penerima tembusan dihapus');
+    const c = notifikasiCcData[idx];
+    confirmAction({ title: 'Hapus Penerima Tembusan', message: `Hapus ${c.nama} dari daftar penerima tembusan?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      notifikasiCcData.splice(idx, 1);
+      renderNotifCcTable();
+      showToast('✓ Penerima tembusan berhasil dihapus');
+    });
   }
 
   // ---- Aturan Reminder & Eskalasi ----
   let aturanReminderSeq = 1;
   const aturanReminderData = [
-    { id: aturanReminderSeq++, offsetHari: -7, nama: "Pengingat Awal", level: "1", channels: { wa: true, sms: false, email: false }, aktif: true },
-    { id: aturanReminderSeq++, offsetHari: -1, nama: "Pengingat Terakhir", level: "1", channels: { wa: true, sms: true, email: false }, aktif: true },
-    { id: aturanReminderSeq++, offsetHari: 5, nama: "Lewat Jatuh Tempo (disesuaikan sekolah ini)", level: "2", channels: { wa: true, sms: true, email: false }, aktif: true },
+    { id: aturanReminderSeq++, offsetHari: -7, nama: "Pengingat Awal", level: "1", channels: { wa: true, email: false, push: false, inapp: false }, aktif: true },
+    { id: aturanReminderSeq++, offsetHari: -1, nama: "Pengingat Terakhir", level: "1", channels: { wa: true, email: false, push: true, inapp: false }, aktif: true },
+    { id: aturanReminderSeq++, offsetHari: 5, nama: "Lewat Jatuh Tempo (disesuaikan sekolah ini)", level: "2", channels: { wa: true, email: false, push: true, inapp: false }, aktif: true },
   ];
+  // Salinan Aturan Default Platform (lihat Konfigurasi Sistem -- Admin Pusat, kartu "Aturan
+  // Reminder & Eskalasi" tag DEFAULT PLATFORM) -- jadi acuan tombol "Reset ke Setelan Awal".
+  // Daftar ini sengaja tidak ikut berubah saat sekolah mengedit aturannya sendiri.
+  const ATURAN_REMINDER_DEFAULT_PLATFORM = [
+    { offsetHari: -7, nama: "Pengingat Awal", level: "1", channels: { wa: true, email: false, push: false, inapp: false } },
+    { offsetHari: -3, nama: "Pengingat Mendekati", level: "1", channels: { wa: true, email: false, push: false, inapp: false } },
+    { offsetHari: -1, nama: "Pengingat Terakhir", level: "1", channels: { wa: true, email: false, push: true, inapp: false } },
+    { offsetHari: 3, nama: "Lewat Jatuh Tempo", level: "2", channels: { wa: true, email: false, push: true, inapp: false } },
+    { offsetHari: 7, nama: "Peringatan Tunggakan", level: "2", channels: { wa: true, email: true, push: true, inapp: true } },
+    { offsetHari: 14, nama: "Eskalasi ke Kepala Sekolah", level: "3", channels: { wa: true, email: true, push: true, inapp: true } },
+  ];
+  function resetAturanReminderToDefault() {
+    if (!document.getElementById('rules-body')) return;
+    confirmAction({
+      title: 'Reset ke Setelan Awal',
+      message: 'Kembalikan Aturan Reminder & Eskalasi sekolah ini ke Aturan Default Platform? Semua penyesuaian khusus sekolah ini (nama, offset, level, channel) akan hilang dan tidak bisa dibatalkan.',
+      confirmLabel: 'Ya, Reset',
+      danger: true,
+    }, () => {
+      aturanReminderData.length = 0;
+      ATURAN_REMINDER_DEFAULT_PLATFORM.forEach(a => aturanReminderData.push({
+        id: aturanReminderSeq++, offsetHari: a.offsetHari, nama: a.nama, level: a.level,
+        channels: { ...a.channels }, aktif: true,
+      }));
+      renderAturanReminderTable();
+      showToast('✓ Aturan Reminder & Eskalasi sekolah ini dikembalikan ke setelan awal (Default Platform)');
+    });
+  }
   // CRUD dipisah seperti fitur lain: Read = tabel ringkas (bukan input langsung), Create/Update
   // lewat panel dengan validasi sendiri-sendiri, Delete langsung per baris via ikon.
   let aturanReminderEditIdx = null;
-  const CHANNEL_LABEL_SHORT = { wa: 'WA', sms: 'SMS', email: 'Email' };
+  const CHANNEL_LABEL_SHORT = { wa: 'WA', email: 'Email', push: 'Push Notif', inapp: 'Notif Aplikasi' };
   function renderAturanReminderTable() {
     if (!document.getElementById('rules-body')) return;
     const q = (document.getElementById('aturan-search').value || '').trim().toLowerCase();
@@ -994,7 +1137,7 @@
         <td>${a.offsetHari > 0 ? `H+${a.offsetHari}` : (a.offsetHari < 0 ? `H${a.offsetHari}` : 'H')}</td>
         <td>${a.nama}</td>
         <td>${REMINDER_LEVEL_LABEL[a.level]}</td>
-        <td>${['wa', 'sms', 'email'].filter(c => a.channels[c]).map(c => CHANNEL_LABEL_SHORT[c]).join(', ') || '--'}</td>
+        <td>${['wa', 'email', 'push', 'inapp'].filter(c => a.channels[c]).map(c => CHANNEL_LABEL_SHORT[c]).join(', ') || '--'}</td>
         <td>${a.aktif ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
         <td>
           <div class="row-actions">
@@ -1014,8 +1157,9 @@
       document.getElementById('ar-nama').value = a.nama;
       document.getElementById('ar-level').value = a.level;
       document.getElementById('ar-ch-wa').checked = a.channels.wa;
-      document.getElementById('ar-ch-sms').checked = a.channels.sms;
       document.getElementById('ar-ch-email').checked = a.channels.email;
+      document.getElementById('ar-ch-push').checked = a.channels.push;
+      document.getElementById('ar-ch-inapp').checked = a.channels.inapp;
       document.getElementById('ar-aktif').checked = a.aktif;
     } else {
       document.getElementById('aturan-panel-title').textContent = 'Tambah Aturan Reminder';
@@ -1023,8 +1167,9 @@
       document.getElementById('ar-nama').value = '';
       document.getElementById('ar-level').value = '1';
       document.getElementById('ar-ch-wa').checked = true;
-      document.getElementById('ar-ch-sms').checked = false;
       document.getElementById('ar-ch-email').checked = false;
+      document.getElementById('ar-ch-push').checked = false;
+      document.getElementById('ar-ch-inapp').checked = false;
       document.getElementById('ar-aktif').checked = true;
     }
     panel.style.display = 'block';
@@ -1040,32 +1185,42 @@
     const level = document.getElementById('ar-level').value;
     const channels = {
       wa: document.getElementById('ar-ch-wa').checked,
-      sms: document.getElementById('ar-ch-sms').checked,
       email: document.getElementById('ar-ch-email').checked,
+      push: document.getElementById('ar-ch-push').checked,
+      inapp: document.getElementById('ar-ch-inapp').checked,
     };
     const aktif = document.getElementById('ar-aktif').checked;
 
     if (!nama) { showToast('Nama Aturan wajib diisi'); return; }
     if (isNaN(offsetHari)) { showToast('Offset Hari harus berupa angka'); return; }
-    if (!channels.wa && !channels.sms && !channels.email) { showToast('Aturan wajib punya minimal 1 channel aktif'); return; }
+    if (!channels.wa && !channels.email && !channels.push && !channels.inapp) { showToast('Aturan wajib punya minimal 1 channel aktif'); return; }
     const dup = aturanReminderData.some((a, i) => i !== aturanReminderEditIdx && a.offsetHari === offsetHari);
     if (dup) { showToast(`Offset Hari ${offsetHari} sudah dipakai aturan lain -- harus unik`); return; }
 
+    const commitSaveAturan = () => {
+      if (aturanReminderEditIdx !== null) {
+        const id = aturanReminderData[aturanReminderEditIdx].id;
+        aturanReminderData[aturanReminderEditIdx] = { id, offsetHari, nama, level, channels, aktif };
+      } else {
+        aturanReminderData.push({ id: aturanReminderSeq++, offsetHari, nama, level, channels, aktif });
+      }
+      closeAturanReminderPanel();
+      renderAturanReminderTable();
+      showToast('✓ Aturan Reminder berhasil disimpan');
+    };
     if (aturanReminderEditIdx !== null) {
-      const id = aturanReminderData[aturanReminderEditIdx].id;
-      aturanReminderData[aturanReminderEditIdx] = { id, offsetHari, nama, level, channels, aktif };
+      confirmAction({ title: 'Simpan Perubahan Aturan Reminder', message: `Simpan perubahan aturan "${nama}"?`, confirmLabel: 'Ya, Simpan' }, commitSaveAturan);
     } else {
-      aturanReminderData.push({ id: aturanReminderSeq++, offsetHari, nama, level, channels, aktif });
+      commitSaveAturan();
     }
-    closeAturanReminderPanel();
-    renderAturanReminderTable();
-    showToast('✓ Aturan Reminder berhasil disimpan');
   }
   function removeAturanReminderRow(idx) {
     const removed = aturanReminderData[idx];
-    aturanReminderData.splice(idx, 1);
-    renderAturanReminderTable();
-    showToast(`Aturan "${removed.nama}" dihapus`);
+    confirmAction({ title: 'Hapus Aturan Reminder', message: `Hapus aturan "${removed.nama}"?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      aturanReminderData.splice(idx, 1);
+      renderAturanReminderTable();
+      showToast(`✓ Aturan "${removed.nama}" berhasil dihapus`);
+    });
   }
 
   // ---- Template Pesan ----
@@ -1131,6 +1286,50 @@
     Object.keys(draft).forEach(ch => Object.assign(templatePesanData[ch], draft[ch]));
     showToast('✓ Template pesan sekolah ini berhasil disimpan');
   }
+  // Salinan Template Pesan Default Platform (lihat Konfigurasi Sistem -- Admin Pusat, kartu
+  // "Template Pesan -- Default Platform"), dengan {nama_sekolah} sudah disubstitusi -- jadi
+  // acuan tombol "Reset ke Setelan Awal" pada tab Template Pesan sekolah ini. Beda dari
+  // templatePesanData di atas (channel wa/sms/email) -- ini mengikuti channel yang benar-benar
+  // tampil di tab ini (wa/email/push/inapp), lihat textarea #tmpl-konfig-{channel}-{level}.
+  const TEMPLATE_PESAN_DEFAULT_PLATFORM = {
+    wa: {
+      "1": "Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo). Tagihan SPP sebesar Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}",
+      "2": "Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo), tagihan SPP Rp{nominal} sudah melewati jatuh tempo {hari_terlambat} hari. Mohon segera diselesaikan: {link_bayar}",
+      "3": "Pemberitahuan penting: tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) telah menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}",
+    },
+    email: {
+      "1": "Yth. Bpk/Ibu Wali dari {nama_siswa},\n\nKami informasikan tagihan SPP SD Muhammadiyah 4 Sidoarjo sebesar Rp{nominal} akan jatuh tempo pada {tanggal_jatuh_tempo}.\n\nSilakan lakukan pembayaran melalui: {link_bayar}\n\nTerima kasih.",
+      "2": "Yth. Bpk/Ibu Wali dari {nama_siswa},\n\nTagihan SPP SD Muhammadiyah 4 Sidoarjo sebesar Rp{nominal} telah melewati jatuh tempo selama {hari_terlambat} hari. Mohon segera diselesaikan melalui: {link_bayar}",
+      "3": "Yth. Bpk/Ibu Wali dari {nama_siswa},\n\nTunggakan SPP SD Muhammadiyah 4 Sidoarjo sudah mencapai {hari_terlambat} hari. Pihak sekolah akan menghubungi Bapak/Ibu untuk membahas penyelesaiannya.",
+    },
+    push: {
+      "1": "Tagihan SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}.",
+      "2": "SPP {nama_siswa} telat {hari_terlambat} hari. Segera lakukan pembayaran.",
+      "3": "Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.",
+    },
+    inapp: {
+      "1": "Tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}",
+      "2": "Tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) sudah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}",
+      "3": "Tunggakan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) sudah {hari_terlambat} hari. {link_bayar}",
+    },
+  };
+  function resetTemplatePesanToDefault() {
+    if (!document.getElementById('tmpl-konfig-wa-1')) return;
+    confirmAction({
+      title: 'Reset ke Setelan Awal',
+      message: 'Kembalikan seluruh Template Pesan (4 channel x 3 level) sekolah ini ke Template Default Platform? Semua penyesuaian redaksi khusus sekolah ini akan hilang dan tidak bisa dibatalkan.',
+      confirmLabel: 'Ya, Reset',
+      danger: true,
+    }, () => {
+      Object.keys(TEMPLATE_PESAN_DEFAULT_PLATFORM).forEach(ch => {
+        Object.keys(TEMPLATE_PESAN_DEFAULT_PLATFORM[ch]).forEach(lvl => {
+          const ta = document.getElementById(`tmpl-konfig-${ch}-${lvl}`);
+          if (ta) ta.value = TEMPLATE_PESAN_DEFAULT_PLATFORM[ch][lvl];
+        });
+      });
+      showToast('✓ Template Pesan sekolah ini dikembalikan ke setelan awal (Default Platform)');
+    });
+  }
   let toastTimer;
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -1140,6 +1339,43 @@
     toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2800);
   }
   function fmtRp(n) { return 'Rp' + n.toLocaleString('id-ID'); }
+
+  // ---- confirm modal (generic, dipakai sebelum Edit/Hapus/Nonaktifkan data yang sudah tersimpan) ----
+  function ensureConfirmModal() {
+    if (document.getElementById('gconfirm-overlay')) return;
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="modal-overlay" id="gconfirm-overlay" onclick="if(event.target===this) closeConfirmModal();">
+        <div class="modal-box" style="max-width:420px;">
+          <div class="modal-head">
+            <h3 id="gconfirm-title">Konfirmasi</h3>
+            <span class="modal-close" onclick="closeConfirmModal()">✕</span>
+          </div>
+          <div class="modal-body">
+            <p id="gconfirm-message" style="margin:0;font-size:13px;color:var(--ink);line-height:1.6;"></p>
+          </div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-ghost" onclick="closeConfirmModal()">Batal</button>
+            <button class="btn" id="gconfirm-btn"></button>
+          </div>
+        </div>
+      </div>`);
+  }
+  function closeConfirmModal() {
+    const overlay = document.getElementById('gconfirm-overlay');
+    if (overlay) overlay.classList.remove('active');
+  }
+  function confirmAction(opts, onConfirm) {
+    ensureConfirmModal();
+    const { title = 'Konfirmasi', message = '', confirmLabel = 'Ya, Lanjutkan', danger = false } = opts;
+    document.getElementById('gconfirm-title').textContent = title;
+    document.getElementById('gconfirm-message').textContent = message;
+    const btn = document.getElementById('gconfirm-btn');
+    btn.textContent = confirmLabel;
+    btn.style.background = danger ? 'var(--red)' : 'var(--navy)';
+    btn.style.color = '#fff';
+    btn.onclick = () => { closeConfirmModal(); onConfirm(); };
+    document.getElementById('gconfirm-overlay').classList.add('active');
+  }
 
   // =========================================================================
   // MANAJEMEN SEKOLAH -- profil sekolah
@@ -1266,10 +1502,12 @@
       if (currentUser && currentUser.email === s.email && peran !== 'Admin') {
         showToast('Tidak bisa mengubah peran akun Anda sendiri menjadi bukan Admin'); return;
       }
-      s.nama = nama; s.peran = peran; s.wa = wa; s.email = email;
-      closeInvitePanel();
-      renderStaffTable();
-      showToast(`✓ Data pengguna ${nama} berhasil diperbarui`);
+      confirmAction({ title: 'Simpan Perubahan Pengguna', message: `Simpan perubahan data pengguna ${nama}?`, confirmLabel: 'Ya, Simpan' }, () => {
+        s.nama = nama; s.peran = peran; s.wa = wa; s.email = email;
+        closeInvitePanel();
+        renderStaffTable();
+        showToast(`✓ Data pengguna ${nama} berhasil diperbarui`);
+      });
       return;
     }
 
@@ -1298,9 +1536,76 @@
   function toggleStaffStatus(idx) {
     const s = staffData[idx];
     if (currentUser && currentUser.email === s.email) { showToast('Tidak bisa menonaktifkan akun Anda sendiri'); return; }
-    s.status = s.status === 'nonaktif' ? 'aktif' : 'nonaktif';
-    renderStaffTable();
-    showToast(s.status === 'nonaktif' ? `Akun ${s.nama} dinonaktifkan` : `Akun ${s.nama} diaktifkan kembali`);
+    const commitToggle = () => {
+      s.status = s.status === 'nonaktif' ? 'aktif' : 'nonaktif';
+      renderStaffTable();
+      showToast(s.status === 'nonaktif' ? `✓ Akun ${s.nama} berhasil dinonaktifkan` : `✓ Akun ${s.nama} diaktifkan kembali`);
+    };
+    if (s.status !== 'nonaktif') {
+      confirmAction({ title: 'Nonaktifkan Pengguna', message: `Nonaktifkan akun ${s.nama}? Pengguna ini tidak akan bisa login sampai diaktifkan kembali.`, confirmLabel: 'Ya, Nonaktifkan', danger: true }, commitToggle);
+    } else {
+      commitToggle();
+    }
+  }
+
+  // =========================================================================
+  // MANAJEMEN SEKOLAH -- Role & Hak Akses (3 role tetap, tidak bisa tambah/hapus role --
+  // hanya izin Create/Read/Update/Delete per modul yang bisa diatur Admin lewat modal
+  // "Kelola Izin". Admin sendiri dikunci -- lihat alasan di komentar ROLE_DESKRIPSI).
+  // =========================================================================
+  function renderRbacRoleTable() {
+    if (!document.getElementById('rbac-role-body')) return;
+    document.getElementById('rbac-role-body').innerHTML = Object.keys(rbacPerms).map(nama => {
+      const locked = nama === 'Admin';
+      return `<tr>
+        <td><b>${nama}</b></td>
+        <td>${ROLE_DESKRIPSI[nama] || ''}</td>
+        <td><button class="btn btn-outline btn-xs" onclick="openRbacPermModalSekolah('${nama}')">${locked ? 'Detail' : 'Kelola Izin'}</button></td>
+      </tr>`;
+    }).join('');
+  }
+  let rbacPermEditRole = null;
+  function openRbacPermModalSekolah(nama) {
+    const perms = rbacPerms[nama];
+    if (!perms) return;
+    rbacPermEditRole = nama;
+    const locked = nama === 'Admin';
+    document.getElementById('rbac-perm-modal-title-sk').textContent = `${locked ? 'Detail Izin' : 'Kelola Izin'} -- ${nama}`;
+    document.getElementById('rbac-perm-modal-sub-sk').textContent = locked
+      ? 'Admin selalu memiliki izin penuh dan tidak bisa diubah -- supaya RBAC ini tidak pernah kehilangan pengelola.'
+      : 'Atur hak akses Create/Read/Update/Delete per modul untuk role ini.';
+    document.getElementById('rbac-perm-body-sk').innerHTML = RBAC_MODULES_SEKOLAH.map(m => {
+      const p = perms[m.key];
+      const chk = (v) => `${v ? 'checked ' : ''}${locked ? 'disabled' : ''}`;
+      return `<tr data-mod-key="${m.key}">
+        <td>${m.icon} ${m.label}</td>
+        <td class="rbac-check-cell"><input type="checkbox" data-act="c" ${chk(p.c)}></td>
+        <td class="rbac-check-cell"><input type="checkbox" data-act="r" ${chk(p.r)}></td>
+        <td class="rbac-check-cell"><input type="checkbox" data-act="u" ${chk(p.u)}></td>
+        <td class="rbac-check-cell"><input type="checkbox" data-act="d" ${chk(p.d)}></td>
+      </tr>`;
+    }).join('');
+    document.getElementById('rbac-perm-save-btn-sk').style.display = locked ? 'none' : 'inline-flex';
+    document.getElementById('rbac-perm-modal-overlay-sk').classList.add('active');
+  }
+  function closeRbacPermModalSekolah() {
+    if (!document.getElementById('rbac-perm-modal-overlay-sk')) return;
+    document.getElementById('rbac-perm-modal-overlay-sk').classList.remove('active');
+    rbacPermEditRole = null;
+  }
+  function saveRbacPermModalSekolah() {
+    if (!rbacPermEditRole || rbacPermEditRole === 'Admin') { closeRbacPermModalSekolah(); return; }
+    const perms = rbacPerms[rbacPermEditRole];
+    document.querySelectorAll('#rbac-perm-body-sk tr[data-mod-key]').forEach(tr => {
+      const key = tr.dataset.modKey;
+      const get = (act) => tr.querySelector(`input[data-act="${act}"]`).checked;
+      perms[key] = cru(get('c'), get('r'), get('u'), get('d'));
+    });
+    const changedRole = rbacPermEditRole;
+    closeRbacPermModalSekolah();
+    if (currentUser && currentUser.peran === changedRole) applyRbacToSidebar();
+    renderRbacRoleTable();
+    showToast(`✓ Izin role "${changedRole}" berhasil disimpan`);
   }
 
   // =========================================================================
@@ -1371,76 +1676,59 @@
     if (!(currentUser && currentUser.peran === 'Admin')) closeDaftarWaliPanel();
   }
   // Siswa yang dipilih di panel daftar/edit wali -- mendukung lebih dari 1 siswa per akun
-  // (kakak-adik). Dicari lewat Kategori Kelas -> Kelas -> Nama Siswa, semua bisa diketik/dicari,
-  // lalu ditambahkan satu per satu ke daftar di bawah tombol "+ Tambah ke Daftar".
+  // (kakak-adik). Dicari langsung lewat 1 kolom pencarian Nama/NIS; Kelas & Kategori Sekolah
+  // ikut ditampilkan otomatis (autofill) dari data siswa yang dipilih, bukan dipilih manual.
   let waliSiswaSelected = [];
-  // Daftar siswa yang cocok dengan filter Kategori Kelas + Kelas saat ini -- dropdown nama siswa
-  // lalu memfilter lagi secara lokal dari daftar ini sambil diketik (dropdown search).
-  let waliSiswaSearchMatches = [];
-  function fillWaliKategoriSelect() {
-    const sel = document.getElementById('wali-siswa-kategori');
-    if (!sel) return;
-    sel.innerHTML = '<option value="">Semua Kategori</option>' +
-      kategoriKelasData.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
-  }
-  function onWaliKategoriChange() {
-    document.getElementById('wali-siswa-kelas-search').value = '';
-    refreshWaliKelasDatalist();
-    refreshWaliSiswaMatches();
-  }
-  function refreshWaliKelasDatalist() {
-    const dl = document.getElementById('wali-kelas-datalist');
-    if (!dl) return;
-    const katId = document.getElementById('wali-siswa-kategori').value;
-    const list = masterKelasData.filter(m => !katId || String(m.kategoriId) === katId);
-    dl.innerHTML = list.map(m => `<option value="${m.kelas}">${m.kelas} (${getKategoriNama(m.kategoriId)})</option>`).join('');
-  }
-  function onWaliKelasInputChange() {
-    refreshWaliSiswaMatches();
-  }
-  function refreshWaliSiswaMatches() {
-    const katId = document.getElementById('wali-siswa-kategori').value;
-    const kelasQuery = (document.getElementById('wali-siswa-kelas-search').value || '').trim().toLowerCase();
-    waliSiswaSearchMatches = studentsData.filter(s => {
-      if (s.status !== 'aktif') return false;
-      if (katId && String(getKategoriIdForKelas(s.kelas)) !== katId) return false;
-      if (kelasQuery && !s.kelas.toLowerCase().includes(kelasQuery)) return false;
-      return true;
-    });
-    document.getElementById('wali-siswa-nama-search').value = '';
-    document.getElementById('wali-siswa-nama-value').value = '';
-    hideWaliSiswaSearchList();
-  }
   function renderWaliSiswaSearchList() {
     const list = document.getElementById('wali-siswa-search-list');
     if (!list) return;
     const q = document.getElementById('wali-siswa-nama-search').value.trim().toLowerCase();
-    const filtered = waliSiswaSearchMatches.filter(s => !q || s.nama.toLowerCase().includes(q));
+    const filtered = q
+      ? studentsData.filter(s => s.status === 'aktif' && (s.nama.toLowerCase().includes(q) || s.nis.includes(q)))
+      : [];
     list.innerHTML = filtered.length
-      ? filtered.map(s => `<div class="search-select-item" onmousedown="selectWaliSiswaFromSearch('${s.nama.replace(/'/g, "\\'")}|${s.kelas}')">${s.nama} -- ${s.kelas}</div>`).join('')
-      : '<div class="search-select-empty">Tidak ada siswa yang cocok</div>';
+      ? filtered.map(s => `<div class="search-select-item" onmousedown="selectWaliSiswaFromSearch('${s.nis}')">${s.nama} -- ${s.kelas} -- NIS ${s.nis}</div>`).join('')
+      : `<div class="search-select-empty">${q ? 'Tidak ada siswa yang cocok' : 'Ketik nama atau NIS siswa...'}</div>`;
     list.style.display = 'block';
   }
   function hideWaliSiswaSearchList() {
     const list = document.getElementById('wali-siswa-search-list');
     if (list) list.style.display = 'none';
   }
-  function selectWaliSiswaFromSearch(key) {
-    const [snama, skelas] = key.split('|');
-    document.getElementById('wali-siswa-nama-search').value = `${snama} -- ${skelas}`;
-    document.getElementById('wali-siswa-nama-value').value = key;
+  // Dipanggil saat user mengetik ulang di kolom pencarian -- batalkan siswa yang sempat
+  // terpilih sebelumnya (teks tidak lagi cocok dengan pilihan tadi) & sembunyikan autofill-nya.
+  function onWaliSiswaSearchInput() {
+    document.getElementById('wali-siswa-nama-value').value = '';
+    clearWaliSiswaAutofill();
+    renderWaliSiswaSearchList();
+  }
+  function clearWaliSiswaAutofill() {
+    document.getElementById('wali-siswa-autofill-wrap').style.display = 'none';
+    document.getElementById('wali-siswa-nis-autofill').value = '';
+    document.getElementById('wali-siswa-kelas-autofill').value = '';
+    document.getElementById('wali-siswa-kategori-autofill').value = '';
+  }
+  function selectWaliSiswaFromSearch(nis) {
+    const s = studentsData.find(s => s.status === 'aktif' && s.nis === nis);
+    if (!s) return;
+    document.getElementById('wali-siswa-nama-search').value = s.nama;
+    document.getElementById('wali-siswa-nama-value').value = nis;
+    document.getElementById('wali-siswa-nis-autofill').value = s.nis;
+    document.getElementById('wali-siswa-kelas-autofill').value = s.kelas;
+    document.getElementById('wali-siswa-kategori-autofill').value = getKategoriNama(getKategoriIdForKelas(s.kelas));
+    document.getElementById('wali-siswa-autofill-wrap').style.display = '';
     hideWaliSiswaSearchList();
   }
   function addWaliSiswaFromSearch() {
-    const val = document.getElementById('wali-siswa-nama-value').value;
-    if (!val) { showToast('Cari dan pilih nama siswa dari dropdown dulu'); return; }
-    const [snama, skelas] = val.split('|');
-    const s = studentsData.find(s => s.status === 'aktif' && s.nama === snama && s.kelas === skelas);
+    const nis = document.getElementById('wali-siswa-nama-value').value;
+    if (!nis) { showToast('Cari dan pilih siswa dari dropdown dulu'); return; }
+    const s = studentsData.find(s => s.status === 'aktif' && s.nis === nis);
     if (!s) { showToast('Siswa tidak ditemukan -- pilih dari dropdown'); return; }
     if (waliSiswaSelected.some(w => w.nama === s.nama && w.kelas === s.kelas)) { showToast(`${s.nama} sudah ada di daftar`); return; }
     waliSiswaSelected.push({ nama: s.nama, kelas: s.kelas });
     document.getElementById('wali-siswa-nama-search').value = '';
     document.getElementById('wali-siswa-nama-value').value = '';
+    clearWaliSiswaAutofill();
     renderWaliSiswaChips();
   }
   function removeWaliSiswa(idx) {
@@ -1456,17 +1744,16 @@
     }
     el.innerHTML = waliSiswaSelected.map((s, i) => `
       <span class="tag-pill info" style="display:inline-flex;align-items:center;gap:6px;margin:3px 6px 3px 0;">
-        ${s.nama} -- ${s.kelas}
+        ${s.nama} -- ${s.kelas} (${getKategoriNama(getKategoriIdForKelas(s.kelas))})
         <span style="cursor:pointer;font-weight:800;" onclick="removeWaliSiswa(${i})" title="Hapus">&times;</span>
       </span>`).join('');
   }
   function resetWaliSiswaPicker(initialSiswaList) {
     waliSiswaSelected = initialSiswaList ? [...initialSiswaList] : [];
-    fillWaliKategoriSelect();
-    document.getElementById('wali-siswa-kategori').value = '';
-    document.getElementById('wali-siswa-kelas-search').value = '';
-    refreshWaliKelasDatalist();
-    refreshWaliSiswaMatches();
+    document.getElementById('wali-siswa-nama-search').value = '';
+    document.getElementById('wali-siswa-nama-value').value = '';
+    clearWaliSiswaAutofill();
+    hideWaliSiswaSearchList();
     renderWaliSiswaChips();
   }
   function openDaftarWaliPanel() {
@@ -1519,10 +1806,12 @@
     const siswaList = waliSiswaSelected.map(s => ({ nama: s.nama, kelas: s.kelas }));
     if (waliEditIdx !== null) {
       const w = waliAccounts[waliEditIdx];
-      w.nama = nama; w.wa = wa; w.email = email; w.siswaList = siswaList;
-      closeDaftarWaliPanel();
-      renderWaliTable();
-      showToast(`✓ Siswa terkait akun ${nama} berhasil diperbarui`);
+      confirmAction({ title: 'Simpan Perubahan Akun Wali', message: `Simpan perubahan siswa terkait akun ${nama}?`, confirmLabel: 'Ya, Simpan' }, () => {
+        w.nama = nama; w.wa = wa; w.email = email; w.siswaList = siswaList;
+        closeDaftarWaliPanel();
+        renderWaliTable();
+        showToast(`✓ Siswa terkait akun ${nama} berhasil diperbarui`);
+      });
       return;
     }
     waliAccounts.unshift({
@@ -1550,9 +1839,16 @@
   }
   function toggleWaliStatus(idx) {
     const w = waliAccounts[idx];
-    w.status = w.status === 'nonaktif' ? 'aktif' : 'nonaktif';
-    renderWaliTable();
-    showToast(w.status === 'nonaktif' ? `Akun ${w.nama} dinonaktifkan` : `Akun ${w.nama} diaktifkan kembali`);
+    const commitToggle = () => {
+      w.status = w.status === 'nonaktif' ? 'aktif' : 'nonaktif';
+      renderWaliTable();
+      showToast(w.status === 'nonaktif' ? `✓ Akun ${w.nama} berhasil dinonaktifkan` : `✓ Akun ${w.nama} diaktifkan kembali`);
+    };
+    if (w.status !== 'nonaktif') {
+      confirmAction({ title: 'Nonaktifkan Akun Wali', message: `Nonaktifkan akun wali murid ${w.nama}? Akun ini tidak bisa SSO ke aplikasi mobile sampai diaktifkan kembali.`, confirmLabel: 'Ya, Nonaktifkan', danger: true }, commitToggle);
+    } else {
+      commitToggle();
+    }
   }
 
   // =========================================================================
@@ -1561,18 +1857,29 @@
   let currentStudentIdx = null;
 
   function renderStudentList() {
-    if (!document.getElementById('murid-search')) return;
-    const search = document.getElementById('murid-search').value.toLowerCase();
-    const kelas = document.getElementById('murid-filter-kelas').value;
+    if (!document.getElementById('murid-filter-periode')) return;
     const periode = document.getElementById('murid-filter-periode').value;
+    const katId = document.getElementById('murid-filter-kategori').value;
+    const kelas = document.getElementById('murid-filter-kelas').value;
+    const nama = (document.getElementById('murid-filter-nama').value || '').trim().toLowerCase();
+    const nis = (document.getElementById('murid-filter-nis').value || '').trim();
     const status = document.getElementById('murid-filter-status').value;
     const tbody = document.getElementById('murid-table-body');
+
+    // Periode, Kategori Sekolah, dan Kelas wajib dipilih dulu sebelum daftar siswa ditampilkan --
+    // default halaman sengaja kosong supaya tidak langsung menampilkan seluruh siswa sekolah.
+    if (!periode || !katId || !kelas) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-hint">Pilih Periode Tahun Ajaran, Kategori Sekolah, dan Kelas terlebih dahulu untuk menampilkan daftar siswa.</td></tr>`;
+      return;
+    }
+
     const rows = studentsData
       .map((s, i) => ({ s, i }))
-      .filter(({s}) => !kelas || s.kelas === kelas)
-      .filter(({s}) => !periode || s.periode === periode)
+      .filter(({s}) => s.periode === periode)
+      .filter(({s}) => s.kelas === kelas)
       .filter(({s}) => !status || s.status === status)
-      .filter(({s}) => !search || s.nama.toLowerCase().includes(search) || s.nis.includes(search));
+      .filter(({s}) => !nama || s.nama.toLowerCase().includes(nama))
+      .filter(({s}) => !nis || s.nis.includes(nis));
 
     if (!rows.length) {
       tbody.innerHTML = `<tr><td colspan="7" class="empty-hint">Tidak ada siswa yang cocok dengan filter.</td></tr>`;
@@ -1590,11 +1897,53 @@
       </tr>`).join('');
   }
 
+  // Kontak yang Dapat Dihubungi pada panel Tambah Siswa Baru -- baris ditambah/dihapus langsung
+  // lewat DOM (bukan state array) supaya nilai yang sedang diketik di baris lain tidak hilang,
+  // konsisten dengan pola accounts-table di halaman lain. Minimal 1 baris selalu tersisa.
+  function addTmKontakRow() {
+    const tbody = document.getElementById('tm-kontak-body');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" placeholder="mis. Bapak/Ibu ..."></td>
+      <td><select>
+        <option value="ayah">ayah</option>
+        <option value="ibu">ibu</option>
+        <option value="wali" selected>wali</option>
+      </select></td>
+      <td><input type="tel" placeholder="08xx-xxxx-xxxx"></td>
+      <td><input type="tel" placeholder="opsional"></td>
+      <td><input type="email" placeholder="opsional"></td>
+      <td><button type="button" class="btn-remove-row" onclick="removeTmKontakRow(this)">✕</button></td>`;
+    tbody.appendChild(tr);
+    updateTmKontakRemoveButtons();
+  }
+  function removeTmKontakRow(btn) {
+    const tbody = document.getElementById('tm-kontak-body');
+    if (!tbody || tbody.querySelectorAll('tr').length <= 1) return;
+    btn.closest('tr').remove();
+    updateTmKontakRemoveButtons();
+  }
+  function updateTmKontakRemoveButtons() {
+    const rows = document.querySelectorAll('#tm-kontak-body tr');
+    rows.forEach(row => {
+      const btn = row.querySelector('.btn-remove-row');
+      if (btn) btn.style.visibility = rows.length <= 1 ? 'hidden' : 'visible';
+    });
+  }
+  function resetTmKontakRows() {
+    const tbody = document.getElementById('tm-kontak-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    addTmKontakRow();
+  }
+
   function openTambahMuridPanel() {
     if (!document.getElementById('tm-kelas')) return;
     document.getElementById('tm-kelas').innerHTML = masterKelasData.map(m =>
       `<option value="${m.kelas}">${m.kelas} (${getKategoriNama(m.kategoriId)})</option>`).join('');
     document.getElementById('tm-periode').innerHTML = periodeOptions();
+    resetTmKontakRows();
     document.getElementById('tambah-murid-panel').style.display = 'block';
     document.getElementById('tambah-murid-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -1604,6 +1953,7 @@
     document.getElementById('tm-nama').value = '';
     document.getElementById('tm-nis').value = '';
     document.getElementById('tm-status').value = 'aktif';
+    document.getElementById('tm-kontak-body').innerHTML = '';
   }
   function simpanMuridBaru() {
     if (!document.getElementById('tm-nama')) return;
@@ -1614,10 +1964,23 @@
     const status = document.getElementById('tm-status').value;
     if (!nama || !nis) { showToast('Nama Siswa dan NIS wajib diisi'); return; }
     if (studentsData.some(s => s.nis === nis)) { showToast(`NIS ${nis} sudah dipakai siswa lain`); return; }
-    studentsData.unshift({ nama, nis, kelas, periode, status, guardians: [] });
+
+    const guardians = [...document.querySelectorAll('#tm-kontak-body tr')].map(row => {
+      const inputs = row.querySelectorAll('input');
+      return {
+        nama: inputs[0].value.trim(),
+        wa: inputs[1].value.trim(),
+        hp: inputs[2].value.trim(),
+        email: inputs[3].value.trim(),
+        relasi: row.querySelector('select').value,
+      };
+    }).filter(g => g.nama && g.wa);
+    if (!guardians.length) { showToast('Minimal 1 Kontak yang Dapat Dihubungi (Nama & No. WhatsApp) wajib diisi'); return; }
+
+    studentsData.unshift({ nama, nis, kelas, periode, status, guardians });
     closeTambahMuridPanel();
     renderStudentList();
-    showToast(`✓ Siswa ${nama} berhasil ditambahkan -- klik Detail untuk melengkapi wali murid`);
+    showToast(`✓ Siswa ${nama} beserta ${guardians.length} kontak berhasil ditambahkan`);
   }
 
   function openStudentDetail(i) {
@@ -1646,47 +2009,41 @@
   function saveStudentInfo() {
     if (!document.getElementById('md-nama')) return;
     const s = studentsData[currentStudentIdx];
-    s.nama = document.getElementById('md-nama').value;
-    s.nis = document.getElementById('md-nis').value;
-    s.kelas = document.getElementById('md-kelas').value;
-    s.periode = document.getElementById('md-periode').value;
-    s.status = document.getElementById('md-status').value;
-    document.getElementById('md-title').textContent = s.nama;
-    document.getElementById('md-sub').textContent = `NIS ${s.nis || '-'} -- Kelas ${s.kelas} -- Periode ${s.periode || '-'}`;
-    fillWriteoffInvoiceSelect();
-    showToast('✓ Info siswa berhasil disimpan');
+    confirmAction({ title: 'Simpan Perubahan Info Siswa', message: `Simpan perubahan data siswa ${s.nama}?`, confirmLabel: 'Ya, Simpan' }, () => {
+      s.nama = document.getElementById('md-nama').value;
+      s.nis = document.getElementById('md-nis').value;
+      s.kelas = document.getElementById('md-kelas').value;
+      s.periode = document.getElementById('md-periode').value;
+      s.status = document.getElementById('md-status').value;
+      document.getElementById('md-title').textContent = s.nama;
+      document.getElementById('md-sub').textContent = `NIS ${s.nis || '-'} -- Kelas ${s.kelas} -- Periode ${s.periode || '-'}`;
+      fillWriteoffInvoiceSelect();
+      showToast('✓ Info siswa berhasil disimpan');
+    });
   }
+  // Tabel ini read-only -- wali murid ditambahkan saat "Tambah Siswa Baru" (lihat simpanMuridBaru)
+  // atau dikelola lewat menu Akun Wali Murid, bukan diedit langsung dari sini.
   function renderGuardianTable() {
     if (!document.getElementById('md-guardian-table')) return;
     const s = studentsData[currentStudentIdx];
     const tbody = document.querySelector('#md-guardian-table tbody');
     if (!s.guardians.length) {
-      tbody.innerHTML = `<tr><td colspan="7" class="empty-hint">Belum ada wali murid terdaftar.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-hint">Belum ada wali murid terdaftar.</td></tr>`;
       return;
     }
-    tbody.innerHTML = s.guardians.map((g, gi) => `
+    tbody.innerHTML = s.guardians.map(g => `
       <tr>
-        <td><input type="text" value="${g.nama}"></td>
-        <td><input type="tel" value="${g.wa}"></td>
-        <td><input type="tel" value="${g.hp}"></td>
-        <td><input type="email" value="${g.email}"></td>
-        <td><select>
+        <td><input type="text" value="${g.nama}" disabled></td>
+        <td><input type="tel" value="${g.wa}" disabled></td>
+        <td><input type="tel" value="${g.hp}" disabled></td>
+        <td><input type="email" value="${g.email}" disabled></td>
+        <td><select disabled>
           <option value="ayah" ${g.relasi==='ayah'?'selected':''}>ayah</option>
           <option value="ibu" ${g.relasi==='ibu'?'selected':''}>ibu</option>
           <option value="wali" ${g.relasi==='wali'?'selected':''}>wali</option>
         </select></td>
-        <td style="text-align:center;"><label class="toggle"><input type="checkbox" ${g.primary?'checked':''}><span class="slider"></span></label></td>
-        <td><button class="btn-remove-row" onclick="removeGuardianRow(this, ${gi})">✕</button></td>
+        <td style="text-align:center;"><label class="toggle"><input type="checkbox" ${g.primary?'checked':''} disabled><span class="slider"></span></label></td>
       </tr>`).join('');
-  }
-  function addGuardianRow() {
-    const s = studentsData[currentStudentIdx];
-    s.guardians.push({ nama: "", wa: "", hp: "", email: "", relasi: "wali", primary: s.guardians.length === 0 });
-    renderGuardianTable();
-  }
-  function removeGuardianRow(btn, gi) {
-    studentsData[currentStudentIdx].guardians.splice(gi, 1);
-    renderGuardianTable();
   }
 
   // =========================================================================
@@ -1707,11 +2064,12 @@
     overdue: 'danger', escalated: 'danger', restructured: 'purple', written_off: 'off', closed: 'off',
     success: 'on', pending: 'warn', failed: 'danger', expired: 'off', refunded: 'blue',
     requested: 'off', pending_approval: 'warn', approved: 'on', rejected: 'danger', applied: 'blue',
-    menunggu_verifikasi: 'warn', terverifikasi: 'on', ditolak: 'danger',
+    menunggu_verifikasi: 'warn', terverifikasi: 'on', ditolak: 'danger', aktif: 'on', nonaktif: 'off',
   };
   const STATUS_LABEL_OVERRIDE = {
     menunggu_verifikasi: 'Menunggu Verifikasi', terverifikasi: 'Terverifikasi', ditolak: 'Ditolak',
     pending_approval: 'Menunggu Approval', approved: 'Disetujui', rejected: 'Ditolak', applied: 'Diterapkan', requested: 'Diajukan',
+    aktif: 'Aktif', nonaktif: 'Nonaktif',
   };
   function statusBadge(status) {
     const cls = STATUS_BADGE[status] || 'off';
@@ -1719,47 +2077,131 @@
     return `<span class="badge-status ${cls}"><span class="dot"></span> ${label}</span>`;
   }
 
-  // ---- Master Periode Tahun Ajaran ----
-  function renderPeriodeTahunAjaran() {
+  // ---- Master Periode Tahun Ajaran (halaman tersendiri: periode.html) ----
+  // CRUD dipisah seperti master data lain: Read = tabel ringkas, Create/Update lewat panel
+  // dengan validasi sendiri-sendiri, Delete langsung per baris (dengan guard minimal 1 periode).
+  // Periode yang sudah dipakai data lain (siswa di studentsData, atau nominal tagihan di
+  // masterTagihanData) dikunci dari Edit & Hapus -- supaya riwayat akademik/tagihan yang sudah
+  // tercatat untuk periode itu tidak bisa berubah/hilang begitu saja. "Jadikan Aktif" & menambah
+  // periode baru tetap boleh kapan saja, karena tidak mengubah data historis apa pun.
+  let periodeEditIdx = null;
+  function isPeriodeReferenced(nama) {
+    return studentsData.some(s => s.periode === nama) || masterTagihanData.some(m => m.periodeTahunAjaran === nama);
+  }
+  function renderMasterPeriodeTable() {
     if (!document.getElementById('master-periode-body')) return;
+    const q = (document.getElementById('periode-search')?.value || '').trim().toLowerCase();
     const tbody = document.getElementById('master-periode-body');
-    tbody.innerHTML = periodeTahunAjaranData.map((p, i) => `
+    const rows = periodeTahunAjaranData
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => !q || p.nama.toLowerCase().includes(q));
+    tbody.innerHTML = rows.length ? rows.map(({ p, i }) => {
+      const locked = isPeriodeReferenced(p.nama);
+      return `
       <tr>
-        <td><input type="text" value="${p.nama}" placeholder="mis. 2026/2027"></td>
-        <td><input type="date" value="${p.mulai}"></td>
-        <td><input type="date" value="${p.selesai}"></td>
-        <td style="text-align:center;"><input type="radio" name="periode-aktif-radio" ${p.aktif ? 'checked' : ''}></td>
-        <td><button class="btn-remove-row" onclick="removePeriodeRow(${i})">✕</button></td>
-      </tr>`).join('');
+        <td>${p.nama}</td>
+        <td>${p.mulai}</td>
+        <td>${p.selesai}</td>
+        <td>${p.aktif ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
+        <td>
+          ${locked
+            ? `<span class="hint" title="Periode ini sudah dipakai data siswa dan/atau master data tagihan -- tidak bisa diubah atau dihapus">🔒 Terpakai</span>`
+            : `<div class="row-actions">
+                 <button class="icon-btn" onclick="openPeriodePanel(${i})" title="Edit">✎</button>
+                 <button class="icon-btn icon-btn-red" onclick="removePeriodeRow(${i})" title="Hapus">✕</button>
+               </div>`}
+          ${!p.aktif ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setPeriodeAktif(${i})">Jadikan Aktif</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="5" class="empty-hint">Tidak ada periode yang cocok dengan pencarian.</td></tr>`;
   }
-  function addPeriodeRow() {
-    periodeTahunAjaranData.push({ id: periodeSeq++, nama: "", mulai: "", selesai: "", aktif: periodeTahunAjaranData.length === 0 });
-    renderPeriodeTahunAjaran();
+  function openPeriodePanel(idx) {
+    if (idx !== undefined && isPeriodeReferenced(periodeTahunAjaranData[idx].nama)) {
+      showToast('Periode ini sudah dipakai data siswa/tagihan -- tidak bisa diubah');
+      return;
+    }
+    periodeEditIdx = (idx === undefined) ? null : idx;
+    const panel = document.getElementById('periode-panel');
+    if (periodeEditIdx !== null) {
+      const p = periodeTahunAjaranData[periodeEditIdx];
+      document.getElementById('periode-panel-title').textContent = 'Edit Periode Tahun Ajaran';
+      document.getElementById('prd-nama').value = p.nama;
+      document.getElementById('prd-mulai').value = p.mulai;
+      document.getElementById('prd-selesai').value = p.selesai;
+      document.getElementById('prd-aktif').checked = p.aktif;
+    } else {
+      document.getElementById('periode-panel-title').textContent = 'Tambah Periode Tahun Ajaran';
+      document.getElementById('prd-nama').value = '';
+      document.getElementById('prd-mulai').value = '';
+      document.getElementById('prd-selesai').value = '';
+      document.getElementById('prd-aktif').checked = false;
+    }
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-  function removePeriodeRow(idx) {
-    const wasActive = periodeTahunAjaranData[idx] && periodeTahunAjaranData[idx].aktif;
-    periodeTahunAjaranData.splice(idx, 1);
-    if (wasActive && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
-    renderPeriodeTahunAjaran();
-    refreshPeriodeDropdowns();
+  function closePeriodePanel() {
+    document.getElementById('periode-panel').style.display = 'none';
+    periodeEditIdx = null;
   }
   function savePeriodeTahunAjaran() {
-    if (!document.getElementById('master-periode-body')) return;
-    const rows = document.querySelectorAll('#master-periode-body tr');
-    rows.forEach((tr, i) => {
-      const inputs = tr.querySelectorAll('input');
-      periodeTahunAjaranData[i] = {
-        id: (periodeTahunAjaranData[i] && periodeTahunAjaranData[i].id) || periodeSeq++,
-        nama: inputs[0].value || 'Tanpa Nama',
-        mulai: inputs[1].value,
-        selesai: inputs[2].value,
-        aktif: inputs[3].checked,
-      };
-    });
-    if (!periodeTahunAjaranData.some(p => p.aktif) && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
-    renderPeriodeTahunAjaran();
+    const nama = document.getElementById('prd-nama').value.trim();
+    const mulai = document.getElementById('prd-mulai').value;
+    const selesai = document.getElementById('prd-selesai').value;
+    const aktif = document.getElementById('prd-aktif').checked;
+
+    if (!nama) { showToast('Tahun Ajaran wajib diisi'); return; }
+    if (!mulai || !selesai) { showToast('Tanggal Mulai & Tanggal Selesai wajib diisi'); return; }
+    if (mulai > selesai) { showToast('Tanggal Mulai tidak boleh setelah Tanggal Selesai'); return; }
+    const dup = periodeTahunAjaranData.some((p, i) => i !== periodeEditIdx && p.nama.toLowerCase() === nama.toLowerCase());
+    if (dup) { showToast(`Periode "${nama}" sudah terdaftar`); return; }
+    if (periodeEditIdx !== null && isPeriodeReferenced(periodeTahunAjaranData[periodeEditIdx].nama)) {
+      showToast('Periode ini sudah dipakai data siswa/tagihan -- tidak bisa diubah');
+      return;
+    }
+
+    const commitSavePeriode = () => {
+      if (aktif) periodeTahunAjaranData.forEach(p => p.aktif = false);
+      const payload = { nama, mulai, selesai, aktif };
+      if (periodeEditIdx !== null) {
+        const existing = periodeTahunAjaranData[periodeEditIdx];
+        periodeTahunAjaranData[periodeEditIdx] = { ...existing, ...payload };
+      } else {
+        if (!periodeTahunAjaranData.length) payload.aktif = true;
+        periodeTahunAjaranData.push({ id: periodeSeq++, ...payload });
+      }
+      if (!periodeTahunAjaranData.some(p => p.aktif) && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
+      closePeriodePanel();
+      renderMasterPeriodeTable();
+      refreshPeriodeDropdowns();
+      showToast('✓ Periode Tahun Ajaran berhasil disimpan');
+    };
+    if (periodeEditIdx !== null) {
+      confirmAction({ title: 'Simpan Perubahan Periode', message: `Simpan perubahan periode "${nama}"?`, confirmLabel: 'Ya, Simpan' }, commitSavePeriode);
+    } else {
+      commitSavePeriode();
+    }
+  }
+  function setPeriodeAktif(idx) {
+    periodeTahunAjaranData.forEach((p, i) => p.aktif = (i === idx));
+    renderMasterPeriodeTable();
     refreshPeriodeDropdowns();
-    showToast('✓ Master periode tahun ajaran berhasil disimpan');
+    showToast(`✓ ${periodeTahunAjaranData[idx].nama} dijadikan periode aktif`);
+  }
+  function removePeriodeRow(idx) {
+    if (periodeTahunAjaranData.length <= 1) { showToast('Minimal harus ada 1 periode tahun ajaran'); return; }
+    const p = periodeTahunAjaranData[idx];
+    if (isPeriodeReferenced(p.nama)) {
+      showToast(`Periode "${p.nama}" sudah dipakai data siswa/tagihan -- tidak bisa dihapus`);
+      return;
+    }
+    confirmAction({ title: 'Hapus Periode Tahun Ajaran', message: `Hapus periode "${p.nama}"?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      const wasActive = p.aktif;
+      periodeTahunAjaranData.splice(idx, 1);
+      if (wasActive && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
+      renderMasterPeriodeTable();
+      refreshPeriodeDropdowns();
+      showToast(`✓ Periode "${p.nama}" berhasil dihapus`);
+    });
   }
   function getActivePeriodeNama() {
     const active = periodeTahunAjaranData.find(p => p.aktif);
@@ -1832,29 +2274,38 @@
     if (!nama) { showToast('Nama Kategori wajib diisi'); return; }
     const dup = kategoriKelasData.some((k, i) => i !== kategoriEditIdx && k.nama.toLowerCase() === nama.toLowerCase());
     if (dup) { showToast(`Nama kategori "${nama}" sudah dipakai kategori lain`); return; }
+    const commitSaveKategori = () => {
+      if (kategoriEditIdx !== null) {
+        kategoriKelasData[kategoriEditIdx].nama = nama;
+      } else {
+        kategoriKelasData.push({ id: kategoriKelasSeq++, nama });
+      }
+      closeKategoriPanel();
+      renderKategoriKelasTable();
+      renderMasterKelasTable();
+      renderMasterTagihan();
+      showToast('✓ Kategori Sekolah berhasil disimpan');
+    };
     if (kategoriEditIdx !== null) {
-      kategoriKelasData[kategoriEditIdx].nama = nama;
+      confirmAction({ title: 'Simpan Perubahan Kategori', message: `Simpan perubahan nama kategori menjadi "${nama}"?`, confirmLabel: 'Ya, Simpan' }, commitSaveKategori);
     } else {
-      kategoriKelasData.push({ id: kategoriKelasSeq++, nama });
+      commitSaveKategori();
     }
-    closeKategoriPanel();
-    renderKategoriKelasTable();
-    renderMasterKelasTable();
-    renderMasterTagihan();
-    showToast('✓ Kategori Sekolah berhasil disimpan');
   }
   function removeKategoriKelasRow(idx) {
     if (kategoriKelasData.length <= 1) { showToast('Minimal harus ada 1 kategori kelas'); return; }
     const removed = kategoriKelasData[idx];
-    const terpakai = masterKelasData.filter(m => m.kategoriId === removed.id).length;
-    kategoriKelasData.splice(idx, 1);
-    const fallbackId = kategoriKelasData[0].id;
-    masterKelasData.forEach(m => { if (m.kategoriId === removed.id) m.kategoriId = fallbackId; });
-    masterTagihanData.forEach(m => { delete m.nominalByKategori[removed.id]; });
-    renderKategoriKelasTable();
-    renderMasterKelasTable();
-    renderMasterTagihan();
-    showToast(`Kategori "${removed.nama}" dihapus${terpakai ? ` -- ${terpakai} kelas dipindah ke kategori "${kategoriKelasData[0].nama}"` : ''}`);
+    confirmAction({ title: 'Hapus Kategori Sekolah', message: `Hapus kategori "${removed.nama}"? Kelas yang memakai kategori ini akan dipindah ke kategori lain.`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      const terpakai = masterKelasData.filter(m => m.kategoriId === removed.id).length;
+      kategoriKelasData.splice(idx, 1);
+      const fallbackId = kategoriKelasData[0].id;
+      masterKelasData.forEach(m => { if (m.kategoriId === removed.id) m.kategoriId = fallbackId; });
+      masterTagihanData.forEach(m => { delete m.nominalByKategori[removed.id]; });
+      renderKategoriKelasTable();
+      renderMasterKelasTable();
+      renderMasterTagihan();
+      showToast(`✓ Kategori "${removed.nama}" berhasil dihapus${terpakai ? ` -- ${terpakai} kelas dipindah ke kategori "${kategoriKelasData[0].nama}"` : ''}`);
+    });
   }
 
   function renderMasterKelasTable() {
@@ -1894,8 +2345,11 @@
       showToast(`Kelas ${target.kelas} masih dipakai ${usedBy.length} siswa -- pindahkan siswanya dulu lewat Manajemen Murid`);
       return;
     }
-    masterKelasData.splice(idx, 1);
-    renderMasterKelasTable();
+    confirmAction({ title: 'Hapus Kelas', message: `Hapus kelas "${target.kelas}" dari master data?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      masterKelasData.splice(idx, 1);
+      renderMasterKelasTable();
+      showToast(`✓ Kelas "${target.kelas}" berhasil dihapus`);
+    });
   }
   function saveMasterKelasOnly() {
     if (!document.getElementById('master-kelas-body')) return;
@@ -1931,27 +2385,52 @@
       }
     }
 
-    edited.forEach(e => {
-      masterKelasData[e.idx].kelas = e.kelas;
-      masterKelasData[e.idx].kategoriId = e.kategoriId;
+    confirmAction({ title: 'Simpan Master Kelas', message: 'Simpan perubahan pada master data kelas ini?', confirmLabel: 'Ya, Simpan' }, () => {
+      edited.forEach(e => {
+        masterKelasData[e.idx].kelas = e.kelas;
+        masterKelasData[e.idx].kategoriId = e.kategoriId;
+      });
+      renderMasterKelasTable();
+      renderMasterTagihan();
+      refreshKelasDropdowns();
+      showToast('✓ Kelas berhasil disimpan');
     });
-    renderMasterKelasTable();
-    renderMasterTagihan();
-    refreshKelasDropdowns();
-    showToast('✓ Kelas berhasil disimpan');
+  }
+  // Kategori Sekolah -> Kelas bersifat cascading di filter Manajemen Murid (pilih Kategori dulu,
+  // baru Kelas menyesuaikan) -- Periode, Kategori, dan Kelas sama-sama wajib diisi sebelum daftar
+  // siswa ditampilkan (lihat renderStudentList).
+  function fillMuridFilterKategori() {
+    const sel = document.getElementById('murid-filter-kategori');
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">-- Pilih Kategori Sekolah --</option>' +
+      kategoriKelasData.map(k => `<option value="${k.id}" ${String(k.id) === cur ? 'selected' : ''}>${k.nama}</option>`).join('');
+  }
+  function onMuridKategoriFilterChange() {
+    const katId = document.getElementById('murid-filter-kategori').value;
+    const kelasSel = document.getElementById('murid-filter-kelas');
+    const curKelas = kelasSel.value;
+    if (!katId) {
+      kelasSel.innerHTML = '<option value="">-- Pilih Kategori Sekolah dulu --</option>';
+      kelasSel.disabled = true;
+    } else {
+      const list = masterKelasData.filter(m => String(m.kategoriId) === katId);
+      kelasSel.innerHTML = '<option value="">-- Pilih Kelas --</option>' +
+        list.map(m => `<option value="${m.kelas}" ${m.kelas === curKelas ? 'selected' : ''}>${m.kelas}</option>`).join('');
+      kelasSel.disabled = false;
+    }
+    renderStudentList();
   }
   function refreshKelasDropdowns() {
-    const muridSel = document.getElementById('murid-filter-kelas');
-    if (muridSel) {
-      const curMurid = muridSel.value;
-      muridSel.innerHTML = `<option value="">Semua Kelas</option>` +
-        masterKelasData.map(m => `<option ${m.kelas === curMurid ? 'selected' : ''}>${m.kelas}</option>`).join('');
+    if (document.getElementById('murid-filter-kategori')) {
+      fillMuridFilterKategori();
+      onMuridKategoriFilterChange();
     }
 
     const muridPeriodeSel = document.getElementById('murid-filter-periode');
     if (muridPeriodeSel) {
       const curMuridPeriode = muridPeriodeSel.value;
-      muridPeriodeSel.innerHTML = `<option value="">Semua Periode</option>` +
+      muridPeriodeSel.innerHTML = `<option value="">-- Pilih Periode Tahun Ajaran --</option>` +
         periodeTahunAjaranData.map(p => `<option ${p.nama === curMuridPeriode ? 'selected' : ''}>${p.nama}</option>`).join('');
     }
 
@@ -2039,27 +2518,33 @@
     renderMasterTagihan();
   }
   function removeMasterTagihanRow(idx) {
-    masterTagihanData.splice(idx, 1);
-    renderMasterTagihan();
+    const m = masterTagihanData[idx];
+    confirmAction({ title: 'Hapus Kategori Tagihan', message: `Hapus kategori tagihan "${m.nama}"?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      masterTagihanData.splice(idx, 1);
+      renderMasterTagihan();
+      showToast(`✓ Kategori tagihan "${m.nama}" berhasil dihapus`);
+    });
   }
   function saveMasterTagihan() {
     if (!document.getElementById('master-tagihan-body')) return;
-    const rows = document.querySelectorAll('#master-tagihan-body tr[data-idx]');
-    rows.forEach(tr => {
-      const idx = parseInt(tr.dataset.idx, 10);
-      const nama = tr.querySelector('td:nth-child(1) input').value || 'Tanpa Nama';
-      const periodeTahunAjaran = tr.querySelector('.mt-periode-tahun').value;
-      const periode = tr.querySelector('td:nth-child(3) select').value;
-      const nominalByKategori = {};
-      tr.querySelectorAll('.mt-nominal-kat').forEach(inp => {
-        nominalByKategori[inp.dataset.katId] = parseInt(inp.value, 10) || 0;
+    confirmAction({ title: 'Simpan Master Data Tagihan', message: 'Simpan perubahan pada master data tagihan ini?', confirmLabel: 'Ya, Simpan' }, () => {
+      const rows = document.querySelectorAll('#master-tagihan-body tr[data-idx]');
+      rows.forEach(tr => {
+        const idx = parseInt(tr.dataset.idx, 10);
+        const nama = tr.querySelector('td:nth-child(1) input').value || 'Tanpa Nama';
+        const periodeTahunAjaran = tr.querySelector('.mt-periode-tahun').value;
+        const periode = tr.querySelector('td:nth-child(3) select').value;
+        const nominalByKategori = {};
+        tr.querySelectorAll('.mt-nominal-kat').forEach(inp => {
+          nominalByKategori[inp.dataset.katId] = parseInt(inp.value, 10) || 0;
+        });
+        const aktif = tr.querySelector('td:nth-child(5) input[type=checkbox]').checked;
+        masterTagihanData[idx] = { nama, periode, periodeTahunAjaran, nominalByKategori, aktif };
       });
-      const aktif = tr.querySelector('td:nth-child(5) input[type=checkbox]').checked;
-      masterTagihanData[idx] = { nama, periode, periodeTahunAjaran, nominalByKategori, aktif };
+      renderMasterTagihan();
+      refreshJenisTagihanDropdowns();
+      showToast('✓ Master data tagihan berhasil disimpan');
     });
-    renderMasterTagihan();
-    refreshJenisTagihanDropdowns();
-    showToast('✓ Master data tagihan berhasil disimpan');
   }
   function refreshJenisTagihanDropdowns() {
     if (!document.getElementById('inv-massal-jenis')) return;

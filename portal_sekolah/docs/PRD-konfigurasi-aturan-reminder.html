@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Aturan Reminder &amp; Eskalasi -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864;
+        --navy-dark: #14243f;
+        --navy-soft: #2c4a7c;
+        --accent: #2e7d32;
+        --accent-light: #e8f5e9;
+        --red: #b71c1c;
+        --red-light: #fdecea;
+        --muted: #5b6674;
+        --border: #e3e7ee;
+        --bg: #f5f6f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: var(--bg);
+        color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark);
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .doc-topbar a {
+        color: #cfe0ff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .doc-topbar a:hover {
+        text-decoration: underline;
+      }
+      .doc-topbar .brand {
+        font-size: 13.5px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .doc-wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+      .doc-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 36px 40px;
+        box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 800;
+        margin: 0 0 18px;
+        border-bottom: 3px solid var(--navy);
+        padding-bottom: 12px;
+      }
+      h2 {
+        color: var(--navy);
+        font-size: 19px;
+        font-weight: 800;
+        margin: 36px 0 12px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 72px;
+      }
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      h3 {
+        color: var(--navy-soft);
+        font-size: 15.5px;
+        font-weight: 700;
+        margin: 22px 0 10px;
+        scroll-margin-top: 72px;
+      }
+      p {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 12px;
+      }
+      ul,
+      ol {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 14px;
+        padding-left: 22px;
+      }
+      li {
+        margin-bottom: 4px;
+      }
+      strong {
+        color: var(--navy);
+        font-weight: 700;
+      }
+      code {
+        background: #eef1f6;
+        color: var(--red);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12.5px;
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 28px 0;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        margin: 10px 0 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12.8px;
+        min-width: 560px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--navy);
+        color: #fff;
+        font-weight: 700;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfd;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .badge.prd {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      a.xref {
+        color: var(--navy-soft);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-color: var(--border);
+      }
+      a.xref:hover {
+        color: var(--navy);
+        text-decoration-color: var(--navy-soft);
+      }
+      .doc-meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .fab-prd {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 13px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        z-index: 999;
+      }
+      .fab-prd:hover {
+        background: var(--navy-soft);
+      }
+      @media print {
+        .doc-topbar,
+        .fab-prd {
+          display: none;
+        }
+        .doc-card {
+          box-shadow: none;
+          border: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>
+          PRD: Aturan Reminder &amp; Eskalasi
+          <span class="badge prd">Portal Sekolah</span>
+        </h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Atribut</th>
+                <th>Isi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nama produk / fitur</td>
+                <td>
+                  Aturan Reminder &amp; Eskalasi -- tab "Aturan Reminder" pada
+                  menu Konfigurasi
+                </td>
+              </tr>
+              <tr>
+                <td>Aplikasi</td>
+                <td>
+                  Portal Sekolah -- Platform Invoicing &amp; Payment SPP
+                  (GeekGarden)
+                </td>
+              </tr>
+              <tr>
+                <td>Lingkup pengguna</td>
+                <td>
+                  Satu sekolah (SD Muhammadiyah 4 Sidoarjo), tidak memengaruhi
+                  sekolah lain
+                </td>
+              </tr>
+              <tr>
+                <td>Versi dokumen</td>
+                <td>v1.0</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>Draft</td>
+              </tr>
+              <tr>
+                <td>Penulis</td>
+                <td>Tim Produk GeekGarden</td>
+              </tr>
+              <tr>
+                <td>Tanggal dibuat</td>
+                <td>02-11-2026</td>
+              </tr>
+              <tr>
+                <td>Dokumen terkait</td>
+                <td>
+                  <a class="xref" href="PRD-konfigurasi-rekening-penampung.html"
+                    >PRD Konfigurasi Rekening Penampung</a
+                  >
+                  (tab lain pada menu yang sama); PRD Template Pesan (tab
+                  "Template Pesan" -- isi konten pesan per level &amp; channel
+                  yang dipicu aturan ini, belum didokumentasikan terpisah)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Versi</th>
+                <th>Tanggal</th>
+                <th>Penulis</th>
+                <th>Perubahan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v1.0</td>
+                <td>02-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>Draft awal.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>
+          Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk
+          fitur <strong>Aturan Reminder &amp; Eskalasi</strong> di level sekolah
+          pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA
+          pada tahap implementasi dan pengujian.
+        </p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>
+          Fitur ini memungkinkan pengguna sekolah mengatur
+          <strong>kapan</strong> dan <strong>lewat channel apa</strong>
+          notifikasi tagihan SPP dikirim ke wali murid, relatif terhadap tanggal
+          jatuh tempo (H-/H+), beserta
+          <strong>level penanganannya</strong> (Pengingat / Peringatan /
+          Eskalasi). Aturan ini
+          <strong>berawal dari salinan Aturan Default Platform</strong>, lalu
+          dapat diubah bebas khusus sekolah ini
+          <strong>tanpa memengaruhi sekolah lain</strong>. Fitur ini
+          <strong>tidak</strong> mengatur isi/teks pesan yang dikirim (itu
+          tanggung jawab tab "Template Pesan") dan
+          <strong>tidak</strong> mengatur mekanisme pengiriman pesan aktual
+          (penjadwalan job, retry, dsb berada di luar lingkup dokumen ini).
+        </p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Aturan Reminder</td>
+                <td>
+                  Satu baris konfigurasi yang menentukan offset hari, nama,
+                  level penanganan, kombinasi channel, dan status aktif untuk
+                  satu pengiriman notifikasi tagihan
+                </td>
+              </tr>
+              <tr>
+                <td>Offset Hari (H-/H+)</td>
+                <td>
+                  Jarak hari antara pengiriman notifikasi dan tanggal jatuh
+                  tempo tagihan. Negatif = sebelum jatuh tempo (H-), positif =
+                  setelah jatuh tempo (H+), nol = tepat hari jatuh tempo (H)
+                </td>
+              </tr>
+              <tr>
+                <td>Level Penanganan</td>
+                <td>
+                  Tingkat keseriusan notifikasi: Level 1 -- Pengingat, Level 2
+                  -- Peringatan, Level 3 -- Eskalasi
+                </td>
+              </tr>
+              <tr>
+                <td>Channel</td>
+                <td>
+                  Kanal pengiriman notifikasi: WA (WhatsApp), Email, Push Notif,
+                  Notif Aplikasi. Satu aturan boleh memakai lebih dari satu
+                  channel sekaligus
+                </td>
+              </tr>
+              <tr>
+                <td>Aturan Default Platform</td>
+                <td>
+                  Aturan reminder bawaan yang berlaku untuk seluruh sekolah
+                  sebagai titik awal, dikelola di luar Portal Sekolah (Admin
+                  Pusat)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p>
+          <a class="xref" href="#sec-3">Bagian 3</a> menjelaskan deskripsi umum,
+          <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional rinci
+          per aksi, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis
+          &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data,
+          <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional,
+          <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi,
+          <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, dan
+          <a class="xref" href="#sec-10">bagian 10</a> glosarium.
+        </p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>
+          Tab ini adalah salah satu dari tiga tab pada menu "Konfigurasi" di
+          Portal Sekolah (bersama "Rekening Penampung" dan "Template Pesan").
+          Aturan yang ditetapkan di sini menentukan kapan sistem memicu
+          pengiriman pesan, sementara isi pesannya diambil dari tab "Template
+          Pesan" berdasarkan kombinasi level &amp; channel yang sama.
+        </p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>
+            Menampilkan daftar aturan reminder milik sekolah dengan filter &amp;
+            pencarian.
+          </li>
+          <li>Menambah aturan reminder baru.</li>
+          <li>Mengubah aturan reminder yang sudah ada.</li>
+          <li>Menghapus aturan reminder.</li>
+          <li>
+            Mengaktifkan/menonaktifkan aturan lewat toggle pada form
+            tambah/edit.
+          </li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Peran (RBAC)</th>
+                <th>Interaksi dengan fitur ini</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Admin Sekolah / Bendahara</td>
+                <td>
+                  Pengguna utama. Menambah, mengubah, menghapus, dan
+                  mengaktifkan/menonaktifkan aturan reminder. Dapat disesuaikan
+                  di fitur RBAC.
+                </td>
+              </tr>
+              <tr>
+                <td>Kepala Sekolah</td>
+                <td>
+                  Dapat melihat daftar aturan sebagai referensi/pengawasan.
+                  Dapat disesuaikan di fitur RBAC.
+                </td>
+              </tr>
+              <tr>
+                <td>Admin Muhammadiyah Pusat (di luar Portal Sekolah)</td>
+                <td>
+                  Mengelola Aturan Default Platform yang menjadi salinan awal
+                  bagi setiap sekolah; tidak mengubah aturan sekolah secara
+                  langsung dari sini.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>
+            Aturan yang diubah/ditambah/dihapus di tab ini
+            <strong>hanya berlaku untuk sekolah ini</strong> dan tidak
+            memengaruhi Aturan Default Platform maupun aturan sekolah lain.
+          </li>
+          <li>
+            Tiap aturan wajib memiliki nama, minimal 1 channel aktif, dan offset
+            hari yang tidak boleh sama dengan aturan lain pada sekolah yang
+            sama.
+          </li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>
+            Saat sekolah baru dibuat, daftar aturan reminder diisi awal dari
+            salinan Aturan Default Platform (di luar lingkup dokumen ini --
+            lihat Pertanyaan Terbuka No. 1).
+          </li>
+          <li>
+            Pengiriman notifikasi aktual (job terjadwal yang membaca aturan ini
+            dan mengeksekusi pengiriman) berada di luar lingkup dokumen ini;
+            dokumen ini hanya mencakup pengaturan aturannya.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Fungsi</th>
+                <th>Deskripsi</th>
+                <th>Prioritas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-01</td>
+                <td>Lihat Daftar Aturan Reminder</td>
+                <td>
+                  Sistem menampilkan tabel berisi Offset Hari (format
+                  <code>H-n</code>/<code>H</code>/<code>H+n</code>), Nama
+                  Aturan, Level Penanganan, Channel (daftar channel aktif
+                  dipisah koma, atau "--" jika tidak ada), status Aktif, dan
+                  Aksi
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-02</td>
+                <td>Cari &amp; Filter Aturan</td>
+                <td>
+                  Sistem menyediakan input pencarian (nama aturan), filter Level
+                  (Semua/Level 1/2/3), filter Channel (Semua/WA/Email/Push
+                  Notif/Notif Aplikasi), dan filter Status
+                  (Semua/Aktif/Nonaktif), yang langsung memperbarui tabel saat
+                  diubah
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-03</td>
+                <td>Tambah Aturan Reminder</td>
+                <td>
+                  Tombol "+ Tambah Aturan" membuka panel form kosong berisi
+                  Offset Hari (default <code>0</code>), Nama Aturan, Level
+                  Penanganan (default Level 1), checkbox Channel (WA/Email/Push
+                  Notif/Notif Aplikasi -- default hanya WA tercentang), dan
+                  toggle Aktif (default tercentang)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-04</td>
+                <td>Simpan Aturan Baru</td>
+                <td>
+                  Saat tombol "Simpan" ditekan pada mode tambah, sistem
+                  memvalidasi input (<a class="xref" href="#sec-5"
+                    >lihat bagian 5</a
+                  >); jika valid, aturan baru ditambahkan ke daftar, panel
+                  ditutup, tabel diperbarui, dan toast "&#10003; Aturan Reminder
+                  berhasil disimpan" ditampilkan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-05</td>
+                <td>Ubah Aturan Reminder</td>
+                <td>
+                  Tombol edit (&#9998;) pada setiap baris membuka panel form
+                  yang sama dalam mode edit ("Edit Aturan Reminder"), terisi
+                  seluruh data aturan terkait (Offset Hari, Nama, Level,
+                  Channel, status Aktif)
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-06</td>
+                <td>Simpan Perubahan Aturan</td>
+                <td>
+                  Saat "Simpan" ditekan pada mode edit, sistem memvalidasi input
+                  dengan aturan unik offset hari yang mengecualikan baris yang
+                  sedang diedit sendiri, lalu memperbarui data aturan tersebut
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-07</td>
+                <td>Batal Tambah/Edit</td>
+                <td>
+                  Tombol "Batal" menutup panel form tanpa menyimpan perubahan
+                  apa pun
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-08</td>
+                <td>Aktifkan/Nonaktifkan Aturan</td>
+                <td>
+                  Status Aktif/Nonaktif suatu aturan diatur lewat toggle "Aktif"
+                  pada panel form tambah/edit (bukan tombol langsung di baris
+                  tabel), lalu tersimpan saat "Simpan" ditekan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-09</td>
+                <td>Hapus Aturan Reminder</td>
+                <td>
+                  Tombol hapus (&#10005;) pada setiap baris langsung menghapus
+                  aturan tersebut dari daftar, memperbarui tabel, dan
+                  menampilkan toast "Aturan "[nama]" dihapus" -- tanpa dialog
+                  konfirmasi tambahan
+                </td>
+                <td>Must</td>
+              </tr>
+              <tr>
+                <td>FR-10</td>
+                <td>Konteks Informasi (Disclaimer)</td>
+                <td>
+                  Sistem menampilkan teks penjelasan tetap pada bagian atas tab:
+                  aturan berawal dari salinan Aturan Default Platform dan dapat
+                  diubah bebas khusus sekolah ini tanpa memengaruhi sekolah
+                  lain, serta petunjuk arti offset hari dan syarat wajib aturan
+                  di bagian bawah kartu
+                </td>
+                <td>Must</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Menambah aturan reminder baru</strong></p>
+        <ol>
+          <li>Pengguna membuka tab "Aturan Reminder".</li>
+          <li>Pengguna menekan "+ Tambah Aturan".</li>
+          <li>
+            Sistem menampilkan panel form kosong dengan judul "Tambah Aturan
+            Reminder", Offset Hari terisi <code>0</code>, Level Penanganan
+            "Level 1 -- Pengingat", channel WA tercentang, dan toggle Aktif
+            menyala.
+          </li>
+          <li>
+            Pengguna mengisi Offset Hari, Nama Aturan, memilih Level Penanganan,
+            mencentang satu atau lebih Channel.
+          </li>
+          <li>Pengguna menekan "Simpan".</li>
+          <li>
+            Sistem memvalidasi input; jika valid, aturan baru ditambahkan, panel
+            ditutup, tabel diperbarui, dan toast "&#10003; Aturan Reminder
+            berhasil disimpan" ditampilkan.
+          </li>
+        </ol>
+
+        <p>
+          <strong
+            >UC-02 -- Menambah aturan dengan offset hari yang sudah dipakai
+            (ditolak)</strong
+          >
+        </p>
+        <ol>
+          <li>
+            Pengguna mengisi Offset Hari dengan nilai yang sudah dipakai aturan
+            lain pada sekolah yang sama, lalu menekan "Simpan".
+          </li>
+          <li>
+            Sistem menolak penyimpanan dan menampilkan toast "Offset Hari [n]
+            sudah dipakai aturan lain -- harus unik".
+          </li>
+          <li>Panel form tetap terbuka, data tidak tersimpan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mengubah aturan reminder</strong></p>
+        <ol>
+          <li>Pengguna menekan tombol edit (&#9998;) pada suatu baris.</li>
+          <li>
+            Sistem membuka panel form mode edit, terisi seluruh data aturan
+            tersebut.
+          </li>
+          <li>Pengguna mengubah salah satu field, lalu menekan "Simpan".</li>
+          <li>
+            Sistem memvalidasi input (pengecekan offset hari unik mengecualikan
+            baris ini sendiri); jika valid, data aturan diperbarui, panel
+            ditutup, tabel diperbarui, dan toast konfirmasi ditampilkan.
+          </li>
+        </ol>
+
+        <p><strong>UC-04 -- Menghapus aturan reminder</strong></p>
+        <ol>
+          <li>Pengguna menekan tombol hapus (&#10005;) pada suatu baris.</li>
+          <li>
+            Sistem langsung menghapus aturan tersebut dari daftar (tanpa dialog
+            konfirmasi), memperbarui tabel, dan menampilkan toast "Aturan
+            "[nama]" dihapus".
+          </li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Aturan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BR-01</td>
+                <td>
+                  Nama Aturan wajib diisi (tidak boleh kosong/hanya spasi)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-02</td>
+                <td>
+                  Offset Hari wajib berupa angka bulat (boleh negatif, nol, atau
+                  positif); nilai non-numerik ditolak dengan pesan "Offset Hari
+                  harus berupa angka"
+                </td>
+              </tr>
+              <tr>
+                <td>BR-03</td>
+                <td>
+                  Offset Hari harus unik di antara seluruh aturan reminder
+                  sekolah ini; saat mode edit, pengecekan keunikan mengecualikan
+                  aturan yang sedang diedit itu sendiri
+                </td>
+              </tr>
+              <tr>
+                <td>BR-04</td>
+                <td>
+                  Setiap aturan wajib memiliki minimal 1 channel aktif
+                  (WA/Email/Push Notif/Notif Aplikasi); jika tidak ada satu pun
+                  yang tercentang, penyimpanan ditolak
+                </td>
+              </tr>
+              <tr>
+                <td>BR-05</td>
+                <td>
+                  Level Penanganan wajib salah satu dari: Level 1 -- Pengingat,
+                  Level 2 -- Peringatan, Level 3 -- Eskalasi
+                </td>
+              </tr>
+              <tr>
+                <td>BR-06</td>
+                <td>
+                  Offset hari negatif berarti notifikasi dikirim sebelum tanggal
+                  jatuh tempo (H-), nol berarti tepat pada tanggal jatuh tempo
+                  (H), dan positif berarti setelah tanggal jatuh tempo (H+)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-07</td>
+                <td>
+                  Aturan baru yang ditambahkan mengikuti nilai toggle "Aktif"
+                  yang dipilih pengguna pada form (default menyala)
+                </td>
+              </tr>
+              <tr>
+                <td>BR-08</td>
+                <td>
+                  Penghapusan aturan dilakukan langsung tanpa batas minimal
+                  jumlah aturan tersisa (berbeda dengan tab Rekening Penampung
+                  yang mewajibkan minimal 1 data)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">
+          5.1 Rekomendasi Validasi per Field (Form Tambah/Edit Aturan)
+        </h3>
+        <p>
+          Rincian aturan input untuk setiap field pada panel form
+          <code>#aturan-panel</code>, sebagai acuan implementasi validasi
+          front-end maupun back-end.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Elemen</th>
+                <th>Wajib?</th>
+                <th>Tipe Karakter</th>
+                <th>Catatan Validasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Offset Hari</td>
+                <td><code>#ar-offset</code></td>
+                <td><strong>Ya</strong></td>
+                <td>Numerik (integer, boleh negatif)</td>
+                <td>
+                  Wajib berupa angka bulat valid; wajib unik di antara aturan
+                  sekolah ini, kecuali terhadap dirinya sendiri saat edit (lihat
+                  BR-02, BR-03)
+                </td>
+              </tr>
+              <tr>
+                <td>Nama Aturan</td>
+                <td><code>#ar-nama</code></td>
+                <td><strong>Ya</strong></td>
+                <td>Teks bebas</td>
+                <td>
+                  Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01)
+                </td>
+              </tr>
+              <tr>
+                <td>Level Penanganan</td>
+                <td><code>#ar-level</code></td>
+                <td><strong>Ya</strong></td>
+                <td>Enum (dropdown daftar tetap)</td>
+                <td>
+                  Salah satu dari: <code>1</code> (Pengingat),
+                  <code>2</code> (Peringatan), <code>3</code> (Eskalasi) (lihat
+                  BR-05)
+                </td>
+              </tr>
+              <tr>
+                <td>Channel</td>
+                <td>
+                  <code>#ar-ch-wa</code>, <code>#ar-ch-email</code>,
+                  <code>#ar-ch-push</code>, <code>#ar-ch-inapp</code>
+                </td>
+                <td><strong>Ya, minimal 1</strong></td>
+                <td>Boolean (checkbox, multi-pilih)</td>
+                <td>
+                  Minimal satu checkbox wajib tercentang; boleh mencentang lebih
+                  dari satu channel sekaligus (lihat BR-04)
+                </td>
+              </tr>
+              <tr>
+                <td>Aktif</td>
+                <td><code>#ar-aktif</code></td>
+                <td>Tidak (opsional, ada default)</td>
+                <td>Boolean (toggle)</td>
+                <td>Default tercentang (Aktif) saat menambah aturan baru</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p>
+          <strong>Entitas: <code>AturanReminder</code></strong>
+        </p>
+        <p>
+          Tipe data dan kewajiban pengisian pada tabel di bawah ini disamakan
+          dengan
+          <a class="xref" href="#sec-5-1"
+            >bagian 5.1 Rekomendasi Validasi per Field</a
+          >, supaya aturan input di form dan skema data entitas selalu
+          konsisten.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Tipe Data</th>
+                <th>Wajib Diisi Pengguna?</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>integer</td>
+                <td>Tidak (dibuat sistem)</td>
+                <td>Pengenal unik, auto-increment per sekolah</td>
+              </tr>
+              <tr>
+                <td><code>offsetHari</code></td>
+                <td>integer</td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  Boleh negatif, nol, atau positif; unik per sekolah (lihat
+                  BR-02, BR-03, BR-06)
+                </td>
+              </tr>
+              <tr>
+                <td><code>nama</code></td>
+                <td>string</td>
+                <td><strong>Ya</strong></td>
+                <td>Nama aturan yang ditampilkan di tabel (lihat BR-01)</td>
+              </tr>
+              <tr>
+                <td><code>level</code></td>
+                <td>enum (string)</td>
+                <td><strong>Ya</strong></td>
+                <td>
+                  <code>"1"</code> | <code>"2"</code> | <code>"3"</code> --
+                  Pengingat/Peringatan/Eskalasi (lihat BR-05)
+                </td>
+              </tr>
+              <tr>
+                <td><code>channels</code></td>
+                <td>
+                  object boolean
+                  <code>{ wa, email, push, inapp }</code>
+                </td>
+                <td><strong>Ya, minimal 1 bernilai true</strong></td>
+                <td>Kombinasi channel aktif untuk aturan ini (lihat BR-04)</td>
+              </tr>
+              <tr>
+                <td><code>aktif</code></td>
+                <td>boolean</td>
+                <td>Tidak langsung -- hasil toggle pada form</td>
+                <td>
+                  Menentukan apakah aturan ini berjalan atau diabaikan sistem
+                  pengiriman (lihat BR-07)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Requirement</th>
+                <th>Target terukur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NFR-01</td>
+                <td>Validasi</td>
+                <td>
+                  Seluruh input form divalidasi sebelum data tersimpan (<a
+                    class="xref"
+                    href="#sec-5"
+                    >lihat bagian 5</a
+                  >)
+                </td>
+                <td>100% percobaan simpan tidak valid ditolak</td>
+              </tr>
+              <tr>
+                <td>NFR-02</td>
+                <td>Usability</td>
+                <td>
+                  Perubahan data (tambah, ubah, hapus) langsung tercermin di
+                  tabel tanpa reload halaman
+                </td>
+                <td>Update tabel &lt; 100ms setelah aksi</td>
+              </tr>
+              <tr>
+                <td>NFR-03</td>
+                <td>Feedback</td>
+                <td>
+                  Setiap aksi simpan/hapus menampilkan toast konfirmasi atau
+                  pesan kesalahan yang jelas
+                </td>
+                <td>100% aksi memberi feedback visual</td>
+              </tr>
+              <tr>
+                <td>NFR-04</td>
+                <td>Konsistensi data</td>
+                <td>
+                  Nilai <code>offsetHari</code> tetap unik di antara seluruh
+                  aturan sekolah ini setelah setiap operasi simpan
+                </td>
+                <td>100% invariant terjaga setelah setiap aksi</td>
+              </tr>
+              <tr>
+                <td>NFR-05</td>
+                <td>Auditability</td>
+                <td>
+                  Perubahan aturan (tambah/ubah/hapus) idealnya tercatat pelaku
+                  &amp; waktu (<a class="xref" href="#sec-9"
+                    >lihat Pertanyaan Terbuka No. 2</a
+                  >)
+                </td>
+                <td>-- (belum diimplementasikan di prototipe)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>
+            Penghapusan aturan dilakukan langsung tanpa dialog konfirmasi
+            tambahan dan tanpa batas minimal jumlah aturan tersisa.
+          </li>
+          <li>
+            Tab ini tidak menampilkan atau menjalankan eksekusi pengiriman
+            notifikasi aktual -- hanya mengatur aturan pemicunya.
+          </li>
+          <li>
+            Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI
+            untuk perubahan aturan.
+          </li>
+          <li>
+            Status Aktif/Nonaktif hanya dapat diubah lewat panel form
+            tambah/edit, tidak ada tombol toggle cepat langsung di baris tabel.
+          </li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>
+            Daftar aturan awal sekolah ini merupakan salinan dari Aturan Default
+            Platform saat sekolah tersebut diaktifkan; mekanisme penyalinan
+            tersebut berada di luar lingkup dokumen ini.
+          </li>
+          <li>
+            Kombinasi level &amp; channel pada setiap aturan di sini harus
+            memiliki pasangan Template Pesan yang sesuai di tab "Template Pesan"
+            supaya notifikasi memiliki isi untuk dikirim.
+          </li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Pertanyaan</th>
+                <th>Ditujukan ke</th>
+                <th>Jawaban</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>
+                  Bagaimana mekanisme dan kapan tepatnya salinan Aturan Default
+                  Platform diterapkan ke sekolah baru -- sekali saat onboarding,
+                  atau bisa disinkronkan ulang kemudian?
+                </td>
+                <td>Solution Architect</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>
+                  Apakah perlu audit log (pelaku &amp; waktu) untuk setiap
+                  perubahan aturan reminder (tambah/ubah/hapus)?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>
+                  Apakah perlu dialog konfirmasi sebelum menghapus aturan
+                  reminder, mengingat saat ini penghapusan langsung tanpa
+                  konfirmasi?
+                </td>
+                <td>Product Owner klien</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>
+                  Apa yang terjadi jika suatu aturan tidak memiliki Template
+                  Pesan untuk kombinasi level &amp; channel-nya saat waktu
+                  pengiriman tiba -- dilewati, gagal, atau jatuh ke template
+                  default?
+                </td>
+                <td>Solution Architect</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>H- / H / H+</td>
+                <td>
+                  Notasi offset hari terhadap tanggal jatuh tempo: H- (sebelum
+                  jatuh tempo), H (tepat jatuh tempo), H+ (setelah jatuh tempo)
+                </td>
+              </tr>
+              <tr>
+                <td>Eskalasi</td>
+                <td>
+                  Level penanganan tertinggi (Level 3) untuk tagihan yang sudah
+                  lama menunggak, umumnya ditembuskan ke Kepala Sekolah
+                </td>
+              </tr>
+              <tr>
+                <td>Channel</td>
+                <td>
+                  Kanal pengiriman notifikasi: WA, Email, Push Notif, Notif
+                  Aplikasi
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen"
+      >📄 Dokumen</a
+    >
+  </body>
+</html>

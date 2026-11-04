@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Profil Sekolah -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Profil Sekolah <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Profil Sekolah -- tab "Profil Sekolah" pada menu Manajemen Sekolah</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah (SD Muhammadiyah 4 Sidoarjo), tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>04-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>sekolah.html</code> (tab <code>profil</code>), <code>app.js</code> (data <code>sekolahProfilData</code>, fungsi <code>initSekolahProfil</code>, <code>saveAlamatSekolah</code>, <code>renderStaffTable</code> -- penghitung Jumlah Siswa Aktif)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-sekolah-kategori.html">PRD Kategori Sekolah</a>, <a class="xref" href="PRD-sekolah-kelas.html">PRD Kelas</a> -- tab lain pada menu yang sama; data identitas sekolah (Nama/NPSN/Jenjang/Wilayah/Daerah/Cabang/Status) bersumber dari proses Pendaftaran Sekolah di Admin Pusat, di luar lingkup dokumen ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody>
+              <tr><td>v1.0</td><td>04-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk tab <strong>Profil Sekolah</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA pada tahap implementasi dan pengujian.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Tab ini menampilkan data identitas sekolah (Nama, NPSN, Jenjang, Wilayah/Daerah/Cabang, Status, Jumlah Siswa Aktif) secara <strong>hanya lihat</strong>, dan menyediakan satu field yang <strong>bisa diubah sendiri oleh Admin sekolah</strong>: Alamat Lengkap. Fitur ini <strong>tidak</strong> mengatur identitas resmi sekolah (nama, NPSN, jenjang, struktur organisasi Wilayah/Daerah/Cabang, status Aktif/Nonaktif) -- field tersebut dikunci dan hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat Muhammadiyah lewat aplikasi Admin Pusat (lihat PRD Pendaftaran Sekolah &amp; Manajemen Sekolah di Admin Pusat, di luar lingkup dokumen ini).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>NPSN</td><td>Nomor Pokok Sekolah Nasional -- kode identitas resmi sekolah, dikunci di tab ini</td></tr>
+              <tr><td>PWM / PDM / PCM</td><td>Pimpinan Wilayah/Daerah/Cabang Muhammadiyah -- struktur organisasi tempat sekolah ini bernaung (Wilayah &gt; Daerah &gt; Cabang)</td></tr>
+              <tr><td>Jumlah Siswa Aktif</td><td>Angka siswa berstatus <code>aktif</code> di data Manajemen Murid, dihitung ulang otomatis -- bukan field yang diinput manual</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Tab ini adalah salah satu dari lima tab pada menu "Manajemen Sekolah" (bersama Kategori Sekolah, Kelas, Pengguna &amp; Akun Sekolah, dan Role &amp; Hak Akses), dan merupakan tab default yang terbuka saat menu ini pertama kali diakses.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan identitas sekolah (read-only): Nama, NPSN, Jenjang, Wilayah, Daerah, Cabang, Status.</li>
+          <li>Menampilkan Jumlah Siswa Aktif secara otomatis (read-only, dihitung dari data Manajemen Murid).</li>
+          <li>Mengubah dan menyimpan Alamat Lengkap sekolah.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Admin</td><td>Satu-satunya peran dengan akses modul "Manajemen Sekolah" (lihat <a class="xref" href="PRD-sekolah-rbac.html">PRD Role &amp; Hak Akses</a>) -- satu-satunya yang bisa membuka &amp; mengubah Alamat Lengkap di tab ini.</td></tr>
+              <tr><td>Kepala Sekolah, Bendahara</td><td>Tidak punya akses modul "sekolah" secara default -- tab ini (dan seluruh menu Manajemen Sekolah) tidak tampil di sidebar mereka, kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Nama Sekolah, NPSN, Jenjang, Wilayah/Daerah/Cabang, dan Status <strong>tidak bisa diubah</strong> dari tab ini sama sekali (field dikunci/<code>disabled</code> di UI).</li>
+          <li>Hanya field Alamat Lengkap yang punya mekanisme simpan di tab ini.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Data identitas sekolah (Nama, NPSN, Jenjang, struktur organisasi, Status) diasumsikan sudah benar sejak proses Pendaftaran Sekolah di Admin Pusat -- tab ini tidak melakukan validasi ulang terhadap data tersebut.</li>
+          <li>Jumlah Siswa Aktif bergantung pada data <code>studentsData</code> yang dikelola di menu Manajemen Murid (lihat <a class="xref" href="PRD-manajemen-murid.html">PRD Manajemen Murid</a>).</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Identitas Sekolah</td><td>Sistem menampilkan Nama Sekolah, NPSN, Jenjang, Wilayah (PWM), Daerah (PDM), Cabang (PCM), dan Status sebagai field terkunci (<code>disabled</code>), tidak bisa diedit dari tab ini</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Lihat Jumlah Siswa Aktif</td><td>Sistem menampilkan hitungan siswa berstatus <code>aktif</code> di data Manajemen Murid sebagai field terkunci, dihitung ulang setiap tabel Pengguna &amp; Akun Sekolah di-render (lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>)</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Ubah Alamat Lengkap</td><td>Sistem menyediakan textarea Alamat Lengkap berisi alamat saat ini, bisa diketik ulang bebas oleh pengguna</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Simpan Alamat Lengkap</td><td>Tombol "Simpan Alamat" memvalidasi isi tidak kosong, lalu menyimpan ke data profil sekolah dan menampilkan toast konfirmasi</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Konteks Informasi (Disclaimer)</td><td>Sistem menampilkan teks penjelasan tetap: field identitas selain alamat hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Mengubah alamat sekolah</strong></p>
+        <ol>
+          <li>Admin membuka tab "Profil Sekolah".</li>
+          <li>Sistem menampilkan alamat sekolah saat ini pada textarea Alamat Lengkap (terisi otomatis saat halaman dimuat).</li>
+          <li>Admin mengubah isi textarea.</li>
+          <li>Admin menekan "Simpan Alamat".</li>
+          <li>Sistem memvalidasi isi tidak kosong; jika valid, alamat baru tersimpan dan toast "&#10003; Alamat sekolah berhasil disimpan" ditampilkan.</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba menyimpan alamat kosong (ditolak)</strong></p>
+        <ol>
+          <li>Admin mengosongkan seluruh isi textarea Alamat Lengkap, lalu menekan "Simpan Alamat".</li>
+          <li>Sistem menolak dan menampilkan toast "Alamat tidak boleh kosong".</li>
+          <li>Data alamat sebelumnya tidak berubah.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Alamat Lengkap wajib diisi (tidak boleh kosong setelah di-<em>trim</em>) sebelum bisa disimpan</td></tr>
+              <tr><td>BR-02</td><td>Nama Sekolah, NPSN, Jenjang, Wilayah, Daerah, Cabang, dan Status tidak memiliki mekanisme simpan di tab ini -- perubahan field tersebut harus dilakukan lewat Admin Pusat</td></tr>
+              <tr><td>BR-03</td><td>Jumlah Siswa Aktif adalah nilai turunan (<em>derived</em>), bukan field yang bisa diinput -- selalu mengikuti jumlah siswa berstatus <code>aktif</code> saat ini di data Manajemen Murid</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Alamat Lengkap</td><td><code>#sk-alamat</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em> (lihat BR-01); tidak ada batas panjang maksimal di prototipe saat ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>SekolahProfil</code></strong> (per sekolah, satu record)</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>alamat</code></td><td>string</td><td><strong>Ya</strong></td><td>Satu-satunya field yang bisa diubah dari tab ini (lihat BR-01)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><em>Catatan: Nama, NPSN, Jenjang, Wilayah/Daerah/Cabang, dan Status bukan bagian dari entitas <code>SekolahProfil</code> yang dikelola tab ini -- field tersebut dirender langsung dari data statis/hasil onboarding Admin Pusat, di luar lingkup model data dokumen ini.</em></p>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Validasi</td><td>Input alamat kosong ditolak sebelum tersimpan</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-02</td><td>Feedback</td><td>Aksi simpan menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-03</td><td>Konsistensi data</td><td>Jumlah Siswa Aktif selalu mencerminkan data Manajemen Murid terbaru tanpa perlu reload halaman penuh</td><td>Nilai ter-update setiap tabel Pengguna &amp; Akun Sekolah di-render</td></tr>
+              <tr><td>NFR-04</td><td>Auditability</td><td>Perubahan Alamat Lengkap idealnya tercatat pelaku &amp; waktu (lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 2</a>)</td><td>-- (belum diimplementasikan di prototipe)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Tidak ada riwayat perubahan (audit trail) yang ditampilkan di UI untuk perubahan Alamat Lengkap.</li>
+          <li>Tidak ada konfirmasi tambahan (dialog "Yakin?") sebelum menyimpan perubahan alamat -- langsung tersimpan saat tombol ditekan dan validasi lolos.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Perhitungan Jumlah Siswa Aktif saat ini "menumpang" pada proses render tabel Pengguna &amp; Akun Sekolah (<code>renderStaffTable</code>) karena kedua elemen berada di halaman yang sama -- bukan proses independen.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah Jumlah Siswa Aktif perlu dipisah jadi fungsi hitung tersendiri yang independen dari render tabel Pengguna, supaya lebih mudah dipastikan selalu akurat?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu audit log (pelaku &amp; waktu) untuk setiap perubahan Alamat Lengkap sekolah?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah field identitas sekolah lain (selain alamat) perlu ditampilkan sebagai "permintaan perubahan" yang bisa diajukan Admin sekolah ke Admin Pusat langsung dari tab ini, dibanding harus menghubungi di luar sistem?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Field terkunci</td><td>Input yang ditampilkan untuk informasi saja (atribut <code>disabled</code>), tidak bisa diubah pengguna dari tab ini</td></tr>
+              <tr><td>Nilai turunan (derived)</td><td>Nilai yang dihitung otomatis dari data lain, bukan diinput manual -- contoh: Jumlah Siswa Aktif</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

@@ -28,7 +28,6 @@
     <a class="nav-item nav-parent active" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html" id="nav-self"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
     <div class="nav-children" data-nav-children="konfigurasi">
       <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
-      <a class="nav-item nav-child" data-nav-tab="notifikasi" href="konfigurasi.html?tab=notifikasi">Notifikasi</a>
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
@@ -37,10 +36,12 @@
       <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
       <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
+      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
       <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="wali" href="wali.html"><span class="ic">📱</span> Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
-    <a class="nav-item" data-rbac="murid" href="murid.html"><span class="ic">🧑‍🎓</span> Manajemen Murid</a>
     <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
@@ -74,21 +75,20 @@
         <div class="page-tab-panel active" data-ptabpanel="rekening">
           <div class="card">
             <h3>Rekening Penampung (Disbursement) <span class="tag-pill pg">BANK</span></h3>
-            <p class="card-desc">Rekening tujuan pencairan dana milik sekolah ini -- terpisah dari kanal VA yang dilihat wali murid saat membayar. Bisa lebih dari satu rekening (mis. riwayat ganti bank); salah satu ditandai <b>Utama</b> sebagai tujuan pencairan aktif.</p>
+            <p class="card-desc">Data rekening ini hanya bersifat informasi -- bukan proses otomatis. Pencairan dana (disbursement) tetap dilakukan secara manual oleh admin Muhammadiyah.</p>
             <div class="filter-bar">
               <input type="text" class="search" id="rekening-search" placeholder="Cari nama pemilik / no. rekening..." oninput="renderRekeningTable()">
               <select id="rekening-filter-bank" onchange="renderRekeningTable()"><option value="">Semua Bank</option></select>
               <select id="rekening-filter-status" onchange="renderRekeningTable()">
                 <option value="">Semua Status</option>
-                <option value="menunggu_verifikasi">Menunggu Verifikasi</option>
-                <option value="terverifikasi">Terverifikasi</option>
-                <option value="ditolak">Ditolak</option>
+                <option value="aktif">Aktif</option>
+                <option value="nonaktif">Nonaktif</option>
               </select>
               <button class="btn btn-primary btn-sm" onclick="openRekeningPanel()">+ Tambah Rekening</button>
             </div>
             <table class="dtab" id="rekening-table">
               <thead>
-                <tr><th style="width:18%">Bank</th><th style="width:14%">No. Rekening</th><th style="width:18%">Nama Pemilik</th><th style="width:14%">Jadwal Disbursement</th><th style="width:14%">Status Verifikasi</th><th style="width:10%">Kanal VA</th><th style="width:12%">Aksi</th></tr>
+                <tr><th style="width:22%">Bank</th><th style="width:18%">No. Rekening</th><th style="width:22%">Nama Pemilik</th><th style="width:18%">Status Verifikasi</th><th style="width:20%">Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -96,27 +96,10 @@
             <div class="card" id="rekening-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
               <h3 id="rekening-panel-title">Tambah Rekening Penampung</h3>
               <div class="grid3">
-                <div class="field"><label>Nama Bank</label><select id="rek-bank"></select></div>
+                <div class="field"><label>Nama Bank</label><select id="rek-bank" onchange="handleRekBankChange()"></select></div>
+                <div class="field" id="rek-bank-lainnya-wrap" style="display:none;"><label>Nama Bank Lainnya</label><input type="text" id="rek-bank-lainnya" placeholder="Tulis nama bank"></div>
                 <div class="field"><label>Nomor Rekening</label><input type="text" id="rek-norek" placeholder="hanya angka, 6-20 digit"></div>
                 <div class="field"><label>Nama Pemilik Rekening</label><input type="text" id="rek-nama"></div>
-              </div>
-              <div class="grid2">
-                <div class="field">
-                  <label>Jadwal Disbursement</label>
-                  <select id="rek-jadwal">
-                    <option value="harian">Harian (T+1)</option><option value="mingguan">Mingguan</option><option value="manual">Sesuai permintaan (manual)</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label>Status Verifikasi</label>
-                  <select id="rek-status">
-                    <option value="menunggu_verifikasi">Menunggu Verifikasi</option><option value="terverifikasi">Terverifikasi</option><option value="ditolak">Ditolak</option>
-                  </select>
-                </div>
-              </div>
-              <div class="switch-row">
-                <div class="txt"><b>Aktifkan juga sebagai kanal VA pembayaran</b><span>Opsional -- wali murid bisa bayar langsung lewat VA bank ini</span></div>
-                <label class="toggle"><input type="checkbox" id="rek-va-aktif"><span class="slider"></span></label>
               </div>
               <div class="switch-row">
                 <div class="txt"><b>Jadikan rekening utama</b><span>Tujuan pencairan dana aktif -- otomatis menggantikan rekening utama sebelumnya</span></div>
@@ -128,6 +111,8 @@
               </div>
             </div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-konfigurasi-rekening-penampung.html" target="_blank" title="Lihat dokumen PRD Konfigurasi Rekening Penampung">📄 Lihat PRD</a>
         </div>
 
         <!-- TAB: NOTIFIKASI -->
@@ -188,7 +173,7 @@
                 <option value="1">Level 1 -- Pengingat</option><option value="2">Level 2 -- Peringatan</option><option value="3">Level 3 -- Eskalasi</option>
               </select>
               <select id="aturan-filter-channel" onchange="renderAturanReminderTable()">
-                <option value="">Semua Channel</option><option value="wa">WA</option><option value="sms">SMS</option><option value="email">Email</option>
+                <option value="">Semua Channel</option><option value="wa">WA</option><option value="email">Email</option><option value="push">Push Notif</option><option value="inapp">Notif Aplikasi</option>
               </select>
               <select id="aturan-filter-aktif" onchange="renderAturanReminderTable()">
                 <option value="">Semua Status</option><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option>
@@ -197,7 +182,7 @@
             </div>
             <table class="dtab" id="rules-table">
               <thead>
-                <tr><th style="width:12%">Offset Hari</th><th style="width:26%">Nama Aturan</th><th style="width:20%">Level Penanganan</th><th style="width:18%">Channel</th><th style="width:10%">Aktif</th><th style="width:14%">Aksi</th></tr>
+                <tr><th style="width:10%">Offset Hari</th><th style="width:22%">Nama Aturan</th><th style="width:16%">Level Penanganan</th><th style="width:28%">Channel</th><th style="width:10%">Aktif</th><th style="width:14%">Aksi</th></tr>
               </thead>
               <tbody id="rules-body"></tbody>
             </table>
@@ -218,10 +203,11 @@
               </div>
               <div class="field">
                 <label>Channel</label>
-                <div>
-                  <label style="margin-right:14px;font-size:12.5px;"><input type="checkbox" id="ar-ch-wa"> WA</label>
-                  <label style="margin-right:14px;font-size:12.5px;"><input type="checkbox" id="ar-ch-sms"> SMS</label>
+                <div style="display:flex;flex-wrap:wrap;gap:14px;">
+                  <label style="font-size:12.5px;"><input type="checkbox" id="ar-ch-wa"> WA</label>
                   <label style="font-size:12.5px;"><input type="checkbox" id="ar-ch-email"> Email</label>
+                  <label style="font-size:12.5px;"><input type="checkbox" id="ar-ch-push"> Push Notif</label>
+                  <label style="font-size:12.5px;"><input type="checkbox" id="ar-ch-inapp"> Notif Aplikasi</label>
                 </div>
               </div>
               <div class="switch-row">
@@ -235,7 +221,12 @@
             </div>
 
             <div class="hint" style="margin-top:8px;">Offset negatif = hari sebelum jatuh tempo (H-), positif = hari setelah jatuh tempo (H+). Tiap aturan wajib punya nama, minimal 1 channel aktif, dan offset hari tidak boleh sama dengan aturan lain.</div>
+            <div class="btn-row" style="justify-content:flex-end;margin-top:12px;">
+              <button class="btn btn-outline-red btn-sm" onclick="resetAturanReminderToDefault()">↺ Reset ke Setelan Awal</button>
+            </div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-konfigurasi-aturan-reminder.html" target="_blank" title="Lihat dokumen PRD Aturan Reminder & Eskalasi">📄 Lihat PRD</a>
         </div>
 
         <!-- TAB: TEMPLATE PESAN -->
@@ -246,23 +237,87 @@
             <div id="tmpl-root-konfig">
               <div class="channel-tabs">
                 <div class="channel-tab active" data-ch="wa" onclick="switchChannel('wa','tmpl-root-konfig')">WhatsApp</div>
-                <div class="channel-tab" data-ch="sms" onclick="switchChannel('sms','tmpl-root-konfig')">SMS</div>
                 <div class="channel-tab" data-ch="email" onclick="switchChannel('email','tmpl-root-konfig')">Email</div>
+                <div class="channel-tab" data-ch="push" onclick="switchChannel('push','tmpl-root-konfig')">Push Notif</div>
+                <div class="channel-tab" data-ch="inapp" onclick="switchChannel('inapp','tmpl-root-konfig')">Notif Aplikasi</div>
               </div>
-              <div class="filter-bar">
-                <select id="tmpl-filter-level" onchange="renderTemplatePesan()">
-                  <option value="">Semua Level</option>
-                  <option value="1">Level 1 -- Pengingat</option><option value="2">Level 2 -- Peringatan</option><option value="3">Level 3 -- Eskalasi</option>
-                </select>
+
+              <div class="channel-panel" data-ch-panel="wa">
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+                  <textarea id="tmpl-konfig-wa-1">Assalamu'alaikum, Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo). Tagihan SPP sebesar Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. Bayar: {link_bayar}</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+                  <textarea id="tmpl-konfig-wa-2">Bpk/Ibu wali {nama_siswa} (SD Muhammadiyah 4 Sidoarjo), tagihan SPP Rp{nominal} sudah melewati jatuh tempo {hari_terlambat} hari. Mohon segera diselesaikan: {link_bayar}</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 3 -- Eskalasi (H+14, ditembuskan ke Kepala Sekolah)</div>
+                  <textarea id="tmpl-konfig-wa-3">Pemberitahuan penting: tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) telah menunggak {hari_terlambat} hari. Kami akan menghubungi untuk pembahasan lebih lanjut. {link_bayar}</textarea>
+                </div>
               </div>
-              <div class="channel-panel" data-ch-panel="wa" id="tmpl-panel-wa"></div>
-              <div class="channel-panel" data-ch-panel="sms" id="tmpl-panel-sms" style="display:none;"></div>
-              <div class="channel-panel" data-ch-panel="email" id="tmpl-panel-email" style="display:none;"></div>
+              <div class="channel-panel" data-ch-panel="email" style="display:none;">
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+                  <textarea id="tmpl-konfig-email-1">Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Kami informasikan tagihan SPP SD Muhammadiyah 4 Sidoarjo sebesar Rp{nominal} akan jatuh tempo pada {tanggal_jatuh_tempo}.
+
+Silakan lakukan pembayaran melalui: {link_bayar}
+
+Terima kasih.</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+                  <textarea id="tmpl-konfig-email-2">Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Tagihan SPP SD Muhammadiyah 4 Sidoarjo sebesar Rp{nominal} telah melewati jatuh tempo selama {hari_terlambat} hari. Mohon segera diselesaikan melalui: {link_bayar}</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 3 -- Eskalasi (H+14)</div>
+                  <textarea id="tmpl-konfig-email-3">Yth. Bpk/Ibu Wali dari {nama_siswa},
+
+Tunggakan SPP SD Muhammadiyah 4 Sidoarjo sudah mencapai {hari_terlambat} hari. Pihak sekolah akan menghubungi Bapak/Ibu untuk membahas penyelesaiannya.</textarea>
+                </div>
+              </div>
+              <div class="channel-panel" data-ch-panel="push" style="display:none;">
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+                  <textarea id="tmpl-konfig-push-1">Tagihan SPP {nama_siswa} Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}.</textarea>
+                  <div class="hint">Push Notif tampil sebagai notifikasi singkat di perangkat wali murid (mis. lock screen) -- jaga teks tetap ringkas.</div>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+                  <textarea id="tmpl-konfig-push-2">SPP {nama_siswa} telat {hari_terlambat} hari. Segera lakukan pembayaran.</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 3 -- Eskalasi (H+14)</div>
+                  <textarea id="tmpl-konfig-push-3">Tunggakan SPP {nama_siswa} {hari_terlambat} hari. Sekolah akan menghubungi Anda.</textarea>
+                </div>
+              </div>
+              <div class="channel-panel" data-ch-panel="inapp" style="display:none;">
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 1 -- Pengingat (H-7 / H-3 / H-1)</div>
+                  <textarea id="tmpl-konfig-inapp-1">Tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) Rp{nominal} jatuh tempo {tanggal_jatuh_tempo}. {link_bayar}</textarea>
+                  <div class="hint">Notif Aplikasi tampil di halaman Notifikasi pada App Wali Murid, tidak terikat batas panjang pesan seperti Push Notif.</div>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 2 -- Peringatan (H+3 / H+7)</div>
+                  <textarea id="tmpl-konfig-inapp-2">Tagihan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) sudah lewat jatuh tempo {hari_terlambat} hari. {link_bayar}</textarea>
+                </div>
+                <div class="tmpl-card">
+                  <div class="tmpl-head">Level 3 -- Eskalasi (H+14)</div>
+                  <textarea id="tmpl-konfig-inapp-3">Tunggakan SPP {nama_siswa} (SD Muhammadiyah 4 Sidoarjo) sudah {hari_terlambat} hari. {link_bayar}</textarea>
+                </div>
+              </div>
             </div>
-            <div class="btn-row" style="justify-content:flex-end;margin-top:16px;">
+            <div class="btn-row" style="justify-content:space-between;margin-top:16px;">
+              <button class="btn btn-outline-red btn-sm" onclick="resetTemplatePesanToDefault()">↺ Reset ke Setelan Awal</button>
               <button class="btn btn-success" onclick="saveTemplatePesan()">Simpan Template</button>
             </div>
           </div>
+
+          <a class="fab-prd" href="docs/PRD-konfigurasi-template-pesan.html" target="_blank" title="Lihat dokumen PRD Konfigurasi Template Pesan">📄 Lihat PRD</a>
         </div>
       </div>
 

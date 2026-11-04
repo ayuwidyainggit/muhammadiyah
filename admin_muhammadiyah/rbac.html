@@ -36,11 +36,14 @@
   <div class="main">
     <div class="topbar">
       <div class="crumb"><span id="crumb-role">Super Admin</span> / <b id="crumb-current">Role &amp; Hak Akses</b></div>
-      <div class="user-chip">
-        <div class="av" id="uc-avatar">SA</div>
-        <div class="info">
-          <div class="name" id="uc-name">Super Admin</div>
-          <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+      <div class="topbar-right">
+        <a class="btn-prd" href="docs/PRD-role-hak-akses.html" target="_blank" rel="noopener">📄 PRD</a>
+        <div class="user-chip">
+          <div class="av" id="uc-avatar">SA</div>
+          <div class="info">
+            <div class="name" id="uc-name">Super Admin</div>
+            <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+          </div>
         </div>
       </div>
     </div>
@@ -56,7 +59,7 @@
 
         <div class="card">
           <h3>Role &amp; Hak Akses Modul</h3>
-          <p class="card-desc">Tambah, ubah, atau hapus role, lalu centang modul yang boleh diakses tiap role. Perubahan berlaku ke seluruh pengguna dengan role tersebut setelah disimpan.</p>
+          <p class="card-desc">Tambah, ubah, atau hapus role, lalu atur hak akses granular per modul (Create/Read/Update/Delete) lewat tombol "Kelola Izin". Perubahan berlaku ke seluruh pengguna dengan role tersebut.</p>
           <table class="accounts" id="rbac-matrix-table">
             <thead>
               <tr id="rbac-matrix-head"></tr>
@@ -65,12 +68,44 @@
           </table>
           <button class="btn-add-row" onclick="addRoleRow()">+ Tambah Role</button>
           <div class="btn-row" style="justify-content:flex-end;">
-            <button class="btn btn-success" onclick="saveRoleMatrix()">Simpan Role &amp; Hak Akses</button>
+            <button class="btn btn-success" onclick="saveRoleMatrix()">Simpan Nama &amp; Deskripsi Role</button>
           </div>
-          <div class="note-box info">⚠️ Super Admin selalu memiliki akses penuh termasuk modul Role &amp; Hak Akses ini sendiri (tidak bisa dihapus/diubah izinnya), supaya tidak pernah ada kondisi di mana tak satu pun role bisa mengelola hak akses. Role lain tidak bisa dihapus selama masih ada pengguna yang memakainya -- pindahkan role pengguna tersebut dulu lewat menu Pengguna.</div>
+          <div class="note-box info">⚠️ Super Admin selalu memiliki akses penuh (Create/Read/Update/Delete) termasuk modul Role &amp; Hak Akses ini sendiri (tidak bisa dihapus/diubah izinnya), supaya tidak pernah ada kondisi di mana tak satu pun role bisa mengelola hak akses. Role lain tidak bisa dihapus selama masih ada pengguna yang memakainya -- pindahkan role pengguna tersebut dulu lewat menu Pengguna. Centang <b>Read</b> pada modul tertentu agar role bisa membuka menunya; Create/Update/Delete baru berpengaruh bila Read juga aktif.</div>
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: KELOLA IZIN ROLE (CRUD per modul) ===================== -->
+<div class="modal-overlay" id="rbac-perm-modal-overlay" onclick="if(event.target===this) closeRbacPermModal();">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-head">
+      <div>
+        <h3 id="rbac-perm-modal-title">Kelola Izin Role</h3>
+        <div class="modal-sub" id="rbac-perm-modal-sub"></div>
+      </div>
+      <span class="modal-close" onclick="closeRbacPermModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <table class="accounts" id="rbac-perm-table">
+        <thead>
+          <tr>
+            <th style="width:36%">Modul</th>
+            <th class="rbac-check-cell">Create</th>
+            <th class="rbac-check-cell">Read</th>
+            <th class="rbac-check-cell">Update</th>
+            <th class="rbac-check-cell">Delete</th>
+          </tr>
+        </thead>
+        <tbody id="rbac-perm-body"></tbody>
+      </table>
+      <div class="note-box info" style="margin-top:12px;">Centang <b>Read</b> agar role ini bisa membuka menu/halaman modul tersebut. Create/Update/Delete tetap bisa dicentang terlepas dari Read, namun baru berpengaruh pada aksi di dalam halaman setelah Read juga aktif.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeRbacPermModal()">Batal</button>
+      <button class="btn btn-success" id="rbac-perm-save-btn" onclick="saveRbacPermModal()">Simpan Izin</button>
     </div>
   </div>
 </div>
@@ -85,25 +120,24 @@
     if (enforcePageAccess('rbac')) {
       applyRbacToSidebar();
 
-      // ---- Role & Hak Akses (full CRUD) ----
+      // ---- Role & Hak Akses (full CRUD role + hak akses granular per-aksi per modul) ----
       function renderRbacMatrixHead() {
         document.getElementById('rbac-matrix-head').innerHTML =
-          '<th style="width:8%">Icon</th><th style="width:16%">Nama Role</th><th style="width:20%">Deskripsi</th>' +
-          rbacModules.map(m => `<th>${m.icon} ${m.label}</th>`).join('') +
-          '<th style="width:7%">Aksi</th>';
+          '<th style="width:16%">Kode Role</th><th style="width:19%">Nama Role</th><th style="width:35%">Deskripsi</th><th style="width:30%">Aksi</th>';
       }
       function roleRowHtml(r) {
         const isSuper = r.nama === 'Super Admin';
-        const cells = rbacModules.map(m => `
-          <td class="rbac-check-cell">
-            <input type="checkbox" ${r.perms[m.key] ? 'checked' : ''} ${isSuper ? 'checked disabled' : ''}>
-          </td>`).join('');
         return `<tr data-role-id="${r.id}">
-          <td><input type="text" value="${r.icon}" style="text-align:center;" ${isSuper ? 'disabled' : ''}></td>
+          <td><input type="text" class="rbac-kode-input" value="${r.kode}" disabled style="background:#f5f6f8;color:var(--muted);"></td>
           <td><input type="text" value="${r.nama}" ${isSuper ? 'disabled' : ''}></td>
           <td><input type="text" value="${r.deskripsi}"></td>
-          ${cells}
-          <td>${isSuper ? '' : '<button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button>'}</td>
+          <td>
+            <div class="row-actions">
+              <button class="btn btn-ghost btn-xs" onclick="openRbacPermModal(${r.id}, true)">Detail</button>
+              <button class="btn btn-outline btn-xs" onclick="openRbacPermModal(${r.id})">Kelola Izin</button>
+              ${isSuper ? '' : '<button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button>'}
+            </div>
+          </td>
         </tr>`;
       }
       function renderRoleMatrix() {
@@ -112,13 +146,14 @@
       function addRoleRow() {
         const tbody = document.getElementById('rbac-matrix-body');
         const tr = document.createElement('tr');
-        const cells = rbacModules.map(() => `<td class="rbac-check-cell"><input type="checkbox"></td>`).join('');
         tr.innerHTML = `
-          <td><input type="text" placeholder="🧩" style="text-align:center;"></td>
+          <td><input type="text" class="rbac-kode-input" value="(otomatis saat disimpan)" disabled style="background:#f5f6f8;color:var(--muted);font-style:italic;"></td>
           <td><input type="text" placeholder="Nama role baru"></td>
           <td><input type="text" placeholder="Deskripsi singkat hak akses role ini"></td>
-          ${cells}
-          <td><button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button></td>`;
+          <td>
+            <span style="color:var(--muted);font-size:11.5px;">Simpan dahulu untuk mengatur izin</span>
+            <button class="btn-remove-row" onclick="removeRoleRow(this)">✕</button>
+          </td>`;
         tbody.appendChild(tr);
       }
       function removeRoleRow(btn) {
@@ -133,6 +168,20 @@
         }
         row.remove();
       }
+      // Kode Role adalah identitas tetap role yang tidak bisa diedit -- dibuat otomatis
+      // dari Nama Role saat role baru pertama kali disimpan, lalu tidak berubah lagi
+      // meski Nama Role diganti kemudian.
+      function slugifyRoleKode(nama) {
+        return nama.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'ROLE';
+      }
+      function generateUniqueRoleKode(nama, excludeId) {
+        const base = slugifyRoleKode(nama);
+        let kode = base, n = 2;
+        while (rolesData.some(r => r.kode === kode && r.id !== excludeId)) {
+          kode = `${base}_${n++}`;
+        }
+        return kode;
+      }
       function saveRoleMatrix() {
         const rows = document.querySelectorAll('#rbac-matrix-body tr');
         const updated = [];
@@ -140,15 +189,14 @@
           const existingId = row.dataset.roleId ? Number(row.dataset.roleId) : null;
           const existing = existingId ? roleById(existingId) : null;
           const isSuper = existing && existing.nama === 'Super Admin';
-          const inputs = row.querySelectorAll('input[type=text]');
-          const checks = row.querySelectorAll('input[type=checkbox]');
-          const icon = inputs[0].value.trim() || '🧩';
-          const nama = isSuper ? existing.nama : inputs[1].value.trim();
-          const deskripsi = inputs[2].value.trim();
+          const inputs = row.querySelectorAll('input[type=text]:not(.rbac-kode-input)');
+          const icon = existing ? existing.icon : '🧩';
+          const nama = isSuper ? existing.nama : inputs[0].value.trim();
+          const deskripsi = inputs[1].value.trim();
           if (!nama) return; // skip incomplete new rows
-          const perms = {};
-          rbacModules.forEach((m, i) => { perms[m.key] = isSuper ? true : checks[i].checked; });
-          updated.push({ id: existing ? existing.id : roleSeq++, nama, icon, deskripsi, perms });
+          const perms = existing ? existing.perms : Object.fromEntries(rbacModules.map(m => [m.key, cru(false, false, false, false)]));
+          const kode = existing ? existing.kode : generateUniqueRoleKode(nama);
+          updated.push({ id: existing ? existing.id : roleSeq++, kode, nama, icon, deskripsi, perms });
         });
         rolesData.length = 0;
         rolesData.push(...updated);
@@ -160,11 +208,79 @@
         showToast('✓ Role & hak akses berhasil disimpan');
       }
 
+      // ---- Modal: Kelola Izin (CRUD per modul) ----
+      // kelompokkan rbacModules sesuai nav-group-label di sidebar (lihat field `group` di app.js)
+      function groupedRbacModules() {
+        const groups = [];
+        let current = null;
+        rbacModules.forEach(m => {
+          if (!current || current.group !== m.group) {
+            current = { group: m.group, mods: [] };
+            groups.push(current);
+          }
+          current.mods.push(m);
+        });
+        return groups;
+      }
+      let rbacPermEditRoleId = null;
+      let rbacPermReadOnly = false;
+      function openRbacPermModal(roleId, readOnly) {
+        const role = roleById(roleId);
+        if (!role) return;
+        rbacPermEditRoleId = roleId;
+        rbacPermReadOnly = !!readOnly;
+        const isSuper = role.nama === 'Super Admin';
+        const locked = isSuper || rbacPermReadOnly;
+        document.getElementById('rbac-perm-modal-title').textContent = `${rbacPermReadOnly ? 'Detail Izin' : 'Kelola Izin'} -- ${role.nama}`;
+        document.getElementById('rbac-perm-modal-sub').textContent = isSuper
+          ? 'Super Admin selalu memiliki akses penuh dan tidak bisa diubah.'
+          : (rbacPermReadOnly ? 'Mode lihat saja -- gunakan "Kelola Izin" untuk mengubah.' : 'Atur hak akses Create/Read/Update/Delete per modul untuk role ini.');
+        document.getElementById('rbac-perm-body').innerHTML = groupedRbacModules().map(g => {
+          const header = g.group ? `<tr><td colspan="5" class="rbac-group-row">${g.group}</td></tr>` : '';
+          const rows = g.mods.map(m => {
+            const p = role.perms[m.key];
+            const chk = (v) => `${v ? 'checked ' : ''}${locked ? 'disabled' : ''}`;
+            const nameStyle = g.group ? ' style="padding-left:28px;"' : '';
+            return `<tr data-mod-key="${m.key}">
+              <td${nameStyle}>${m.icon} ${m.label}</td>
+              <td class="rbac-check-cell"><input type="checkbox" data-act="c" ${chk(p.c)}></td>
+              <td class="rbac-check-cell"><input type="checkbox" data-act="r" ${chk(p.r)}></td>
+              <td class="rbac-check-cell"><input type="checkbox" data-act="u" ${chk(p.u)}></td>
+              <td class="rbac-check-cell"><input type="checkbox" data-act="d" ${chk(p.d)}></td>
+            </tr>`;
+          }).join('');
+          return header + rows;
+        }).join('');
+        document.getElementById('rbac-perm-save-btn').style.display = locked ? 'none' : 'inline-flex';
+        document.getElementById('rbac-perm-modal-overlay').classList.add('active');
+      }
+      function closeRbacPermModal() {
+        document.getElementById('rbac-perm-modal-overlay').classList.remove('active');
+        rbacPermEditRoleId = null;
+        rbacPermReadOnly = false;
+      }
+      function saveRbacPermModal() {
+        const role = roleById(rbacPermEditRoleId);
+        if (!role || role.nama === 'Super Admin' || rbacPermReadOnly) { closeRbacPermModal(); return; }
+        document.querySelectorAll('#rbac-perm-body tr[data-mod-key]').forEach(tr => {
+          const key = tr.dataset.modKey;
+          const get = (act) => tr.querySelector(`input[data-act="${act}"]`).checked;
+          role.perms[key] = { c: get('c'), r: get('r'), u: get('u'), d: get('d') };
+        });
+        renderRoleMatrix();
+        if (currentUser && currentUser.roleId === role.id) applyRbacToSidebar();
+        closeRbacPermModal();
+        showToast(`✓ Izin role "${role.nama}" berhasil disimpan`);
+      }
+
       renderRbacMatrixHead();
       renderRoleMatrix();
 
       // expose to inline onclick="" handlers in the markup above
-      Object.assign(window, { addRoleRow, removeRoleRow, saveRoleMatrix });
+      Object.assign(window, {
+        addRoleRow, removeRoleRow, saveRoleMatrix,
+        openRbacPermModal, closeRbacPermModal, saveRbacPermModal,
+      });
     }
   }
 </script>
