@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Riwayat Pembayaran & Konfirmasi -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 Aplikasi Wali Murid -- Dokumen PRD</span>
+  <a href="../riwayat.html">&larr; Lihat Prototipe riwayat.html</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Riwayat Pembayaran &amp; Konfirmasi (Wali Murid)</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+<tbody>
+<tr><td>Nama produk / fitur</td><td>Riwayat Pembayaran &amp; Konfirmasi Pembayaran Saya (Aplikasi Wali Murid)</td></tr>
+<tr><td>Klien / proyek</td><td>Aplikasi Wali Murid -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+<tr><td>Versi dokumen</td><td>v0.1</td></tr>
+<tr><td>Status</td><td>Draft</td></tr>
+<tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+<tr><td>Product Owner</td><td>[Nama PO Klien]</td></tr>
+<tr><td>Solution Architect</td><td>[Nama SA]</td></tr>
+<tr><td>Tanggal dibuat</td><td>08-11-2026</td></tr>
+<tr><td>Target rilis</td><td>[DD-MM-YYYY / Sprint X]</td></tr>
+<tr><td>Dokumen terkait</td><td><code>riwayat.html</code>, <code>app.js</code>, <code>bayar.html</code>, <code>profil.html</code>, PRD Profil Wali Murid, PRD Laporan Pemasukan (Admin Pusat), Portal Sekolah (verifikasi Bendahara)</td></tr>
+</tbody></table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+<tbody>
+<tr><td>v0.1</td><td>08-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal berdasarkan prototipe <code>riwayat.html</code>, menu "Riwayat" pada bottom navigation aplikasi Wali Murid.</td></tr>
+</tbody></table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Halaman Riwayat menampilkan dua hal bagi Wali Murid: (1) <strong>Riwayat Pembayaran</strong> -- daftar seluruh transaksi pembayaran (QRIS/VA BSI/Transfer) yang pernah dilakukan untuk anak yang sedang aktif, lengkap dengan status &amp; detail kuitansi; dan (2) <strong>Riwayat Konfirmasi Pembayaran Saya</strong> -- daftar konfirmasi transfer manual dan rencana pembayaran yang pernah dikirim ke Bendahara, beserta status tindak lanjutnya. Halaman ini juga berfungsi sebagai tujuan ikon lonceng (notifikasi) di seluruh aplikasi, karena bagian Konfirmasi berperan sebagai "kotak masuk" status tindak lanjut Bendahara bagi Wali Murid.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Wali Murid</strong> mengalami <strong>kesulitan melacak status pembayaran yang sudah dilakukan maupun konfirmasi yang sudah dikirim ke Bendahara</strong> saat <strong>tidak ada satu tempat yang merekap riwayat transaksi beserta status tindak lanjutnya</strong>, yang menyebabkan <strong>wali murid tidak tahu apakah transfer manual/rencana bayarnya sudah diverifikasi, dan harus menyimpan bukti pembayaran secara manual di luar aplikasi untuk keperluan audit/klarifikasi</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Status pembayaran dan status verifikasi konfirmasi hanya diketahui lewat notifikasi WA/pemberitahuan sekolah atau dengan menghubungi Bendahara secara langsung. Tidak ada rekap mandiri yang bisa diakses Wali Murid kapan saja dari aplikasi.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Wali Murid dapat membuka menu "Riwayat" kapan saja untuk melihat seluruh riwayat pembayaran anak yang sedang aktif (berhasil/gagal/kedaluwarsa), membuka detail &amp; kuitansi setiap transaksi, serta memantau status setiap konfirmasi transfer manual/rencana bayar yang pernah dikirim (Terjadwal/Menunggu Verifikasi/Terverifikasi/Ditolak) tanpa perlu menghubungi Bendahara.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan makin banyak Wali Murid membayar lewat QRIS/VA BSI dan mengirim konfirmasi transfer manual dari halaman Bayar (lihat PRD terkait), dibutuhkan satu tempat transparan untuk melacak status tindak lanjutnya agar kepercayaan terhadap aplikasi tetap terjaga dan beban tanya-jawab ke Bendahara berkurang.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memberi Wali Murid visibilitas mandiri atas riwayat &amp; status seluruh pembayaran anaknya tanpa perlu menghubungi sekolah/Bendahara.</li>
+<li>Mengurangi volume pertanyaan "apakah transfer saya sudah diverifikasi?" ke Bendahara dengan menampilkan status konfirmasi secara transparan.</li>
+<li>Menyediakan bukti pembayaran (kuitansi) yang bisa diakses ulang kapan saja untuk keperluan arsip pribadi Wali Murid.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan aksi verifikasi/approve/reject konfirmasi dari halaman ini -- itu kewenangan Bendahara di Portal Sekolah.</li>
+<li>Tidak mendukung pembatalan/penarikan kembali konfirmasi yang sudah terkirim.</li>
+<li>Tidak menghasilkan file PDF kuitansi yang sesungguhnya pada fase prototipe ini (lihat FR-04 &amp; catatan implementasi).</li>
+<li>Tidak menampilkan riwayat pembayaran anak lain selain anak yang sedang aktif dipilih (tidak ada tampilan gabungan lintas anak dalam satu daftar).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Metrik</th><th>Baseline saat ini</th><th>Target</th><th>Cara ukur</th><th>Waktu evaluasi</th></tr></thead>
+<tbody>
+<tr><td>% Wali Murid yang membuka halaman Riwayat dalam 7 hari setelah melakukan pembayaran/konfirmasi</td><td>[ ]</td><td>&ge; 60%</td><td>Analitik kunjungan halaman vs event pembayaran/konfirmasi</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>Jumlah pertanyaan "status pembayaran/verifikasi" yang masuk ke Bendahara per bulan</td><td>[ ] (manual, via WA/datang langsung)</td><td>Turun &ge; 40%</td><td>Perbandingan log pertanyaan sebelum vs sesudah rilis</td><td>2 bulan setelah rilis</td></tr>
+<tr><td>Selisih status yang ditampilkan di halaman ini dengan status riil di Portal Sekolah/Bendahara</td><td>[ ]</td><td>0% selisih</td><td>Audit sampling bulanan</td><td>2 bulan setelah rilis</td></tr>
+</tbody></table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Nama / Peran</th><th>Organisasi</th><th>RACI</th><th>Kepentingan</th></tr></thead>
+<tbody>
+<tr><td>Product Owner</td><td>Klien (Muhammadiyah Pusat/Sekolah)</td><td>A</td><td>Menyetujui definisi status &amp; kebijakan tampilan riwayat</td></tr>
+<tr><td>Solution Architect</td><td>GeekGarden</td><td>R</td><td>Desain integrasi data dengan halaman Bayar &amp; Portal Sekolah (Bendahara)</td></tr>
+<tr><td>Tech Lead</td><td>GeekGarden</td><td>R</td><td>Implementasi halaman Riwayat &amp; sinkronisasi status</td></tr>
+<tr><td>QA Lead</td><td>GeekGarden</td><td>C</td><td>Strategi pengujian konsistensi status lintas halaman</td></tr>
+<tr><td>Wali Murid (Orang Tua/Wali)</td><td>Klien (pengguna akhir)</td><td>R</td><td>Pengguna utama fitur ini</td></tr>
+<tr><td>Bendahara</td><td>Klien</td><td>I</td><td>Pihak yang memverifikasi konfirmasi transfer manual/rencana bayar yang statusnya ditampilkan di halaman ini</td></tr>
+</tbody></table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Persona</th><th>Deskripsi</th><th>Tujuan utama</th><th>Pain point</th><th>Perangkat / kanal</th></tr></thead>
+<tbody>
+<tr><td>Wali Murid (Ayah/Ibu/Wali)</td><td>Orang tua/wali yang pernah membayar dan/atau mengirim konfirmasi transfer manual untuk anaknya</td><td>Memantau status pembayaran &amp; konfirmasi, menyimpan bukti pembayaran</td><td>Tidak tahu status verifikasi tanpa menghubungi Bendahara; bukti pembayaran tercecer</td><td>Smartphone (aplikasi mobile web)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>In Scope (fase ini)</th><th>Out of Scope (fase berikutnya / tidak dikerjakan)</th></tr></thead>
+<tbody>
+<tr><td>Daftar Riwayat Pembayaran anak aktif dengan filter Semua/Berhasil/Gagal-Expired</td><td>Riwayat gabungan lintas semua anak dalam satu daftar</td></tr>
+<tr><td>Detail transaksi per pembayaran (anak, tagihan, nominal, metode, provider, waktu, no. kuitansi)</td><td>Verifikasi/approve/reject konfirmasi dari halaman ini</td></tr>
+<tr><td>Unduh/lihat kuitansi untuk transaksi berhasil</td><td>Pembatalan/penarikan kembali konfirmasi yang sudah terkirim</td></tr>
+<tr><td>Daftar Riwayat Konfirmasi Pembayaran Saya (transfer manual &amp; rencana bayar) beserta status tindak lanjut</td><td>Ekspor riwayat ke CSV/PDF oleh Wali Murid</td></tr>
+<tr><td>Reaktif terhadap child-switch di header (riwayat &amp; daftar konfirmasi ikut berganti sesuai anak aktif)</td><td>Notifikasi push/WA otomatis saat status konfirmasi berubah (saat ini hanya terlihat bila Wali Murid membuka halaman ini)</td></tr>
+</tbody></table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Daftar Riwayat Pembayaran dengan filter status, detail transaksi per pembayaran, daftar Riwayat Konfirmasi Pembayaran Saya dengan status tindak lanjut, reaktif terhadap child-switch.</li>
+<li><strong>Should have</strong> -- Unduh kuitansi untuk transaksi berhasil.</li>
+<li><strong>Could have</strong> -- Pencarian/filter tambahan pada daftar konfirmasi (misal per metode/status).</li>
+<li><strong>Won't have (now)</strong> -- Verifikasi/approve/reject dari halaman ini, pembatalan konfirmasi, ekspor riwayat, riwayat gabungan lintas anak.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>User story</th><th>Prioritas</th><th>Acceptance criteria</th></tr></thead>
+<tbody>
+<tr><td>US-01</td><td>Sebagai Wali Murid, saya ingin melihat seluruh riwayat pembayaran anak yang sedang aktif, supaya saya tahu transaksi mana yang berhasil, gagal, atau kedaluwarsa.</td><td>Must</td><td>Given saya membuka menu Riwayat, When halaman dimuat, Then daftar transaksi <code>paymentHistory</code> milik anak aktif ditampilkan terbaru di atas, masing-masing dengan ikon status, nama tagihan, metode &amp; tanggal, nominal, dan badge status</td></tr>
+<tr><td>US-02</td><td>Sebagai Wali Murid, saya ingin memfilter riwayat pembayaran berdasarkan status (Semua/Berhasil/Gagal-Expired), supaya saya bisa cepat menemukan transaksi yang bermasalah.</td><td>Must</td><td>Given saya menekan salah satu tab filter, When filter diterapkan, Then daftar hanya menampilkan transaksi yang cocok dengan filter tersebut untuk anak aktif</td></tr>
+<tr><td>US-03</td><td>Sebagai Wali Murid, saya ingin membuka detail satu transaksi, supaya saya bisa melihat nomor kuitansi, metode, provider, dan waktu pembayaran secara lengkap.</td><td>Must</td><td>Given saya menekan salah satu baris riwayat, When sheet detail terbuka, Then ditampilkan anak, tagihan, nominal, metode, provider, waktu, dan no. kuitansi (atau "--" bila tidak ada) sesuai status transaksi</td></tr>
+<tr><td>US-04</td><td>Sebagai Wali Murid dengan transaksi berhasil, saya ingin mengunduh kuitansi pembayaran, supaya saya punya bukti pembayaran untuk keperluan pribadi/sekolah.</td><td>Should</td><td>Given transaksi berstatus berhasil, When saya menekan "Unduh Kuitansi (PDF)" pada sheet detail, Then sistem menyediakan file kuitansi yang bisa disimpan Wali Murid</td></tr>
+<tr><td>US-05</td><td>Sebagai Wali Murid yang pernah mengirim konfirmasi transfer manual atau rencana bayar, saya ingin melihat status tindak lanjutnya, supaya saya tahu apakah sudah diverifikasi Bendahara atau masih menunggu.</td><td>Must</td><td>Given saya pernah mengirim konfirmasi (transfer manual/rencana bayar) untuk anak aktif, When saya membuka bagian "Riwayat Konfirmasi Pembayaran Saya", Then setiap konfirmasi ditampilkan dengan metode, detail (nominal+bank atau tanggal rencana), dan badge status (Terjadwal/Menunggu Verifikasi/Terverifikasi/Ditolak)</td></tr>
+<tr><td>US-06</td><td>Sebagai Wali Murid dengan lebih dari satu anak, saya ingin riwayat pembayaran &amp; konfirmasi otomatis mengikuti anak yang saya pilih di header, supaya saya tidak salah melihat data anak lain.</td><td>Must</td><td>Given saya mengganti anak aktif lewat child-switch di header, When perpindahan selesai, Then daftar Riwayat Pembayaran dan Riwayat Konfirmasi Pembayaran Saya langsung memperbarui isinya sesuai anak yang baru dipilih</td></tr>
+</tbody></table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Modul</th><th>Deskripsi requirement</th><th>User story</th><th>Prioritas</th><th>Catatan / aturan bisnis</th></tr></thead>
+<tbody>
+<tr><td>FR-01</td><td>Filter Riwayat Pembayaran</td><td>Sistem harus menyediakan 3 tab filter (Semua/Berhasil/Gagal-Expired) yang memfilter daftar <code>paymentHistory</code> milik anak aktif</td><td>US-02</td><td>Must</td><td>Filter "Gagal/Expired" mencakup seluruh transaksi berstatus selain <code>success</code> (termasuk <code>expired</code> dan <code>failed</code>)</td></tr>
+<tr><td>FR-02</td><td>Daftar Riwayat Pembayaran</td><td>Sistem harus menampilkan setiap transaksi dengan ikon status (✓/✕), nama tagihan (<code>invoiceRef</code>), metode &amp; tanggal transaksi, nominal, dan badge status (Berhasil/Kedaluwarsa/Gagal)</td><td>US-01</td><td>Must</td><td>Daftar kosong menampilkan empty state "Belum ada riwayat" dengan ikon 🧾</td></tr>
+<tr><td>FR-03</td><td>Detail Transaksi</td><td>Sistem harus menyediakan sheet detail saat satu baris riwayat ditekan, berisi ikon besar status, judul status, Anak, Tagihan, Nominal, Metode, Provider, Waktu, dan No. Kuitansi</td><td>US-03</td><td>Must</td><td>No. Kuitansi menampilkan "--" apabila transaksi tidak berhasil (tidak memiliki nomor kuitansi)</td></tr>
+<tr><td>FR-04</td><td>Unduh Kuitansi</td><td>Sheet detail transaksi berhasil harus menampilkan tombol "⬇ Unduh Kuitansi (PDF)"</td><td>US-04</td><td>Should</td><td><strong>Catatan implementasi saat ini</strong>: tombol pada prototipe hanya menampilkan toast "✓ Kuitansi diunduh" tanpa menghasilkan file PDF sesungguhnya -- lihat 11. Pertanyaan Terbuka No. 1</td></tr>
+<tr><td>FR-05</td><td>Daftar Riwayat Konfirmasi Pembayaran Saya</td><td>Sistem harus menampilkan daftar <code>pengajuanData</code> milik anak aktif, dengan ikon berbeda untuk jenis "Rencana Bayar" (🗓️) dan "Transfer Manual" (💵), subjudul sesuai jenis (tanggal rencana atau nominal+bank), dan badge status</td><td>US-05</td><td>Must</td><td>Daftar kosong menampilkan empty state "Belum ada konfirmasi" yang mengarahkan ke menu Bayar</td></tr>
+<tr><td>FR-06</td><td>Badge Status Konfirmasi</td><td>Status konfirmasi harus ditampilkan sebagai salah satu dari: Terjadwal (biru), Menunggu Verifikasi (kuning), Terverifikasi (hijau), Ditolak (merah)</td><td>US-05</td><td>Must</td><td>Konsisten dengan status yang dipakai di sisi Bendahara/Portal Sekolah untuk konfirmasi pembayaran</td></tr>
+<tr><td>FR-07</td><td>Reaktivitas terhadap Child-Switch</td><td>Kedua daftar (Riwayat Pembayaran &amp; Riwayat Konfirmasi) harus otomatis dimuat ulang saat anak aktif berganti lewat header</td><td>US-06</td><td>Must</td><td>Dipicu oleh <code>selectChild()</code> yang memanggil <code>renderRiwayat()</code> dan <code>renderPengajuanList()</code></td></tr>
+<tr><td>FR-08</td><td>Akses dari Ikon Notifikasi</td><td>Ikon lonceng (🔔) pada header seluruh halaman aplikasi harus mengarah ke halaman Riwayat, karena bagian Konfirmasi berfungsi sebagai kotak masuk status tindak lanjut bagi Wali Murid</td><td>--</td><td>Should</td><td>Badge jumlah pada ikon lonceng dihitung dari jumlah konfirmasi berstatus "Menunggu Verifikasi" milik anak aktif (<code>updateBellBadge()</code>); lihat 11. Pertanyaan Terbuka No. 2 terkait halaman <code>notifikasi.html</code> yang terpisah</td></tr>
+</tbody></table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Fitur</th><th>Wali Murid (akun aktif)</th><th>Wali Murid (menunggu approval / ditolak)</th></tr></thead>
+<tbody>
+<tr><td>Lihat Riwayat Pembayaran</td><td>Ya</td><td>-- (tidak bisa masuk ke aplikasi)</td></tr>
+<tr><td>Lihat detail transaksi &amp; unduh kuitansi</td><td>Ya</td><td>--</td></tr>
+<tr><td>Lihat Riwayat Konfirmasi Pembayaran Saya</td><td>Ya</td><td>--</td></tr>
+<tr><td>Verifikasi/approve/reject konfirmasi</td><td>--</td><td>--</td></tr>
+</tbody></table></div>
+<p><em>Catatan: verifikasi konfirmasi tidak tersedia di modul ini pada peran apa pun -- tetap dilakukan Bendahara di Portal Sekolah. Akses ke halaman ini ditentukan oleh <code>requireLogin()</code>, sama seperti seluruh halaman lain pada aplikasi ini.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Pemicu</th><th>Penerima</th><th>Kanal</th><th>Isi singkat</th></tr></thead>
+<tbody>
+<tr><td>Konfirmasi transfer manual/rencana bayar terverifikasi atau ditolak Bendahara</td><td>Wali Murid (pengirim)</td><td>In-app (hanya terlihat saat membuka halaman Riwayat; belum ada push/WA otomatis)</td><td>Perubahan badge status pada daftar Riwayat Konfirmasi Pembayaran Saya</td></tr>
+<tr><td>Kuitansi diunduh</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>"✓ Kuitansi diunduh"</td></tr>
+</tbody></table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+<tbody>
+<tr><td>NFR-01</td><td>Konsistensi data</td><td>Status &amp; nominal pada Riwayat Pembayaran harus identik dengan data yang dicatat saat transaksi terjadi di halaman Bayar</td><td>100% konsisten antar tampilan</td></tr>
+<tr><td>NFR-02</td><td>Konsistensi status</td><td>Badge status konfirmasi pada halaman ini harus identik dengan status yang diputuskan Bendahara di Portal Sekolah</td><td>100% konsisten antar tampilan</td></tr>
+<tr><td>NFR-03</td><td>Keamanan sesi</td><td>Halaman Riwayat hanya dapat diakses oleh Wali Murid dengan sesi login aktif</td><td>100% enforced via <code>requireLogin()</code> di setiap pemuatan halaman</td></tr>
+<tr><td>NFR-04</td><td>Performa</td><td>Waktu render daftar Riwayat Pembayaran &amp; Riwayat Konfirmasi saat halaman dimuat atau filter/anak aktif berganti</td><td>&lt; 1 detik untuk &le; 200 transaksi per anak</td></tr>
+<tr><td>NFR-05</td><td>Privasi data</td><td>Riwayat yang ditampilkan hanya milik anak-anak yang terdaftar pada akun Wali Murid yang sedang login</td><td>100% terfilter per <code>childId</code> milik akun yang sedang login</td></tr>
+</tbody></table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama (riwayat pembayaran): Login &rarr; buka menu "Riwayat" lewat bottom navigation (atau ikon 🔔 di header manapun) &rarr; pilih tab filter (opsional) &rarr; tekan salah satu baris transaksi &rarr; tinjau detail pada sheet &rarr; (jika berhasil) "⬇ Unduh Kuitansi (PDF)" &rarr; "Tutup".</li>
+<li>Alur sekunder (riwayat konfirmasi): pada halaman Riwayat, scroll ke bagian "Riwayat Konfirmasi Pembayaran Saya" &rarr; tinjau status setiap konfirmasi transfer manual/rencana bayar yang pernah dikirim dari menu Bayar.</li>
+<li>Wireframe: mengikuti struktur <code>riwayat.html</code> -- header dengan child-switch, segment filter 3 tab di atas kartu daftar Riwayat Pembayaran, lalu kartu "Riwayat Konfirmasi Pembayaran Saya" dengan judul &amp; subjudul penjelas di bawahnya, serta sheet detail transaksi yang muncul dari bawah.</li>
+<li>Edge case yang wajib ditangani: anak aktif tanpa riwayat pembayaran sama sekali (empty state 🧾), anak aktif tanpa konfirmasi apa pun (empty state 📝 mengarahkan ke menu Bayar), transaksi gagal/kedaluwarsa tanpa nomor kuitansi (tampil "--", tombol unduh tidak muncul), konfirmasi jenis "Rencana Bayar" tanpa catatan (baris catatan disembunyikan).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Sistem eksternal</th><th>Fungsi</th><th>Metode</th><th>PIC</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Halaman Bayar (aplikasi ini)</td><td>Sumber data <code>paymentHistory</code> (hasil pembayaran QRIS/VA/simulasi sukses) dan <code>pengajuanData</code> (konfirmasi transfer manual/rencana bayar yang dikirim)</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Portal Sekolah (Bendahara -- verifikasi konfirmasi)</td><td>Pihak yang mengubah status konfirmasi menjadi Terverifikasi/Ditolak</td><td>Internal (shared data store, belum real-time)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Laporan Pemasukan (Admin Pusat)</td><td>Konsumen agregat data <code>paymentHistory</code> lintas sekolah untuk kebutuhan laporan pusat</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>PaymentHistory</code> (id, childId, invoiceRef, tanggal, metode, provider, nominal, status, kuitansi), <code>PengajuanKonfirmasi</code> (id, childId, metode, invoiceRef, nominal, bank, fileName, catatan, status, tanggal).</li>
+<li>Tidak ada migrasi khusus -- struktur data mengikuti objek <code>paymentHistory</code> dan <code>pengajuanData</code> di <code>app.js</code> pada prototipe ini.</li>
+<li>Retensi data: riwayat pembayaran &amp; konfirmasi disimpan selama histori keuangan siswa terkait masih relevan untuk audit (rekomendasi minimal 5 tahun, perlu konfirmasi kebijakan retensi klien).</li>
+<li>Data saat ini bersifat snapshot dalam memori JavaScript (bukan database/API produksi) -- hilang saat sesi browser berakhir; status konfirmasi tidak pernah benar-benar berubah menjadi Terverifikasi/Ditolak pada prototipe karena belum ada aksi Bendahara yang terhubung langsung ke halaman ini.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu transaksi/konfirmasi hanya terkait satu anak dan satu tagihan (tidak ada transaksi/konfirmasi gabungan).</li>
+<li>Riwayat yang relevan bagi Wali Murid hanya riwayat anak yang sedang aktif dipilih, bukan gabungan seluruh anak.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Data bersifat snapshot read-only dalam memori JavaScript, belum terhubung ke API/database produksi, sehingga status konfirmasi tidak berubah otomatis walau Bendahara memverifikasi di sistem lain.</li>
+<li>Belum ada notifikasi push/WA otomatis saat status konfirmasi berubah -- Wali Murid harus membuka halaman ini secara manual untuk mengetahuinya.</li>
+<li>Tombol "Unduh Kuitansi (PDF)" belum menghasilkan file sesungguhnya pada fase prototipe ini.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Batas jawab</th><th>Jawaban</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Format kuitansi yang diunduh (FR-04) perlu berupa PDF asli dengan kop/logo sekolah, atau cukup gambar/struk sederhana?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>2</td><td>Ikon lonceng (🔔) di seluruh halaman mengarah ke halaman Riwayat, bukan ke <code>notifikasi.html</code> (yang berisi pengaturan preferensi notifikasi) -- apakah ini sudah sesuai maksud, atau sebaiknya lonceng mengarah ke daftar notifikasi tersendiri yang memuat lebih dari sekadar status konfirmasi?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>3</td><td>Apakah diperlukan notifikasi push/WA otomatis ke Wali Murid saat status konfirmasi berubah menjadi Terverifikasi/Ditolak, di luar tampilan di halaman ini?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Risiko</th><th>Dampak (H/M/L)</th><th>Kemungkinan (H/M/L)</th><th>Mitigasi</th><th>PIC</th></tr></thead>
+<tbody>
+<tr><td>Status konfirmasi di halaman ini tidak sinkron real-time dengan keputusan Bendahara di Portal Sekolah (snapshot statis)</td><td>H</td><td>M</td><td>Integrasikan dengan API/shared database real-time sebelum go-live produksi</td><td>[ ]</td></tr>
+<tr><td>Wali Murid tidak mengetahui status konfirmasi berubah karena tidak ada notifikasi push/WA, hanya terlihat saat membuka halaman ini</td><td>M</td><td>H</td><td>Tambahkan notifikasi push/WA otomatis saat status konfirmasi berubah (lihat Pertanyaan Terbuka No. 3)</td><td>[ ]</td></tr>
+<tr><td>Tombol "Unduh Kuitansi" tidak menghasilkan file nyata, berisiko Wali Murid mengira sudah punya bukti pembayaran tersimpan padahal belum</td><td>M</td><td>M</td><td>Implementasikan generator PDF kuitansi sesungguhnya sebelum go-live produksi (lihat Pertanyaan Terbuka No. 1)</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Milestone</th><th>Deliverable</th><th>Target tanggal</th><th>Kriteria selesai</th></tr></thead>
+<tbody>
+<tr><td>PRD approved</td><td>Dokumen ini v1.0</td><td>[ ]</td><td>Ditandatangani PO</td></tr>
+<tr><td>Desain selesai</td><td>Mockup &amp; struktur data final</td><td>[ ]</td><td>Review SA &amp; klien</td></tr>
+<tr><td>Development</td><td>Riwayat Pembayaran, detail transaksi, Riwayat Konfirmasi Pembayaran Saya</td><td>[ ]</td><td>Lolos code review</td></tr>
+<tr><td>UAT</td><td>Build staging</td><td>[ ]</td><td>0 bug critical, sign-off UAT</td></tr>
+<tr><td>Go-live</td><td>Production</td><td>[ ]</td><td>Monitoring 2 minggu stabil</td></tr>
+</tbody></table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+<tbody>
+<tr><td>Riwayat Pembayaran</td><td>Daftar transaksi pembayaran (QRIS/VA BSI/Transfer) yang pernah dilakukan untuk seorang anak, beserta status akhirnya</td></tr>
+<tr><td>Kuitansi (RCPT-...)</td><td>Nomor bukti pembayaran yang diterbitkan untuk setiap transaksi berstatus berhasil</td></tr>
+<tr><td>Konfirmasi Pembayaran</td><td>Pemberitahuan dari Wali Murid ke Bendahara terkait transfer manual yang sudah dilakukan atau rencana tanggal pembayaran yang dijanjikan</td></tr>
+<tr><td>Terjadwal</td><td>Status konfirmasi jenis "Rencana Bayar" yang masih menunggu tanggal pembayaran yang dijanjikan tiba</td></tr>
+<tr><td>Menunggu Verifikasi</td><td>Status konfirmasi transfer manual yang bukti transfernya belum diperiksa Bendahara</td></tr>
+<tr><td>Terverifikasi / Ditolak</td><td>Hasil akhir pemeriksaan Bendahara atas konfirmasi transfer manual</td></tr>
+</tbody></table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Peran</th><th>Nama</th><th>Tanda tangan</th><th>Tanggal</th></tr></thead>
+<tbody>
+<tr><td>Product Owner (klien)</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Project Manager</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Solution Architect</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Tech Lead</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="../riwayat.html" title="Lihat prototipe riwayat.html">📄 Prototipe</a>
+
+</body>
+</html>

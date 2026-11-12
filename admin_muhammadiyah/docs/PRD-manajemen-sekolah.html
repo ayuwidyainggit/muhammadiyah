@@ -185,7 +185,7 @@
 </tr>
 <tr>
 <td>Versi dokumen</td>
-<td>v0.4</td>
+<td>v0.6</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -252,6 +252,18 @@
 <td>Tim Produk GeekGarden</td>
 <td>Perombakan navigasi &amp; penyederhanaan lingkup berdasarkan prototipe terkini: (1) mode "Kelola" diubah dari 3 tab bebas menjadi <strong>wizard 4 step</strong> (Info Sekolah &rarr; Akun Awal &rarr; Rekening Penampung &rarr; Review) dengan tombol Lanjut/Kembali -- step tetap bisa diklik langsung kapan saja; (2) step baru <strong>"Akun Awal"</strong> ditambahkan, berisi kartu "Akun Awal -- Admin Sekolah" (Nama, Peran, No. WhatsApp, Email akun login) yang sebelumnya tidak ada sama sekali di halaman ini, plus kartu Kontak Sekolah yang dipindah dari tab Info Sekolah; (3) field Alamat Lengkap ditambahkan ke Info Sekolah, dan Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) diubah dari readonly menjadi <strong>dropdown cascading yang bisa diedit</strong> (sebelumnya hanya bisa diisi saat Pendaftaran Sekolah); (4) step Review kini menampilkan ringkasan per bagian (Info Sekolah/Akun Awal/Rekening Penampung) masing-masing dengan tombol "Edit" untuk kembali ke step terkait, diakhiri tombol <strong>"Simpan Perubahan"</strong> yang benar-benar menuliskan perubahan ke data sekolah (sebelumnya field-field ini bisa diisi tapi tidak pernah tersimpan); (5) fitur <strong>Reminder &amp; Template override per sekolah dihapus seluruhnya</strong> dari lingkup halaman ini (FR-07/FR-08 pada versi sebelumnya); (6) tombol hapus &amp; aktifkan/nonaktifkan pada baris tabel Rekening Penampung dihapus -- aksi yang tersisa hanya edit (✎) dan "Jadikan Utama"; (7) tombol Nonaktifkan/Aktifkan ditambahkan langsung pada baris Daftar Sekolah, tidak perlu lagi membuka "Kelola" dulu.</td>
 </tr>
+<tr>
+<td>v0.5</td>
+<td>09-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Menambahkan <strong>penegakan cakupan akses berjenjang</strong> (Pusat/Wilayah/Daerah/Cabang) pada Daftar Sekolah, berdasarkan field <code>cakupan</code> per akun yang sudah ada di modul Pengguna: (1) filter Daftar Sekolah diperluas dari hanya Wilayah (PWM) menjadi 3 filter cascading -- Wilayah (PWM), Daerah (PDM), dan Cabang (PCM); (2) baris sekolah yang ditampilkan kini selalu dibatasi sesuai cakupan akun yang login -- akun cakupan <strong>Pusat</strong> dapat mengakses seluruh sekolah, sedangkan akun cakupan <strong>Wilayah/Daerah/Cabang</strong> hanya dapat mengakses sekolah pada Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) sesuai cakupannya masing-masing, terlepas dari filter yang dipilih; (3) tambah kotak keterangan cakupan akses (dinamis sesuai akun yang login) di atas filter bar; (4) tambah modal "⛔ Tidak Dapat Mengakses" yang muncul &amp; mengembalikan filter ke nilai sebelumnya saat akun memilih kombinasi filter Wilayah/Daerah/Cabang di luar cakupannya (misal akun bercakupan Cabang PCM A memilih filter Cabang PCM B) -- lihat FR-13 s.d. FR-16 dan 6.3 Cakupan Akses.</td>
+</tr>
+<tr>
+<td>v0.6</td>
+<td>09-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Mengganti mekanisme penegakan cakupan pada filter Daftar Sekolah: modal "⛔ Tidak Dapat Mengakses" (allow-lalu-tolak setelah dipilih) <strong>dihapus/diganti</strong> (US-12, FR-15 direvisi) dengan <strong>penguncian langsung di dropdown</strong> (autofill + disabled bertingkat sesuai cakupan akun yang login) -- memakai fungsi/komponen cascading-lock yang sama dengan Step 1 Pendaftaran Sekolah (FR-07 di PRD Pendaftaran Sekolah), supaya logikanya konsisten &amp; tidak diimplementasikan dua kali: akun cakupan <strong>Pusat</strong> tetap bebas memilih ketiga dropdown filter; akun cakupan <strong>Wilayah (PWM)</strong> -- dropdown PWM autofill &amp; disabled, dropdown PDM &amp; PCM tetap aktif (cascading, otomatis terbatas ke bawah PWM yang terkunci); akun cakupan <strong>Daerah (PDM)</strong> -- dropdown PWM &amp; PDM autofill &amp; disabled, hanya dropdown PCM yang aktif; akun cakupan <strong>Cabang (PCM)</strong> -- ketiga dropdown autofill &amp; disabled sepenuhnya. Dengan pendekatan ini, kombinasi filter di luar cakupan tidak pernah bisa dipilih sejak awal, sehingga modal peringatan tidak lagi diperlukan.</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
@@ -273,6 +285,7 @@
 <li>Memberikan satu titik kendali bagi Admin untuk mengelola konfigurasi tiap sekolah (info, akun awal, rekening) tanpa melibatkan tim backend.</li>
 <li>Mencegah sekolah dinonaktifkan tanpa disertai pencatatan alasan dan kesadaran akan tunggakan siswa yang belum lunas.</li>
 <li>Menyediakan satu alur wizard yang konsisten antara Pendaftaran Sekolah dan Manajemen Sekolah (field, tahapan step, dan pola Review per bagian yang sama), supaya Admin tidak perlu belajar dua pola UI berbeda untuk tugas yang serupa.</li>
+<li>Memastikan setiap akun hanya dapat melihat &amp; memfilter sekolah sesuai cakupan organisasinya (Pusat/Wilayah/Daerah/Cabang), supaya data sekolah milik wilayah/daerah/cabang lain tidak terekspos ke akun yang tidak berwenang.</li>
 </ol>
 <h3>3.2 Non-Tujuan (Out of Goal)</h3>
 <ul>
@@ -280,6 +293,8 @@
 <li>Tidak mendukung bulk edit/nonaktifkan banyak sekolah sekaligus pada fase ini.</li>
 <li>Tidak menangani write-off tunggakan dari halaman ini (write-off tunduk pada proses terpisah dengan approval Kepala Sekolah).</li>
 <li>Tidak mengelola Aturan Reminder &amp; Template Pesan per sekolah dari halaman ini pada fase ini -- fitur override yang pernah ada (lihat v0.1 -- v0.3) dihapus dari lingkup Manajemen Sekolah; bila dibutuhkan kembali, akan dirancang ulang sebagai modul/halaman terpisah.</li>
+<li>Tidak mendukung satu akun dengan lebih dari satu cakupan sekaligus (mis. merangkap dua Wilayah) -- satu akun hanya memiliki satu level &amp; nilai cakupan tunggal, diatur lewat modul Pengguna (lihat 6.3 Cakupan Akses).</li>
+<li>Tidak menyediakan aksi dari halaman ini untuk mengubah cakupan akses akun manapun -- cakupan tetap diatur lewat modul Pengguna, bukan dari Manajemen Sekolah.</li>
 </ul>
 <h3>3.3 Metrik Keberhasilan (KPI)</h3>
 <div class="table-scroll"><table>
@@ -313,6 +328,13 @@
 <td>0 kasus</td>
 <td>Insiden yang dilaporkan vs total nonaktivasi</td>
 <td>3 bulan setelah rilis</td>
+</tr>
+<tr>
+<td>Jumlah kasus akun mengakses/memfilter data sekolah di luar cakupan organisasinya (Wilayah/Daerah/Cabang)</td>
+<td>[ ] (belum ditegakkan sebelum v0.5)</td>
+<td>0 kasus</td>
+<td>Audit log percobaan mengakses data di luar cakupan lewat request API/console (karena lewat UI dropdown yang terkunci sudah mustahil dipilih) vs insiden kebocoran data yang dilaporkan</td>
+<td>1 bulan setelah rilis</td>
 </tr>
 </tbody>
 </table></div>
@@ -437,14 +459,18 @@
 <td>Nonaktifkan Sekolah (dengan alasan wajib + peringatan tunggakan) &amp; Aktifkan Kembali -- bisa dipicu dari baris Daftar Sekolah maupun dari kartu Aksi Sekolah di step Info Sekolah</td>
 <td>Notifikasi otomatis ke wali murid saat sekolah dinonaktifkan</td>
 </tr>
+<tr>
+<td>Filter Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) cascading pada Daftar Sekolah, penegakan cakupan akses berjenjang sesuai akun yang login (Pusat = semua sekolah; Wilayah/Daerah/Cabang = sesuai cakupan akun), dengan dropdown filter yang otomatis terkunci (autofill + disabled bertingkat) sesuai cakupan -- memakai fungsi yang sama dengan FR-07 di PRD Pendaftaran Sekolah</td>
+<td>Pengaturan/ubah cakupan akses akun dari halaman ini (tetap di modul Pengguna); dukungan satu akun dengan lebih dari satu cakupan</td>
+</tr>
 </tbody>
 </table></div>
 <h3>5.2 Prioritas (MoSCoW)</h3>
 <ul>
-<li><strong>Must have</strong> -- Daftar sekolah (+ tombol cepat Nonaktifkan/Aktifkan), wizard step Info Sekolah &amp; Akun Awal, Nonaktifkan/Aktifkan dengan validasi tunggakan.</li>
-<li><strong>Should have</strong> -- Step Rekening Penampung, step Review dengan Edit per bagian &amp; Simpan Perubahan, mode Detail (read-only), pencarian &amp; filter Daftar Sekolah.</li>
+<li><strong>Must have</strong> -- Daftar sekolah (+ tombol cepat Nonaktifkan/Aktifkan), wizard step Info Sekolah &amp; Akun Awal, Nonaktifkan/Aktifkan dengan validasi tunggakan, penegakan cakupan akses berjenjang (Pusat/Wilayah/Daerah/Cabang) pada Daftar Sekolah.</li>
+<li><strong>Should have</strong> -- Step Rekening Penampung, step Review dengan Edit per bagian &amp; Simpan Perubahan, mode Detail (read-only), pencarian &amp; filter Daftar Sekolah (termasuk filter Daerah/Cabang &amp; penguncian dropdown sesuai cakupan akun).</li>
 <li><strong>Could have</strong> -- Riwayat status sekolah yang lebih detail (multi-entry, bukan hanya entri terakhir).</li>
-<li><strong>Won't have (now)</strong> -- Bulk action, penghapusan permanen, write-off dari halaman ini, Aturan Reminder &amp; Template override per sekolah (dihapus dari lingkup), hapus/aktifkan-nonaktifkan rekening langsung dari tabel.</li>
+<li><strong>Won't have (now)</strong> -- Bulk action, penghapusan permanen, write-off dari halaman ini, Aturan Reminder &amp; Template override per sekolah (dihapus dari lingkup), hapus/aktifkan-nonaktifkan rekening langsung dari tabel, pengaturan cakupan akses dari halaman ini.</li>
 </ul>
 <h3>5.3 User Stories</h3>
 <div class="table-scroll"><table>
@@ -516,6 +542,18 @@
 <td>Sebagai Admin, saya ingin menekan tombol Nonaktifkan/Aktifkan langsung dari baris Daftar Sekolah, supaya saya tidak perlu membuka "Kelola" dulu hanya untuk mengubah status operasional sekolah.</td>
 <td>Should</td>
 <td>Given saya di Daftar Sekolah, When saya menekan "Nonaktifkan" (untuk sekolah berstatus Aktif) atau "Aktifkan" (untuk sekolah berstatus Nonaktif) pada suatu baris, Then modal konfirmasi terkait terbuka langsung tanpa harus membuka halaman Kelola/Detail terlebih dahulu</td>
+</tr>
+<tr>
+<td>US-11</td>
+<td>Sebagai Admin dengan cakupan Pusat, saya ingin bisa mengakses &amp; memfilter seluruh sekolah di semua Wilayah (PWM)/Daerah (PDM)/Cabang (PCM), supaya saya bisa memantau seluruh sekolah secara nasional tanpa batasan.</td>
+<td>Must</td>
+<td>Given akun saya memiliki cakupan "Pusat", When saya membuka Manajemen Sekolah, Then ketiga dropdown filter (Wilayah/Daerah/Cabang) selalu dalam keadaan aktif (tidak pernah disabled/autofill) dan saya bisa memilih kombinasi filter apa pun, dengan seluruh sekolah pada kombinasi tersebut tetap tampil</td>
+</tr>
+<tr>
+<td>US-12</td>
+<td>Sebagai Admin dengan cakupan Wilayah/Daerah/Cabang, saya ingin dropdown filter Wilayah/Daerah/Cabang otomatis terisi &amp; terkunci (disabled) sesuai cakupan saya sendiri, supaya saya tidak bisa (sengaja atau tidak sengaja) memfilter ke wilayah organisasi lain yang bukan tanggung jawab saya -- tanpa perlu dulu salah pilih dan baru diperingatkan lewat modal.</td>
+<td>Must</td>
+<td>Given akun saya memiliki cakupan Cabang (misal PCM Wonokromo), When saya membuka Daftar Sekolah, Then dropdown Wilayah (PWM) terisi "PWM Jawa Timur" dan disabled, dropdown Daerah (PDM) terisi "PDM Surabaya" dan disabled, dropdown Cabang (PCM) terisi "PCM Wonokromo" dan disabled -- ketiganya tidak bisa diubah ke nilai lain sama sekali lewat dropdown ini</td>
 </tr>
 </tbody>
 </table></div>
@@ -613,6 +651,38 @@
 <td>Must</td>
 <td>"Simpan Perubahan" menuliskan nilai Nama Sekolah, NPSN, Jenjang, Wilayah/Daerah/Cabang, Alamat, Akun Awal (Admin), dan Kontak Sekolah ke data sekolah, lalu memperbarui judul halaman dan Daftar Sekolah serta menampilkan toast konfirmasi. Sebelum versi ini, field-field tersebut bisa diedit di form namun tidak pernah benar-benar tersimpan. Tombol "Kembali" nonaktif di step pertama; label tombol "Lanjut" berubah jadi "Simpan Perubahan ✓" di step terakhir</td>
 </tr>
+<tr>
+<td>FR-13</td>
+<td>Filter Daerah (PDM) &amp; Cabang (PCM)</td>
+<td>Sistem harus menambahkan dropdown filter Daerah (PDM) dan Cabang (PCM) pada Daftar Sekolah, cascading mengikuti pilihan Wilayah (PWM): Daerah hanya terisi &amp; aktif setelah Wilayah dipilih, Cabang hanya terisi &amp; aktif setelah Daerah dipilih</td>
+<td>US-08</td>
+<td>Should</td>
+<td>Opsi dropdown mengikuti struktur organisasi lengkap platform (bukan hanya sekolah yang sudah terdaftar), sama seperti dropdown cascading pada step Info Sekolah; mengganti/melengkapi filter Wilayah (PWM) tunggal dari FR-10</td>
+</tr>
+<tr>
+<td>FR-14</td>
+<td>Penegakan Cakupan Akses pada Daftar Sekolah</td>
+<td>Baris sekolah yang ditampilkan di Daftar Sekolah harus selalu dibatasi sesuai cakupan akses akun yang login (lihat field <code>cakupan</code> pada data pengguna), terlepas dari nilai filter Wilayah/Daerah/Cabang yang sedang dipilih</td>
+<td>US-11, US-12</td>
+<td>Must</td>
+<td>Akun cakupan <strong>Pusat</strong> melihat seluruh sekolah; akun cakupan <strong>Wilayah</strong> hanya melihat sekolah pada Wilayah (PWM) sesuai cakupannya; akun cakupan <strong>Daerah</strong> hanya melihat sekolah pada Wilayah+Daerah (PWM+PDM) sesuai cakupannya; akun cakupan <strong>Cabang</strong> hanya melihat sekolah pada Wilayah+Daerah+Cabang (PWM+PDM+PCM) sesuai cakupannya -- lihat 6.3 Cakupan Akses</td>
+</tr>
+<tr>
+<td>FR-15</td>
+<td>Dropdown Filter Terkunci Sesuai Cakupan</td>
+<td>Dropdown filter Wilayah (PWM), Daerah (PDM), dan Cabang (PCM) pada Daftar Sekolah harus otomatis terisi dan dinonaktifkan (disabled) secara bertingkat sesuai Cakupan akun yang login, memakai fungsi/komponen cascading-lock yang sama dengan Step 1 Pendaftaran Sekolah (FR-07 di PRD Pendaftaran Sekolah)</td>
+<td>US-12</td>
+<td>Must</td>
+<td>Aturan sama persis dengan FR-07: <strong>Cakupan Pusat</strong> -- ketiga dropdown filter tetap aktif &amp; bebas dipilih (cascading biasa, tidak ada yang terkunci); <strong>Cakupan Wilayah (PWM)</strong> -- dropdown PWM autofill &amp; disabled sesuai PWM akun yang login, dropdown PDM &amp; PCM tetap aktif (opsinya otomatis terbatas hanya yang berada di bawah PWM yang terkunci); <strong>Cakupan Daerah (PDM)</strong> -- dropdown PWM &amp; PDM autofill &amp; disabled, hanya dropdown PCM yang aktif (opsinya terbatas hanya yang di bawah PDM tersebut); <strong>Cakupan Cabang (PCM)</strong> -- ketiga dropdown (PWM, PDM, PCM) autofill &amp; disabled, tidak ada yang bisa diubah. Karena kombinasi di luar cakupan tidak pernah bisa dipilih sejak awal, modal peringatan "⛔ Tidak Dapat Mengakses" dari versi sebelumnya (v0.5) <strong>dihapus dari lingkup</strong> -- tidak dibutuhkan lagi</td>
+</tr>
+<tr>
+<td>FR-16</td>
+<td>Keterangan Cakupan Akses</td>
+<td>Sistem harus menampilkan kotak informasi di atas filter bar Daftar Sekolah yang menjelaskan cakupan akses akun yang sedang login secara dinamis</td>
+<td>US-11, US-12</td>
+<td>Should</td>
+<td>Teks menyesuaikan level cakupan: Pusat ("dapat mengakses &amp; memfilter seluruh sekolah..."), atau Wilayah/Daerah/Cabang (menyebutkan nilai cakupan spesifik akun &amp; menjelaskan mengapa sebagian/seluruh dropdown filter di atasnya sudah terisi &amp; dinonaktifkan secara otomatis -- lihat FR-15)</td>
+</tr>
 </tbody>
 </table></div>
 <h3>6.1 Hak Akses per Peran</h3>
@@ -671,6 +741,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><em>Catatan: tabel di atas mengatur hak akses <strong>jenis aksi</strong> (Read/CRUD) berdasarkan peran. Sekolah <strong>mana saja</strong> yang boleh dilihat/diaksi tetap dibatasi lebih lanjut oleh cakupan organisasi (Pusat/Wilayah/Daerah/Cabang) pada akun tersebut, terlepas dari perannya -- lihat 6.3 Cakupan Akses. Kedua dimensi ini berlaku bersamaan: peran menentukan boleh tidaknya suatu aksi, cakupan menentukan pada sekolah mana saja aksi itu boleh dilakukan.</em></p>
 <h3>6.2 Notifikasi</h3>
 <div class="table-scroll"><table>
 <thead>
@@ -702,6 +773,35 @@
 </tr>
 </tbody>
 </table></div>
+<h3>6.3 Cakupan Akses (PWM/PDM/PCM)</h3>
+<p>Setiap akun memiliki field <code>cakupan</code> yang diatur lewat modul Pengguna (di luar lingkup halaman ini), terdiri dari level <code>Pusat</code>, <code>Wilayah</code>, <code>Daerah</code>, atau <code>Cabang</code>. Level ini menentukan sekolah mana saja yang bisa dilihat &amp; difilter pada Daftar Sekolah di halaman Manajemen Sekolah.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Cakupan Akun</th>
+<th>Sekolah yang bisa diakses &amp; difilter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pusat</td>
+<td>Seluruh sekolah, di semua Wilayah (PWM), Daerah (PDM), dan Cabang (PCM) -- tanpa batasan</td>
+</tr>
+<tr>
+<td>Wilayah</td>
+<td>Hanya sekolah pada 1 Wilayah (PWM) sesuai field cakupan akun; seluruh Daerah (PDM) &amp; Cabang (PCM) di bawah Wilayah tersebut ikut terjangkau</td>
+</tr>
+<tr>
+<td>Daerah</td>
+<td>Hanya sekolah pada 1 Wilayah (PWM) + 1 Daerah (PDM) sesuai field cakupan akun; seluruh Cabang (PCM) di bawah Daerah tersebut ikut terjangkau</td>
+</tr>
+<tr>
+<td>Cabang</td>
+<td>Hanya sekolah pada 1 Wilayah (PWM) + 1 Daerah (PDM) + 1 Cabang (PCM) spesifik sesuai field cakupan akun -- paling sempit</td>
+</tr>
+</tbody>
+</table></div>
+<p>Dropdown filter Wilayah/Daerah/Cabang pada Daftar Sekolah otomatis disesuaikan dengan cakupan ini: field yang sudah pasti (misal Wilayah &amp; Daerah untuk akun bercakupan Daerah) langsung terisi &amp; dinonaktifkan (disabled) sejak halaman dibuka, sehingga akun tidak pernah bisa memilih nilai di luar cakupannya sendiri lewat dropdown ini -- lihat FR-14 &amp; FR-15 (memakai fungsi cascading-lock yang sama dengan FR-07 di PRD Pendaftaran Sekolah). Akun bercakupan Pusat tidak dibatasi sama sekali; seluruh dropdown filter tetap aktif.</p>
 <hr />
 <h2>7. Kebutuhan Non-Fungsional</h2>
 <div class="table-scroll"><table>
@@ -750,6 +850,12 @@
 <td>Admin dapat menyelesaikan 1 siklus edit konfigurasi (buka sekolah → ubah → simpan) tanpa panduan</td>
 <td>&lt; 3 menit</td>
 </tr>
+<tr>
+<td>NFR-07</td>
+<td>Keamanan cakupan data</td>
+<td>Baris Daftar Sekolah yang ditampilkan tidak boleh pernah melebihi cakupan akses akun yang login, terlepas dari filter yang dipilih di UI</td>
+<td>100% enforced; pada fase prototipe ini validasi baru di sisi client, wajib diterapkan ulang di level API/backend sebelum go-live produksi (lihat 11. Pertanyaan Terbuka &amp; 12. Risiko)</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
@@ -757,7 +863,8 @@
 <ul>
 <li>Alur utama: Menu "Manajemen Sekolah" → Daftar Sekolah → klik "Kelola" → wizard 4 step (Info Sekolah → Akun Awal → Rekening Penampung → Review) → tekan "Simpan Perubahan" di step Review; atau → klik "Nonaktifkan"/"Aktifkan" langsung dari baris Daftar Sekolah maupun dari kartu "Aksi Sekolah" di step Info Sekolah, keduanya via modal konfirmasi yang sama.</li>
 <li>Wireframe: mengikuti struktur <code>manajemen.html</code> -- list panel &amp; detail panel dengan <strong>stepper</strong> (bernomor, bisa diklik langsung + tombol Lanjut/Kembali) pada mode "Kelola", dan <strong>tab biasa tanpa step Review</strong> pada mode "Detail".</li>
-<li>Edge case yang wajib ditangani: sekolah berstatus Draft (aksi nonaktifkan/aktifkan tidak relevan dan disembunyikan), sekolah dengan tunggakan nol (modal nonaktivasi menampilkan pesan "tidak ada tunggakan" tanpa checklist tambahan), sekolah dinonaktifkan lalu diaktifkan berkali-kali (riwayat status terbaru menimpa yang lama pada fase ini), memilih "Lainnya" pada Nama Bank tanpa mengisi field "Nama Bank Lainnya" (sistem menolak simpan), pencarian/filter Daftar Sekolah yang tidak menemukan hasil (tabel menampilkan pesan kosong, bukan tabel blank), sekolah Nonaktif dengan tunggakan tersisa (wali murid tetap bisa login ke App Wali Murid untuk melunasi tagihan lama meski staf sekolah sudah tidak bisa login), dan Admin mengubah data di beberapa step lalu menutup halaman <em>tanpa</em> menekan "Simpan Perubahan" di Review (perubahan tidak tersimpan -- lihat Risiko bagian 12).</li>
+<li>Alur cakupan akses: Admin login &rarr; kotak keterangan cakupan tampil di atas filter bar (menyesuaikan cakupan akun) &rarr; dropdown filter Wilayah/Daerah/Cabang yang sudah pasti sesuai cakupan otomatis terisi &amp; disabled sejak halaman dibuka &rarr; Daftar Sekolah otomatis hanya menampilkan sekolah dalam cakupan &rarr; Admin hanya bisa memilih dropdown yang masih aktif (jika ada, misal PCM untuk akun bercakupan Daerah) &rarr; tabel memperbarui hasil sesuai pilihan, selalu dalam batas cakupannya.</li>
+<li>Edge case yang wajib ditangani: sekolah berstatus Draft (aksi nonaktifkan/aktifkan tidak relevan dan disembunyikan), sekolah dengan tunggakan nol (modal nonaktivasi menampilkan pesan "tidak ada tunggakan" tanpa checklist tambahan), sekolah dinonaktifkan lalu diaktifkan berkali-kali (riwayat status terbaru menimpa yang lama pada fase ini), memilih "Lainnya" pada Nama Bank tanpa mengisi field "Nama Bank Lainnya" (sistem menolak simpan), pencarian/filter Daftar Sekolah yang tidak menemukan hasil (tabel menampilkan pesan kosong, bukan tabel blank), sekolah Nonaktif dengan tunggakan tersisa (wali murid tetap bisa login ke App Wali Murid untuk melunasi tagihan lama meski staf sekolah sudah tidak bisa login), Admin mengubah data di beberapa step lalu menutup halaman <em>tanpa</em> menekan "Simpan Perubahan" di Review (perubahan tidak tersimpan -- lihat Risiko bagian 12), dan akun bercakupan Wilayah/Daerah/Cabang yang membuka Daftar Sekolah mendapati sebagian/seluruh dropdown filter Wilayah/Daerah/Cabang sudah terisi &amp; disabled sejak awal (tidak ada aksi "ditolak" -- opsi di luar cakupan memang tidak pernah bisa dipilih, Daftar Sekolah juga tidak pernah kosong tiba-tiba karenanya).</li>
 </ul>
 <hr />
 <h2>9. Integrasi &amp; Dependensi</h2>
@@ -793,6 +900,7 @@
 <ul>
 <li>Entitas utama: Sekolah (atribut termasuk nama, NPSN, jenjang, status, <strong>wilayah/PWM, daerah/PDM, cabang/PCM sebagai 3 field terpisah</strong> yang bisa diedit, alamat lengkap, akun awal admin [nama, no. WhatsApp, email, peran="Admin"], kontak sekolah [email, nama kontak person, no. WhatsApp]), RekeningPenampungSekolah (relasi satu-ke-banyak terhadap Sekolah; atribut: bank -- termasuk nama bank kustom hasil input "Nama Bank Lainnya", nomor rekening, nama pemilik, status verifikasi, flag utama), RiwayatStatusSekolah, Tunggakan (agregat per sekolah).</li>
 <li>Entitas AturanReminderSekolah dan TemplatePesanSekolah (override per sekolah) <strong>dihapus dari lingkup data halaman ini sejak v0.4</strong> -- lihat 3.2 Non-Tujuan.</li>
+<li>Entitas Pengguna memiliki field <code>cakupan</code> (level: Pusat/Wilayah/Daerah/Cabang, serta nilai <code>pwm</code>/<code>pdm</code>/<code>pcm</code> sesuai level) yang menentukan subset Sekolah yang boleh diakses &amp; difilter akun tersebut pada halaman ini -- lihat 6.3 Cakupan Akses. Field ini dikelola dari modul Pengguna, bukan dari Manajemen Sekolah.</li>
 <li>Retensi data: riwayat status sekolah &amp; alasan nonaktivasi disimpan permanen untuk audit.</li>
 <li>Laporan yang dibutuhkan: daftar sekolah per status, daftar sekolah dengan tunggakan saat nonaktivasi.</li>
 </ul>
@@ -833,6 +941,20 @@
 <td>[DD-MM-YYYY]</td>
 <td>[ ]</td>
 </tr>
+<tr>
+<td>3</td>
+<td>Penegakan cakupan akses (6.3) pada fase ini baru divalidasi di sisi client (prototipe) -- apakah validasi yang identik di level API/backend menjadi prasyarat wajib sebelum go-live produksi, atau cukup diperkuat pada iterasi berikutnya?</td>
+<td>PO klien / Tech Lead</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Apakah suatu akun perlu mendukung lebih dari satu cakupan sekaligus (mis. merangkap 2 Wilayah berdekatan), atau cakupan tunggal per akun (seperti saat ini) sudah cukup untuk seluruh struktur organisasi Muhammadiyah?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
@@ -860,6 +982,20 @@
 <td>M</td>
 <td>M</td>
 <td>Label tombol terakhir dibuat jelas ("Simpan Perubahan ✓"); pertimbangkan dialog konfirmasi saat keluar bila ada perubahan belum disimpan (future improvement)</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Penegakan cakupan akses (Pusat/Wilayah/Daerah/Cabang) saat ini hanya divalidasi di sisi client (prototipe) -- bisa dilewati bila data/API diakses langsung tanpa melalui UI ini</td>
+<td>H</td>
+<td>M</td>
+<td>Terapkan validasi cakupan yang identik (berdasarkan field <code>cakupan</code> pengguna) di level API/backend sebelum go-live produksi -- jangan hanya mengandalkan dropdown yang disabled di sisi client, karena atribut <code>disabled</code> HTML bisa dilewati lewat devtools/request langsung</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Admin dengan cakupan terbatas mengira dropdown filter yang disabled/autofill adalah bug atau sistem tidak responsif, bukan memahaminya sebagai batasan cakupan yang disengaja</td>
+<td>L</td>
+<td>M</td>
+<td>Pastikan field yang disabled tetap menampilkan nilai cakupannya dengan jelas (bukan kosong/samar), dan kotak keterangan cakupan (FR-16) menjelaskan secara eksplisit mengapa field tersebut terkunci -- lihat FR-15/FR-16</td>
 <td>[ ]</td>
 </tr>
 </tbody>
@@ -957,6 +1093,10 @@
 <tr>
 <td>PCM</td>
 <td>Pimpinan Cabang Muhammadiyah -- tingkat struktur organisasi setingkat kecamatan, field "Cabang" pada data sekolah</td>
+</tr>
+<tr>
+<td>Cakupan Akses</td>
+<td>Batas organisasi (Pusat/Wilayah/Daerah/Cabang) yang menentukan sekolah mana saja yang bisa diakses &amp; difilter oleh suatu akun, ditentukan oleh field <code>cakupan</code> pada data pengguna (lihat 6.3 Cakupan Akses)</td>
 </tr>
 </tbody>
 </table></div>

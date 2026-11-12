@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Master Data Tagihan -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Master Data Tagihan <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Master Data Tagihan -- halaman tersendiri <code>transaksi-master-tagihan.html</code>, nav-child pertama di bawah menu Transaksi &amp; Invoice</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>09-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>transaksi-master-tagihan.html</code>, <code>app.js</code> (data <code>masterTagihanData</code>, <code>kategoriKelasData</code>, <code>periodeTahunAjaranData</code>; fungsi <code>renderMasterTagihan</code>, <code>openMasterTagihanPanel</code>, <code>closeMasterTagihanPanel</code>, <code>renderMtNominalFields</code>, <code>saveMasterTagihanPanel</code>, <code>removeMasterTagihanRow</code>, <code>fillMasterTagihanFilter</code>, <code>jenisTagihanOptions</code>, <code>getNominalTagihan</code>, <code>refreshJenisTagihanDropdowns</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a> -- konsumen utama kategori &amp; nominal yang didefinisikan di sini saat membuat tagihan baru; <a class="xref" href="PRD-sekolah-kategori.html">PRD Kategori Sekolah</a> -- sumber <code>kategoriKelasData</code> yang menentukan kolom nominal per kategori di sini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>09-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan pemisahan Master Data Tagihan dari halaman "Tagihan (Invoice)" milik Transaksi &amp; Invoice (sebelumnya tabel edit-semua-baris-lalu-simpan dalam satu kartu bersama form "Buat Tagihan Baru") menjadi halaman CRUD tersendiri dengan panel Tambah/Edit per-baris dan hapus langsung per baris, mengikuti pola yang sama dengan Periode Tahun Ajaran &amp; Kategori Sekolah.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Master Data Tagihan</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini mengelola daftar <strong>kategori tagihan</strong> (mis. SPP, Uang Gedung, Uang Pangkal, Kegiatan Semester) milik satu sekolah, beserta jenis periode penagihannya (Sekali Bayar/Bulanan/Per 3 Bulan/Per 6 Bulan/Tahunan) dan <strong>nominal per Kategori Kelas</strong> (mis. Reguler vs Umum) untuk satu Periode Tahun Ajaran tertentu. Kategori yang dibuat di sini menjadi pilihan "Jenis Tagihan" saat Bendahara/Admin membuat tagihan baru (lihat <a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a>). Fitur ini <strong>tidak</strong> membuat tagihan untuk siswa tertentu (itu dilakukan di halaman Tagihan (Invoice)) dan <strong>tidak</strong> mengelola daftar Periode Tahun Ajaran maupun Kategori Kelas itu sendiri (lihat 3.5 Asumsi &amp; Dependensi).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Kategori Tagihan</td><td>Satu jenis tagihan yang bisa dipakai berulang kali (mis. "SPP"), didefinisikan di halaman ini</td></tr>
+              <tr><td>Periode Tagihan</td><td>Frekuensi penagihan suatu kategori: Sekali Bayar, Bulanan, Per 3 Bulan, Per 6 Bulan, atau Tahunan</td></tr>
+              <tr><td>Periode Tahun Ajaran</td><td>Tahun ajaran (mis. "2026/2027") yang menentukan nominal mana yang berlaku -- lihat 3.5</td></tr>
+              <tr><td>Kategori Kelas</td><td>Pengelompokan kelas (mis. Reguler, Umum) yang menentukan nominal berbeda untuk kategori tagihan yang sama</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child pertama di bawah grup "Transaksi &amp; Invoice" pada sidebar, mendahului "Tagihan (Invoice)". Sebelumnya fitur ini adalah kartu "Master Data Tagihan" di bagian atas halaman "Tagihan (Invoice)", dikelola lewat tabel yang seluruh barisnya bisa diedit langsung lalu disimpan bersamaan lewat satu tombol "Simpan Master Data Tagihan". Dipisah menjadi halaman tersendiri dengan pola CRUD per-baris (panel Tambah/Edit, hapus langsung) supaya konsisten dengan pola master data lain (Periode Tahun Ajaran, Kategori Sekolah) dan supaya halaman Tagihan (Invoice) bisa fokus ke pembuatan &amp; pemantauan tagihan individual siswa.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan daftar kategori tagihan dengan nominal per Kategori Kelas, difilter per Periode Tahun Ajaran.</li>
+          <li>Menambah kategori tagihan baru untuk suatu Periode Tahun Ajaran.</li>
+          <li>Mengubah kategori tagihan yang sudah ada (nama, periode tagihan, nominal per kategori, status aktif).</li>
+          <li>Menghapus kategori tagihan.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Mengelola Master Data Tagihan secara penuh -- menambah, mengubah, menghapus kategori &amp; nominal. Mengikuti akses modul <code>transaksi</code> yang sudah dimiliki Bendahara.</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- mengelola Master Data Tagihan secara penuh (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default (modul <code>transaksi</code> bernilai tidak aktif untuk peran ini), kecuali izin diubah lewat Role &amp; Hak Akses.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Kombinasi Nama Kategori + Periode Tahun Ajaran harus unik -- tidak boleh ada dua kategori dengan nama sama pada periode tahun ajaran yang sama.</li>
+          <li>Nominal disimpan per Kategori Kelas yang ada saat ini (<code>kategoriKelasData</code>); menambah/menghapus Kategori Kelas di halaman lain akan mengubah kolom nominal yang tampil di sini (lihat 3.5).</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Daftar Periode Tahun Ajaran (<code>periodeTahunAjaranData</code>) <strong>tidak dikelola dari Portal Sekolah</strong> -- sekarang dikelola terpusat oleh Admin Pusat (menu Konfigurasi Sistem, aplikasi <code>admin_muhammadiyah</code>) supaya seluruh sekolah memakai satu sumber tahun ajaran yang sama. Halaman ini hanya memakai data tersebut sebagai pilihan read-only pada dropdown filter &amp; panel Tambah/Edit.</li>
+          <li>Daftar Kategori Kelas (<code>kategoriKelasData</code>) dikelola di halaman <a class="xref" href="PRD-sekolah-kategori.html">Kategori Sekolah</a> (Manajemen Sekolah) -- fitur ini hanya membaca daftar tersebut untuk membangun kolom nominal per kategori.</li>
+          <li>Keterkaitan kategori tagihan dengan Periode Tahun Ajaran dicek berdasarkan <strong>nama periode (string)</strong>, bukan <code>id</code>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Kategori Tagihan</td><td>Sistem menampilkan tabel berisi Nama Kategori, Periode Tahun Ajaran, Periode Tagihan, Nominal per Kategori Kelas (mis. "Reguler: Rp350.000 / Umum: Rp375.000"), status Aktif/Nonaktif, dan Aksi</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Filter per Periode Tahun Ajaran</td><td>Dropdown "Semua Periode" / nama periode memfilter tabel sesuai Periode Tahun Ajaran yang dipilih; default menampilkan seluruh periode saat halaman pertama dimuat</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Tambah Kategori Tagihan</td><td>Tombol "+ Tambah Kategori Tagihan" membuka panel form berisi Nama Kategori, Periode Tahun Ajaran, Periode Tagihan, Nominal per Kategori Kelas (satu input per kategori kelas yang ada), dan toggle Aktif</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Simpan Kategori Baru</td><td>Saat "Simpan" ditekan pada mode tambah, sistem memvalidasi input (lihat <a class="xref" href="#sec-5">bagian 5</a>), lalu menambahkan kategori baru tanpa dialog konfirmasi tambahan</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Ubah Kategori Tagihan</td><td>Tombol edit (&#9998;) pada tiap baris membuka panel form yang sama dalam mode edit, terisi data kategori terkait (termasuk nominal per kategori kelas saat ini)</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Simpan Perubahan Kategori</td><td>Saat "Simpan" ditekan pada mode edit, sistem menampilkan dialog konfirmasi sebelum benar-benar menyimpan perubahan</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Hapus Kategori Tagihan</td><td>Tombol hapus (&#10005;) pada tiap baris menampilkan dialog konfirmasi sebelum menghapus kategori</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Refresh Dropdown Jenis Tagihan</td><td>Setiap kategori ditambah/diubah/dihapus, sistem memperbarui seluruh dropdown "Jenis Tagihan" yang sedang terbuka di halaman Tagihan (Invoice) lewat <code>refreshJenisTagihanDropdowns()</code>, termasuk baris individual &amp; mode massal yang sudah ada</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Menambah kategori tagihan baru untuk Periode Tahun Ajaran tertentu</strong></p>
+        <ol>
+          <li>Bendahara memfilter "Semua Periode" ke "2026/2027", lalu menekan "+ Tambah Kategori Tagihan".</li>
+          <li>Panel terbuka dengan Periode Tahun Ajaran otomatis terisi "2026/2027" (mengikuti filter aktif); Bendahara mengisi Nama Kategori "Uang Study Tour", Periode Tagihan "Sekali Bayar", dan nominal per kategori kelas.</li>
+          <li>Bendahara menekan "Simpan". Sistem memvalidasi, menambahkan kategori baru, menutup panel, memperbarui tabel &amp; dropdown Jenis Tagihan di halaman Tagihan (Invoice), menampilkan toast "&#10003; Master data tagihan berhasil disimpan".</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba menambah kategori dengan nama &amp; periode yang sudah ada (ditolak)</strong></p>
+        <ol>
+          <li>Admin menekan "+ Tambah Kategori Tagihan", mengisi Nama Kategori "SPP" dengan Periode Tahun Ajaran "2026/2027" -- kombinasi yang sudah ada.</li>
+          <li>Admin menekan "Simpan". Sistem menolak dengan toast <code>Kategori "SPP" sudah ada untuk periode 2026/2027</code>; panel tetap terbuka, data tidak tersimpan.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mengubah nominal SPP untuk tahun ajaran baru</strong></p>
+        <ol>
+          <li>Bendahara menekan edit (&#9998;) pada baris "SPP -- 2026/2027", panel terbuka terisi data saat ini.</li>
+          <li>Bendahara menaikkan nominal kategori "Reguler" dan "Umum", menekan "Simpan".</li>
+          <li>Sistem menampilkan dialog konfirmasi "Simpan perubahan kategori tagihan 'SPP'?"; setelah dikonfirmasi, perubahan tersimpan dan tabel diperbarui.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Nama Kategori wajib diisi (tidak boleh kosong setelah di-<em>trim</em>)</td></tr>
+              <tr><td>BR-02</td><td>Periode Tahun Ajaran wajib dipilih</td></tr>
+              <tr><td>BR-03</td><td>Kombinasi Nama Kategori (case-insensitive) + Periode Tahun Ajaran wajib unik di antara seluruh kategori sekolah ini; saat mode edit, pengecekan keunikan mengecualikan kategori yang sedang diedit sendiri</td></tr>
+              <tr><td>BR-04</td><td>Nominal per Kategori Kelas yang tidak diisi/tidak valid dianggap <code>0</code>, bukan ditolak sebagai error -- memungkinkan kategori tagihan berlaku hanya untuk sebagian Kategori Kelas</td></tr>
+              <tr><td>BR-05</td><td>Hapus kategori tidak memiliki guard/pengecekan apakah kategori tersebut sudah dipakai tagihan siswa yang sudah dibuat (<code>invoiceData[].jenis</code>) -- lihat 8. Batasan &amp; <a class="xref" href="#sec-9">9. Pertanyaan Terbuka No. 1</a></td></tr>
+              <tr><td>BR-06</td><td>Menambah kategori baru tanpa memilih filter periode lebih dulu otomatis memakai Periode Tahun Ajaran yang sedang aktif (<code>getActivePeriodeNama()</code>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama Kategori</td><td><code>#mt-nama</code></td><td><strong>Ya</strong></td><td>Tidak boleh kosong setelah di-<em>trim</em>; unik bersama Periode Tahun Ajaran, case-insensitive (lihat BR-01, BR-03)</td></tr>
+              <tr><td>Periode Tahun Ajaran</td><td><code>#mt-periode-tahun</code></td><td><strong>Ya</strong></td><td>Dropdown dari <code>periodeTahunAjaranData</code> (read-only, dikelola Admin Pusat -- lihat 3.5); harus terisi (lihat BR-02)</td></tr>
+              <tr><td>Periode Tagihan</td><td><code>#mt-periode-tagihan</code></td><td>Ya (selalu ada default)</td><td>Salah satu dari: Sekali Bayar, Bulanan, Per 3 Bulan, Per 6 Bulan, Tahunan -- default "Sekali Bayar"</td></tr>
+              <tr><td>Nominal per Kategori Kelas</td><td><code>.mt-nominal-kat</code> (satu per Kategori Kelas)</td><td>Tidak (opsional per kategori)</td><td>Angka; nilai kosong/non-angka dianggap 0 (lihat BR-04)</td></tr>
+              <tr><td>Aktif</td><td><code>#mt-aktif</code></td><td>Tidak (opsional)</td><td>Boolean (toggle); default tercentang (Aktif) saat menambah kategori baru</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>KategoriTagihan</code> (<code>masterTagihanData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>nama</code></td><td>string</td><td><strong>Ya</strong></td><td>Nama kategori, mis. <code>"SPP"</code> (lihat BR-01, BR-03). Nilai inilah yang dicocokkan terhadap <code>invoiceData[].jenis</code> saat tagihan dibuat/divalidasi (lihat <code>validateImportRow</code> di <a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a>)</td></tr>
+              <tr><td><code>periode</code></td><td>string enum (<code>sekali</code>/<code>bulanan</code>/<code>per3bulan</code>/<code>per6bulan</code>/<code>tahunan</code>)</td><td><strong>Ya</strong></td><td>Frekuensi penagihan -- hanya label &amp; informasi, tidak memicu penagihan berulang otomatis (lihat 8. Batasan)</td></tr>
+              <tr><td><code>periodeTahunAjaran</code></td><td>string</td><td><strong>Ya</strong></td><td>Merujuk <code>nama</code> pada <code>periodeTahunAjaranData</code> (read-only, lihat 3.5); menentukan nominal mana yang berlaku saat kategori yang sama dipakai di tahun ajaran berbeda</td></tr>
+              <tr><td><code>nominalByKategori</code></td><td>object (<code>{ [kategoriKelasId]: nominal }</code>)</td><td>Tidak (per-elemen opsional)</td><td>Nominal berbeda per Kategori Kelas (lihat BR-04); dibaca lewat <code>getNominalTagihan(nama, kelasCode, periode)</code> yang menerjemahkan kode kelas siswa &rarr; <code>kategoriKelasId</code> lewat <code>getKategoriIdForKelas</code></td></tr>
+              <tr><td><code>aktif</code></td><td>boolean</td><td>Tidak (toggle, default <code>true</code>)</td><td>Kategori nonaktif tidak muncul sebagai opsi "Jenis Tagihan" (lihat <code>jenisTagihanOptions</code>) namun tetap tersimpan &amp; tetap muncul di tabel halaman ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><em>Catatan: entitas ini tidak memiliki field <code>id</code> -- seluruh operasi Edit/Hapus pada UI merujuk <strong>index posisi</strong> dalam array <code>masterTagihanData</code> (dikirim sebagai parameter <code>idx</code> ke <code>openMasterTagihanPanel(idx)</code>/<code>removeMasterTagihanRow(idx)</code>), bukan pengenal unik permanen -- lihat <a class="xref" href="#sec-9">9. Pertanyaan Terbuka No. 3</a>.</em></p>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Validasi</td><td>Seluruh input form divalidasi sebelum data tersimpan (lihat <a class="xref" href="#sec-5">bagian 5</a>)</td><td>100% percobaan simpan tidak valid ditolak</td></tr>
+              <tr><td>NFR-02</td><td>Konsistensi lintas halaman</td><td>Perubahan kategori tagihan (tambah/ubah/hapus) langsung memperbarui dropdown "Jenis Tagihan" di halaman Tagihan (Invoice), baik mode Massal maupun baris-baris mode Individual yang sudah ada, lewat <code>refreshJenisTagihanDropdowns()</code></td><td>0% dropdown Jenis Tagihan menampilkan data basi setelah perubahan</td></tr>
+              <tr><td>NFR-03</td><td>Feedback</td><td>Setiap aksi (tambah/ubah/hapus) menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-04</td><td>Keterbacaan data</td><td>Kolom Nominal per Kategori Kelas menampilkan seluruh Kategori Kelas yang ada saat ini, bukan hanya kategori yang pernah diisi nominalnya</td><td>100% Kategori Kelas tampil per baris, termasuk yang nominalnya Rp0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Field <code>periode</code> (Periode Tagihan: Bulanan/Per 3 Bulan/dst.) bersifat informatif saja -- sistem <strong>tidak</strong> secara otomatis menerbitkan tagihan berulang sesuai frekuensi ini; pembuatan tagihan aktual tetap manual lewat halaman Tagihan (Invoice) tiap periode penagihan.</li>
+          <li>Menghapus kategori yang sudah pernah dipakai pada tagihan siswa yang sudah dibuat (<code>invoiceData[].jenis</code>) tidak mengubah/menghapus tagihan yang sudah ada -- tagihan tersebut tetap menyimpan nama jenis sebagai teks bebas, terlepas dari kategori sumbernya masih ada atau sudah dihapus (lihat BR-05).</li>
+          <li>Tidak ada riwayat perubahan (audit trail) untuk nominal yang pernah berubah pada suatu kategori + periode.</li>
+          <li>Tidak ada guard "minimal 1 kategori tersisa" seperti pada Periode Tahun Ajaran/Kategori Sekolah -- seluruh kategori tagihan sekolah ini bisa dihapus hingga kosong.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Karena nominal nyata tiap Kategori Kelas dianggap 0 bila belum diisi (BR-04), Bendahara diasumsikan selalu meninjau seluruh baris nominal sebelum menyimpan, supaya tidak ada kategori tagihan dengan nominal 0 yang tidak disengaja.</li>
+          <li>Izin modul <code>transaksi</code> untuk halaman ini mengikuti pola akses yang sama dengan Tagihan (Invoice), Riwayat Pembayaran, Write-off, dan Pembayaran Manual (Bendahara &amp; Admin bisa akses, Kepala Sekolah tidak) -- lihat <a class="xref" href="#sec-3">bagian 3.3</a>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apakah perlu guard yang menolak/memperingatkan penghapusan kategori tagihan yang sudah dipakai tagihan siswa aktif (mis. masih berstatus <code>sent</code>/<code>overdue</code>), serupa dengan guard "Terpakai" pada Periode Tahun Ajaran?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah Periode Tagihan (Bulanan/Per 3 Bulan/dst.) perlu dikembangkan menjadi penjadwalan otomatis yang benar-benar menerbitkan draft tagihan berulang, bukan sekadar label informatif?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah entitas ini perlu diberi <code>id</code> permanen (bukan hanya index array) untuk keperluan integrasi API/backend di kemudian hari, mengingat Edit/Hapus saat ini bergantung pada posisi baris yang bisa berubah jika urutan data berubah?</td><td>Tech Lead</td><td>[ ]</td></tr>
+              <tr><td>4</td><td>Apakah Kepala Sekolah perlu akses lihat-saja (read-only) ke Master Data Tagihan untuk keperluan audit internal, mengingat perannya saat ini tidak memiliki akses modul <code>transaksi</code> sama sekali?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Kategori Tagihan</td><td>Satu jenis tagihan yang bisa dipakai berulang, mis. "SPP", "Uang Gedung" -- entitas utama halaman ini</td></tr>
+              <tr><td>Periode Tagihan</td><td>Frekuensi penagihan suatu kategori (Sekali Bayar/Bulanan/Per 3 Bulan/Per 6 Bulan/Tahunan) -- bersifat informatif, lihat 8. Batasan</td></tr>
+              <tr><td>Nominal per Kategori Kelas</td><td>Nominal tagihan yang bisa berbeda untuk tiap Kategori Kelas (mis. Reguler vs Umum) dalam satu kategori tagihan yang sama</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Konfigurasi Notifikasi -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+  .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+  .doc-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 36px 40px; box-shadow: 0 1px 3px rgba(20,36,63,0.06); }
+  h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+  h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code { background: #eef1f6; color: #b71c1c; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .fab-prd {
+    position: fixed; bottom: 26px; right: 26px;
+    background: var(--navy); color: #fff; border: none; border-radius: 999px;
+    padding: 13px 20px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35); cursor: pointer;
+    display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 Aplikasi Wali Murid -- Dokumen PRD</span>
+  <a href="../notifikasi.html">&larr; Lihat Prototipe notifikasi.html</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Konfigurasi Notifikasi (Wali Murid)</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+<tbody>
+<tr><td>Nama produk / fitur</td><td>Konfigurasi Notifikasi (Preferensi Kanal Pemberitahuan Wali Murid)</td></tr>
+<tr><td>Klien / proyek</td><td>Aplikasi Wali Murid -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+<tr><td>Versi dokumen</td><td>v0.1</td></tr>
+<tr><td>Status</td><td>Draft</td></tr>
+<tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+<tr><td>Product Owner</td><td>[Nama PO Klien]</td></tr>
+<tr><td>Solution Architect</td><td>[Nama SA]</td></tr>
+<tr><td>Tanggal dibuat</td><td>08-11-2026</td></tr>
+<tr><td>Target rilis</td><td>[DD-MM-YYYY / Sprint X]</td></tr>
+<tr><td>Dokumen terkait</td><td><code>notifikasi.html</code>, <code>app.js</code>, PRD Profil Wali Murid (preferensi tanggal pengingat), PRD Riwayat Pembayaran &amp; Konfirmasi</td></tr>
+</tbody></table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+<tbody>
+<tr><td>v0.1</td><td>08-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal berdasarkan prototipe <code>notifikasi.html</code>, menu "Notifikasi" pada bottom navigation aplikasi Wali Murid.</td></tr>
+</tbody></table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Halaman Notifikasi memungkinkan Wali Murid mengatur kanal mana saja yang dipakai untuk menerima informasi tagihan, reminder jatuh tempo, dan update status pembayaran: WhatsApp, SMS, Email, dan Push Notifikasi. Satu kanal, "Notifikasi Aplikasi" (muncul di ikon lonceng dalam aplikasi), selalu aktif dan tidak dapat dimatikan sebagai jaring pengaman minimal agar Wali Murid tidak kehilangan info penting.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Wali Murid</strong> mengalami <strong>kesulitan mengatur kanal komunikasi mana yang paling sesuai dengan kebiasaannya</strong> saat <strong>seluruh notifikasi dikirim lewat kanal yang ditetapkan sekolah tanpa bisa disesuaikan</strong>, yang menyebabkan <strong>info tagihan/reminder tidak sampai efektif (mis. WA tidak aktif, email jarang dibuka) atau Wali Murid merasa terlalu banyak menerima notifikasi dari kanal yang tidak diinginkan</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Kanal pengiriman notifikasi (WA/SMS/Email/Push) ditetapkan secara default dan sama untuk semua Wali Murid, tanpa opsi personalisasi dari sisi pengguna.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Wali Murid dapat membuka menu "Notifikasi" dan menyalakan/mematikan setiap kanal (WA/SMS/Email/Push) sesuai preferensinya sendiri, dengan "Notifikasi Aplikasi" tetap menjadi jaring pengaman minimal yang selalu aktif.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan makin banyak Wali Murid yang bergantung pada reminder tagihan untuk membayar tepat waktu (lihat PRD Profil Wali Murid -- preferensi tanggal pengingat), personalisasi kanal notifikasi meningkatkan efektivitas reminder sampai ke Wali Murid yang tepat lewat kanal yang benar-benar mereka pakai.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Meningkatkan efektivitas reminder tagihan dengan mengirim lewat kanal yang benar-benar dipakai Wali Murid.</li>
+<li>Mengurangi keluhan Wali Murid terkait notifikasi dari kanal yang tidak diinginkan.</li>
+<li>Menjamin Wali Murid tetap menerima info penting minimal lewat Notifikasi Aplikasi walau seluruh kanal eksternal dimatikan.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mencakup pengaturan jadwal/tanggal pengingat tagihan tambahan -- itu domain halaman <strong>Profil</strong> (field "Ingatkan saya setiap tanggal").</li>
+<li>Tidak mencakup pengiriman notifikasi itu sendiri (integrasi gateway WA/SMS/Email/Push) -- halaman ini hanya menyimpan preferensi kanal.</li>
+<li>Tidak mendukung pengaturan granular per jenis pesan (mis. kanal berbeda untuk reminder vs hasil verifikasi) pada fase ini -- preferensi berlaku untuk seluruh jenis notifikasi.</li>
+<li>Tidak menyediakan opsi mematikan "Notifikasi Aplikasi" (selalu aktif sebagai jaring pengaman).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Metrik</th><th>Baseline saat ini</th><th>Target</th><th>Cara ukur</th><th>Waktu evaluasi</th></tr></thead>
+<tbody>
+<tr><td>% Wali Murid yang mengubah preferensi notifikasi dari default dalam 30 hari pertama</td><td>[ ]</td><td>&ge; 20%</td><td>Perbandingan <code>notifPrefs</code> tersimpan vs nilai default</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>% penurunan keluhan "tidak menerima reminder" setelah fitur ini tersedia</td><td>[ ]</td><td>Turun &ge; 25%</td><td>Perbandingan jumlah tiket bantuan sebelum vs sesudah rilis</td><td>2 bulan setelah rilis</td></tr>
+<tr><td>% Wali Murid dengan minimal 1 kanal eksternal aktif (selain Notifikasi Aplikasi)</td><td>[ ]</td><td>&ge; 90%</td><td>Audit <code>notifPrefs</code> seluruh akun aktif</td><td>2 bulan setelah rilis</td></tr>
+</tbody></table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Nama / Peran</th><th>Organisasi</th><th>RACI</th><th>Kepentingan</th></tr></thead>
+<tbody>
+<tr><td>Product Owner</td><td>Klien (Muhammadiyah Pusat/Sekolah)</td><td>A</td><td>Menyetujui kanal yang tersedia &amp; kebijakan kanal wajib</td></tr>
+<tr><td>Solution Architect</td><td>GeekGarden</td><td>R</td><td>Desain integrasi preferensi dengan gateway notifikasi (produksi)</td></tr>
+<tr><td>Tech Lead</td><td>GeekGarden</td><td>R</td><td>Implementasi halaman &amp; penyimpanan preferensi</td></tr>
+<tr><td>QA Lead</td><td>GeekGarden</td><td>C</td><td>Strategi pengujian kombinasi toggle kanal</td></tr>
+<tr><td>Wali Murid (Orang Tua/Wali)</td><td>Klien (pengguna akhir)</td><td>R</td><td>Pengguna utama fitur ini</td></tr>
+</tbody></table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Persona</th><th>Deskripsi</th><th>Tujuan utama</th><th>Pain point</th><th>Perangkat / kanal</th></tr></thead>
+<tbody>
+<tr><td>Wali Murid (Ayah/Ibu/Wali)</td><td>Orang tua/wali yang ingin mengatur cara menerima info tagihan</td><td>Menerima reminder lewat kanal yang paling sering dipakai, tanpa kebanjiran notifikasi dari kanal lain</td><td>Notifikasi penting terlewat karena masuk ke kanal yang tidak dipantau</td><td>Smartphone (aplikasi mobile web)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>In Scope (fase ini)</th><th>Out of Scope (fase berikutnya / tidak dikerjakan)</th></tr></thead>
+<tbody>
+<tr><td>Toggle aktif/nonaktif untuk kanal WhatsApp, SMS, Email, Push Notifikasi</td><td>Pengaturan jadwal/tanggal pengingat tambahan (domain halaman Profil)</td></tr>
+<tr><td>Kanal "Notifikasi Aplikasi" yang selalu aktif (tidak bisa dimatikan)</td><td>Integrasi pengiriman nyata ke gateway WA/SMS/Email/Push</td></tr>
+<tr><td>Penyimpanan preferensi lewat tombol "Simpan Preferensi"</td><td>Pengaturan granular per jenis notifikasi (reminder vs verifikasi vs lainnya)</td></tr>
+<tr><td>Deskripsi singkat kegunaan tiap kanal pada UI</td><td>Riwayat notifikasi yang pernah dikirim (itu domain halaman Riwayat -- bagian Konfirmasi)</td></tr>
+</tbody></table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Toggle WA/SMS/Email/Push, kanal Notifikasi Aplikasi yang selalu aktif, tombol Simpan Preferensi.</li>
+<li><strong>Should have</strong> -- Deskripsi penjelas tiap kanal pada UI.</li>
+<li><strong>Could have</strong> -- Pengaturan granular per jenis notifikasi.</li>
+<li><strong>Won't have (now)</strong> -- Integrasi gateway pengiriman nyata, riwayat notifikasi terkirim di halaman ini.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>User story</th><th>Prioritas</th><th>Acceptance criteria</th></tr></thead>
+<tbody>
+<tr><td>US-01</td><td>Sebagai Wali Murid, saya ingin menyalakan/mematikan kanal WhatsApp, SMS, Email, dan Push Notifikasi secara terpisah, supaya saya hanya menerima info tagihan lewat kanal yang saya pantau.</td><td>Must</td><td>Given saya membuka menu Notifikasi, When saya mengubah salah satu toggle kanal, Then status toggle tersebut berubah sesuai pilihan saya</td></tr>
+<tr><td>US-02</td><td>Sebagai Wali Murid, saya ingin preferensi kanal yang saya ubah benar-benar tersimpan, supaya pilihan saya tidak hilang saat saya kembali ke halaman ini.</td><td>Must</td><td>Given saya mengubah satu atau lebih toggle kanal, When saya menekan "Simpan Preferensi", Then toast konfirmasi penyimpanan muncul dan preferensi tetap sesuai pilihan saya saat halaman dibuka kembali</td></tr>
+<tr><td>US-03</td><td>Sebagai Wali Murid, saya ingin memahami kegunaan masing-masing kanal sebelum memutuskan menyalakan/mematikannya, supaya saya bisa membuat keputusan yang tepat.</td><td>Should</td><td>Given saya membuka menu Notifikasi, When halaman dimuat, Then setiap kanal menampilkan deskripsi singkat kegunaannya</td></tr>
+<tr><td>US-04</td><td>Sebagai Wali Murid, saya ingin tetap menerima info penting di dalam aplikasi walau saya mematikan semua kanal eksternal, supaya saya tidak kehilangan info krusial seperti status pembayaran.</td><td>Must</td><td>Given saya mematikan WA, SMS, Email, dan Push, When saya melihat kanal "Notifikasi Aplikasi", Then kanal tersebut tetap aktif dan tidak bisa dimatikan</td></tr>
+</tbody></table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Modul</th><th>Deskripsi requirement</th><th>User story</th><th>Prioritas</th><th>Catatan / aturan bisnis</th></tr></thead>
+<tbody>
+<tr><td>FR-01</td><td>Toggle Kanal WhatsApp</td><td>Sistem harus menyediakan toggle aktif/nonaktif untuk kanal WhatsApp, dengan deskripsi sebagai kanal utama (reminder, kuitansi, info penting)</td><td>US-01, US-03</td><td>Must</td><td>Default aktif (<code>true</code>)</td></tr>
+<tr><td>FR-02</td><td>Toggle Kanal SMS</td><td>Sistem harus menyediakan toggle aktif/nonaktif untuk kanal SMS, dengan deskripsi sebagai kanal cadangan bila nomor WhatsApp tidak aktif</td><td>US-01, US-03</td><td>Must</td><td>Default nonaktif (<code>false</code>)</td></tr>
+<tr><td>FR-03</td><td>Toggle Kanal Email</td><td>Sistem harus menyediakan toggle aktif/nonaktif untuk kanal Email, dengan deskripsi sebagai kanal pengiriman kuitansi &amp; ringkasan bulanan</td><td>US-01, US-03</td><td>Must</td><td>Default aktif (<code>true</code>)</td></tr>
+<tr><td>FR-04</td><td>Toggle Kanal Push Notifikasi</td><td>Sistem harus menyediakan toggle aktif/nonaktif untuk Push Notifikasi, dengan deskripsi sebagai notifikasi pop-up walau aplikasi tertutup</td><td>US-01, US-03</td><td>Must</td><td>Default aktif (<code>true</code>)</td></tr>
+<tr><td>FR-05</td><td>Kanal Notifikasi Aplikasi (Terkunci Aktif)</td><td>Sistem harus menampilkan toggle "Notifikasi Aplikasi" dalam kondisi selalu menyala dan tidak dapat diklik/dimatikan</td><td>US-04</td><td>Must</td><td>Disertai catatan penjelas bahwa kanal ini adalah jaring pengaman minimal di dalam aplikasi</td></tr>
+<tr><td>FR-06</td><td>Simpan Preferensi</td><td>Sistem harus menyediakan tombol "Simpan Preferensi" yang menyimpan seluruh status toggle kanal saat ditekan</td><td>US-02</td><td>Must</td><td>Perubahan toggle individual sudah tercatat ke state saat diubah (<code>onNotifToggle()</code>); tombol memberi konfirmasi eksplisit via toast "✓ Preferensi notifikasi disimpan"</td></tr>
+</tbody></table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Fitur</th><th>Wali Murid (akun aktif)</th><th>Wali Murid (menunggu approval / ditolak)</th></tr></thead>
+<tbody>
+<tr><td>Lihat &amp; ubah preferensi kanal notifikasi</td><td>Ya</td><td>-- (tidak bisa masuk ke aplikasi)</td></tr>
+<tr><td>Matikan Notifikasi Aplikasi</td><td>-- (tidak tersedia untuk siapa pun)</td><td>--</td></tr>
+</tbody></table></div>
+<p><em>Catatan: akses ke halaman ini ditentukan oleh <code>requireLogin()</code>, sama seperti seluruh halaman lain pada aplikasi ini.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Pemicu</th><th>Penerima</th><th>Kanal</th><th>Isi singkat</th></tr></thead>
+<tbody>
+<tr><td>Preferensi notifikasi disimpan</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>"✓ Preferensi notifikasi disimpan"</td></tr>
+</tbody></table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+<tbody>
+<tr><td>NFR-01</td><td>Konsistensi state</td><td>Status toggle yang ditampilkan harus selalu merefleksikan preferensi yang tersimpan terakhir untuk akun yang sedang login</td><td>100% konsisten antar sesi/pemuatan halaman</td></tr>
+<tr><td>NFR-02</td><td>Keamanan sesi</td><td>Halaman Notifikasi hanya dapat diakses oleh Wali Murid dengan sesi login aktif</td><td>100% enforced via <code>requireLogin()</code></td></tr>
+<tr><td>NFR-03</td><td>Performa</td><td>Waktu respons toggle &amp; simpan preferensi</td><td>&lt; 300ms (operasi lokal, tanpa panggilan API pada prototipe)</td></tr>
+<tr><td>NFR-04</td><td>Keterjangkauan (Accessibility)</td><td>Setiap toggle harus memiliki label yang jelas &amp; dapat dioperasikan dengan mudah di layar mobile</td><td>Lolos uji keterbacaan label &amp; ukuran target sentuh minimum</td></tr>
+</tbody></table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login &rarr; buka menu "Notifikasi" lewat bottom navigation &rarr; nyalakan/matikan toggle kanal (WA/SMS/Email/Push) sesuai preferensi &rarr; tekan "Simpan Preferensi" &rarr; toast konfirmasi.</li>
+<li>Wireframe: mengikuti struktur <code>notifikasi.html</code> -- header dengan child-switch, kartu daftar toggle per kanal lengkap dengan ikon &amp; deskripsi, catatan info di bawah kartu menjelaskan mengapa Notifikasi Aplikasi tidak bisa dimatikan, tombol "Simpan Preferensi" di bagian bawah.</li>
+<li>Edge case yang wajib ditangani: Wali Murid mematikan seluruh kanal eksternal sekaligus (Notifikasi Aplikasi tetap aktif sebagai jaring pengaman, ditegaskan lewat catatan info), Wali Murid menekan "Simpan Preferensi" tanpa mengubah apa pun (tetap menampilkan toast konfirmasi agar tidak membingungkan).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Sistem eksternal</th><th>Fungsi</th><th>Metode</th><th>PIC</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Gateway WhatsApp/SMS/Email/Push (produksi)</td><td>Pengiriman notifikasi aktual sesuai preferensi kanal yang disimpan di halaman ini</td><td>Integrasi eksternal (belum diimplementasi pada prototipe)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Halaman Profil (aplikasi ini)</td><td>Sumber preferensi tanggal pengingat tagihan tambahan yang saling melengkapi dengan preferensi kanal di halaman ini</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>NotifPrefs</code> (wa, sms, email, push, inapp -- seluruhnya boolean).</li>
+<li>Tidak ada migrasi khusus -- struktur data mengikuti objek <code>notifPrefs</code> di <code>app.js</code> pada prototipe ini.</li>
+<li>Data saat ini bersifat snapshot dalam memori JavaScript (bukan database/API produksi) -- preferensi tidak benar-benar tersimpan permanen dan akan kembali ke default saat sesi browser berakhir.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Preferensi kanal berlaku untuk seluruh jenis notifikasi (reminder tagihan, hasil verifikasi, dsb.) secara seragam -- tidak ada pengaturan per jenis pesan pada fase ini.</li>
+<li>"Notifikasi Aplikasi" dianggap cukup sebagai jaring pengaman minimal tanpa perlu persetujuan eksplisit dari Wali Murid untuk tetap aktif.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Belum ada integrasi nyata ke gateway WA/SMS/Email/Push -- toggle hanya menyimpan preferensi, belum memicu pengiriman sungguhan.</li>
+<li>Preferensi bersifat snapshot dalam memori JavaScript, hilang saat sesi browser berakhir (belum persisten di backend produksi).</li>
+<li>Tidak ada pengaturan granular per jenis notifikasi pada fase ini.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Batas jawab</th><th>Jawaban</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Apakah diperlukan pengaturan granular per jenis notifikasi (misal kanal berbeda untuk reminder tagihan vs hasil verifikasi pembayaran) pada iterasi berikutnya?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>2</td><td>Siapa penyedia gateway WhatsApp/SMS yang akan diintegrasikan di produksi, dan apakah ada batasan kuota/biaya per pesan yang perlu mempengaruhi desain default kanal?</td><td>PO klien / SA</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>3</td><td>Apakah "Notifikasi Aplikasi" perlu memiliki halaman daftar riwayat notifikasi tersendiri, atau cukup diwakili oleh bagian "Riwayat Konfirmasi Pembayaran Saya" di halaman Riwayat seperti saat ini?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Risiko</th><th>Dampak (H/M/L)</th><th>Kemungkinan (H/M/L)</th><th>Mitigasi</th><th>PIC</th></tr></thead>
+<tbody>
+<tr><td>Preferensi notifikasi tidak benar-benar memicu pengiriman nyata pada prototipe, berisiko Wali Murid mengira pengaturan sudah aktif penuh</td><td>M</td><td>H (pada prototipe)</td><td>Integrasikan dengan gateway WA/SMS/Email/Push sesungguhnya sebelum go-live produksi</td><td>[ ]</td></tr>
+<tr><td>Wali Murid mematikan seluruh kanal eksternal tanpa sadar akan kehilangan reminder tagihan, berisiko terlambat bayar</td><td>M</td><td>M</td><td>Pertimbangkan peringatan/konfirmasi tambahan saat seluruh kanal eksternal dimatikan sekaligus</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Milestone</th><th>Deliverable</th><th>Target tanggal</th><th>Kriteria selesai</th></tr></thead>
+<tbody>
+<tr><td>PRD approved</td><td>Dokumen ini v1.0</td><td>[ ]</td><td>Ditandatangani PO</td></tr>
+<tr><td>Desain selesai</td><td>Mockup &amp; struktur data final</td><td>[ ]</td><td>Review SA &amp; klien</td></tr>
+<tr><td>Development</td><td>Toggle kanal, penyimpanan preferensi</td><td>[ ]</td><td>Lolos code review</td></tr>
+<tr><td>UAT</td><td>Build staging</td><td>[ ]</td><td>0 bug critical, sign-off UAT</td></tr>
+<tr><td>Go-live</td><td>Production</td><td>[ ]</td><td>Monitoring 2 minggu stabil</td></tr>
+</tbody></table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+<tbody>
+<tr><td>Kanal Notifikasi</td><td>Jalur pengiriman info tagihan/reminder ke Wali Murid (WhatsApp, SMS, Email, Push, atau Notifikasi Aplikasi)</td></tr>
+<tr><td>Notifikasi Aplikasi</td><td>Catatan riwayat minimal di dalam aplikasi (ikon lonceng) yang selalu aktif sebagai jaring pengaman</td></tr>
+<tr><td>Push Notifikasi</td><td>Notifikasi pop-up di perangkat Wali Murid walau aplikasi sedang tertutup</td></tr>
+</tbody></table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Peran</th><th>Nama</th><th>Tanda tangan</th><th>Tanggal</th></tr></thead>
+<tbody>
+<tr><td>Product Owner (klien)</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Project Manager</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Solution Architect</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Tech Lead</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="../notifikasi.html" title="Lihat prototipe notifikasi.html">📄 Prototipe</a>
+
+</body>
+</html>

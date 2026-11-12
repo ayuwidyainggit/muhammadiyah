@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Master Data Tagihan -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" href="sekolah.html">Profil Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kategori.html">Kategori Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kelas.html">Kelas</a>
+      <a class="nav-item nav-child" href="sekolah-pengguna.html">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-rbac.html">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="transaksi" data-nav-group="transaksi" href="transaksi-tagihan.html"><span class="ic">💳</span> Transaksi &amp; Invoice<span class="chev" onclick="toggleNavGroup(event,'transaksi')">▸</span></a>
+    <div class="nav-children" data-nav-children="transaksi">
+      <a class="nav-item nav-child active" href="transaksi-master-tagihan.html" id="nav-self">Master Data Tagihan</a>
+      <a class="nav-item nav-child" href="transaksi-tagihan.html">Tagihan (Invoice)</a>
+      <a class="nav-item nav-child" href="transaksi-riwayat.html">Riwayat Pembayaran</a>
+      <a class="nav-item nav-child" href="transaksi-writeoff.html">Write-off (Hapus Buku)</a>
+      <a class="nav-item nav-child" href="transaksi-manual.html">Pembayaran Manual <span class="count-pill" id="nav-manual-pending-count">0</span></a>
+    </div>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / Transaksi &amp; Invoice / <b id="crumb-current">Master Data Tagihan</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-transaksi-master-tagihan">
+        <div class="page-title">
+          <h1>Master Data Tagihan</h1>
+          <p>Kategori tagihan yang bisa dipakai berulang kali saat membuat tagihan -- baik yang sifatnya tetap dalam periode tertentu (mis. SPP bulanan, kegiatan per 6 bulan) maupun sekali bayar (mis. uang gedung, uang pangkal, uang pendaftaran).</p>
+        </div>
+
+        <div class="card">
+          <h3>Master Data Tagihan</h3>
+          <p class="card-desc">Nominal bisa berbeda tiap Periode Tahun Ajaran, mis. SPP naik tiap tahun -- gunakan filter di bawah untuk melihat/mengubah nominal tahun tertentu. Kategori tagihan yang dibuat di sini akan muncul sebagai pilihan "Jenis Tagihan" saat membuat Tagihan baru.</p>
+          <div class="note-box info" style="margin-bottom:14px;">Kelola daftar Periode Tahun Ajaran (tambah/ubah/hapus, tandai periode aktif) di menu <b>Manajemen Sekolah &rarr; Periode Tahun Ajaran</b>.</div>
+          <div class="filter-bar">
+            <input type="text" class="search" id="mt-filter-cari" placeholder="Cari kode/nama kategori..." oninput="renderMasterTagihan()">
+            <select id="mt-filter-periode" onchange="renderMasterTagihan()">
+              <option value="">Semua Periode</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="openMasterTagihanPanel()">+ Tambah Kategori Tagihan</button>
+          </div>
+          <table class="dtab" id="master-tagihan-table">
+            <thead>
+              <tr><th style="width:10%">Kode</th><th style="width:15%">Nama Kategori</th><th style="width:13%">Periode Tahun Ajaran</th><th style="width:12%">Periode Tagihan</th><th style="width:24%">Nominal per Kategori Kelas</th><th style="width:9%">Aktif</th><th style="width:17%">Aksi</th></tr>
+            </thead>
+            <tbody id="master-tagihan-body"></tbody>
+          </table>
+
+          <div class="card" id="master-tagihan-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+            <h3 id="master-tagihan-panel-title">Tambah Kategori Tagihan</h3>
+            <div class="grid4">
+              <div class="field"><label>Kode Kategori</label><input type="text" id="mt-kode" placeholder="mis. SPP" style="text-transform:uppercase;"></div>
+              <div class="field"><label>Nama Kategori</label><input type="text" id="mt-nama" placeholder="mis. SPP"></div>
+              <div class="field"><label>Periode Tahun Ajaran</label><select id="mt-periode-tahun"></select></div>
+              <div class="field">
+                <label>Periode Tagihan</label>
+                <select id="mt-periode-tagihan">
+                  <option value="sekali">Sekali Bayar</option>
+                  <option value="bulanan">Bulanan</option>
+                  <option value="per3bulan">Per 3 Bulan</option>
+                  <option value="per6bulan">Per 6 Bulan</option>
+                  <option value="tahunan">Tahunan</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Nominal per Kategori Kelas (Rp)</label>
+              <div id="mt-nominal-wrap"></div>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Aktif</b><span>Kategori nonaktif tidak akan muncul sebagai pilihan Jenis Tagihan saat membuat tagihan baru</span></div>
+              <label class="toggle"><input type="checkbox" id="mt-aktif" checked><span class="slider"></span></label>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-ghost" onclick="closeMasterTagihanPanel()">Batal</button>
+              <button class="btn btn-success" onclick="saveMasterTagihanPanel()">Simpan</button>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:10px;">Kode Kategori &amp; Nama Kategori wajib diisi; kombinasi Nama Kategori + Periode Tahun Ajaran maupun kombinasi Kode Kategori + Periode Tahun Ajaran tidak boleh duplikat (supaya nominal yang dipakai saat membuat tagihan tidak ambigu).</div>
+        </div>
+
+        <a class="fab-prd" href="docs/PRD-master-data-tagihan.html" target="_blank" title="Lihat dokumen PRD Master Data Tagihan">📄 Lihat PRD</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+<!-- MODAL: DETAIL NOMINAL PER KATEGORI KELAS -->
+<div class="modal-overlay" id="nominal-kategori-modal-overlay" onclick="if(event.target===this) closeNominalKategoriModal();">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3 id="nk-modal-title">Detail Nominal</h3>
+        <div class="modal-sub" id="nk-modal-sub"></div>
+      </div>
+      <span class="modal-close" onclick="closeNominalKategoriModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <table class="dtab">
+        <thead>
+          <tr><th style="width:60%">Kategori Kelas</th><th style="width:40%;text-align:right;">Nominal</th></tr>
+        </thead>
+        <tbody id="nk-modal-body"></tbody>
+      </table>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeNominalKategoriModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    renderMasterTagihan();
+  }
+</script>
+</body>
+</html>

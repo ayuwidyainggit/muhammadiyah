@@ -15,7 +15,10 @@ const rbacModules = [
   { key: 'dashboard-konsolidasi', label: 'Dashboard Konsolidasi', icon: '📊', page: 'dashboard-konsolidasi.html', group: null },
   { key: 'pendaftaran', label: 'Pendaftaran Sekolah', icon: '＋', page: 'pendaftaran.html', group: 'Onboarding' },
   { key: 'manajemen', label: 'Manajemen Sekolah', icon: '🏫', page: 'manajemen.html', group: 'Onboarding' },
+  { key: 'laporan-pemasukan', label: 'Laporan Pemasukan', icon: '💰', page: 'laporan-pemasukan.html', group: 'Laporan' },
+  { key: 'laporan-pindah-tunggakan', label: 'Laporan Pindah Sekolah & Tunggakan', icon: '📦', page: 'laporan-pindah-tunggakan.html', group: 'Laporan' },
   { key: 'konfigurasi', label: 'Konfigurasi Sistem', icon: '⚙', page: 'konfigurasi.html', group: 'Konfigurasi' },
+  { key: 'periode-tahun-ajaran', label: 'Periode Tahun Ajaran', icon: '🗓️', page: 'periode-tahun-ajaran.html', group: 'Konfigurasi' },
   { key: 'pengguna', label: 'Pengguna', icon: '👤', page: 'pengguna.html', group: 'Konfigurasi' },
   { key: 'rbac', label: 'Role & Hak Akses', icon: '🔐', page: 'rbac.html', group: 'Konfigurasi' },
 ];
@@ -30,32 +33,30 @@ const rolesData = [
   { id: roleSeq++, nama: 'Super Admin', kode: 'SUPER_ADMIN', icon: '🛡️', deskripsi: 'Akses penuh (Create/Read/Update/Delete) ke seluruh modul platform.',
     perms: {
       'dashboard-konsolidasi': cruFull(true), pendaftaran: cruFull(true), manajemen: cruFull(true),
-      konfigurasi: cruFull(true), pengguna: cruFull(true), rbac: cruFull(true),
+      'laporan-pemasukan': cruFull(true), 'laporan-pindah-tunggakan': cruFull(true),
+      konfigurasi: cruFull(true), 'periode-tahun-ajaran': cruFull(true), pengguna: cruFull(true), rbac: cruFull(true),
     } },
-  { id: roleSeq++, nama: 'Admin Wilayah (PWM)', kode: 'ADMIN_WILAYAH_PWM', icon: '🗺️', deskripsi: 'Kelola sekolah & onboarding di wilayahnya, tanpa akses konfigurasi platform.',
+  { id: roleSeq++, nama: 'Admin', kode: 'ADMIN', icon: '🗺️', deskripsi: 'Kelola sekolah & onboarding di cakupannya (lihat field Cakupan per pengguna), tanpa akses konfigurasi platform.',
     perms: {
       'dashboard-konsolidasi': cru(false, true, false, false),
       pendaftaran: cru(true, true, true, false),
       manajemen: cru(false, true, true, false),
+      'laporan-pemasukan': cru(false, true, false, false),
+      'laporan-pindah-tunggakan': cru(false, true, false, false),
       konfigurasi: cru(false, false, false, false),
+      'periode-tahun-ajaran': cru(false, false, false, false),
       pengguna: cru(false, false, false, false),
       rbac: cru(false, false, false, false),
     } },
-  { id: roleSeq++, nama: 'Staff Keuangan Pusat', kode: 'STAFF_KEUANGAN_PUSAT', icon: '💰', deskripsi: 'Pantau performa pembayaran & data sekolah, tanpa ubah konfigurasi/onboarding.',
+  { id: roleSeq++, nama: 'Staff Keuangan', kode: 'STAFF_KEUANGAN', icon: '💰', deskripsi: 'Pantau performa pembayaran & data sekolah, tanpa ubah konfigurasi/onboarding.',
     perms: {
       'dashboard-konsolidasi': cru(false, true, false, false),
       pendaftaran: cru(false, false, false, false),
       manajemen: cru(false, true, false, false),
+      'laporan-pemasukan': cru(false, true, false, false),
+      'laporan-pindah-tunggakan': cru(false, true, false, false),
       konfigurasi: cru(false, false, false, false),
-      pengguna: cru(false, false, false, false),
-      rbac: cru(false, false, false, false),
-    } },
-  { id: roleSeq++, nama: 'Viewer (Read-only)', kode: 'VIEWER', icon: '👁️', deskripsi: 'Hanya lihat Dashboard Konsolidasi.',
-    perms: {
-      'dashboard-konsolidasi': cru(false, true, false, false),
-      pendaftaran: cru(false, false, false, false),
-      manajemen: cru(false, false, false, false),
-      konfigurasi: cru(false, false, false, false),
+      'periode-tahun-ajaran': cru(false, false, false, false),
       pengguna: cru(false, false, false, false),
       rbac: cru(false, false, false, false),
     } },
@@ -63,11 +64,13 @@ const rolesData = [
 
 let userSeq = 1;
 const usersData = [
-  { id: userSeq++, nama: 'Siti Aminah', email: 'superadmin@geekgarden.id', password: 'admin123', roleId: 1, status: 'Aktif' },
-  { id: userSeq++, nama: 'Budi Santoso', email: 'wilayah.jatim@muhammadiyah.id', password: 'wilayah123', roleId: 2, status: 'Aktif' },
-  { id: userSeq++, nama: 'Rina Kartika', email: 'keuangan@muhammadiyah.id', password: 'keuangan123', roleId: 3, status: 'Aktif' },
-  { id: userSeq++, nama: 'Ahmad Fauzi', email: 'viewer@muhammadiyah.id', password: 'viewer123', roleId: 4, status: 'Aktif' },
-  { id: userSeq++, nama: 'Dedi Kurniawan', email: 'nonaktif@muhammadiyah.id', password: 'nonaktif123', roleId: 4, status: 'Nonaktif' },
+  { id: userSeq++, nama: 'Siti Aminah', email: 'superadmin@geekgarden.id', password: 'admin123', roleId: 1, status: 'Aktif', cakupan: { level: 'Pusat' } },
+  { id: userSeq++, nama: 'Budi Santoso', email: 'wilayah.jatim@muhammadiyah.id', password: 'wilayah123', roleId: 2, status: 'Aktif', cakupan: { level: 'Wilayah', pwm: 'PWM Jawa Timur' } },
+  { id: userSeq++, nama: 'Ratna Dewi', email: 'daerah.sidoarjo@muhammadiyah.id', password: 'daerah123', roleId: 2, status: 'Aktif', cakupan: { level: 'Daerah', pwm: 'PWM Jawa Timur', pdm: 'PDM Sidoarjo' } },
+  { id: userSeq++, nama: 'Hendra Saputra', email: 'cabang.wonokromo@muhammadiyah.id', password: 'cabang123', roleId: 2, status: 'Aktif', cakupan: { level: 'Cabang', pwm: 'PWM Jawa Timur', pdm: 'PDM Surabaya', pcm: 'PCM Wonokromo' } },
+  { id: userSeq++, nama: 'Rina Kartika', email: 'keuangan@muhammadiyah.id', password: 'keuangan123', roleId: 3, status: 'Aktif', cakupan: { level: 'Pusat' } },
+  { id: userSeq++, nama: 'Ahmad Fauzi', email: 'staffkeuangan2@muhammadiyah.id', password: 'staff123', roleId: 3, status: 'Aktif', cakupan: { level: 'Pusat' } },
+  { id: userSeq++, nama: 'Dedi Kurniawan', email: 'nonaktif@muhammadiyah.id', password: 'nonaktif123', roleId: 3, status: 'Nonaktif', cakupan: { level: 'Pusat' } },
 ];
 
 function roleById(id) { return rolesData.find(r => r.id === Number(id)); }
@@ -297,14 +300,130 @@ function confirmAction(opts, onConfirm) {
   document.getElementById('gconfirm-overlay').classList.add('active');
 }
 
+// =========================================================================
+// KONFIGURASI SISTEM -- Periode Tahun Ajaran (satu sumber data untuk seluruh
+// sekolah). Sebelumnya tiap sekolah mengatur periode tahun ajarannya sendiri
+// lewat Portal Sekolah (periode.html) -- dipindah ke sini supaya tidak ada
+// lagi variasi tanggal tahun ajaran antar sekolah. Portal Sekolah membaca
+// daftar ini sebagai salinan read-only (lihat app.js miliknya,
+// periodeTahunAjaranData) -- di produksi diisi lewat API dari sini.
+// =========================================================================
+let periodeSeq = 1;
+const periodeTahunAjaranData = [
+  { id: periodeSeq++, nama: "2025/2026", mulai: "2025-07-01", selesai: "2026-06-30", aktif: false },
+  { id: periodeSeq++, nama: "2026/2027", mulai: "2026-07-01", selesai: "2027-06-30", aktif: true },
+];
+let periodeEditIdx = null;
+function renderMasterPeriodeTable() {
+  if (!document.getElementById('master-periode-body')) return;
+  const q = (document.getElementById('periode-search')?.value || '').trim().toLowerCase();
+  const tbody = document.getElementById('master-periode-body');
+  const rows = periodeTahunAjaranData
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => !q || p.nama.toLowerCase().includes(q));
+  tbody.innerHTML = rows.length ? rows.map(({ p, i }) => `
+    <tr>
+      <td>${p.nama}</td>
+      <td>${p.mulai}</td>
+      <td>${p.selesai}</td>
+      <td>${p.aktif ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn" onclick="openPeriodePanel(${i})" title="Edit">✎</button>
+          <button class="icon-btn icon-btn-red" onclick="removePeriodeRow(${i})" title="Hapus">✕</button>
+        </div>
+        ${!p.aktif ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setPeriodeAktif(${i})">Jadikan Aktif</button>` : ''}
+      </td>
+    </tr>`).join('') : `<tr><td colspan="5" class="empty-hint">Tidak ada periode yang cocok dengan pencarian.</td></tr>`;
+}
+function openPeriodePanel(idx) {
+  periodeEditIdx = (idx === undefined) ? null : idx;
+  const panel = document.getElementById('periode-panel');
+  if (periodeEditIdx !== null) {
+    const p = periodeTahunAjaranData[periodeEditIdx];
+    document.getElementById('periode-panel-title').textContent = 'Edit Periode Tahun Ajaran';
+    document.getElementById('prd-nama').value = p.nama;
+    document.getElementById('prd-mulai').value = p.mulai;
+    document.getElementById('prd-selesai').value = p.selesai;
+    document.getElementById('prd-aktif').checked = p.aktif;
+  } else {
+    document.getElementById('periode-panel-title').textContent = 'Tambah Periode Tahun Ajaran';
+    document.getElementById('prd-nama').value = '';
+    document.getElementById('prd-mulai').value = '';
+    document.getElementById('prd-selesai').value = '';
+    document.getElementById('prd-aktif').checked = false;
+  }
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function closePeriodePanel() {
+  document.getElementById('periode-panel').style.display = 'none';
+  periodeEditIdx = null;
+}
+function savePeriodeTahunAjaran() {
+  const nama = document.getElementById('prd-nama').value.trim();
+  const mulai = document.getElementById('prd-mulai').value;
+  const selesai = document.getElementById('prd-selesai').value;
+  const aktif = document.getElementById('prd-aktif').checked;
+
+  if (!nama) { showToast('Tahun Ajaran wajib diisi'); return; }
+  if (!mulai || !selesai) { showToast('Tanggal Mulai & Tanggal Selesai wajib diisi'); return; }
+  if (mulai > selesai) { showToast('Tanggal Mulai tidak boleh setelah Tanggal Selesai'); return; }
+  const dup = periodeTahunAjaranData.some((p, i) => i !== periodeEditIdx && p.nama.toLowerCase() === nama.toLowerCase());
+  if (dup) { showToast(`Periode "${nama}" sudah terdaftar`); return; }
+
+  const commitSavePeriode = () => {
+    if (aktif) periodeTahunAjaranData.forEach(p => p.aktif = false);
+    const payload = { nama, mulai, selesai, aktif };
+    if (periodeEditIdx !== null) {
+      const existing = periodeTahunAjaranData[periodeEditIdx];
+      periodeTahunAjaranData[periodeEditIdx] = { ...existing, ...payload };
+    } else {
+      if (!periodeTahunAjaranData.length) payload.aktif = true;
+      periodeTahunAjaranData.push({ id: periodeSeq++, ...payload });
+    }
+    if (!periodeTahunAjaranData.some(p => p.aktif) && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
+    closePeriodePanel();
+    renderMasterPeriodeTable();
+    showToast('✓ Periode Tahun Ajaran berhasil disimpan');
+  };
+  if (periodeEditIdx !== null) {
+    confirmAction({ title: 'Simpan Perubahan Periode', message: `Simpan perubahan periode "${nama}"? Perubahan ini berlaku untuk seluruh sekolah.`, confirmLabel: 'Ya, Simpan' }, commitSavePeriode);
+  } else {
+    commitSavePeriode();
+  }
+}
+function setPeriodeAktif(idx) {
+  const nama = periodeTahunAjaranData[idx].nama;
+  confirmAction({ title: 'Jadikan Periode Aktif', message: `Jadikan "${nama}" sebagai periode tahun ajaran aktif? Ini akan berlaku sebagai default di seluruh sekolah.`, confirmLabel: 'Ya, Jadikan Aktif' }, () => {
+    periodeTahunAjaranData.forEach((p, i) => p.aktif = (i === idx));
+    renderMasterPeriodeTable();
+    showToast(`✓ ${nama} dijadikan periode aktif`);
+  });
+}
+function removePeriodeRow(idx) {
+  if (periodeTahunAjaranData.length <= 1) { showToast('Minimal harus ada 1 periode tahun ajaran'); return; }
+  const p = periodeTahunAjaranData[idx];
+  confirmAction({ title: 'Hapus Periode Tahun Ajaran', message: `Hapus periode "${p.nama}"? Tindakan ini memengaruhi seluruh sekolah.`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+    const wasActive = p.aktif;
+    periodeTahunAjaranData.splice(idx, 1);
+    if (wasActive && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
+    renderMasterPeriodeTable();
+    showToast(`✓ Periode "${p.nama}" berhasil dihapus`);
+  });
+}
+
 // ---- floating PRD doc button (muncul di semua halaman app, bukan di login) ----
 const PRD_BY_PAGE = {
   'dashboard-konsolidasi.html': 'docs/PRD-dashboard-konsolidasi.html',
   'pendaftaran.html': 'docs/PRD-pendaftaran-sekolah.html',
   'manajemen.html': 'docs/PRD-manajemen-sekolah.html',
   'konfigurasi.html': 'docs/PRD-konfigurasi-sistem.html',
+  'periode-tahun-ajaran.html': 'docs/PRD-periode-tahun-ajaran.html',
   'pengguna.html': 'docs/PRD-pengguna.html',
   'rbac.html': 'docs/PRD-role-hak-akses.html',
+  'laporan-pemasukan.html': 'docs/PRD-laporan-pemasukan.html',
+  'laporan-pindah-tunggakan.html': 'docs/PRD-laporan-pindah-tunggakan.html',
 };
 function injectPrdFab() {
   if (!document.getElementById('app-shell')) return;

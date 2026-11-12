@@ -6,7 +6,7 @@
 | ------------------- | --------------------------------------------------------------------------------------- |
 | Nama produk / fitur | Pendaftaran Sekolah (Onboarding Sekolah Baru)                                           |
 | Klien / proyek      | Admin Pusat Muhammadiyah -- Platform Invoicing & Payment SPP (GeekGarden)               |
-| Versi dokumen       | v0.1                                                                                    |
+| Versi dokumen       | v0.2                                                                                    |
 | Status              | Draft                                                                                   |
 | Penulis             | Tim Produk GeekGarden                                                                   |
 | Product Owner       | [Nama PO Klien]                                                                         |
@@ -20,6 +20,7 @@
 | Versi | Tanggal    | Penulis               | Perubahan                                                                                                            |
 | ----- | ---------- | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | v0.1  | 25-10-2026 | Tim Produk GeekGarden | Draft awal berdasarkan prototipe `pendaftaran.html` (4 langkah: Data Sekolah, Akun Awal, Rekening Penampung, Review) |
+| v0.2  | 08-11-2026 | Tim Produk GeekGarden | Menambahkan **FR-07**: field Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) di Step 1 kini otomatis terisi & terkunci (disabled) secara bertingkat sesuai **Cakupan** akun yang login (konsep yang sama dengan Cakupan di PRD Pengguna) -- Cakupan Pusat tetap mengisi ketiganya manual, Cakupan Wilayah mengunci PWM saja, Cakupan Daerah mengunci PWM+PDM, Cakupan Cabang mengunci ketiganya -- supaya tanggung jawab pendaftaran sekolah tetap sesuai wilayah masing-masing admin dan tidak bisa dimanipulasi ke cakupan lain. |
 
 ---
 
@@ -27,7 +28,7 @@
 
 ### 2.1 Ringkasan
 
-Pendaftaran Sekolah adalah wizard 4 langkah bagi Super Admin/Admin Wilayah untuk mendaftarkan sekolah baru ke platform: mengisi data induk sekolah, membuat satu akun Admin awal, mencatat rekening penampung fee sekolah, lalu meninjau seluruh data sebelum sekolah diaktifkan. Hasilnya, sekolah baru bisa langsung beroperasi di platform tanpa proses manual bolak-balik dokumen.
+Pendaftaran Sekolah adalah wizard 4 langkah bagi Super Admin/Admin untuk mendaftarkan sekolah baru ke platform: mengisi data induk sekolah, membuat satu akun Admin awal, mencatat rekening penampung fee sekolah, lalu meninjau seluruh data sebelum sekolah diaktifkan. Struktur organisasi (PWM/PDM/PCM) di Step 1 otomatis mengikuti Cakupan akun yang login -- admin dengan Cakupan terbatas (Wilayah/Daerah/Cabang) hanya bisa mendaftarkan sekolah di dalam wilayahnya sendiri. Hasilnya, sekolah baru bisa langsung beroperasi di platform tanpa proses manual bolak-balik dokumen, dan tanggung jawab pendaftaran tetap sesuai cakupan masing-masing admin.
 
 ### 2.2 Problem Statement
 
@@ -39,7 +40,7 @@ Data sekolah baru (profil, struktur organisasi, kontak, rekening bagi hasil fee)
 
 ### 2.4 Kondisi yang Diharapkan (To-Be)
 
-Super Admin/Admin Wilayah mengisi satu wizard terstruktur 4 langkah, meninjau ringkasan di langkah akhir, lalu menekan "Daftarkan Sekolah" -- status sekolah otomatis berubah dari Draft menjadi Aktif dan event onboarding diterbitkan ke seluruh service terkait.
+Super Admin/Admin mengisi satu wizard terstruktur 4 langkah, meninjau ringkasan di langkah akhir, lalu menekan "Daftarkan Sekolah" -- status sekolah otomatis berubah dari Draft menjadi Aktif dan event onboarding diterbitkan ke seluruh service terkait. Di Step 1, field Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) sudah otomatis terisi & terkunci sesuai Cakupan akun yang login (kecuali Cakupan Pusat, yang tetap bebas mengisi ketiganya), sehingga admin tidak perlu (dan tidak bisa) salah memilih wilayah organisasi di luar tanggung jawabnya.
 
 ### 2.5 Kenapa Sekarang?
 
@@ -99,11 +100,11 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 | Step 2: Akun Awal Admin Sekolah + Kontak Sekolah                                        | Pembuatan lebih dari 1 akun saat onboarding             |
 | Step 3: Rekening Penampung (Nama Bank, No Rek, Nama Pemilik)                            | Validasi otomatis nama rekening via API bank saat input |
 | Step 4: Review seluruh input Step 1-3 sebelum submit                                    | Auto-save draft antar sesi                              |
-|                                                                                           | Sistem hitung & bagi hasil (revenue sharing) antara sekolah dan GeekGarden dari dana di rekening Pusat -- dilakukan manual di luar sistem |
+| Struktur organisasi (PWM/PDM/PCM) di Step 1 otomatis terisi & terkunci bertingkat sesuai Cakupan akun yang login | Sistem hitung & bagi hasil (revenue sharing) antara sekolah dan GeekGarden dari dana di rekening Pusat -- dilakukan manual di luar sistem |
 
 ### 5.2 Prioritas (MoSCoW)
 
-- **Must have** -- Step 1-4 wizard lengkap, validasi data wajib, perubahan status Draft → Aktif.
+- **Must have** -- Step 1-4 wizard lengkap, validasi data wajib, perubahan status Draft → Aktif, penguncian PWM/PDM/PCM sesuai Cakupan akun yang login.
 - **Should have** -- Review step yang merangkum seluruh input sebelum submit.
 
 ### 5.3 User Stories
@@ -114,6 +115,7 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 | US-02 | Sebagai Admin Wilayah, saya ingin membuat satu akun Admin Sekolah beserta kontak sekolah, supaya sekolah punya satu titik kontak awal yang bisa mengundang staf lain.                  | Must      | Given saya di Step 2, When saya mengisi nama, No. WhatsApp, dan email akun Admin serta kontak sekolah, Then data tersimpan dan saya bisa lanjut ke Step 3                                                                                                     |
 | US-03 | Sebagai Admin Wilayah, saya ingin mencatat rekening penampung fee sekolah (Nama Bank, No Rek, Nama Pemilik), supaya pencairan bagi hasil fee sekolah punya tujuan rekening yang benar. | Must      | Given saya di Step 3, When saya mengisi Nama Bank, No Rek, dan Nama Pemilik, Then data tersimpan dan saya bisa lanjut ke Step 4                                                                                                                               |
 | US-04 | Sebagai Admin Wilayah, saya ingin meninjau seluruh data dari Step 1-3 sebelum mendaftarkan sekolah, supaya saya bisa memastikan tidak ada kesalahan input sebelum sekolah diaktifkan.  | Must      | Given saya di Step 4, When halaman dimuat, Then seluruh data Step 1-3 (data sekolah, akun admin, kontak, rekening penampung) ditampilkan dalam satu tabel ringkasan, dan setelah saya menekan "Daftarkan Sekolah", status sekolah berubah dari Draft ke Aktif |
+| US-05 | Sebagai Admin dengan Cakupan terbatas (Wilayah/Daerah/Cabang), saya ingin field struktur organisasi yang sudah pasti sesuai cakupan saya otomatis terisi dan terkunci, supaya saya tidak bisa (sengaja atau tidak sengaja) mendaftarkan sekolah ke wilayah organisasi lain yang bukan tanggung jawab saya. | Must      | Given saya login dengan Cakupan "Daerah (PDM) -- PDM Kabupaten Magelang", When saya membuka Step 1, Then field Wilayah (PWM) terisi "PWM Jawa Tengah" dan field Daerah (PDM) terisi "PDM Kabupaten Magelang", keduanya dalam keadaan disabled, dan saya hanya perlu memilih Cabang (PCM) dari opsi yang berada di bawah PDM tersebut |
 
 ---
 
@@ -121,12 +123,13 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 
 | ID    | Modul              | Deskripsi requirement                                                                                                                                                                                                                  | User story | Prioritas | Catatan / aturan bisnis                                                                                                                             |
 | ----- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| FR-01 | Data Sekolah       | Sistem harus menyediakan form Step 1 berisi Nama Sekolah, NPSN, Jenjang, Perkiraan Jumlah Siswa Aktif, Wilayah (PWM), Daerah (PDM), Cabang (PCM), Status Awal (readonly: Draft), dan Alamat Lengkap                                    | US-01      | Must      | Dropdown PDM & PCM mengikuti pilihan PWM yang dipilih (dependent select)                                                                            |
+| FR-01 | Data Sekolah       | Sistem harus menyediakan form Step 1 berisi Nama Sekolah, NPSN, Jenjang, Perkiraan Jumlah Siswa Aktif, Wilayah (PWM), Daerah (PDM), Cabang (PCM), Status Awal (readonly: Draft), dan Alamat Lengkap                                    | US-01      | Must      | Dropdown PDM & PCM mengikuti pilihan PWM yang dipilih (dependent select); lihat FR-07 untuk aturan penguncian field ini berdasarkan Cakupan akun yang login                                                                            |
 | FR-02 | Akun Awal          | Sistem harus menyediakan form Step 2 untuk 1 akun dengan peran otomatis "Admin" (Nama, No. WhatsApp, Email) dan Kontak Sekolah (Email Sekolah, Nama Kontak Person, No. WhatsApp Kontak Person)                                         | US-02      | Must      | Akun ini menerima link aktivasi (bukan kredensial langsung) setelah sekolah Aktif; akun ini yang berhak mengundang Kepala Sekolah & Bendahara       |
 | FR-03 | Rekening Penampung | Sistem harus menyediakan form Step 3 dengan tepat 3 field: Nama Bank (dropdown), No Rek, Nama Pemilik                                                                                                                                  | US-03      | Must      | Rekening ini hanya untuk pencairan bagi hasil fee sekolah, bukan rekening penampung pembayaran SPP wali murid (yang terpusat di Konfigurasi Sistem) |
 | FR-04 | Review             | Sistem harus menampilkan ringkasan seluruh data Step 1-3 (Nama Sekolah, NPSN, Jenjang, Jumlah Siswa, Struktur Organisasi, Alamat, Status Awal, Akun Admin, Kontak Sekolah, Rekening Penampung) di Step 4 sebelum tombol submit ditekan | US-04      | Must      | Review bersifat read-only summary, bukan form edit ulang                                                                                            |
 | FR-05 | Aktivasi Sekolah   | Sistem harus mengubah status sekolah dari "Draft" menjadi "Aktif" dan menerbitkan event `school.onboarded` ke service terkait saat tombol "Daftarkan Sekolah" ditekan di Step 4                                                        | US-04      | Must      | Event ini memicu proses lain (misal: pembuatan akses login Admin Sekolah, mulai jadwal invoicing)                                                   |
 | FR-06 | Navigasi Wizard    | Sistem harus menyediakan tombol "Lanjut"/"Kembali" antar step dan indikator stepper (Data Sekolah → Akun Awal → Rekening Penampung → Review)                                                                                           | US-01      | Must      | Tombol "Kembali" nonaktif di Step 1; tombol "Lanjut" berubah teks jadi "Daftarkan Sekolah" di Step 4                                                |
+| FR-07 | Cakupan Mengunci Struktur Organisasi | Field Wilayah (PWM), Daerah (PDM), dan Cabang (PCM) di Step 1 harus otomatis terisi dan dinonaktifkan (disabled) secara bertingkat sesuai Cakupan akun yang login | US-05      | Must      | Aturan: **Cakupan Pusat** -- ketiga field tetap harus diisi manual (dependent select seperti FR-01, tidak ada yang terkunci); **Cakupan Wilayah (PWM)** -- field PWM autofill & disabled sesuai PWM akun yang login, field PDM & PCM tetap harus diisi manual (opsi PDM/PCM tetap dibatasi hanya yang berada di bawah PWM tersebut); **Cakupan Daerah (PDM)** -- field PWM & PDM autofill & disabled, hanya field PCM yang harus diisi manual (opsi PCM dibatasi hanya yang di bawah PDM tersebut); **Cakupan Cabang (PCM)** -- ketiga field (PWM, PDM, PCM) autofill & disabled, tidak ada input tersisa, field hanya ditampilkan untuk konfirmasi. Nilai yang mengisi/mengunci field ini bersumber dari field Cakupan pada akun yang login (lihat PRD Pengguna) |
 
 ### 6.1 Hak Akses per Peran
 
@@ -160,7 +163,7 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 
 - Alur utama: Login → Menu "Pendaftaran Sekolah" → Step 1 Data Sekolah → Step 2 Akun Awal → Step 3 Rekening Penampung → Step 4 Review → submit → status Aktif.
 - Wireframe: mengikuti struktur `pendaftaran.html` (stepper 4 langkah di bagian atas, form per step, tombol navigasi di bawah).
-- Edge case yang wajib ditangani: NPSN duplikat, admin menutup browser di tengah wizard (data belum tersimpan permanen sampai submit akhir), No. WhatsApp/email akun Admin tidak valid format.
+- Edge case yang wajib ditangani: NPSN duplikat, admin menutup browser di tengah wizard (data belum tersimpan permanen sampai submit akhir), No. WhatsApp/email akun Admin tidak valid format, akun dengan Cakupan "Cabang (PCM)" membuka Step 1 dan mendapati ketiga field struktur organisasi sudah terisi penuh & disabled (tidak ada yang perlu/bisa diubah selain field lain di Step 1).
 
 ---
 
@@ -190,6 +193,7 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 - Integrasi H2H (Host-to-Host) ada di level **Admin Muhammadiyah Pusat**, bukan per sekolah. Satu kerja sama bank H2H terpusat (BSI) dipakai bersama oleh seluruh sekolah.
 - Pembayaran SPP oleh wali murid (via Virtual Account/QRIS) **langsung masuk ke rekening penampung Pusat**, bukan ke rekening sekolah. Rekening penampung yang diisi di Step 3 wizard ini adalah rekening tujuan **pencairan bagi hasil fee ke sekolah**, bukan rekening penerima pembayaran SPP.
 - NPSN bersifat unik per sekolah dan tersedia saat pendaftaran.
+- Field Cakupan pada akun yang login (lihat PRD Pengguna) adalah satu-satunya sumber yang menentukan apakah PWM/PDM/PCM di Step 1 terisi otomatis & terkunci, atau masih harus diisi manual (lihat FR-07).
 
 **Batasan:**
 
@@ -211,6 +215,7 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 | ------------------------------------------------------------- | -------------- | ------------------- | ----------------------------------------------------------------------------------------------------- | --- |
 | Data NPSN/rekening salah input tidak terdeteksi sebelum Aktif | H              | M                   | Tambahkan validasi format & konfirmasi di Review step; pertimbangkan verifikasi rekening via API bank | [ ] |
 | Admin menutup browser di tengah wizard, data hilang           | M              | M                   | Evaluasi kebutuhan auto-save/draft di rilis berikutnya                                                | [ ] |
+| Penguncian field PWM/PDM/PCM (FR-07) hanya diterapkan di sisi klien (disabled di UI), sehingga admin yang paham teknis bisa memanipulasi request submit untuk mendaftarkan sekolah di luar Cakupannya sendiri | H | M | Terapkan validasi yang sama di backend saat submit Step 4: cocokkan PWM/PDM/PCM yang dikirim dengan Cakupan akun yang login di server, tolak jika tidak sesuai | [ ] |
 
 ---
 
@@ -231,6 +236,7 @@ Pertumbuhan jumlah sekolah yang bergabung ke platform (ribuan sekolah ditargetka
 | Istilah            | Arti                                                                        |
 | ------------------ | --------------------------------------------------------------------------- |
 | PWM/PDM/PCM        | Pimpinan Wilayah/Daerah/Cabang Muhammadiyah, struktur organisasi berjenjang |
+| Cakupan            | Lingkup wilayah kewenangan akun yang login (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM); menentukan field struktur organisasi mana di Step 1 yang terkunci otomatis (lihat FR-07 & PRD Pengguna) |
 | H2H                | Host-to-Host, integrasi langsung ke sistem bank mitra                       |
 | NPSN               | Nomor Pokok Sekolah Nasional                                                |
 | `school.onboarded` | Event internal yang diterbitkan saat sekolah berubah status jadi Aktif      |

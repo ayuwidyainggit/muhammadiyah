@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeekGarden Admin -- Laporan Pemasukan</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app-shell">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="brand">
+          <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+          <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+        </div>
+
+        <a
+          href="dashboard-konsolidasi.html"
+          class="nav-item"
+          data-rbac="dashboard-konsolidasi"
+          ><span class="ic">📊</span> Dashboard Konsolidasi</a
+        >
+
+        <div class="nav-group-label">Onboarding</div>
+        <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"
+          ><span class="ic">＋</span> Pendaftaran Sekolah</a
+        >
+        <a href="manajemen.html" class="nav-item" data-rbac="manajemen"
+          ><span class="ic">🏫</span> Manajemen Sekolah</a
+        >
+
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item active"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
+        <div class="nav-group-label">Konfigurasi</div>
+        <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
+        >
+        <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
+          ><span class="ic">👤</span> Pengguna</a
+        >
+        <a href="rbac.html" class="nav-item" data-rbac="rbac"
+          ><span class="ic">🔐</span> Role &amp; Hak Akses</a
+        >
+
+        <div
+          style="
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 10px;
+          "
+        >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              logout();
+              return false;
+            "
+            ><span class="ic">🚪</span> Keluar</a
+          >
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">
+            <span id="crumb-role">Super Admin</span> /
+            <b id="crumb-current">Laporan Pemasukan</b>
+          </div>
+          <div class="topbar-right">
+            <a
+              class="btn-prd"
+              href="docs/PRD-laporan-pemasukan.html"
+              target="_blank"
+              rel="noopener"
+              >📄 PRD</a
+            >
+            <div class="user-chip">
+              <div class="av" id="uc-avatar">SA</div>
+              <div class="info">
+                <div class="name" id="uc-name">Super Admin</div>
+                <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- ===================== VIEW: LAPORAN PEMASUKAN ===================== -->
+          <div class="page-view active" id="view-laporan-pemasukan">
+            <div class="page-title">
+              <h1>Laporan Pemasukan</h1>
+              <p>
+                Rekap pemasukan pembayaran per sekolah, diturunkan dari
+                transaksi yang tercatat lewat aplikasi Wali Murid (QRIS, VA
+                BSI, Transfer Manual) dan Portal Sekolah.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Filter Laporan</h3>
+              <p class="card-desc">
+                Filter berlaku untuk statistik ringkasan di bawah maupun
+                tabel Pemasukan per Sekolah. Periode selalu difilter ke satu
+                bulan (default: periode terbaru/aktif) agar performa tetap
+                baik saat data transaksi sudah banyak -- tidak ada opsi
+                "Semua Periode".
+              </p>
+              <div class="filter-bar">
+                <select id="lp-filter-sekolah" onchange="onIncomeFilterChange()">
+                  <option value="">Semua Sekolah</option>
+                </select>
+                <select id="lp-filter-status" onchange="onIncomeFilterChange()">
+                  <option value="">Semua Status Sekolah</option>
+                  <option value="Aktif">Aktif</option>
+                  <option value="Nonaktif">Nonaktif</option>
+                  <option value="Draft">Draft</option>
+                </select>
+                <select id="lp-filter-periode" onchange="onIncomeFilterChange()">
+                </select>
+                <button
+                  class="btn btn-ghost btn-sm"
+                  style="margin-left: auto"
+                  onclick="exportIncomeExcel()"
+                >
+                  ⬇ Export Excel
+                </button>
+              </div>
+            </div>
+
+            <div class="stat-row" id="lp-stat-row"></div>
+
+            <div class="card">
+              <h3>Pemasukan per Sekolah</h3>
+              <p class="card-desc">
+                Hanya transaksi dengan status <b>Berhasil</b> yang dihitung
+                sebagai pemasukan. Klik "Lihat Detail" untuk melihat rincian
+                transaksi per siswa sesuai data di aplikasi Wali Murid.
+              </p>
+              <table class="dtab">
+                <thead>
+                  <tr>
+                    <th style="width: 20%">Nama Sekolah</th>
+                    <th style="width: 9%">Status</th>
+                    <th style="width: 9%">Siswa Aktif</th>
+                    <th style="width: 11%">Transaksi Berhasil</th>
+                    <th style="width: 14%">Total Pemasukan</th>
+                    <th style="width: 15%">Invoice Belum Terbayar</th>
+                    <th style="width: 10%">Metode Terbanyak</th>
+                    <th style="width: 12%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="lp-table-body"></tbody>
+              </table>
+            </div>
+
+            <div
+              class="card"
+              id="lp-detail-panel"
+              style="display: none; border-style: dashed"
+            >
+              <h3 id="lp-detail-title">Detail Transaksi</h3>
+              <p class="card-desc" id="lp-detail-sub"></p>
+
+              <h4 style="font-size: 13px; margin: 0 0 8px">
+                Transaksi Berhasil
+              </h4>
+              <table class="dtab" style="margin-bottom: 20px">
+                <thead>
+                  <tr>
+                    <th style="width: 14%">Tanggal Pembayaran</th>
+                    <th style="width: 17%">Siswa</th>
+                    <th style="width: 13%">Status Siswa</th>
+                    <th style="width: 14%">Jenis Tagihan</th>
+                    <th style="width: 12%">Metode</th>
+                    <th style="width: 14%">Nominal</th>
+                    <th style="width: 16%">No. Kuitansi</th>
+                  </tr>
+                </thead>
+                <tbody id="lp-detail-body"></tbody>
+              </table>
+
+              <h4 style="font-size: 13px; margin: 0 0 8px">
+                Invoice Belum Terbayar
+              </h4>
+              <p class="card-desc" style="margin-bottom: 10px">
+                <b>Belum Terbayar</b> -- belum ada upaya pembayaran sama
+                sekali. <b>Failed</b> -- sudah ada upaya pembayaran namun
+                gagal dari pihak bank, baru diketahui lewat callback BSI H2H
+                (bukan dari aksi wali murid di aplikasi).
+              </p>
+              <table class="dtab">
+                <thead>
+                  <tr>
+                    <th style="width: 13%">Tanggal Jatuh Tempo</th>
+                    <th style="width: 15%">Siswa</th>
+                    <th style="width: 12%">Status Siswa</th>
+                    <th style="width: 13%">Jenis Tagihan</th>
+                    <th style="width: 11%">Metode</th>
+                    <th style="width: 13%">Nominal</th>
+                    <th style="width: 23%">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="lp-detail-unpaid-body"></tbody>
+              </table>
+
+              <div class="btn-row" style="margin-top: 14px">
+                <button class="btn btn-ghost" onclick="closeIncomeDetail()">
+                  Tutup Detail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+    <script src="app.js"></script>
+    <script>
+      const u = requireLogin();
+      if (u) {
+        applyCurrentUserToUi();
+        if (enforcePageAccess("laporan-pemasukan")) {
+          applyRbacToSidebar();
+
+          // ---- data pemasukan per sekolah -- disusun selaras dengan field transaksi
+          // di aplikasi Wali Murid (paymentHistory: metode, provider, nominal, status,
+          // kuitansi RCPT-...) & Portal Sekolah (paymentData) supaya nomenklatur konsisten
+          // lintas aplikasi. "success"/"belum_terbayar"/"failed" sesuai status pembayaran mobile.
+          const schoolsIncomeData = [
+            {
+              nama: "SD Muhammadiyah 4 Sidoarjo",
+              status: "Aktif",
+              siswaAktif: 7,
+              transaksi: [
+                { tanggal: "2026-07-08 09:12", siswa: "Ahmad Fauzan", statusSiswa: "aktif", jenis: "SPP 2026-07", metode: "QRIS", nominal: 350000, status: "success", kuitansi: "RCPT-2026-000112" },
+                { tanggal: "2026-07-09 14:40", siswa: "Khadijah Putri", statusSiswa: "aktif", jenis: "SPP 2026-07", metode: "VA BSI", nominal: 350000, status: "success", kuitansi: "RCPT-2026-000118" },
+                { tanggal: "2026-08-02 08:05", siswa: "Siti Maryam", statusSiswa: "aktif", jenis: "SPP 2026-08", metode: "VA BSI", nominal: 200000, status: "success", kuitansi: "RCPT-2026-000201" },
+                { jatuhTempo: "2026-08-10", siswa: "Umar Abdullah", statusSiswa: "aktif", jenis: "SPP 2026-08", metode: "QRIS", nominal: 375000, status: "belum_terbayar", kuitansi: "" },
+                { jatuhTempo: "2026-07-10", siswa: "Muhammad Rizky", statusSiswa: "pindah_sekolah", jenis: "SPP 2026-07", metode: "VA BSI", nominal: 350000, status: "failed", kuitansi: "", catatanBank: "Callback BSI H2H melaporkan dana didebit lalu ditolak sistem bank (gagal settle)." },
+              ],
+            },
+            {
+              nama: "SD Muhammadiyah 1 Surabaya",
+              status: "Aktif",
+              siswaAktif: 5,
+              transaksi: [
+                { tanggal: "2026-08-05 10:02", siswa: "Nabila Zahra", statusSiswa: "aktif", jenis: "SPP 2026-08", metode: "QRIS", nominal: 375000, status: "success", kuitansi: "RCPT-2026-000310" },
+                { tanggal: "2026-08-06 07:45", siswa: "Raihan Saputra", statusSiswa: "aktif", jenis: "SPP 2026-08", metode: "VA BSI", nominal: 375000, status: "success", kuitansi: "RCPT-2026-000311" },
+                { tanggal: "2026-08-07 19:30", siswa: "Dinda Pratiwi", statusSiswa: "aktif", jenis: "Uang Gedung", metode: "Transfer Manual", nominal: 2500000, status: "success", kuitansi: "RCPT-2026-000312" },
+                { jatuhTempo: "2026-08-10", siswa: "Farhan Maulana", statusSiswa: "aktif", jenis: "SPP 2026-08", metode: "QRIS", nominal: 375000, status: "belum_terbayar", kuitansi: "" },
+              ],
+            },
+            {
+              nama: "SMP Muhammadiyah 2 Malang",
+              status: "Nonaktif",
+              siswaAktif: 0,
+              catatan:
+                "Dinonaktifkan 12 Agu 2026 -- merger dengan SMP Muhammadiyah 1 Malang (lihat Manajemen Sekolah). Tidak ada transaksi baru sejak nonaktif.",
+              transaksi: [],
+            },
+            {
+              nama: "SMK Muhammadiyah 1 Yogyakarta",
+              status: "Draft",
+              siswaAktif: 0,
+              catatan:
+                "Masih proses onboarding (PG: BSI H2H -- Pending). Belum ada transaksi.",
+              transaksi: [],
+            },
+          ];
+
+          function fmtRp(n) {
+            return "Rp" + n.toLocaleString("id-ID");
+          }
+          // "Periode" = bulan transaksi (YYYY-MM), diambil dari tanggal pembayaran
+          // (transaksi success) atau tanggal jatuh tempo (belum_terbayar/failed).
+          function periodeOf(t) {
+            const tgl = t.tanggal || t.jatuhTempo;
+            return tgl ? tgl.slice(0, 7) : null;
+          }
+          function schoolIncomeSummary(s, periodeF) {
+            const transaksi = periodeF
+              ? s.transaksi.filter((t) => periodeOf(t) === periodeF)
+              : s.transaksi;
+            const sukses = transaksi.filter((t) => t.status === "success");
+            const belumTerbayar = transaksi.filter(
+              (t) => t.status === "belum_terbayar" || t.status === "failed",
+            );
+            const total = sukses.reduce((a, t) => a + t.nominal, 0);
+            const totalBelumTerbayar = belumTerbayar.reduce(
+              (a, t) => a + t.nominal,
+              0,
+            );
+            const metodeCount = {};
+            sukses.forEach((t) => {
+              metodeCount[t.metode] = (metodeCount[t.metode] || 0) + 1;
+            });
+            const metodeTerbanyak =
+              Object.keys(metodeCount).sort(
+                (a, b) => metodeCount[b] - metodeCount[a],
+              )[0] || "--";
+            return {
+              sukses,
+              total,
+              belumTerbayar,
+              totalBelumTerbayar,
+              metodeTerbanyak,
+              transaksiCount: transaksi.length,
+            };
+          }
+          function sekolahStatusBadge(status) {
+            const cls =
+              status === "Aktif" ? "on" : status === "Draft" ? "warn" : "off";
+            return `<span class="badge-status ${cls}"><span class="dot"></span> ${status}</span>`;
+          }
+          // "Belum Terbayar" = belum ada upaya pembayaran sama sekali (invoice terbit,
+          // wali murid belum bayar). "Failed" = sudah ada upaya pembayaran (dana sempat
+          // didebit/diproses), tapi gagal dari sisi bank -- baru diketahui lewat callback
+          // BSI H2H, bukan dari aksi wali murid di aplikasi.
+          function transaksiStatusBadge(status) {
+            const map = {
+              success: ["on", "Berhasil"],
+              belum_terbayar: ["warn", "Belum Terbayar"],
+              failed: ["bad", "Failed"],
+            };
+            const [cls, label] = map[status] || ["off", status];
+            return `<span class="badge-status ${cls}"><span class="dot"></span> ${label}</span>`;
+          }
+          function siswaStatusBadge(status) {
+            return status === "pindah_sekolah"
+              ? '<span class="badge-status off"><span class="dot"></span> Pindah Sekolah</span>'
+              : '<span class="badge-status on"><span class="dot"></span> Aktif</span>';
+          }
+
+          function populateSchoolFilter() {
+            const sel = document.getElementById("lp-filter-sekolah");
+            sel.innerHTML =
+              `<option value="">Semua Sekolah</option>` +
+              schoolsIncomeData
+                .map((s) => `<option value="${s.nama}">${s.nama}</option>`)
+                .join("");
+          }
+
+          // Tidak ada opsi "Semua Periode" -- selalu scoped ke satu bulan agar
+          // ringkasan & tabel tidak perlu memproses seluruh histori transaksi
+          // sekaligus (jaga performa saat data transaksi sudah banyak). Default
+          // terpilih adalah periode terbaru/aktif (bulan transaksi paling akhir).
+          function populatePeriodeFilter() {
+            const bulanNama = [
+              "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+              "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+            ];
+            const periodeSet = new Set();
+            schoolsIncomeData.forEach((s) =>
+              s.transaksi.forEach((t) => {
+                const ym = periodeOf(t);
+                if (ym) periodeSet.add(ym);
+              }),
+            );
+            const periods = Array.from(periodeSet).sort();
+            const periodeAktif = periods[periods.length - 1];
+            const sel = document.getElementById("lp-filter-periode");
+            sel.innerHTML = periods.length
+              ? periods
+                  .map((ym) => {
+                    const [y, m] = ym.split("-");
+                    const label = `${bulanNama[Number(m) - 1]} ${y}`;
+                    return `<option value="${ym}"${ym === periodeAktif ? " selected" : ""}>${label}</option>`;
+                  })
+                  .join("")
+              : `<option value="">Tidak ada data periode</option>`;
+          }
+
+          function currentPeriodeFilter() {
+            return document.getElementById("lp-filter-periode").value;
+          }
+
+          function filteredIncomeSchools() {
+            const statusF = document.getElementById("lp-filter-status").value;
+            const sekolahF = document.getElementById("lp-filter-sekolah").value;
+            return schoolsIncomeData.filter(
+              (s) =>
+                (!statusF || s.status === statusF) &&
+                (!sekolahF || s.nama === sekolahF),
+            );
+          }
+
+          function onIncomeFilterChange() {
+            renderIncomeStats();
+            renderIncomeTable();
+          }
+
+          function renderIncomeStats() {
+            const rows = filteredIncomeSchools();
+            const periodeF = currentPeriodeFilter();
+            let totalPemasukan = 0,
+              totalTransaksi = 0,
+              totalBelumTerbayarRp = 0,
+              totalBelumTerbayarCount = 0,
+              topSchool = null,
+              topVal = -1;
+            rows.forEach((s) => {
+              const { sukses, total, belumTerbayar, totalBelumTerbayar } =
+                schoolIncomeSummary(s, periodeF);
+              totalPemasukan += total;
+              totalTransaksi += sukses.length;
+              totalBelumTerbayarRp += totalBelumTerbayar;
+              totalBelumTerbayarCount += belumTerbayar.length;
+              if (total > topVal) {
+                topVal = total;
+                topSchool = s.nama;
+              }
+            });
+            document.getElementById("lp-stat-row").innerHTML = `
+              <div class="stat-card"><div class="lbl">Total Pemasukan</div><div class="val">${fmtRp(totalPemasukan)}</div><div class="sub">sesuai filter, akumulasi data demo</div></div>
+              <div class="stat-card"><div class="lbl">Transaksi Berhasil</div><div class="val">${totalTransaksi}</div><div class="sub">status "Berhasil" di aplikasi Wali Murid</div></div>
+              <div class="stat-card"><div class="lbl">Total Invoice Belum Terbayar</div><div class="val">${fmtRp(totalBelumTerbayarRp)}</div><div class="sub">${totalBelumTerbayarCount} invoice -- status Belum Terbayar/Failed</div></div>
+              <div class="stat-card"><div class="lbl">Pemasukan Tertinggi</div><div class="val">${topSchool || "--"}</div><div class="sub">${topVal > 0 ? fmtRp(topVal) : "belum ada transaksi"}</div></div>
+            `;
+          }
+
+          function renderIncomeTable() {
+            const rows = filteredIncomeSchools();
+            const periodeF = currentPeriodeFilter();
+            const tbody = document.getElementById("lp-table-body");
+            tbody.innerHTML = rows.length
+              ? rows
+                  .map((s) => {
+                    const idx = schoolsIncomeData.indexOf(s);
+                    const { sukses, total, belumTerbayar, totalBelumTerbayar, metodeTerbanyak, transaksiCount } =
+                      schoolIncomeSummary(s, periodeF);
+                    return `<tr>
+                <td><b>${s.nama}</b>${s.catatan ? `<br><span style="color:var(--muted);font-size:11px;">${s.catatan}</span>` : ""}</td>
+                <td>${sekolahStatusBadge(s.status)}</td>
+                <td>${s.siswaAktif}</td>
+                <td>${sukses.length}</td>
+                <td><b>${fmtRp(total)}</b></td>
+                <td>${belumTerbayar.length ? `${belumTerbayar.length} invoice -- <b>${fmtRp(totalBelumTerbayar)}</b>` : `<span style="color:var(--muted);">Rp0</span>`}</td>
+                <td>${metodeTerbanyak}</td>
+                <td>
+                  ${transaksiCount ? `<button class="btn btn-ghost btn-sm" onclick="openIncomeDetail(${idx})">Lihat Detail</button>` : `<span style="color:var(--muted);font-size:11.5px;">Tidak ada transaksi</span>`}
+                </td>
+              </tr>`;
+                  })
+                  .join("")
+              : `<tr><td colspan="8" class="empty-hint">Tidak ada sekolah yang cocok dengan filter.</td></tr>`;
+          }
+
+          function openIncomeDetail(idx) {
+            const s = schoolsIncomeData[idx];
+            if (!s) return;
+            const periodeF = currentPeriodeFilter();
+            const { sukses, total, belumTerbayar, totalBelumTerbayar, transaksiCount } =
+              schoolIncomeSummary(s, periodeF);
+            document.getElementById("lp-detail-title").textContent =
+              `Detail Transaksi -- ${s.nama}`;
+            document.getElementById("lp-detail-sub").innerHTML =
+              `${transaksiCount} transaksi tercatat, ${sukses.length} berhasil (total pemasukan <b>${fmtRp(total)}</b>), ${belumTerbayar.length} invoice belum terbayar (<b>${fmtRp(totalBelumTerbayar)}</b>).`;
+            document.getElementById("lp-detail-body").innerHTML = sukses.length
+              ? sukses
+                  .map(
+                    (t) => `<tr>
+              <td>${t.tanggal}</td>
+              <td>${t.siswa}</td>
+              <td>${siswaStatusBadge(t.statusSiswa)}</td>
+              <td>${t.jenis}</td>
+              <td>${t.metode}</td>
+              <td>${fmtRp(t.nominal)}</td>
+              <td>${t.kuitansi || "--"}</td>
+            </tr>`,
+                  )
+                  .join("")
+              : `<tr><td colspan="7" class="empty-hint">Belum ada transaksi berhasil.</td></tr>`;
+            document.getElementById("lp-detail-unpaid-body").innerHTML = belumTerbayar.length
+              ? belumTerbayar
+                  .map(
+                    (t) => `<tr>
+              <td>${t.jatuhTempo}</td>
+              <td>${t.siswa}</td>
+              <td>${siswaStatusBadge(t.statusSiswa)}</td>
+              <td>${t.jenis}</td>
+              <td>${t.status === "belum_terbayar" ? "-" : t.metode}</td>
+              <td>${fmtRp(t.nominal)}</td>
+              <td>${transaksiStatusBadge(t.status)}${t.catatanBank ? `<br><span style="color:var(--muted);font-size:10.5px;">⚠ ${t.catatanBank}</span>` : ""}</td>
+            </tr>`,
+                  )
+                  .join("")
+              : `<tr><td colspan="7" class="empty-hint">Tidak ada invoice belum terbayar.</td></tr>`;
+            const panel = document.getElementById("lp-detail-panel");
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          function closeIncomeDetail() {
+            document.getElementById("lp-detail-panel").style.display = "none";
+          }
+
+          // CSV asli (bukan trik HTML-table-disamarkan-jadi-.xls) -- dibuka Excel tanpa
+          // peringatan "format tidak cocok", dan tetap valid dibuka software spreadsheet lain.
+          function csvEscape(v) {
+            const s = String(v ?? "");
+            return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+          }
+          function csvRow(arr) {
+            return arr.map(csvEscape).join(",");
+          }
+          function csvSection(title, header, dataRows) {
+            const lines = [csvEscape(title), csvRow(header)];
+            if (dataRows.length) dataRows.forEach((r) => lines.push(csvRow(r)));
+            else lines.push(csvEscape("Tidak ada data."));
+            return lines;
+          }
+
+          // Export mencakup seluruh data yang tampil di halaman ini: ringkasan per
+          // sekolah, rincian Transaksi Berhasil, dan rincian Invoice Belum Terbayar
+          // (termasuk Status Siswa & catatan callback bank untuk status Failed).
+          function exportIncomeExcel() {
+            const rows = filteredIncomeSchools();
+            const periodeF = currentPeriodeFilter();
+            if (!rows.length) {
+              showToast("Tidak ada data untuk diexport");
+              return;
+            }
+
+            const summaryHeader = [
+              "Nama Sekolah",
+              "Status Sekolah",
+              "Siswa Aktif",
+              "Transaksi Berhasil",
+              "Total Pemasukan (Rp)",
+              "Invoice Belum Terbayar (Jumlah)",
+              "Invoice Belum Terbayar (Rp)",
+              "Metode Terbanyak",
+            ];
+            const summaryRows = rows.map((s) => {
+              const { sukses, total, belumTerbayar, totalBelumTerbayar, metodeTerbanyak } =
+                schoolIncomeSummary(s, periodeF);
+              return [
+                s.nama,
+                s.status,
+                s.siswaAktif,
+                sukses.length,
+                total,
+                belumTerbayar.length,
+                totalBelumTerbayar,
+                metodeTerbanyak,
+              ];
+            });
+
+            const sukesHeader = [
+              "Nama Sekolah",
+              "Tanggal Pembayaran",
+              "Siswa",
+              "Status Siswa",
+              "Jenis Tagihan",
+              "Metode",
+              "Nominal (Rp)",
+              "No. Kuitansi",
+            ];
+            const suksesRows = [];
+            const unpaidHeader = [
+              "Nama Sekolah",
+              "Tanggal Jatuh Tempo",
+              "Siswa",
+              "Status Siswa",
+              "Jenis Tagihan",
+              "Metode",
+              "Nominal (Rp)",
+              "Status",
+              "Catatan Bank",
+            ];
+            const unpaidRows = [];
+            rows.forEach((s) => {
+              const { sukses, belumTerbayar } = schoolIncomeSummary(s, periodeF);
+              sukses.forEach((t) => {
+                suksesRows.push([
+                  s.nama,
+                  t.tanggal,
+                  t.siswa,
+                  t.statusSiswa === "pindah_sekolah" ? "Pindah Sekolah" : "Aktif",
+                  t.jenis,
+                  t.metode,
+                  t.nominal,
+                  t.kuitansi || "--",
+                ]);
+              });
+              belumTerbayar.forEach((t) => {
+                unpaidRows.push([
+                  s.nama,
+                  t.jatuhTempo,
+                  t.siswa,
+                  t.statusSiswa === "pindah_sekolah" ? "Pindah Sekolah" : "Aktif",
+                  t.jenis,
+                  t.status === "belum_terbayar" ? "-" : t.metode,
+                  t.nominal,
+                  t.status === "failed" ? "Failed" : "Belum Terbayar",
+                  t.catatanBank || "",
+                ]);
+              });
+            });
+
+            const lines = [
+              ...csvSection("Pemasukan per Sekolah", summaryHeader, summaryRows),
+              "",
+              ...csvSection("Detail Transaksi Berhasil", sukesHeader, suksesRows),
+              "",
+              ...csvSection("Detail Invoice Belum Terbayar", unpaidHeader, unpaidRows),
+            ];
+            const csv = lines.join("\r\n");
+            const blob = new Blob(["﻿" + csv], {
+              type: "text/csv;charset=utf-8",
+            });
+            const url = URL.createObjectURL(blob);
+            const tanggal = new Date().toISOString().slice(0, 10);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `laporan-pemasukan-${tanggal}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            showToast("✓ Laporan Pemasukan berhasil diexport");
+          }
+
+          populateSchoolFilter();
+          populatePeriodeFilter();
+          renderIncomeStats();
+          renderIncomeTable();
+
+          Object.assign(window, {
+            onIncomeFilterChange,
+            openIncomeDetail,
+            closeIncomeDetail,
+            exportIncomeExcel,
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

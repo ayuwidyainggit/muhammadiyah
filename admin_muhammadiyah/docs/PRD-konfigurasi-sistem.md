@@ -6,20 +6,22 @@
 | ------------------- | ----------------------------------------------------------------------- |
 | Nama produk / fitur | Konfigurasi Sistem (Pengaturan Global Platform)                         |
 | Klien / proyek      | Admin Pusat Muhammadiyah -- Platform Invoicing & Payment SPP (GeekGarden) |
-| Versi dokumen       | v0.1                                                                     |
+| Versi dokumen       | v0.3                                                                     |
 | Status              | Draft                                                                    |
 | Penulis             | Tim Produk GeekGarden                                                    |
 | Product Owner       | [Nama PO Klien]                                                          |
 | Solution Architect  | [Nama SA]                                                                |
 | Tanggal dibuat      | 26-10-2026                                                               |
 | Target rilis        | [DD-MM-YYYY / Sprint X]                                                  |
-| Dokumen terkait     | `konfigurasi.html`, `app.js`, PRD Manajemen Sekolah, PRD Dashboard Konsolidasi |
+| Dokumen terkait     | `konfigurasi.html`, `app.js`, PRD Manajemen Sekolah, PRD Dashboard Konsolidasi, PRD Periode Tahun Ajaran |
 
 ### Riwayat Revisi
 
 | Versi | Tanggal    | Penulis               | Perubahan                                                                                   |
 | ----- | ---------- | --------------------- | -------------------------------------------------------------------------------------------- |
 | v0.1  | 26-10-2026 | Tim Produk GeekGarden | Draft awal berdasarkan prototipe `konfigurasi.html` setelah disederhanakan menjadi 4 kartu: Rekening Bank Penampung Pusat & VA, Notifikasi Nomor Resmi Terpusat, Aturan Reminder & Eskalasi, Template Pesan Default Platform. |
+| v0.2  | 09-11-2026 | Tim Produk GeekGarden | (Superseded oleh v0.3) Sempat menambahkan kartu kelima **Periode Tahun Ajaran** di halaman ini, dipindahkan dari Portal Sekolah supaya satu sumber data. |
+| v0.3  | 09-11-2026 | Tim Produk GeekGarden | **Periode Tahun Ajaran dipisah lagi** menjadi fitur & halaman tersendiri (`periode-tahun-ajaran.html`, menu sidebar sendiri di bawah grup "Konfigurasi") -- lihat PRD Periode Tahun Ajaran yang baru. Halaman Konfigurasi Sistem kembali fokus ke 4 kartu semula (Rekening, Notifikasi, Aturan Reminder, Template Pesan); tidak ada lagi kartu Periode Tahun Ajaran di halaman ini. |
 
 ---
 
@@ -28,6 +30,8 @@
 ### 2.1 Ringkasan
 
 Fitur Konfigurasi Sistem memungkinkan Super Admin mengatur baseline global yang berlaku untuk seluruh sekolah di platform: rekening bank penampung pusat beserta Virtual Account (VA) pembayaran, nomor WhatsApp Business resmi terpusat, aturan reminder & eskalasi tagihan default, dan template pesan default. Pengaturan ini menjadi acuan awal bagi sekolah baru saat onboarding dan sebagian dapat di-override di level sekolah masing-masing lewat menu Manajemen Sekolah.
+
+> Sejak v0.3, **Periode Tahun Ajaran** bukan lagi bagian dari halaman ini -- fitur tersebut punya halaman & PRD tersendiri (lihat PRD Periode Tahun Ajaran), ditempatkan sebagai menu sidebar sendiri tepat di bawah "Konfigurasi Sistem".
 
 ### 2.2 Problem Statement
 
@@ -94,6 +98,7 @@ Platform sedang menambah jumlah sekolah onboarding secara bertahap (lihat PRD Pe
 | Aturan Reminder & Eskalasi default platform (tambah/hapus baris, channel per baris, aktif/nonaktif) | Skema Bagi Hasil (Revenue Share) SPP                                        |
 | Template Pesan Default Platform per kanal (WhatsApp/SMS/Email) x level (1/2/3)         | Biaya Layanan Notifikasi per kanal                                          |
 | Simpan konfigurasi (global dan per kartu Aturan Reminder / Template Pesan)             | Keamanan & Kepatuhan (session timeout, retensi audit log, kewajiban 2FA)    |
+|                                                                                         | Periode Tahun Ajaran -- dipindahkan ke halaman & PRD tersendiri sejak v0.3   |
 
 ### 5.2 Prioritas (MoSCoW)
 
@@ -136,7 +141,7 @@ Platform sedang menambah jumlah sekolah onboarding secara bertahap (lihat PRD Pe
 | Tambah/hapus Aturan Reminder & Eskalasi             | Ya          | --             | --                      | --     |
 | Ubah Template Pesan Default                         | Ya          | --             | --                      | --     |
 
-_Catatan: pada konfigurasi default, hanya role dengan permission `konfigurasi` (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role & Hak Akses._
+_Catatan: pada konfigurasi default, hanya role dengan permission `konfigurasi` (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role & Hak Akses. Hak akses Periode Tahun Ajaran diatur terpisah lewat key RBAC `periode-tahun-ajaran` -- lihat PRD Periode Tahun Ajaran._
 
 ### 6.2 Notifikasi
 

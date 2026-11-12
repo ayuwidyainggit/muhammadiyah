@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Manajemen Sekolah -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<title>Profil Sekolah -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -31,18 +31,24 @@
       <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
       <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
     </div>
-    <a class="nav-item nav-parent active" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html" id="nav-self"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
     <div class="nav-children" data-nav-children="sekolah">
-      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
-      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
-      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child active" href="sekolah.html" id="nav-self">Profil Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kategori.html">Kategori Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kelas.html">Kelas</a>
+      <a class="nav-item nav-child" href="sekolah-pengguna.html">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-rbac.html">Role &amp; Hak Akses</a>
       <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
       <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item nav-parent" data-rbac="transaksi" data-nav-group="transaksi" href="transaksi-tagihan.html"><span class="ic">💳</span> Transaksi &amp; Invoice<span class="chev" onclick="toggleNavGroup(event,'transaksi')">▸</span></a>
+    <div class="nav-children" data-nav-children="transaksi">
+      <a class="nav-item nav-child" href="transaksi-master-tagihan.html">Master Data Tagihan</a>
+      <a class="nav-item nav-child" href="transaksi-tagihan.html">Tagihan (Invoice)</a>
+      <a class="nav-item nav-child" href="transaksi-riwayat.html">Riwayat Pembayaran</a>
+      <a class="nav-item nav-child" href="transaksi-writeoff.html">Write-off (Hapus Buku)</a>
+      <a class="nav-item nav-child" href="transaksi-manual.html">Pembayaran Manual <span class="count-pill" id="nav-manual-pending-count">0</span></a>
+    </div>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
     <div class="sidebar-foot">
@@ -53,7 +59,7 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="crumb">Portal Sekolah / <b id="crumb-current">Manajemen Sekolah</b></div>
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Profil Sekolah</b></div>
       <div class="user-chip">
         <div class="av" id="uc-avatar">--</div>
         <div class="info">
@@ -65,196 +71,36 @@
 
     <div class="content">
 
-      <div class="page-view active" id="view-sekolah">
+      <div class="page-view active" id="view-sekolah-profil">
         <div class="page-title">
-          <h1>Manajemen Sekolah</h1>
-          <p>Profil sekolah Anda, kategori &amp; kelas, serta pengguna yang punya akses ke sistem ini.</p>
+          <h1>Profil Sekolah</h1>
+          <p>Data identitas sekolah Anda -- nama, NPSN, jenjang, struktur organisasi, dan alamat.</p>
         </div>
 
-        <!-- TAB: PROFIL SEKOLAH -->
-        <div class="page-tab-panel active" data-ptabpanel="profil">
-          <div class="card">
-            <h3>Profil Sekolah</h3>
-            <div class="grid2">
-              <div class="field"><label>Nama Sekolah</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo" disabled></div>
-              <div class="field"><label>NPSN</label><input type="text" value="20501234" disabled></div>
-              <div class="field"><label>Jenjang</label><input type="text" value="SD" disabled></div>
-              <div class="field"><label>Jumlah Siswa Aktif</label><input type="text" id="sk-jumlah-siswa" value="" disabled></div>
-            </div>
-            <div class="grid4">
-              <div class="field"><label>Wilayah (PWM)</label><input type="text" value="PWM Jawa Timur" disabled></div>
-              <div class="field"><label>Daerah (PDM)</label><input type="text" value="PDM Sidoarjo" disabled></div>
-              <div class="field"><label>Cabang (PCM)</label><input type="text" value="PCM Sidoarjo Kota" disabled></div>
-              <div class="field"><label>Status</label><input type="text" value="Aktif" disabled></div>
-            </div>
-            <div class="field"><label>Alamat Lengkap</label><textarea id="sk-alamat"></textarea></div>
-            <div class="note-box info">Nama sekolah, NPSN, jenjang, struktur organisasi (Wilayah/Daerah/Cabang), dan status hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
-            <div class="btn-row" style="justify-content:flex-end;">
-              <button class="btn btn-success" onclick="saveAlamatSekolah()">Simpan Alamat</button>
-            </div>
+        <div class="card">
+          <h3>Profil Sekolah</h3>
+          <div class="grid2">
+            <div class="field"><label>Nama Sekolah</label><input type="text" value="SD Muhammadiyah 4 Sidoarjo" disabled></div>
+            <div class="field"><label>NPSN</label><input type="text" value="20501234" disabled></div>
+            <div class="field"><label>Jenjang</label><input type="text" value="SD" disabled></div>
+            <div class="field"><label>Jumlah Siswa Aktif</label><input type="text" id="sk-jumlah-siswa" value="" disabled></div>
           </div>
-
-          <a class="fab-prd" href="docs/PRD-sekolah-profil.html" target="_blank" title="Lihat dokumen PRD Profil Sekolah">📄 Lihat PRD</a>
-        </div>
-
-        <!-- TAB: KATEGORI SEKOLAH -->
-        <div class="page-tab-panel" data-ptabpanel="kategori">
-          <div class="card">
-            <h3>Kategori Sekolah <span class="tag-pill pg">MEMPENGARUHI HARGA SPP</span></h3>
-            <p class="card-desc">Sekolah ini bisa punya lebih dari satu kategori kelas (mis. Reguler, Umum, atau kategori lain sesuai kebutuhan) -- tiap kategori bisa punya nominal SPP &amp; tagihan lain yang berbeda (diatur di <b>Master Data Tagihan</b>, halaman Transaksi &amp; Invoice). Tiap kelas di tab <b>Kelas</b> di-assign ke salah satu kategori di bawah ini.</p>
-            <div class="filter-bar">
-              <input type="text" class="search" id="kat-search" placeholder="Cari nama kategori..." oninput="renderKategoriKelasTable()">
-              <button class="btn btn-primary btn-sm" onclick="openKategoriPanel()">+ Tambah Kategori</button>
-            </div>
-            <table class="dtab" id="master-kategori-kelas-table">
-              <thead><tr><th>Nama Kategori</th><th style="width:18%">Jumlah Kelas</th><th style="width:20%">Aksi</th></tr></thead>
-              <tbody id="master-kategori-kelas-body"></tbody>
-            </table>
-
-            <div class="card" id="kategori-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
-              <h3 id="kategori-panel-title">Tambah Kategori Sekolah</h3>
-              <div class="field"><label>Nama Kategori</label><input type="text" id="kat-nama" placeholder="mis. Reguler"></div>
-              <div class="btn-row">
-                <button class="btn btn-ghost" onclick="closeKategoriPanel()">Batal</button>
-                <button class="btn btn-success" onclick="saveKategoriKelas()">Simpan</button>
-              </div>
-            </div>
-
-            <div class="hint" style="margin-top:10px;">Menghapus kategori yang masih dipakai kelas akan otomatis memindahkan kelas tersebut ke kategori pertama yang tersisa. Minimal harus ada 1 kategori. Nama kategori wajib diisi &amp; tidak boleh sama dengan kategori lain.</div>
+          <div class="grid4">
+            <div class="field"><label>Wilayah (PWM)</label><input type="text" value="PWM Jawa Timur" disabled></div>
+            <div class="field"><label>Daerah (PDM)</label><input type="text" value="PDM Sidoarjo" disabled></div>
+            <div class="field"><label>Cabang (PCM)</label><input type="text" value="PCM Sidoarjo Kota" disabled></div>
+            <div class="field"><label>Status</label><input type="text" value="Aktif" disabled></div>
           </div>
-
-          <a class="fab-prd" href="docs/PRD-sekolah-kategori.html" target="_blank" title="Lihat dokumen PRD Kategori Sekolah">📄 Lihat PRD</a>
-        </div>
-
-        <!-- TAB: KELAS -->
-        <div class="page-tab-panel" data-ptabpanel="kelas">
-          <div class="card">
-            <h3>Kelas</h3>
-            <p class="card-desc">Daftar kelas sekolah ini -- tiap kelas di-assign ke satu Kategori Sekolah. Sumber tunggal daftar kelas yang dipakai di seluruh portal (Manajemen Murid, Buat Tagihan, Akun Wali Murid, Blast Notifikasi).</p>
-            <div class="filter-bar">
-              <select id="mk-filter-kategori" onchange="renderMasterKelasTable()">
-                <option value="">Semua Kategori</option>
-              </select>
-            </div>
-            <table class="dtab" id="master-kelas-table">
-              <thead><tr><th>Kelas</th><th>Kategori</th><th style="width:16%">Aksi</th></tr></thead>
-              <tbody id="master-kelas-body"></tbody>
-            </table>
-            <button class="btn-add-row" onclick="addMasterKelasRow()">+ Tambah Kelas</button>
-            <div class="hint" style="margin-top:10px;">Kelas yang masih ada siswa aktifnya tidak bisa dihapus -- pindahkan siswanya dulu lewat Manajemen Murid. Kode kelas wajib diisi &amp; tidak boleh sama dengan kelas lain.</div>
-            <div class="btn-row" style="justify-content:flex-end;">
-              <button class="btn btn-success" onclick="saveMasterKelasOnly()">Simpan Kelas</button>
-            </div>
+          <div class="field"><label>Alamat Lengkap</label><textarea id="sk-alamat"></textarea></div>
+          <div class="note-box info">Nama sekolah, NPSN, jenjang, struktur organisasi (Wilayah/Daerah/Cabang), dan status hanya bisa diubah oleh Super Admin GeekGarden atau Pimpinan Pusat -- hubungi mereka jika ada perubahan data resmi.</div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-success" onclick="saveAlamatSekolah()">Simpan Alamat</button>
           </div>
-
-          <a class="fab-prd" href="docs/PRD-sekolah-kelas.html" target="_blank" title="Lihat dokumen PRD Kelas">📄 Lihat PRD</a>
         </div>
 
-        <!-- TAB: PENGGUNA & AKUN SEKOLAH -->
-        <div class="page-tab-panel" data-ptabpanel="pengguna">
-          <div class="card">
-            <h3>Pengguna &amp; Akun Sekolah</h3>
-            <p class="card-desc">Akun internal yang punya akses ke sekolah ini. Sebagai Admin, Anda berwenang mengatur RBAC &amp; mengundang seluruh peran -- termasuk Kepala Sekolah dan Bendahara -- dari sini.</p>
-            <div class="filter-bar">
-              <input type="text" class="search" id="sk-staff-search" placeholder="Cari nama / email..." oninput="renderStaffTable()">
-              <select id="sk-staff-filter-peran" onchange="renderStaffTable()">
-                <option value="">Semua Peran</option>
-                <option>Kepala Sekolah</option><option>Bendahara</option><option>Admin</option>
-              </select>
-              <select id="sk-staff-filter-status" onchange="renderStaffTable()">
-                <option value="">Semua Status</option>
-                <option value="aktif">aktif</option><option value="undangan_terkirim">undangan terkirim</option><option value="nonaktif">nonaktif</option>
-              </select>
-              <button class="btn btn-primary btn-sm" onclick="openInvitePanel()">+ Undang Pengguna Baru</button>
-            </div>
-            <table class="dtab" id="staff-table">
-              <thead>
-                <tr><th style="width:22%">Nama</th><th style="width:15%">Peran</th><th style="width:17%">No. WhatsApp</th><th style="width:20%">Email</th><th style="width:14%">Status Akun</th><th style="width:12%">Aksi</th></tr>
-              </thead>
-              <tbody>
-                <!-- filled by JS -->
-              </tbody>
-            </table>
-
-            <div class="card" id="invite-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
-              <h3 id="invite-panel-title">Undang Pengguna Baru</h3>
-              <p class="card-desc" id="invite-panel-desc">Sebagai Admin sekolah ini, Anda bisa mengundang akun Kepala Sekolah, Bendahara, atau Admin cadangan -- tidak perlu menunggu Muhammadiyah Pusat.</p>
-              <div class="grid2">
-                <div class="field"><label>Nama Lengkap</label><input type="text" id="inv-nama" placeholder="mis. Ahmad Yusuf"></div>
-                <div class="field">
-                  <label>Peran</label>
-                  <select id="inv-peran">
-                    <option value="Kepala Sekolah">Kepala Sekolah</option>
-                    <option value="Bendahara">Bendahara</option>
-                    <option value="Admin">Admin (cadangan)</option>
-                  </select>
-                </div>
-                <div class="field"><label>No. WhatsApp</label><input type="tel" id="inv-wa" placeholder="08xx-xxxx-xxxx"></div>
-                <div class="field"><label>Email</label><input type="email" id="inv-email" placeholder="nama@sdmuh4sda.sch.id"></div>
-              </div>
-              <div class="note-box info" id="invite-panel-note">Undangan dikirim sebagai <b>link aktivasi</b> lewat WhatsApp/email -- bukan password langsung. Penerima mengatur password miliknya sendiri saat mengklik link tersebut, supaya password tidak pernah tertulis di pesan chat.</div>
-              <div class="btn-row">
-                <button class="btn btn-ghost" onclick="closeInvitePanel()">Batal</button>
-                <button class="btn btn-success" id="invite-submit-btn" onclick="sendInvite()">Kirim Undangan</button>
-              </div>
-            </div>
-
-            <div class="note-box info" style="margin-top:14px;">Bendahara tidak bisa menyetujui pengajuan write-off yang dibuat sendiri (segregation of duties).</div>
-          </div>
-
-          <a class="fab-prd" href="docs/PRD-sekolah-pengguna.html" target="_blank" title="Lihat dokumen PRD Pengguna & Akun Sekolah">📄 Lihat PRD</a>
-        </div>
-
-        <!-- TAB: ROLE & HAK AKSES -->
-        <div class="page-tab-panel" data-ptabpanel="rbac">
-          <div class="card">
-            <h3>Role &amp; Hak Akses</h3>
-            <p class="card-desc">Role di portal ini bersifat tetap (Kepala Sekolah, Bendahara, Admin) -- tidak bisa ditambah atau dihapus. Sebagai Admin, Anda bisa mengatur hak akses granular per modul (Create/Read/Update/Delete) lewat tombol "Kelola Izin". Perubahan berlaku ke seluruh pengguna sekolah ini dengan role tersebut.</p>
-            <table class="dtab" id="rbac-role-table">
-              <thead>
-                <tr><th style="width:22%">Role</th><th style="width:58%">Deskripsi</th><th style="width:20%">Aksi</th></tr>
-              </thead>
-              <tbody id="rbac-role-body"></tbody>
-            </table>
-            <div class="note-box info" style="margin-top:14px;">⚠️ Admin selalu memiliki akses penuh (Create/Read/Update/Delete) termasuk modul Role &amp; Hak Akses ini sendiri (tidak bisa diubah izinnya), supaya tidak pernah ada kondisi di mana tak satu pun pengguna sekolah ini bisa mengelola hak akses. Centang <b>Read</b> pada modul tertentu agar role bisa membuka menunya; Create/Update/Delete baru berpengaruh bila Read juga aktif.</div>
-          </div>
-
-          <a class="fab-prd" href="docs/PRD-sekolah-rbac.html" target="_blank" title="Lihat dokumen PRD Role & Hak Akses">📄 Lihat PRD</a>
-        </div>
+        <a class="fab-prd" href="docs/PRD-sekolah-profil.html" target="_blank" title="Lihat dokumen PRD Profil Sekolah">📄 Lihat PRD</a>
       </div>
 
-    </div>
-  </div>
-</div>
-
-<!-- ===================== MODAL: KELOLA IZIN ROLE (sekolah ini) ===================== -->
-<div class="modal-overlay" id="rbac-perm-modal-overlay-sk" onclick="if(event.target===this) closeRbacPermModalSekolah();">
-  <div class="modal-box" style="max-width:640px;">
-    <div class="modal-head">
-      <div>
-        <h3 id="rbac-perm-modal-title-sk">Kelola Izin Role</h3>
-        <div class="modal-sub" id="rbac-perm-modal-sub-sk"></div>
-      </div>
-      <span class="modal-close" onclick="closeRbacPermModalSekolah()">✕</span>
-    </div>
-    <div class="modal-body">
-      <table class="dtab" id="rbac-perm-table-sk">
-        <thead>
-          <tr>
-            <th style="width:36%">Modul</th>
-            <th class="rbac-check-cell">Create</th>
-            <th class="rbac-check-cell">Read</th>
-            <th class="rbac-check-cell">Update</th>
-            <th class="rbac-check-cell">Delete</th>
-          </tr>
-        </thead>
-        <tbody id="rbac-perm-body-sk"></tbody>
-      </table>
-      <div class="note-box info" style="margin-top:12px;">Centang <b>Read</b> agar role ini bisa membuka menu/halaman modul tersebut. Create/Update/Delete tetap bisa dicentang terlepas dari Read, namun baru berpengaruh pada aksi di dalam halaman setelah Read juga aktif.</div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="closeRbacPermModalSekolah()">Batal</button>
-      <button class="btn btn-success" id="rbac-perm-save-btn-sk" onclick="saveRbacPermModalSekolah()">Simpan Izin</button>
     </div>
   </div>
 </div>
@@ -265,14 +111,7 @@
 <script>
   restoreSession();
   if (currentUser) {
-    renderStaffTable();
-    renderKategoriKelasTable();
-    renderMasterKelasTable();
-    refreshKelasDropdowns();
     initSekolahProfil();
-    renderRbacRoleTable();
-    const __tab = new URLSearchParams(location.search).get('tab');
-    if (__tab) switchPageTab(__tab);
   }
 </script>
 </body>

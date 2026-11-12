@@ -33,16 +33,22 @@
     </div>
     <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
     <div class="nav-children" data-nav-children="sekolah">
-      <a class="nav-item nav-child" data-nav-tab="profil" href="sekolah.html?tab=profil">Profil Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="kategori" href="sekolah.html?tab=kategori">Kategori Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="kelas" href="sekolah.html?tab=kelas">Kelas</a>
-      <a class="nav-item nav-child" data-rbac="periode" href="periode.html">Periode Tahun Ajaran</a>
-      <a class="nav-item nav-child" data-nav-tab="pengguna" href="sekolah.html?tab=pengguna">Pengguna &amp; Akun Sekolah</a>
-      <a class="nav-item nav-child" data-nav-tab="rbac" href="sekolah.html?tab=rbac">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" href="sekolah.html">Profil Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kategori.html">Kategori Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kelas.html">Kelas</a>
+      <a class="nav-item nav-child" href="sekolah-pengguna.html">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-rbac.html">Role &amp; Hak Akses</a>
       <a class="nav-item nav-child active" data-rbac="wali" href="wali.html" id="nav-self">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
       <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
     </div>
-    <a class="nav-item" data-rbac="transaksi" href="transaksi.html"><span class="ic">💳</span> Transaksi &amp; Invoice</a>
+    <a class="nav-item nav-parent" data-rbac="transaksi" data-nav-group="transaksi" href="transaksi-tagihan.html"><span class="ic">💳</span> Transaksi &amp; Invoice<span class="chev" onclick="toggleNavGroup(event,'transaksi')">▸</span></a>
+    <div class="nav-children" data-nav-children="transaksi">
+      <a class="nav-item nav-child" href="transaksi-master-tagihan.html">Master Data Tagihan</a>
+      <a class="nav-item nav-child" href="transaksi-tagihan.html">Tagihan (Invoice)</a>
+      <a class="nav-item nav-child" href="transaksi-riwayat.html">Riwayat Pembayaran</a>
+      <a class="nav-item nav-child" href="transaksi-writeoff.html">Write-off (Hapus Buku)</a>
+      <a class="nav-item nav-child" href="transaksi-manual.html">Pembayaran Manual <span class="count-pill" id="nav-manual-pending-count">0</span></a>
+    </div>
     <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
 
     <div class="sidebar-foot">

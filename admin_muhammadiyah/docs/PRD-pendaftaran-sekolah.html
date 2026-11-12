@@ -233,7 +233,7 @@
               </tr>
               <tr>
                 <td>Versi dokumen</td>
-                <td>v0.1</td>
+                <td>v0.2</td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -280,6 +280,23 @@
                 <td>Tim Produk GeekGarden</td>
                 <td>Draft</td>
               </tr>
+              <tr>
+                <td>v0.2</td>
+                <td>08-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Menambahkan <strong>FR-07</strong>: field Wilayah (PWM)/Daerah
+                  (PDM)/Cabang (PCM) di Step 1 kini otomatis terisi &amp;
+                  terkunci (disabled) secara bertingkat sesuai
+                  <strong>Cakupan</strong> akun yang login (konsep yang sama
+                  dengan Cakupan di PRD Pengguna) -- Cakupan Pusat tetap mengisi
+                  ketiganya manual, Cakupan Wilayah mengunci PWM saja, Cakupan
+                  Daerah mengunci PWM+PDM, Cakupan Cabang mengunci ketiganya --
+                  supaya tanggung jawab pendaftaran sekolah tetap sesuai wilayah
+                  masing-masing admin dan tidak bisa dimanipulasi ke cakupan
+                  lain.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -293,7 +310,12 @@
           rekening penampung fee sekolah, lalu meninjau seluruh data sebelum
           sekolah diaktifkan. Hasilnya, admin sekolah mendapatkan verifikasi
           email, kemudian setelah proses verifikasi baru bisa langsung
-          beroperasi di platform tanpa proses manual bolak-balik dokumen.
+          beroperasi di platform tanpa proses manual bolak-balik dokumen. Di
+          Step 1, field Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) sudah otomatis
+          terisi &amp; terkunci sesuai Cakupan akun yang login (kecuali Cakupan
+          Pusat, yang tetap bebas mengisi ketiganya), sehingga admin tidak perlu
+          (dan tidak bisa) salah memilih wilayah organisasi di luar tanggung
+          jawabnya.
         </p>
         <h3>2.2 Problem Statement</h3>
         <p>
@@ -494,6 +516,13 @@
                   dilakukan manual di luar sistem
                 </td>
               </tr>
+              <tr>
+                <td>
+                  Struktur organisasi (PWM/PDM/PCM) di Step 1 otomatis terisi
+                  &amp; terkunci bertingkat sesuai Cakupan akun yang login
+                </td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -501,7 +530,8 @@
         <ul>
           <li>
             <strong>Must have</strong> -- Step 1-4 wizard lengkap, validasi data
-            wajib, perubahan status Draft → Aktif.
+            wajib, perubahan status Draft → Aktif, penguncian PWM/PDM/PCM sesuai
+            Cakupan akun yang login.
           </li>
           <li>
             <strong>Should have</strong> -- Review step yang merangkum seluruh
@@ -584,6 +614,25 @@
                   Draft ke Aktif
                 </td>
               </tr>
+              <tr>
+                <td>US-05</td>
+                <td>
+                  Sebagai Admin dengan Cakupan terbatas (Wilayah/Daerah/Cabang),
+                  saya ingin field struktur organisasi yang sudah pasti sesuai
+                  cakupan saya otomatis terisi dan terkunci, supaya saya tidak
+                  bisa (sengaja atau tidak sengaja) mendaftarkan sekolah ke
+                  wilayah organisasi lain yang bukan tanggung jawab saya.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given saya login dengan Cakupan "Daerah (PDM) -- PDM Kabupaten
+                  Magelang", When saya membuka Step 1, Then field Wilayah (PWM)
+                  terisi "PWM Jawa Tengah" dan field Daerah (PDM) terisi "PDM
+                  Kabupaten Magelang", keduanya dalam keadaan disabled, dan saya
+                  hanya perlu memilih Cabang (PCM) dari opsi yang berada di
+                  bawah PDM tersebut
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -615,7 +664,8 @@
                 <td>Must</td>
                 <td>
                   Dropdown PDM &amp; PCM mengikuti pilihan PWM yang dipilih
-                  (dependent select)
+                  (dependent select); lihat FR-07 untuk aturan penguncian field
+                  ini berdasarkan Cakupan akun yang login
                 </td>
               </tr>
               <tr>
@@ -694,6 +744,33 @@
                 <td>
                   Tombol "Kembali" nonaktif di Step 1; tombol "Lanjut" berubah
                   teks jadi "Daftarkan Sekolah" di Step 4
+                </td>
+              </tr>
+              <tr>
+                <td>FR-07</td>
+                <td>Cakupan Mengunci Struktur Organisasi</td>
+                <td>
+                  Field Wilayah (PWM), Daerah (PDM), dan Cabang (PCM) di Step 1
+                  harus otomatis terisi dan dinonaktifkan (disabled) secara
+                  bertingkat sesuai Cakupan akun yang login
+                </td>
+                <td>US-05</td>
+                <td>Must</td>
+                <td>
+                  Aturan: <strong>Cakupan Pusat</strong> -- ketiga field tetap
+                  harus diisi manual (dependent select seperti FR-01, tidak ada
+                  yang terkunci); <strong>Cakupan Wilayah (PWM)</strong> --
+                  field PWM autofill &amp; disabled sesuai PWM akun yang login,
+                  field PDM &amp; PCM tetap harus diisi manual (opsi PDM/PCM
+                  tetap dibatasi hanya yang berada di bawah PWM tersebut);
+                  <strong>Cakupan Daerah (PDM)</strong> -- field PWM &amp; PDM
+                  autofill &amp; disabled, hanya field PCM yang harus diisi
+                  manual (opsi PCM dibatasi hanya yang di bawah PDM tersebut);
+                  <strong>Cakupan Cabang (PCM)</strong> -- ketiga field (PWM,
+                  PDM, PCM) autofill &amp; disabled, tidak ada input tersisa,
+                  field hanya ditampilkan untuk konfirmasi. Nilai yang
+                  mengisi/mengunci field ini bersumber dari field Cakupan pada
+                  akun yang login (lihat PRD Pengguna)
                 </td>
               </tr>
             </tbody>
@@ -833,7 +910,10 @@
           <li>
             Edge case yang wajib ditangani: NPSN duplikat, admin menutup browser
             di tengah wizard (data belum tersimpan permanen sampai submit
-            akhir), No. WhatsApp/email akun Admin tidak valid format.
+            akhir), No. WhatsApp/email akun Admin tidak valid format, akun
+            dengan Cakupan "Cabang (PCM)" membuka Step 1 dan mendapati ketiga
+            field struktur organisasi sudah terisi penuh &amp; disabled (tidak
+            ada yang perlu/bisa diubah selain field lain di Step 1).
           </li>
         </ul>
         <hr />
@@ -916,6 +996,12 @@
             penerima pembayaran SPP.
           </li>
           <li>NPSN bersifat unik per sekolah dan tersedia saat pendaftaran.</li>
+          <li>
+            Field Cakupan pada akun yang login (lihat PRD Pengguna) adalah
+            satu-satunya sumber yang menentukan apakah PWM/PDM/PCM di Step 1
+            terisi otomatis &amp; terkunci, atau masih harus diisi manual (lihat
+            FR-07).
+          </li>
         </ul>
         <p><strong>Batasan:</strong></p>
         <ul>
@@ -1001,6 +1087,22 @@
                 <td>Evaluasi kebutuhan auto-save/draft di rilis berikutnya</td>
                 <td>[ ]</td>
               </tr>
+              <tr>
+                <td>
+                  Penguncian field PWM/PDM/PCM (FR-07) hanya diterapkan di sisi
+                  klien (disabled di UI), sehingga admin yang paham teknis bisa
+                  memanipulasi request submit untuk mendaftarkan sekolah di luar
+                  Cakupannya sendiri
+                </td>
+                <td>H</td>
+                <td>M</td>
+                <td>
+                  Terapkan validasi yang sama di backend saat submit Step 4:
+                  cocokkan PWM/PDM/PCM yang dikirim dengan Cakupan akun yang
+                  login di server, tolak jika tidak sesuai
+                </td>
+                <td>[ ]</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1066,6 +1168,15 @@
                 <td>
                   Pimpinan Wilayah/Daerah/Cabang Muhammadiyah, struktur
                   organisasi berjenjang
+                </td>
+              </tr>
+              <tr>
+                <td>Cakupan</td>
+                <td>
+                  Lingkup wilayah kewenangan akun yang login
+                  (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM); menentukan field
+                  struktur organisasi mana di Step 1 yang terkunci otomatis
+                  (lihat FR-07 &amp; PRD Pengguna)
                 </td>
               </tr>
               <tr>

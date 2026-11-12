@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeekGarden Admin -- Periode Tahun Ajaran</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app-shell">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="brand">
+          <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+          <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+        </div>
+
+        <a
+          href="dashboard-konsolidasi.html"
+          class="nav-item"
+          data-rbac="dashboard-konsolidasi"
+          ><span class="ic">📊</span> Dashboard Konsolidasi</a
+        >
+
+        <div class="nav-group-label">Onboarding</div>
+        <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"
+          ><span class="ic">＋</span> Pendaftaran Sekolah</a
+        >
+        <a href="manajemen.html" class="nav-item" data-rbac="manajemen"
+          ><span class="ic">🏫</span> Manajemen Sekolah</a
+        >
+
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
+        <div class="nav-group-label">Konfigurasi</div>
+        <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item active"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
+        >
+        <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
+          ><span class="ic">👤</span> Pengguna</a
+        >
+        <a href="rbac.html" class="nav-item" data-rbac="rbac"
+          ><span class="ic">🔐</span> Role &amp; Hak Akses</a
+        >
+
+        <div
+          style="
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 10px;
+          "
+        >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              logout();
+              return false;
+            "
+            ><span class="ic">🚪</span> Keluar</a
+          >
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">
+            <span id="crumb-role">Super Admin</span> /
+            <b id="crumb-current">Periode Tahun Ajaran</b>
+          </div>
+          <div class="topbar-right">
+            <a
+              class="btn-prd"
+              href="docs/PRD-periode-tahun-ajaran.html"
+              target="_blank"
+              rel="noopener"
+              >📄 PRD</a
+            >
+            <div class="user-chip">
+              <div class="av" id="uc-avatar">SA</div>
+              <div class="info">
+                <div class="name" id="uc-name">Super Admin</div>
+                <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- ===================== VIEW: PERIODE TAHUN AJARAN ===================== -->
+          <div class="page-view active" id="view-periode-tahun-ajaran">
+            <div class="page-title">
+              <h1>Periode Tahun Ajaran</h1>
+              <p>
+                Kalender tahun ajaran terpusat -- satu sumber data untuk
+                seluruh sekolah di platform ini.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>
+                Periode Tahun Ajaran
+                <span class="tag-pill pg">SATU SUMBER DATA -- SELURUH SEKOLAH</span>
+              </h3>
+              <p class="card-desc">
+                Kalender tahun ajaran berlaku sama untuk seluruh sekolah di
+                platform ini -- sebelumnya tiap sekolah mengatur periodenya
+                sendiri lewat Portal Sekolah, kini dipindah ke sini supaya
+                tidak ada lagi variasi tanggal tahun ajaran antar sekolah.
+                Periode aktif menjadi pilihan default saat sekolah membuat
+                tagihan baru di Portal Sekolah masing-masing.
+              </p>
+              <div class="filter-bar">
+                <input
+                  type="text"
+                  class="search"
+                  id="periode-search"
+                  placeholder="Cari tahun ajaran..."
+                  oninput="renderMasterPeriodeTable()"
+                />
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="openPeriodePanel()"
+                >
+                  + Tambah Periode Tahun Ajaran
+                </button>
+              </div>
+              <table class="dtab" id="master-periode-table">
+                <thead>
+                  <tr>
+                    <th style="width: 26%">Tahun Ajaran</th>
+                    <th style="width: 20%">Tanggal Mulai</th>
+                    <th style="width: 20%">Tanggal Selesai</th>
+                    <th style="width: 14%">Status</th>
+                    <th style="width: 20%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="master-periode-body"></tbody>
+              </table>
+
+              <div
+                class="card"
+                id="periode-panel"
+                style="
+                  display: none;
+                  background: var(--light);
+                  border-style: dashed;
+                  margin-top: 16px;
+                  margin-bottom: 0;
+                "
+              >
+                <h3 id="periode-panel-title">Tambah Periode Tahun Ajaran</h3>
+                <div class="grid3">
+                  <div class="field">
+                    <label>Tahun Ajaran</label>
+                    <input
+                      type="text"
+                      id="prd-nama"
+                      placeholder="mis. 2027/2028"
+                    />
+                  </div>
+                  <div class="field">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" id="prd-mulai" />
+                  </div>
+                  <div class="field">
+                    <label>Tanggal Selesai</label>
+                    <input type="date" id="prd-selesai" />
+                  </div>
+                </div>
+                <div class="switch-row">
+                  <div class="txt">
+                    <b>Jadikan periode aktif</b>
+                    <span
+                      >Jadi pilihan default saat sekolah membuat tagihan baru
+                      -- otomatis menggantikan periode aktif sebelumnya,
+                      berlaku untuk seluruh sekolah</span
+                    >
+                  </div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="prd-aktif" /><span
+                      class="slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-ghost" onclick="closePeriodePanel()">
+                    Batal
+                  </button>
+                  <button
+                    class="btn btn-success"
+                    onclick="savePeriodeTahunAjaran()"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </div>
+
+              <div class="hint" style="margin-top: 10px">
+                Minimal harus ada 1 periode tahun ajaran. Tahun Ajaran wajib
+                diisi &amp; tidak boleh sama dengan periode lain; Tanggal
+                Mulai tidak boleh setelah Tanggal Selesai.
+              </div>
+              <div class="note-box info" style="margin-top: 12px">
+                Prototipe ini belum memvalidasi apakah suatu periode sudah
+                dipakai data siswa/tagihan di sekolah manapun -- di produksi,
+                periode yang sudah terpakai akan dikunci dari Edit &amp;
+                Hapus (dicek lintas sekolah lewat API) supaya riwayat
+                akademik/tagihan yang sudah tercatat tidak berubah.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+    <script src="app.js"></script>
+    <script>
+      const u = requireLogin();
+      if (u) {
+        applyCurrentUserToUi();
+        if (enforcePageAccess("periode-tahun-ajaran")) {
+          applyRbacToSidebar();
+          renderMasterPeriodeTable();
+        }
+      }
+    </script>
+  </body>
+</html>

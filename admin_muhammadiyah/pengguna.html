@@ -29,9 +29,29 @@
           ><span class="ic">🏫</span> Manajemen Sekolah</a
         >
 
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
         <div class="nav-group-label">Konfigurasi</div>
         <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
-          ><span class="ic">⚙</span> Konfigurasi Sistem</a
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
         >
         <a href="pengguna.html" class="nav-item active" data-rbac="pengguna"
           ><span class="ic">👤</span> Pengguna</a
@@ -114,11 +134,12 @@
               <table class="dtab" id="users-table">
                 <thead>
                   <tr>
-                    <th style="width: 22%">Nama</th>
-                    <th style="width: 30%">Email</th>
-                    <th style="width: 20%">Role</th>
-                    <th style="width: 13%">Status</th>
-                    <th style="width: 15%">Aksi</th>
+                    <th style="width: 18%">Nama</th>
+                    <th style="width: 24%">Email</th>
+                    <th style="width: 15%">Role</th>
+                    <th style="width: 18%">Cakupan</th>
+                    <th style="width: 12%">Status</th>
+                    <th style="width: 13%">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="rbac-users-body"></tbody>
@@ -162,9 +183,44 @@
                   <div class="field">
                     <label>Status</label
                     ><select id="user-status">
+                      <option>Menunggu Aktivasi</option>
                       <option>Aktif</option>
                       <option>Nonaktif</option>
                     </select>
+                  </div>
+                </div>
+                <div class="grid2">
+                  <div class="field">
+                    <label>Cakupan</label
+                    ><select
+                      id="user-cakupan-level"
+                      onchange="onCakupanLevelChange()"
+                    >
+                      <option value="Pusat">Pusat</option>
+                      <option value="Wilayah">Wilayah (PWM)</option>
+                      <option value="Daerah">Daerah (PDM)</option>
+                      <option value="Cabang">Cabang (PCM)</option>
+                    </select>
+                  </div>
+                  <div class="field" id="user-cakupan-pwm-field">
+                    <label>Wilayah (PWM)</label
+                    ><select
+                      id="user-cakupan-pwm"
+                      onchange="fillCakupanPdmOptions()"
+                    ></select>
+                  </div>
+                </div>
+                <div class="grid2">
+                  <div class="field" id="user-cakupan-pdm-field">
+                    <label>Daerah (PDM)</label
+                    ><select
+                      id="user-cakupan-pdm"
+                      onchange="fillCakupanPcmOptions()"
+                    ></select>
+                  </div>
+                  <div class="field" id="user-cakupan-pcm-field">
+                    <label>Cabang (PCM)</label
+                    ><select id="user-cakupan-pcm"></select>
                   </div>
                 </div>
                 <div class="btn-row">
@@ -194,8 +250,107 @@
 
           // ---- Pengguna -- Create/Update lewat panel, Delete langsung per baris (konfirmasi) ----
           let userEditIdx = null;
+
+          // struktur organisasi (PWM/PDM/PCM) -- sama seperti cascading dropdown di
+          // Manajemen Sekolah/Pendaftaran Sekolah, dipakai untuk field Cakupan pengguna.
+          const ORG_TREE_PENGGUNA = {
+            "PWM Jawa Timur": {
+              "PDM Surabaya": ["PCM Wonokromo", "PCM Genteng", "PCM Tegalsari"],
+              "PDM Sidoarjo": ["PCM Sidoarjo Kota", "PCM Waru", "PCM Krian"],
+              "PDM Malang": ["PCM Klojen", "PCM Lowokwaru"],
+            },
+            "PWM DKI Jakarta": {
+              "PDM Jakarta Selatan": ["PCM Kebayoran Baru", "PCM Pasar Minggu"],
+              "PDM Jakarta Timur": ["PCM Duren Sawit", "PCM Cakung"],
+            },
+            "PWM Jawa Barat": {
+              "PDM Bandung": ["PCM Coblong", "PCM Sukajadi"],
+              "PDM Bekasi": ["PCM Bekasi Timur", "PCM Bekasi Selatan"],
+            },
+            "PWM DI Yogyakarta": {
+              "PDM Kota Yogyakarta": ["PCM Danurejan", "PCM Gondokusuman"],
+            },
+          };
+
+          function onCakupanLevelChange() {
+            const level = document.getElementById("user-cakupan-level").value;
+            document.getElementById("user-cakupan-pwm-field").style.display =
+              level === "Pusat" ? "none" : "block";
+            document.getElementById("user-cakupan-pdm-field").style.display =
+              level === "Daerah" || level === "Cabang" ? "block" : "none";
+            document.getElementById("user-cakupan-pcm-field").style.display =
+              level === "Cabang" ? "block" : "none";
+            if (level !== "Pusat") fillCakupanPwmOptions();
+          }
+          function fillCakupanPwmOptions(selectedPwm) {
+            const sel = document.getElementById("user-cakupan-pwm");
+            sel.innerHTML = Object.keys(ORG_TREE_PENGGUNA)
+              .map((w) => `<option>${w}</option>`)
+              .join("");
+            if (selectedPwm) sel.value = selectedPwm;
+            fillCakupanPdmOptions();
+          }
+          function fillCakupanPdmOptions(selectedPdm) {
+            const pwm = document.getElementById("user-cakupan-pwm").value;
+            const pdms = Object.keys(ORG_TREE_PENGGUNA[pwm] || {});
+            const sel = document.getElementById("user-cakupan-pdm");
+            sel.innerHTML = pdms.map((d) => `<option>${d}</option>`).join("");
+            if (selectedPdm) sel.value = selectedPdm;
+            fillCakupanPcmOptions();
+          }
+          function fillCakupanPcmOptions(selectedPcm) {
+            const pwm = document.getElementById("user-cakupan-pwm").value;
+            const pdm = document.getElementById("user-cakupan-pdm").value;
+            const pcms = (ORG_TREE_PENGGUNA[pwm] || {})[pdm] || [];
+            const sel = document.getElementById("user-cakupan-pcm");
+            sel.innerHTML = pcms.map((c) => `<option>${c}</option>`).join("");
+            if (selectedPcm) sel.value = selectedPcm;
+          }
+          function setCakupanFields(cakupan) {
+            const c = cakupan || { level: "Pusat" };
+            document.getElementById("user-cakupan-level").value = c.level;
+            document.getElementById("user-cakupan-pwm-field").style.display =
+              c.level === "Pusat" ? "none" : "block";
+            document.getElementById("user-cakupan-pdm-field").style.display =
+              c.level === "Daerah" || c.level === "Cabang" ? "block" : "none";
+            document.getElementById("user-cakupan-pcm-field").style.display =
+              c.level === "Cabang" ? "block" : "none";
+            if (c.level !== "Pusat") {
+              fillCakupanPwmOptions(c.pwm);
+              if (c.level === "Daerah" || c.level === "Cabang") {
+                fillCakupanPdmOptions(c.pdm);
+              }
+              if (c.level === "Cabang") {
+                fillCakupanPcmOptions(c.pcm);
+              }
+            }
+          }
+          function readCakupanFields() {
+            const level = document.getElementById("user-cakupan-level").value;
+            if (level === "Pusat") return { level: "Pusat" };
+            const pwm = document.getElementById("user-cakupan-pwm").value;
+            if (level === "Wilayah") return { level, pwm };
+            const pdm = document.getElementById("user-cakupan-pdm").value;
+            if (level === "Daerah") return { level, pwm, pdm };
+            const pcm = document.getElementById("user-cakupan-pcm").value;
+            return { level, pwm, pdm, pcm };
+          }
+          function cakupanLabel(cakupan) {
+            const c = cakupan || { level: "Pusat" };
+            if (c.level === "Pusat") return "Pusat";
+            if (c.level === "Wilayah") return `<b>${c.pwm}</b>`;
+            if (c.level === "Daerah")
+              return `<b>${c.pdm}</b><br><span style="color:var(--muted);font-size:11px;">${c.pwm}</span>`;
+            return `<b>${c.pcm}</b><br><span style="color:var(--muted);font-size:11px;">${c.pwm} / ${c.pdm}</span>`;
+          }
+
+          // Role "Super Admin" tidak ditawarkan di panel Tambah/Edit Pengguna --
+          // supaya elevasi ke Super Admin tidak bisa dilakukan sembarangan lewat sini.
+          // Kecuali pengguna yang sedang diedit memang sudah Super Admin, supaya role-nya
+          // tetap tampil benar (bukan diam-diam berubah saat disimpan).
           function userRoleOptionsHtml(selectedRoleId) {
             return rolesData
+              .filter((r) => r.nama !== "Super Admin" || r.id === selectedRoleId)
               .map(
                 (r) =>
                   `<option value="${r.id}" ${r.id === selectedRoleId ? "selected" : ""}>${r.nama}</option>`,
@@ -208,20 +363,33 @@
               ? usersData
                   .map((u, i) => {
                     const role = roleById(u.roleId);
+                    const statusBadge =
+                      u.status === "Aktif"
+                        ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>'
+                        : u.status === "Menunggu Aktivasi"
+                          ? '<span class="badge-status warn"><span class="dot"></span> Menunggu Aktivasi</span>'
+                          : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>';
+                    const activationBtns =
+                      u.status === "Menunggu Aktivasi"
+                        ? `<button class="icon-btn" onclick="simulateActivationEmail(${i})" title="Simulasikan Kirim Email Aktivasi">✉️</button>
+                <button class="icon-btn" onclick="simulateActivation(${i})" title="Simulasikan Pengguna Klik Link Aktivasi">🔑</button>`
+                        : "";
                     return `<tr>
             <td>${u.nama}</td>
             <td>${u.email}</td>
             <td>${role ? role.nama : "--"}</td>
-            <td>${u.status === "Aktif" ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
+            <td>${cakupanLabel(u.cakupan)}</td>
+            <td>${statusBadge}</td>
             <td>
               <div class="row-actions">
+                ${activationBtns}
                 <button class="icon-btn" onclick="openUserPanel(${i})" title="Edit">✎</button>
               </div>
             </td>
           </tr>`;
                   })
                   .join("")
-              : `<tr><td colspan="5" class="empty-hint">Belum ada pengguna.</td></tr>`;
+              : `<tr><td colspan="6" class="empty-hint">Belum ada pengguna.</td></tr>`;
           }
           function openUserPanel(idx) {
             userEditIdx = idx === undefined ? null : idx;
@@ -235,15 +403,19 @@
               document.getElementById("user-email").value = u.email;
               sel.innerHTML = userRoleOptionsHtml(u.roleId);
               document.getElementById("user-status").value = u.status;
+              setCakupanFields(u.cakupan);
             } else {
               document.getElementById("user-panel-title").textContent =
                 "Tambah Pengguna";
               document.getElementById("user-nama").value = "";
               document.getElementById("user-email").value = "";
+              const defaultRole = rolesData.find((r) => r.nama !== "Super Admin");
               sel.innerHTML = userRoleOptionsHtml(
-                rolesData[0] ? rolesData[0].id : null,
+                defaultRole ? defaultRole.id : null,
               );
-              document.getElementById("user-status").value = "Aktif";
+              document.getElementById("user-status").value =
+                "Menunggu Aktivasi";
+              setCakupanFields({ level: "Pusat" });
             }
             panel.style.display = "block";
             panel.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -276,7 +448,9 @@
               return;
             }
 
-            if (userEditIdx !== null) {
+            const cakupan = readCakupanFields();
+            const isNewUser = userEditIdx === null;
+            if (!isNewUser) {
               const existing = usersData[userEditIdx];
               usersData[userEditIdx] = {
                 ...existing,
@@ -284,6 +458,7 @@
                 email,
                 roleId,
                 status,
+                cakupan,
               };
               if (currentUser && currentUser.id === existing.id) {
                 currentUser = usersData[userEditIdx];
@@ -298,12 +473,31 @@
                 email,
                 roleId,
                 status,
+                cakupan,
                 password: "demo123",
               });
             }
             closeUserPanel();
             renderUsersTable();
-            showToast("✓ Pengguna berhasil disimpan");
+            if (isNewUser && status === "Menunggu Aktivasi") {
+              showToast(
+                `✓ Pengguna disimpan & ✉️ email aktivasi terkirim ke ${email} (simulasi)`,
+              );
+            } else {
+              showToast("✓ Pengguna berhasil disimpan");
+            }
+          }
+          function simulateActivationEmail(idx) {
+            const u = usersData[idx];
+            if (!u || u.status !== "Menunggu Aktivasi") return;
+            showToast(`✉️ Email aktivasi terkirim ke ${u.email} (simulasi)`);
+          }
+          function simulateActivation(idx) {
+            const u = usersData[idx];
+            if (!u || u.status !== "Menunggu Aktivasi") return;
+            u.status = "Aktif";
+            renderUsersTable();
+            showToast(`✓ ${u.nama} telah mengaktifkan akunnya (simulasi)`);
           }
           renderUsersTable();
 
@@ -312,6 +506,11 @@
             openUserPanel,
             closeUserPanel,
             saveUserPanel,
+            simulateActivationEmail,
+            simulateActivation,
+            onCakupanLevelChange,
+            fillCakupanPdmOptions,
+            fillCakupanPcmOptions,
           });
         }
       }

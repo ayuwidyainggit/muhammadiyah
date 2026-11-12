@@ -1,0 +1,1720 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Laporan Pemasukan -- GeekGarden Admin</title>
+    <style>
+      :root {
+        --navy: #1f3864;
+        --navy-dark: #14243f;
+        --navy-soft: #2c4a7c;
+        --accent: #2e7d32;
+        --accent-light: #e8f5e9;
+        --red: #b71c1c;
+        --red-light: #fdecea;
+        --muted: #5b6674;
+        --border: #e3e7ee;
+        --bg: #f5f6f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: var(--bg);
+        color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark);
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .doc-topbar a {
+        color: #cfe0ff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .doc-topbar a:hover {
+        text-decoration: underline;
+      }
+      .doc-topbar .brand {
+        font-size: 13.5px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .doc-wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+      .doc-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 36px 40px;
+        box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 {
+        color: var(--navy);
+        font-size: 26px;
+        font-weight: 800;
+        margin: 0 0 18px;
+        border-bottom: 3px solid var(--navy);
+        padding-bottom: 12px;
+      }
+      h2 {
+        color: var(--navy);
+        font-size: 19px;
+        font-weight: 800;
+        margin: 36px 0 12px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+        padding-top: 18px;
+      }
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      h3 {
+        color: var(--navy-soft);
+        font-size: 15.5px;
+        font-weight: 700;
+        margin: 22px 0 10px;
+      }
+      p {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 12px;
+      }
+      ul,
+      ol {
+        font-size: 13.8px;
+        line-height: 1.65;
+        color: #2a2f3a;
+        margin: 0 0 14px;
+        padding-left: 22px;
+      }
+      li {
+        margin-bottom: 4px;
+      }
+      strong {
+        color: var(--navy);
+        font-weight: 700;
+      }
+      code {
+        background: #eef1f6;
+        color: #b71c1c;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12.5px;
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 28px 0;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        margin: 10px 0 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12.8px;
+        min-width: 560px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--navy);
+        color: #fff;
+        font-weight: 700;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+      tr:nth-child(even) td {
+        background: #fafbfd;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      input[type="checkbox"] {
+        transform: translateY(1px);
+      }
+      .doc-meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .fab-prd {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 13px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        z-index: 999;
+      }
+      .fab-prd:hover {
+        background: var(--navy-soft);
+      }
+      @media print {
+        .doc-topbar,
+        .fab-prd {
+          display: none;
+        }
+        .doc-card {
+          box-shadow: none;
+          border: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Laporan Pemasukan</h1>
+        <h2>1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Atribut</th>
+                <th>Isi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nama produk / fitur</td>
+                <td>Laporan Pemasukan (Laporan Konsolidasi Admin Pusat)</td>
+              </tr>
+              <tr>
+                <td>Klien / proyek</td>
+                <td>
+                  Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment
+                  SPP (GeekGarden)
+                </td>
+              </tr>
+              <tr>
+                <td>Versi dokumen</td>
+                <td>v0.3</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>Draft</td>
+              </tr>
+              <tr>
+                <td>Penulis</td>
+                <td>Tim Produk GeekGarden</td>
+              </tr>
+              <tr>
+                <td>Product Owner</td>
+                <td>[Nama PO Klien]</td>
+              </tr>
+              <tr>
+                <td>Solution Architect</td>
+                <td>[Nama SA]</td>
+              </tr>
+              <tr>
+                <td>Tanggal dibuat</td>
+                <td>08-11-2026</td>
+              </tr>
+              <tr>
+                <td>Target rilis</td>
+                <td>[DD-MM-YYYY / Sprint X]</td>
+              </tr>
+              <tr>
+                <td>Dokumen terkait</td>
+                <td>
+                  <code>laporan-pemasukan.html</code>,
+                  <code>pengguna.html</code>, <code>app.js</code>, PRD Laporan
+                  Pindah Sekolah &amp; Tunggakan, PRD Dashboard Konsolidasi, PRD
+                  Pengguna, PRD Manajemen Sekolah, Aplikasi Wali Murid
+                  (paymentHistory), Portal Sekolah (paymentData)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Versi</th>
+                <th>Tanggal</th>
+                <th>Penulis</th>
+                <th>Perubahan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v0.1</td>
+                <td>08-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Draft awal berdasarkan prototipe
+                  <code>laporan-pemasukan.html</code>, bagian dari sidebar
+                  "Laporan" di Admin Pusat.
+                </td>
+              </tr>
+              <tr>
+                <td>v0.2</td>
+                <td>08-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Sinkronisasi dengan prototipe terkini: (1) tambah fitur
+                  <strong>Ekspor Laporan</strong> (tombol "⬇ Export Excel") yang
+                  mengunduh file CSV asli berisi ringkasan per sekolah + detail
+                  Transaksi Berhasil + detail Invoice Belum Terbayar,
+                  menghormati filter aktif -- lihat FR-08; (2) kolom
+                  <strong>Metode</strong> pada baris Invoice Belum Terbayar kini
+                  menampilkan "-" khusus untuk status
+                  <code>belum_terbayar</code> (karena belum ada upaya pembayaran
+                  sehingga metode belum relevan), sedangkan status
+                  <code>failed</code> tetap menampilkan metode yang sungguh
+                  dicoba -- lihat FR-05.
+                </td>
+              </tr>
+              <tr>
+                <td>v0.3</td>
+                <td>08-11-2026</td>
+                <td>Tim Produk GeekGarden</td>
+                <td>
+                  Sinkronisasi dengan perubahan RBAC terkini (lihat PRD
+                  Pengguna): (1) role
+                  <strong>"Admin Wilayah (PWM)"</strong> digeneralisasi menjadi
+                  role tunggal <strong>"Admin"</strong>, dengan cakupan data
+                  (Pusat/Wilayah/Daerah/Cabang) ditentukan per pengguna lewat
+                  field <strong>Cakupan</strong> di menu Pengguna, bukan lagi
+                  melekat pada nama role; (2) role
+                  <strong>"Staff Keuangan Pusat"</strong> berganti nama menjadi
+                  <strong>"Staff Keuangan"</strong> (cakupannya juga mengikuti
+                  field Cakupan, tidak lagi selalu Pusat secara implisit); (3)
+                  role <strong>"Viewer"</strong> dihapus dari platform; (4)
+                  tambah kebutuhan fungsional baru <strong>FR-09</strong>: data
+                  yang ditampilkan di Laporan Pemasukan (stat row, tabel, panel
+                  detail, dan ekspor CSV) harus dibatasi sesuai Cakupan pengguna
+                  yang login -- cakupan Pusat melihat seluruh sekolah, cakupan
+                  Wilayah hanya sekolah di PWM-nya, cakupan Daerah hanya sekolah
+                  di PDM-nya, dan cakupan Cabang hanya sekolah di PCM-nya.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>2. Ringkasan &amp; Latar Belakang</h2>
+        <h3>2.1 Ringkasan</h3>
+        <p>
+          Fitur Laporan Pemasukan menyediakan rekap pemasukan pembayaran per
+          sekolah bagi Admin Pusat, diturunkan dari transaksi yang tercatat
+          lewat aplikasi Wali Murid (QRIS, VA BSI, Transfer Manual) dan Portal
+          Sekolah. Fitur ini juga menyediakan drill-down ke level transaksi per
+          siswa untuk kebutuhan rekonsiliasi &amp; audit, tanpa perlu membuka
+          aplikasi Wali Murid atau Portal Sekolah satu per satu.
+        </p>
+        <h3>2.2 Problem Statement</h3>
+        <p>
+          <strong>Staff Keuangan / Super Admin</strong> mengalami
+          <strong
+            >kesulitan memantau pemasukan pembayaran SPP secara nasional</strong
+          >
+          saat
+          <strong
+            >data transaksi tersebar di masing-masing aplikasi Wali Murid &amp;
+            Portal Sekolah tiap sekolah</strong
+          >, yang menyebabkan
+          <strong
+            >lambatnya deteksi invoice yang belum terbayar/gagal dan kurangnya
+            visibilitas pemasukan lintas sekolah untuk kebutuhan rekonsiliasi
+            &amp; pelaporan ke pimpinan</strong
+          >.
+        </p>
+        <h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+        <p>
+          Setiap sekolah mencatat transaksinya sendiri lewat aplikasi Wali
+          Murid/Portal Sekolah. Admin Pusat tidak memiliki rekap gabungan dan
+          harus menghubungi/menarik data tiap sekolah secara manual untuk
+          mengetahui total pemasukan dan invoice yang belum terbayar.
+        </p>
+        <h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+        <p>
+          Super Admin/Staff Keuangan dapat membuka menu "Laporan Pemasukan" dan
+          langsung melihat ringkasan pemasukan seluruh sekolah, memfilter per
+          sekolah dan status sekolah, lalu membuka detail transaksi (Berhasil
+          &amp; Belum Terbayar/Failed) per sekolah tanpa perlu menghubungi
+          sekolah satu per satu.
+        </p>
+        <h3>2.5 Kenapa Sekarang?</h3>
+        <p>
+          Dengan makin banyak sekolah yang onboarding dan aktif bertransaksi
+          (lihat PRD Manajemen Sekolah &amp; PRD Pendaftaran Sekolah), Staff
+          Keuangan membutuhkan satu titik pemantauan pemasukan untuk menjamin
+          fee tertagih dan invoice bermasalah terdeteksi tepat waktu.
+        </p>
+        <hr />
+        <h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+        <h3>3.1 Tujuan Bisnis</h3>
+        <ol>
+          <li>
+            Memberi visibilitas terpusat atas pemasukan pembayaran SPP seluruh
+            sekolah dalam platform.
+          </li>
+          <li>
+            Mempercepat deteksi invoice belum terbayar/gagal supaya bisa
+            ditindaklanjuti sebelum menumpuk.
+          </li>
+          <li>
+            Mendukung rekonsiliasi &amp; pelaporan keuangan ke pimpinan
+            Muhammadiyah Pusat/PWM dengan data yang konsisten terhadap aplikasi
+            Wali Murid &amp; Portal Sekolah.
+          </li>
+        </ol>
+        <h3>3.2 Non-Tujuan (Out of Goal)</h3>
+        <ul>
+          <li>
+            Tidak menyediakan aksi create/update/delete transaksi dari halaman
+            ini -- seluruh role hanya memiliki hak Read (lihat 6.1).
+          </li>
+          <li>
+            Tidak mendukung ekspor ke format <code>.xlsx</code>/<code
+              >.pdf</code
+            >
+            asli (styling/formatting Excel, sheet terpisah, grafik, dsb.) --
+            ekspor yang tersedia berupa file CSV polos (lihat FR-08).
+          </li>
+          <li>
+            Tidak menangani aksi tindak lanjut penagihan (reminder, dsb) dari
+            halaman ini.
+          </li>
+          <li>
+            Tidak merinci kasus pindah sekolah/write-off tunggakan secara
+            mendalam -- itu domain
+            <strong>Laporan Pindah Sekolah &amp; Tunggakan</strong>.
+          </li>
+        </ul>
+        <h3>3.3 Metrik Keberhasilan (KPI)</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Metrik</th>
+                <th>Baseline saat ini</th>
+                <th>Target</th>
+                <th>Cara ukur</th>
+                <th>Waktu evaluasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Waktu rata-rata Admin Pusat mengetahui total pemasukan seluruh
+                  sekolah
+                </td>
+                <td>[ ] (manual, hubungi tiap sekolah)</td>
+                <td>&lt; 5 menit (self-service)</td>
+                <td>
+                  Timestamp akses halaman vs waktu proses manual sebelumnya
+                </td>
+                <td>1 bulan setelah rilis</td>
+              </tr>
+              <tr>
+                <td>
+                  % invoice belum terbayar/gagal yang terdeteksi dalam 24 jam
+                  sejak status muncul
+                </td>
+                <td>[ ]</td>
+                <td>90%</td>
+                <td>
+                  Selisih waktu status muncul vs waktu dibuka/ditinjau di
+                  laporan
+                </td>
+                <td>2 bulan setelah rilis</td>
+              </tr>
+              <tr>
+                <td>
+                  Selisih nominal Total Pemasukan antara laporan ini dan
+                  rekonsiliasi manual keuangan pusat
+                </td>
+                <td>[ ]</td>
+                <td>0% selisih</td>
+                <td>Audit bulanan</td>
+                <td>3 bulan setelah rilis</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>4. Stakeholder &amp; Persona Pengguna</h2>
+        <h3>4.1 Stakeholder (RACI)</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama / Peran</th>
+                <th>Organisasi</th>
+                <th>RACI</th>
+                <th>Kepentingan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Product Owner</td>
+                <td>Klien (Muhammadiyah Pusat)</td>
+                <td>A</td>
+                <td>
+                  Menyetujui definisi "pemasukan" dan kebijakan status transaksi
+                </td>
+              </tr>
+              <tr>
+                <td>Solution Architect</td>
+                <td>GeekGarden</td>
+                <td>R</td>
+                <td>
+                  Desain integrasi data dengan aplikasi Wali Murid &amp; Portal
+                  Sekolah
+                </td>
+              </tr>
+              <tr>
+                <td>Tech Lead</td>
+                <td>GeekGarden</td>
+                <td>R</td>
+                <td>Implementasi agregasi &amp; tampilan laporan</td>
+              </tr>
+              <tr>
+                <td>QA Lead</td>
+                <td>GeekGarden</td>
+                <td>C</td>
+                <td>Strategi pengujian konsistensi nominal lintas sekolah</td>
+              </tr>
+              <tr>
+                <td>Super Admin</td>
+                <td>Klien</td>
+                <td>R</td>
+                <td>Pengguna utama fitur ini</td>
+              </tr>
+              <tr>
+                <td>Staff Keuangan</td>
+                <td>Klien</td>
+                <td>R</td>
+                <td>Pemantau pemasukan &amp; rekonsiliasi dana</td>
+              </tr>
+              <tr>
+                <td>Admin (cakupan Wilayah/Daerah/Cabang)</td>
+                <td>Klien</td>
+                <td>C/R</td>
+                <td>Memantau pemasukan sekolah dalam cakupannya saja</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>4.2 Persona Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Persona</th>
+                <th>Deskripsi</th>
+                <th>Tujuan utama</th>
+                <th>Pain point</th>
+                <th>Perangkat / kanal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Super Admin Pusat</td>
+                <td>Mengawasi seluruh operasional platform</td>
+                <td>Memantau pemasukan nasional per sekolah</td>
+                <td>Tidak ada rekap terpusat sebelumnya</td>
+                <td>Laptop/web</td>
+              </tr>
+              <tr>
+                <td>Staff Keuangan</td>
+                <td>Fokus pada pemasukan &amp; tunggakan invoice</td>
+                <td>
+                  Mendeteksi invoice belum terbayar/gagal sedini mungkin &amp;
+                  merekonsiliasi dana
+                </td>
+                <td>Data tersebar per aplikasi Wali Murid/Portal Sekolah</td>
+                <td>Laptop/web</td>
+              </tr>
+              <tr>
+                <td>Admin (cakupan Wilayah/Daerah/Cabang)</td>
+                <td>
+                  Mengelola sekolah dalam satu Wilayah (PWM)/Daerah (PDM)/Cabang
+                  (PCM) sesuai Cakupan yang diset di menu Pengguna
+                </td>
+                <td>
+                  Mengetahui performa pemasukan sekolah dalam cakupannya, tanpa
+                  terdistraksi data sekolah lain
+                </td>
+                <td>
+                  Sebelumnya tidak ada pembatasan data otomatis -- harus memilah
+                  manual mana sekolah yang relevan
+                </td>
+                <td>Laptop/web</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>5. Ruang Lingkup &amp; User Stories</h2>
+        <h3>5.1 Ruang Lingkup</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>In Scope (fase ini)</th>
+                <th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Statistik ringkasan (Total Pemasukan, Transaksi Berhasil,
+                  Total Invoice Belum Terbayar, Pemasukan Tertinggi), reaktif
+                  terhadap filter aktif
+                </td>
+                <td>
+                  Ekspor ke format <code>.xlsx</code>/<code>.pdf</code> asli
+                  (styling/formatting Excel, sheet terpisah, grafik, dsb.)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Tabel rekap pemasukan per sekolah (siswa aktif, transaksi
+                  berhasil, total pemasukan, invoice belum terbayar, metode
+                  terbanyak)
+                </td>
+                <td>Filter periode/rentang tanggal transaksi</td>
+              </tr>
+              <tr>
+                <td>
+                  Filter Sekolah dan Status Sekolah (Aktif/Nonaktif/Draft)
+                </td>
+                <td>
+                  Aksi tindak lanjut penagihan (kirim reminder, tandai
+                  ditindaklanjuti) untuk invoice belum terbayar
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Detail transaksi per sekolah: tabel Transaksi Berhasil &amp;
+                  tabel Invoice Belum Terbayar (termasuk Failed dengan catatan
+                  bank, dan Metode "-" untuk status Belum Terbayar)
+                </td>
+                <td>Create/Update/Delete transaksi dari Admin Pusat</td>
+              </tr>
+              <tr>
+                <td>
+                  Definisi &amp; nomenklatur status transaksi yang konsisten
+                  dengan aplikasi Wali Murid &amp; Portal Sekolah
+                </td>
+                <td>
+                  Rekap mendalam kasus pindah sekolah/write-off (domain Laporan
+                  Pindah Sekolah &amp; Tunggakan)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Ekspor laporan ke CSV (3 bagian: ringkasan per sekolah, detail
+                  Transaksi Berhasil, detail Invoice Belum Terbayar),
+                  menghormati filter Sekolah/Status Sekolah aktif
+                </td>
+                <td>
+                  Penjadwalan ekspor otomatis (terkirim ke email secara berkala)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>5.2 Prioritas (MoSCoW)</h3>
+        <ul>
+          <li>
+            <strong>Must have</strong> -- Stat row ringkasan, tabel rekap per
+            sekolah, filter Sekolah &amp; Status Sekolah, detail Transaksi
+            Berhasil, definisi status transaksi yang konsisten lintas aplikasi.
+          </li>
+          <li>
+            <strong>Should have</strong> -- Detail Invoice Belum Terbayar/Failed
+            dengan catatan bank, badge status siswa "Pindah Sekolah" pada tabel
+            detail, ekspor laporan ke CSV yang menghormati filter aktif.
+          </li>
+          <li>
+            <strong>Could have</strong> -- Filter periode/rentang tanggal.
+          </li>
+          <li>
+            <strong>Won't have (now)</strong> -- Aksi tindak lanjut penagihan
+            dari halaman ini, create/update/delete transaksi, approve/reject apa
+            pun.
+          </li>
+        </ul>
+        <h3>5.3 User Stories</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User story</th>
+                <th>Prioritas</th>
+                <th>Acceptance criteria</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>US-01</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin melihat ringkasan
+                  pemasukan seluruh sekolah dalam beberapa kartu statistik,
+                  supaya saya cepat menilai performa pemasukan secara nasional.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given saya membuka Laporan Pemasukan, When halaman dimuat,
+                  Then 4 kartu statistik (Total Pemasukan, Transaksi Berhasil,
+                  Total Invoice Belum Terbayar, Pemasukan Tertinggi) tampil
+                  dihitung dari seluruh sekolah
+                </td>
+              </tr>
+              <tr>
+                <td>US-02</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin memfilter rekap
+                  pemasukan berdasarkan sekolah dan status sekolah, supaya saya
+                  bisa fokus pada sekolah tertentu.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given saya memilih nilai pada filter Sekolah dan/atau Status
+                  Sekolah, When filter diterapkan, Then stat row dan tabel hanya
+                  menghitung sekolah yang cocok dengan kombinasi filter (AND)
+                </td>
+              </tr>
+              <tr>
+                <td>US-03</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin melihat rincian
+                  transaksi berhasil per siswa pada satu sekolah, supaya saya
+                  bisa merekonsiliasi pemasukan dengan data aplikasi Wali Murid.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given saya menekan "Lihat Detail" pada satu sekolah, When
+                  panel detail terbuka, Then tabel Transaksi Berhasil
+                  menampilkan tanggal pembayaran, siswa, status siswa, jenis
+                  tagihan, metode, nominal, dan no. kuitansi untuk setiap
+                  transaksi berstatus success
+                </td>
+              </tr>
+              <tr>
+                <td>US-04</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin melihat daftar
+                  invoice belum terbayar/gagal beserta alasannya, supaya saya
+                  bisa menindaklanjuti penagihan di luar sistem.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given panel detail terbuka, When saya melihat bagian Invoice
+                  Belum Terbayar, Then setiap baris menampilkan status (Belum
+                  Terbayar/Failed) dan catatan bank bila berstatus Failed
+                </td>
+              </tr>
+              <tr>
+                <td>US-05</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin status "Belum
+                  Terbayar" dan "Failed" dibedakan jelas, supaya saya tidak
+                  salah menyimpulkan wali murid belum berusaha membayar padahal
+                  transaksinya gagal dari sisi bank.
+                </td>
+                <td>Should</td>
+                <td>
+                  Given terdapat invoice berstatus Failed, When ditampilkan di
+                  tabel, Then badge "Failed" beserta catatan bank (sumber
+                  callback BSI H2H) ditampilkan terpisah dari badge "Belum
+                  Terbayar"; And untuk baris berstatus Belum Terbayar, kolom
+                  Metode menampilkan "-" karena belum ada metode yang
+                  benar-benar dicoba
+                </td>
+              </tr>
+              <tr>
+                <td>US-07</td>
+                <td>
+                  Sebagai Staff Keuangan dengan Cakupan Wilayah/Daerah/Cabang,
+                  saya hanya ingin melihat data pemasukan sekolah dalam cakupan
+                  saya, supaya saya tidak melihat data sekolah yang bukan
+                  tanggung jawab saya.
+                </td>
+                <td>Must</td>
+                <td>
+                  Given saya login sebagai pengguna dengan Cakupan level Wilayah
+                  (PWM tertentu)/Daerah (PDM tertentu)/Cabang (PCM tertentu),
+                  When saya membuka Laporan Pemasukan, Then stat row, tabel,
+                  panel detail, dan ekspor CSV hanya menghitung sekolah yang
+                  Wilayah/Daerah/Cabang-nya cocok dengan Cakupan saya; And
+                  pengguna dengan Cakupan level Pusat (termasuk Super Admin)
+                  tetap melihat seluruh sekolah tanpa pembatasan
+                </td>
+              </tr>
+              <tr>
+                <td>US-06</td>
+                <td>
+                  Sebagai Staff Keuangan Pusat, saya ingin mengekspor rekap
+                  pemasukan yang sedang ditampilkan ke file yang bisa dibuka
+                  Excel, supaya saya bisa melampirkannya ke laporan rapat
+                  keuangan tanpa menyalin data secara manual.
+                </td>
+                <td>Should</td>
+                <td>
+                  Given saya menekan tombol "⬇ Export Excel" pada tabel
+                  Pemasukan per Sekolah, When proses ekspor berjalan, Then
+                  sebuah file CSV asli (bukan HTML yang disamarkan jadi
+                  <code>.xls</code>) terunduh berisi 3 bagian -- ringkasan per
+                  sekolah, detail Transaksi Berhasil, dan detail Invoice Belum
+                  Terbayar -- sesuai filter Sekolah/Status Sekolah yang sedang
+                  aktif; And jika tidak ada sekolah yang cocok dengan filter,
+                  sistem menampilkan toast "Tidak ada data untuk diexport" tanpa
+                  mengunduh file apa pun
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>6. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Modul</th>
+                <th>Deskripsi requirement</th>
+                <th>User story</th>
+                <th>Prioritas</th>
+                <th>Catatan / aturan bisnis</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-01</td>
+                <td>Stat Row Ringkasan</td>
+                <td>
+                  Sistem harus menampilkan 4 kartu statistik: Total Pemasukan,
+                  Transaksi Berhasil, Total Invoice Belum Terbayar, Pemasukan
+                  Tertinggi, dihitung dari sekolah yang lolos filter aktif
+                </td>
+                <td>US-01, US-02</td>
+                <td>Must</td>
+                <td>
+                  Hanya transaksi berstatus <code>success</code> yang dihitung
+                  sebagai pemasukan; Pemasukan Tertinggi menampilkan nama
+                  sekolah dengan total pemasukan terbesar di antara hasil filter
+                </td>
+              </tr>
+              <tr>
+                <td>FR-02</td>
+                <td>Filter Sekolah &amp; Status</td>
+                <td>
+                  Sistem harus menyediakan dropdown filter Nama Sekolah (opsi
+                  "Semua Sekolah") dan Status Sekolah (Aktif/Nonaktif/Draft,
+                  opsi "Semua Status Sekolah")
+                </td>
+                <td>US-02</td>
+                <td>Must</td>
+                <td>
+                  Kombinasi filter bersifat AND; mengubah salah satu filter
+                  memicu re-render stat row dan tabel tanpa reload halaman
+                </td>
+              </tr>
+              <tr>
+                <td>FR-03</td>
+                <td>Tabel Pemasukan per Sekolah</td>
+                <td>
+                  Sistem harus menampilkan tabel dengan kolom Nama Sekolah
+                  (+catatan khusus bila ada), Status, Siswa Aktif, Transaksi
+                  Berhasil, Total Pemasukan, Invoice Belum Terbayar
+                  (jumlah+nominal), Metode Terbanyak, Aksi
+                </td>
+                <td>US-01, US-02</td>
+                <td>Must</td>
+                <td>
+                  Sekolah tanpa transaksi menampilkan teks "Tidak ada transaksi"
+                  pada kolom Aksi (bukan tombol); filter tanpa hasil menampilkan
+                  pesan "Tidak ada sekolah yang cocok dengan filter."
+                </td>
+              </tr>
+              <tr>
+                <td>FR-04</td>
+                <td>Detail Transaksi Berhasil</td>
+                <td>
+                  Sistem harus menyediakan tombol "Lihat Detail" yang membuka
+                  panel berisi tabel transaksi <code>success</code>: tanggal
+                  pembayaran, siswa, status siswa, jenis tagihan, metode,
+                  nominal, no. kuitansi
+                </td>
+                <td>US-03</td>
+                <td>Must</td>
+                <td>
+                  Panel menampilkan ringkasan teks (jumlah transaksi, jumlah
+                  berhasil &amp; totalnya, jumlah belum terbayar &amp; totalnya)
+                  sebelum tabel; panel otomatis scroll ke tengah layar saat
+                  dibuka
+                </td>
+              </tr>
+              <tr>
+                <td>FR-05</td>
+                <td>Detail Invoice Belum Terbayar</td>
+                <td>
+                  Panel yang sama harus menampilkan tabel invoice berstatus
+                  <code>belum_terbayar</code>/<code>failed</code>: tanggal jatuh
+                  tempo, siswa, status siswa, jenis tagihan, metode, nominal,
+                  status (+catatan bank bila <code>failed</code>)
+                </td>
+                <td>US-04, US-05</td>
+                <td>Must</td>
+                <td>
+                  "Belum Terbayar" = belum ada upaya pembayaran sama sekali;
+                  "Failed" = sudah ada upaya pembayaran namun gagal di sisi
+                  bank, diketahui lewat callback BSI H2H, bukan dari aksi wali
+                  murid di aplikasi. Kolom <strong>Metode</strong> pada baris
+                  berstatus <code>belum_terbayar</code> ditampilkan "-" karena
+                  belum ada metode yang benar-benar dicoba; baris berstatus
+                  <code>failed</code> tetap menampilkan metode aslinya karena
+                  upaya pembayaran sudah terjadi (hanya gagal di bank)
+                </td>
+              </tr>
+              <tr>
+                <td>FR-06</td>
+                <td>Badge Status Siswa</td>
+                <td>
+                  Siswa berstatus <code>pindah_sekolah</code> harus ditandai
+                  badge "Pindah Sekolah" pada tabel detail transaksi, berbeda
+                  dari badge "Aktif"
+                </td>
+                <td>US-05</td>
+                <td>Should</td>
+                <td>
+                  Konsisten dengan status siswa yang dipakai di PRD Laporan
+                  Pindah Sekolah &amp; Tunggakan
+                </td>
+              </tr>
+              <tr>
+                <td>FR-07</td>
+                <td>Konsistensi Nomenklatur Status Transaksi</td>
+                <td>
+                  Field dan status transaksi
+                  (<code>success</code>/<code>belum_terbayar</code>/<code>failed</code>)
+                  harus konsisten dengan field <code>paymentHistory</code> di
+                  aplikasi Wali Murid dan <code>paymentData</code> di Portal
+                  Sekolah
+                </td>
+                <td>US-01..05</td>
+                <td>Must</td>
+                <td>
+                  Mencegah ambiguitas saat rekonsiliasi lintas aplikasi;
+                  perubahan nomenklatur di salah satu aplikasi wajib
+                  disinkronkan ke laporan ini
+                </td>
+              </tr>
+              <tr>
+                <td>FR-08</td>
+                <td>Ekspor Laporan (CSV)</td>
+                <td>
+                  Sistem harus menyediakan tombol "⬇ Export Excel" yang
+                  mengunduh file CSV asli (bukan trik
+                  HTML-table-disamarkan-jadi-<code>.xls</code>) berisi 3 bagian
+                  berurutan: ringkasan Pemasukan per Sekolah, detail Transaksi
+                  Berhasil, dan detail Invoice Belum Terbayar
+                </td>
+                <td>US-06</td>
+                <td>Should</td>
+                <td>
+                  Data yang diekspor mengikuti filter Sekolah/Status Sekolah
+                  yang sedang aktif; kolom nominal diekspor sebagai angka mentah
+                  (bukan string "Rp...") agar tetap numerik di Excel; nama file
+                  mengikuti pola <code>laporan-pemasukan-YYYY-MM-DD.csv</code>;
+                  jika hasil filter kosong, ekspor dibatalkan dan sistem
+                  menampilkan toast "Tidak ada data untuk diexport"
+                </td>
+              </tr>
+              <tr>
+                <td>FR-09</td>
+                <td>Pembatasan Data Berdasarkan Cakupan Pengguna</td>
+                <td>
+                  Sistem harus membatasi sekolah yang dihitung/ditampilkan di
+                  stat row, tabel, panel detail, dan ekspor CSV sesuai field
+                  <strong>Cakupan</strong> milik pengguna yang login (diatur di
+                  menu Pengguna, lihat PRD Pengguna): Cakupan
+                  <code>Pusat</code> &rarr; seluruh sekolah;
+                  <code>Wilayah</code> &rarr; hanya sekolah dengan Wilayah (PWM)
+                  yang sama dengan <code>cakupan.pwm</code>;
+                  <code>Daerah</code> &rarr; hanya sekolah dengan Daerah (PDM)
+                  yang sama dengan <code>cakupan.pdm</code>;
+                  <code>Cabang</code> &rarr; hanya sekolah dengan Cabang (PCM)
+                  yang sama dengan <code>cakupan.pcm</code>
+                </td>
+                <td>US-07</td>
+                <td>Must</td>
+                <td>
+                  Pembatasan ini berlaku <strong>di atas</strong> filter
+                  Sekolah/Status Sekolah yang dipilih manual (bukan
+                  menggantikannya) -- pengguna tidak bisa memilih sekolah di
+                  luar cakupannya sekalipun lewat dropdown filter Sekolah.
+                  Berlaku untuk seluruh role yang punya hak Read ke modul ini
+                  (Super Admin, Admin, Staff Keuangan), bukan hanya role
+                  tertentu -- karena Cakupan adalah field per pengguna, bukan
+                  per role (lihat 6.1)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>6.1 Hak Akses per Peran</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Fitur</th>
+                <th>Super Admin</th>
+                <th>Admin</th>
+                <th>Staff Keuangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Lihat Laporan Pemasukan</td>
+                <td>Read</td>
+                <td>Read</td>
+                <td>Read</td>
+              </tr>
+              <tr>
+                <td>Filter Sekolah &amp; Status Sekolah</td>
+                <td>Read</td>
+                <td>Read</td>
+                <td>Read</td>
+              </tr>
+              <tr>
+                <td>Lihat detail transaksi per sekolah</td>
+                <td>Read</td>
+                <td>Read</td>
+                <td>Read</td>
+              </tr>
+              <tr>
+                <td>Create/Update/Delete transaksi dari halaman ini</td>
+                <td>--</td>
+                <td>--</td>
+                <td>--</td>
+              </tr>
+              <tr>
+                <td>Pembatasan data sesuai Cakupan (Wilayah/Daerah/Cabang)</td>
+                <td>
+                  Tidak berlaku -- Super Admin selalu dianggap Cakupan
+                  <code>Pusat</code>
+                </td>
+                <td>
+                  Berlaku sesuai Cakupan pengguna (Pusat/Wilayah/Daerah/Cabang)
+                </td>
+                <td>
+                  Berlaku sesuai Cakupan pengguna (Pusat/Wilayah/Daerah/Cabang)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <em
+            >Catatan: seluruh role hanya memiliki hak Read pada modul
+            <code>laporan-pemasukan</code> (lihat <code>rolesData</code> di
+            <code>app.js</code>); tidak ada role yang memiliki hak
+            Create/Update/Delete pada modul ini karena transaksi dicatat
+            otomatis dari aplikasi Wali Murid &amp; Portal Sekolah, bukan
+            diinput manual di Admin Pusat. Role "Viewer" yang sebelumnya ada di
+            platform telah dihapus (lihat Riwayat Revisi v0.3) -- tidak ada lagi
+            role yang sama sekali tidak memiliki akses ke modul ini selain lewat
+            status "Nonaktif" pada akun pengguna. Pembatasan Cakupan (baris
+            terakhir) ditentukan oleh field <strong>Cakupan</strong> per
+            pengguna di menu Pengguna, bukan oleh nama role -- dua pengguna
+            dengan role "Admin" yang sama bisa memiliki Cakupan berbeda (mis.
+            satu Wilayah Jawa Timur, satu Wilayah Jawa Barat) dan masing-masing
+            hanya melihat sekolah di wilayahnya sendiri.</em
+          >
+        </p>
+        <h3>6.2 Notifikasi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Pemicu</th>
+                <th>Penerima</th>
+                <th>Kanal</th>
+                <th>Isi singkat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Invoice berubah status menjadi Failed (callback BSI H2H)
+                </td>
+                <td>Staff Keuangan (disarankan)</td>
+                <td>Email/Dashboard (belum diimplementasi)</td>
+                <td>
+                  Pemberitahuan ada pembayaran gagal di sisi bank untuk siswa
+                  tertentu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Requirement</th>
+                <th>Target terukur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NFR-01</td>
+                <td>Konsistensi data</td>
+                <td>
+                  Nilai Total Pemasukan pada stat row dan tabel per sekolah
+                  harus selalu identik dengan hasil kalkulasi di panel detail
+                  untuk sekolah yang sama
+                </td>
+                <td>100% konsisten antar tampilan</td>
+              </tr>
+              <tr>
+                <td>NFR-02</td>
+                <td>Performa</td>
+                <td>Waktu render tabel &amp; penerapan filter</td>
+                <td>&lt; 1 detik untuk ≤ 200 sekolah/≤ 5.000 transaksi</td>
+              </tr>
+              <tr>
+                <td>NFR-03</td>
+                <td>Auditability</td>
+                <td>
+                  Nomor kuitansi (<code>RCPT-...</code>) pada setiap transaksi
+                  <code>success</code> harus unik dan dapat ditelusuri ke
+                  sumbernya (aplikasi Wali Murid/Portal Sekolah)
+                </td>
+                <td>100% transaksi success memiliki kuitansi tertelusuri</td>
+              </tr>
+              <tr>
+                <td>NFR-04</td>
+                <td>Akses</td>
+                <td>
+                  Halaman hanya bisa diakses oleh role dengan hak Read pada
+                  modul <code>laporan-pemasukan</code>
+                </td>
+                <td>
+                  100% enforced via <code>enforcePageAccess</code>, baik di
+                  client maupun server
+                </td>
+              </tr>
+              <tr>
+                <td>NFR-05</td>
+                <td>Konsistensi ekspor</td>
+                <td>
+                  Nilai pada file CSV hasil ekspor (FR-08) harus identik dengan
+                  nilai yang ditampilkan di tabel/panel untuk filter yang sama
+                  pada saat ekspor ditekan
+                </td>
+                <td>100% konsisten antara tampilan dan file hasil ekspor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>8. Alur Pengguna &amp; Desain</h2>
+        <ul>
+          <li>
+            Alur utama: Login → Menu "Laporan" → "Laporan Pemasukan" → lihat
+            statistik ringkasan &amp; tabel per sekolah → filter Sekolah/Status
+            Sekolah (opsional) → klik "Lihat Detail" pada satu sekolah → tinjau
+            Transaksi Berhasil &amp; Invoice Belum Terbayar → "Tutup Detail".
+          </li>
+          <li>
+            Alur ekspor: pada tabel Pemasukan per Sekolah → klik "⬇ Export
+            Excel" → file CSV (<code>laporan-pemasukan-YYYY-MM-DD.csv</code>)
+            otomatis terunduh sesuai filter Sekolah/Status Sekolah yang sedang
+            aktif → toast konfirmasi "✓ Laporan Pemasukan berhasil diexport"
+            muncul.
+          </li>
+          <li>
+            Wireframe: mengikuti struktur <code>laporan-pemasukan.html</code> --
+            4 kartu statistik di atas, filter bar (berisi filter Sekolah, filter
+            Status Sekolah, dan tombol "⬇ Export Excel") di atas tabel rekap per
+            sekolah, dan panel detail dengan 2 sub-tabel (Transaksi Berhasil
+            &amp; Invoice Belum Terbayar) yang muncul di bawah tabel saat
+            dibuka.
+          </li>
+          <li>
+            Edge case yang wajib ditangani: sekolah tanpa transaksi sama sekali
+            (kolom Aksi menampilkan teks, bukan tombol "Lihat Detail"), sekolah
+            berstatus Nonaktif/Draft dengan catatan konteks (misal merger,
+            onboarding pending), filter yang tidak menyisakan sekolah (tabel
+            menampilkan pesan kosong, bukan tabel blank, dan tombol ekspor
+            menampilkan toast peringatan tanpa mengunduh file), invoice Failed
+            dengan catatan bank yang panjang, invoice Belum Terbayar yang kolom
+            Metode-nya "-" (lihat FR-05), serta siswa berstatus
+            <code>pindah_sekolah</code> yang masih punya transaksi/tunggakan
+            tercatat di sekolah asal.
+          </li>
+        </ul>
+        <hr />
+        <h2>9. Integrasi &amp; Dependensi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Sistem eksternal</th>
+                <th>Fungsi</th>
+                <th>Metode</th>
+                <th>PIC</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Aplikasi Wali Murid (<code>paymentHistory</code>)</td>
+                <td>
+                  Sumber transaksi pembayaran (QRIS/VA BSI/Transfer Manual)
+                  beserta status success/belum_terbayar/failed
+                </td>
+                <td>Internal (shared data store)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Portal Sekolah (<code>paymentData</code>)</td>
+                <td>Sumber transaksi yang dicatat/diinput di level sekolah</td>
+                <td>Internal (shared data store)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Callback BSI H2H</td>
+                <td>
+                  Sumber status <code>failed</code> pasca-upaya pembayaran gagal
+                  di sisi bank
+                </td>
+                <td>Integrasi bank (host-to-host)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Modul Manajemen Sekolah</td>
+                <td>
+                  Konteks status sekolah (Aktif/Nonaktif/Draft) yang memengaruhi
+                  narasi di kolom catatan; juga sumber field Wilayah
+                  (PWM)/Daerah (PDM)/Cabang (PCM) per sekolah yang dibutuhkan
+                  FR-09
+                </td>
+                <td>Internal (shared data store)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Modul Pengguna (field Cakupan)</td>
+                <td>
+                  Sumber Cakupan (Pusat/Wilayah/Daerah/Cabang, beserta
+                  <code>pwm</code>/<code>pdm</code>/<code>pcm</code> terpilih)
+                  milik pengguna yang login -- menentukan pembatasan data
+                  laporan (FR-09)
+                </td>
+                <td>Internal (shared data store)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>10. Kebutuhan Data</h2>
+        <ul>
+          <li>
+            Entitas utama: Sekolah (nama, status, siswaAktif, catatan),
+            Transaksi (tanggal/jatuhTempo, siswa, statusSiswa, jenis tagihan,
+            metode, nominal, status, kuitansi, catatanBank).
+          </li>
+          <li>
+            Entitas Sekolah perlu ditambahkan field
+            <strong>Wilayah (PWM)</strong>, <strong>Daerah (PDM)</strong>,
+            <strong>Cabang (PCM)</strong> -- sudah ada di Manajemen Sekolah,
+            namun <strong>belum ada</strong> di data demo
+            <code>schoolsIncomeData</code> pada
+            <code>laporan-pemasukan.html</code> saat ini (lihat Batasan). Field
+            ini wajib ada agar FR-09 bisa mencocokkan sekolah dengan Cakupan
+            pengguna yang login.
+          </li>
+          <li>
+            Entitas Pengguna sudah memiliki field <code>cakupan</code> (<code
+              >{ level, pwm, pdm, pcm }</code
+            >) sejak <code>pengguna.html</code> -- field ini menjadi input utama
+            FR-09, dibaca dari <code>currentUser.cakupan</code> saat laporan
+            dimuat.
+          </li>
+          <li>
+            Tidak ada migrasi khusus lain -- struktur data mengikuti
+            <code>schoolsIncomeData</code> yang diselaraskan dengan
+            <code>paymentHistory</code> (aplikasi Wali Murid) &amp;
+            <code>paymentData</code> (Portal Sekolah).
+          </li>
+          <li>
+            Retensi data: transaksi &amp; kuitansi disimpan selama histori
+            keuangan sekolah terkait masih relevan untuk audit (rekomendasi
+            minimal 5 tahun, perlu konfirmasi kebijakan retensi klien).
+          </li>
+          <li>
+            Laporan yang dibutuhkan: rekap pemasukan per periode per sekolah,
+            daftar invoice belum terbayar/failed lintas sekolah.
+          </li>
+        </ul>
+        <hr />
+        <h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>
+            Status transaksi
+            (<code>success</code>/<code>belum_terbayar</code>/<code>failed</code>)
+            sudah final saat ditampilkan di laporan ini -- tidak ada status
+            transisi tambahan pada fase ini.
+          </li>
+          <li>
+            Satu transaksi hanya terkait satu siswa dan satu jenis tagihan
+            (tidak ada transaksi gabungan beberapa tagihan dalam satu baris).
+          </li>
+        </ul>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>
+            Fase ini belum mendukung filter periode/rentang tanggal transaksi --
+            hanya filter Sekolah dan Status Sekolah.
+          </li>
+          <li>
+            Data saat ini bersifat snapshot read-only
+            (<code>schoolsIncomeData</code>), belum real-time via API produksi.
+          </li>
+          <li>
+            Ekspor laporan (FR-08) berupa file CSV polos -- bukan file
+            <code>.xlsx</code>/<code>.pdf</code> asli, sehingga belum mendukung
+            styling/formatting Excel lanjutan (warna, sheet terpisah, grafik,
+            dsb.).
+          </li>
+          <li>
+            Data demo <code>schoolsIncomeData</code> pada prototipe ini
+            <strong
+              >belum memiliki field Wilayah (PWM)/Daerah (PDM)/Cabang
+              (PCM)</strong
+            >
+            per sekolah, sehingga pembatasan Cakupan (FR-09) belum bisa
+            diperagakan end-to-end di prototipe saat ini -- data sekolah perlu
+            disesuaikan (disamakan dengan struktur di Manajemen Sekolah) sebelum
+            FR-09 diimplementasikan.
+          </li>
+          <li>
+            Pembatasan Cakupan (FR-09) didesain berlaku di sisi tampilan
+            (client); keputusan apakah backend/API juga perlu memvalidasi ulang
+            cakupan ada di Risiko (bagian 12).
+          </li>
+        </ul>
+        <p><strong>Pertanyaan terbuka:</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Pertanyaan</th>
+                <th>Ditujukan ke</th>
+                <th>Batas jawab</th>
+                <th>Jawaban</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>
+                  Apakah laporan ini perlu filter tambahan periode/rentang
+                  tanggal transaksi?
+                </td>
+                <td>PO klien</td>
+                <td>[DD-MM-YYYY]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>
+                  Apakah dibutuhkan ekspor laporan (Excel/PDF) untuk kebutuhan
+                  rapat keuangan pusat?
+                </td>
+                <td>PO klien</td>
+                <td>[DD-MM-YYYY]</td>
+                <td>
+                  Sebagian terjawab di v0.2: tersedia ekspor CSV (FR-08) yang
+                  bisa dibuka Excel/Google Sheets. Masih perlu konfirmasi apakah
+                  format <code>.xlsx</code>/<code>.pdf</code> asli (dengan
+                  styling) tetap dibutuhkan
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>
+                  Apakah diperlukan aksi tindak lanjut (kirim reminder) langsung
+                  dari invoice belum terbayar/failed di laporan ini?
+                </td>
+                <td>PO klien</td>
+                <td>[DD-MM-YYYY]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>
+                  Apakah role Staff Keuangan juga bisa memiliki Cakupan selain
+                  Pusat (mis. Staff Keuangan Wilayah), atau role ini selalu
+                  dianggap Pusat secara kebijakan?
+                </td>
+                <td>PO klien</td>
+                <td>[DD-MM-YYYY]</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>12. Risiko &amp; Mitigasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Risiko</th>
+                <th>Dampak (H/M/L)</th>
+                <th>Kemungkinan (H/M/L)</th>
+                <th>Mitigasi</th>
+                <th>PIC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Data pemasukan di laporan pusat tidak sinkron dengan transaksi
+                  terbaru di aplikasi Wali Murid/Portal Sekolah (snapshot
+                  statis)
+                </td>
+                <td>H</td>
+                <td>M</td>
+                <td>
+                  Integrasikan dengan API/shared database real-time sebelum
+                  go-live produksi
+                </td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>
+                  Invoice berstatus Failed disalahartikan sebagai kelalaian wali
+                  murid, padahal gagal di sisi bank
+                </td>
+                <td>M</td>
+                <td>M</td>
+                <td>
+                  Pastikan badge &amp; catatan "Failed" selalu ditampilkan
+                  terpisah dari "Belum Terbayar" dengan penjelasan sumber
+                  (callback BSI H2H)
+                </td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>
+                  Pembatasan Cakupan (FR-09) hanya diterapkan di sisi client
+                  (JS), sehingga pengguna dengan Cakupan Wilayah/Daerah/Cabang
+                  secara teknis masih bisa mengakses data di luar cakupannya
+                  lewat manipulasi request langsung ke backend/API
+                </td>
+                <td>H</td>
+                <td>M</td>
+                <td>
+                  Validasi Cakupan wajib juga diterapkan di sisi API/backend
+                  sebelum data dikirim ke client, tidak hanya disembunyikan di
+                  UI
+                </td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>
+                  Data sekolah di luar lingkup demo (non-Jawa Timur, dsb.) belum
+                  punya field Wilayah/Daerah/Cabang yang konsisten, sehingga
+                  Admin dengan Cakupan tertentu berisiko tidak melihat sekolah
+                  yang semestinya masuk cakupannya (false negative)
+                </td>
+                <td>M</td>
+                <td>M</td>
+                <td>
+                  Audit kelengkapan field Wilayah/Daerah/Cabang pada seluruh
+                  data sekolah sebelum FR-09 dirilis ke produksi
+                </td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>13. Rencana Rilis &amp; Milestone</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Milestone</th>
+                <th>Deliverable</th>
+                <th>Target tanggal</th>
+                <th>Kriteria selesai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PRD approved</td>
+                <td>Dokumen ini v1.0</td>
+                <td>[ ]</td>
+                <td>Ditandatangani PO</td>
+              </tr>
+              <tr>
+                <td>Desain selesai</td>
+                <td>Mockup &amp; struktur data final</td>
+                <td>[ ]</td>
+                <td>Review SA &amp; klien</td>
+              </tr>
+              <tr>
+                <td>Development</td>
+                <td>
+                  Stat row, tabel rekap per sekolah, filter, panel detail
+                  transaksi
+                </td>
+                <td>[ ]</td>
+                <td>Lolos code review</td>
+              </tr>
+              <tr>
+                <td>UAT</td>
+                <td>Build staging</td>
+                <td>[ ]</td>
+                <td>0 bug critical, sign-off UAT</td>
+              </tr>
+              <tr>
+                <td>Go-live</td>
+                <td>Production</td>
+                <td>[ ]</td>
+                <td>Monitoring 2 minggu stabil</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>14. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Istilah</th>
+                <th>Arti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pemasukan</td>
+                <td>
+                  Nominal transaksi berstatus <code>success</code> --
+                  satu-satunya status yang dihitung sebagai pemasukan
+                </td>
+              </tr>
+              <tr>
+                <td>Belum Terbayar</td>
+                <td>
+                  Invoice terbit, wali murid belum melakukan upaya pembayaran
+                  apa pun
+                </td>
+              </tr>
+              <tr>
+                <td>Failed</td>
+                <td>
+                  Sudah ada upaya pembayaran namun gagal di sisi bank, diketahui
+                  lewat callback BSI H2H, bukan dari aksi wali murid di aplikasi
+                </td>
+              </tr>
+              <tr>
+                <td>Callback BSI H2H</td>
+                <td>
+                  Mekanisme Host-to-Host dari Bank BSI yang melaporkan status
+                  akhir transaksi VA secara otomatis ke sistem
+                </td>
+              </tr>
+              <tr>
+                <td>Kuitansi (RCPT-...)</td>
+                <td>
+                  Nomor bukti pembayaran yang diterbitkan untuk setiap transaksi
+                  berstatus <code>success</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Metode Terbanyak</td>
+                <td>
+                  Metode pembayaran dengan jumlah transaksi
+                  <code>success</code> terbanyak pada satu sekolah
+                </td>
+              </tr>
+              <tr>
+                <td>Ekspor CSV</td>
+                <td>
+                  Comma-separated values -- format teks sederhana yang dibuka
+                  langsung oleh Excel/Google Sheets tanpa peringatan "format
+                  tidak cocok"; dipakai pada tombol "⬇ Export Excel" di laporan
+                  ini (bukan file <code>.xlsx</code> asli, dan bukan trik
+                  HTML-table-disamarkan-jadi-<code>.xls</code>)
+                </td>
+              </tr>
+              <tr>
+                <td>Cakupan</td>
+                <td>
+                  Field pada data Pengguna (diatur di menu Pengguna) yang
+                  menentukan lingkup data yang bisa dilihat pengguna tersebut:
+                  <code>Pusat</code> (semua), <code>Wilayah</code> (satu PWM),
+                  <code>Daerah</code> (satu PDM), atau <code>Cabang</code> (satu
+                  PCM) -- independen dari nama role
+                </td>
+              </tr>
+              <tr>
+                <td>PWM / PDM / PCM</td>
+                <td>
+                  Pimpinan Wilayah/Daerah/Cabang Muhammadiyah -- tingkat
+                  struktur organisasi (provinsi/kota-kabupaten/kecamatan) yang
+                  dipakai sebagai field Wilayah/Daerah/Cabang pada data sekolah
+                  maupun Cakupan pengguna
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h2>15. Persetujuan</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Peran</th>
+                <th>Nama</th>
+                <th>Tanda tangan</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Product Owner (klien)</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Project Manager</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Solution Architect</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+              <tr>
+                <td>Tech Lead</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+                <td>[ ]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <h3>Checklist Kualitas PRD</h3>
+        <ul>
+          <li>
+            <input type="checkbox" checked disabled /> Problem statement
+            didukung konteks penggunaan (perlu divalidasi dengan data riil
+            klien)
+          </li>
+          <li>
+            <input type="checkbox" checked disabled /> Setiap tujuan punya KPI
+            dengan baseline dan target
+          </li>
+          <li>
+            <input type="checkbox" checked disabled /> Out of scope ditulis
+            eksplisit
+          </li>
+          <li>
+            <input type="checkbox" checked disabled /> Setiap user story punya
+            acceptance criteria Given-When-Then
+          </li>
+          <li>
+            <input type="checkbox" checked disabled /> NFR ditulis dengan angka
+            terukur
+          </li>
+          <li>
+            <input type="checkbox" disabled /> Semua integrasi punya PIC dan
+            status (menunggu konfirmasi PIC)
+          </li>
+          <li>
+            <input type="checkbox" disabled /> Pertanyaan terbuka punya batas
+            waktu jawab (menunggu tanggal dari PO)
+          </li>
+          <li>
+            <input type="checkbox" checked disabled /> PRD tidak membahas detail
+            teknis implementasi
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD"
+      >📄 PRD</a
+    >
+  </body>
+</html>

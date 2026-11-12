@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Periode Tahun Ajaran -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Periode Tahun Ajaran</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Periode Tahun Ajaran (Kalender Tahun Ajaran Terpusat)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.1</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>09-11-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>periode-tahun-ajaran.html</code>, <code>app.js</code>, PRD Konfigurasi Sistem, PRD Role &amp; Hak Akses, Portal Sekolah (Kelas, Master Data Tagihan, Manajemen Murid -- konsumen read-only)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>09-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal. Fitur ini sebelumnya adalah halaman tersendiri <code>periode.html</code> di Portal Sekolah (per sekolah), lalu sempat digabung sebagai salah satu kartu di PRD Konfigurasi Sistem (v0.2), dan sejak revisi ini <strong>dipisah menjadi fitur &amp; halaman tersendiri</strong> (<code>periode-tahun-ajaran.html</code>) yang ditempatkan di bawah grup sidebar "Konfigurasi" -- bukan lagi kartu di dalam halaman Konfigurasi Sistem -- supaya fitur ini punya siklus PRD, RBAC, dan navigasi sendiri yang jelas.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Fitur Periode Tahun Ajaran menyediakan satu kalender tahun ajaran terpusat (Tahun Ajaran, Tanggal Mulai, Tanggal Selesai, status Aktif) yang berlaku sama untuk <strong>seluruh sekolah</strong> di platform. Super Admin mengelolanya dari satu halaman tersendiri di Admin Pusat (<code>periode-tahun-ajaran.html</code>, di bawah grup sidebar "Konfigurasi"); Portal Sekolah di tiap sekolah hanya membaca daftar ini secara read-only untuk kebutuhan dropdown/filter di menu Kelas, Master Data Tagihan, dan Manajemen Murid.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Super Admin</strong> mengalami <strong>kesulitan menjaga satu kalender tahun ajaran yang konsisten di seluruh sekolah</strong> saat <strong>sebelumnya tiap sekolah mengatur periode tahun ajarannya sendiri-sendiri lewat Portal Sekolah masing-masing</strong>, yang menyebabkan <strong>risiko tanggal tahun ajaran berbeda-beda antar sekolah, sulit diaudit, dan tidak ada satu acuan tunggal untuk laporan lintas sekolah yang berbasis periode (mis. Laporan Pemasukan per periode)</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Sebelum revisi ini, Periode Tahun Ajaran dikelola masing-masing sekolah lewat halaman <code>periode.html</code> di Portal Sekolah (dihapus), lalu sempat dipindah menjadi satu kartu di dalam halaman Konfigurasi Sistem Admin Pusat (v0.2) -- bercampur dengan pengaturan lain seperti Rekening Penampung dan Template Pesan, sehingga sulit ditemukan dan tidak punya RBAC granular sendiri.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin membuka menu tersendiri "Periode Tahun Ajaran" di sidebar (grup "Konfigurasi", tepat di bawah "Konfigurasi Sistem") dan mengelola daftar periode tahun ajaran dari satu halaman yang fokus pada fitur ini saja: Tambah, Edit, Hapus, dan Jadikan Aktif -- terpisah dari pengaturan rekening/notifikasi/reminder/template, dengan hak akses yang bisa diatur sendiri lewat menu Role &amp; Hak Akses.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Setelah Periode Tahun Ajaran dipindah ke Admin Pusat (v0.2) demi satu sumber data, fitur ini ternyata cukup berdiri sendiri (punya alur Tambah/Edit/Hapus/Jadikan Aktif yang lengkap, dipakai banyak modul di Portal Sekolah) sehingga lebih jelas dan mudah dirawat sebagai halaman &amp; PRD tersendiri, alih-alih menumpuk di satu halaman Konfigurasi Sistem yang sudah padat.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Menyediakan satu sumber kebenaran (single source of truth) untuk kalender tahun ajaran yang dipakai seluruh sekolah di platform.</li>
+<li>Memisahkan siklus pengelolaan &amp; hak akses Periode Tahun Ajaran dari pengaturan global lain (Rekening, Notifikasi, Reminder, Template), supaya masing-masing lebih mudah ditemukan, diaudit, dan diberi RBAC granular.</li>
+<li>Menjadi acuan periode yang konsisten untuk laporan lintas sekolah berbasis periode (mis. Laporan Pemasukan).</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mengatur pengaturan global lain (Rekening Penampung, Nomor Resmi, Aturan Reminder, Template Pesan) -- tetap di PRD &amp; halaman Konfigurasi Sistem.</li>
+<li>Tidak menyediakan override Periode Tahun Ajaran per sekolah -- satu kalender nasional berlaku mutlak untuk seluruh sekolah pada fase ini (lihat Asumsi).</li>
+<li>Tidak memvalidasi otomatis apakah suatu periode sudah dipakai data siswa/tagihan di sekolah manapun sebelum diizinkan Edit/Hapus pada fase ini (lihat Batasan).</li>
+</ul>
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui kebijakan kalender tahun ajaran nasional</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain satu sumber data &amp; validasi lintas sekolah di masa depan</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi penyimpanan &amp; propagasi periode ke Portal Sekolah</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian validasi periode &amp; dampaknya ke Portal Sekolah</td>
+</tr>
+<tr>
+<td>Super Admin</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pengguna utama fitur ini</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin</td>
+<td>Mengelola kalender tahun ajaran seluruh sekolah</td>
+<td>Memastikan satu kalender tahun ajaran yang sama dipakai semua sekolah</td>
+<td>Dulu harus memastikan tiap sekolah mengisi tanggal yang sama sendiri-sendiri</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Bendahara/Admin sekolah (Portal Sekolah)</td>
+<td>Memakai periode aktif saat membuat tagihan &amp; mengelola kelas/murid</td>
+<td>Melihat daftar periode &amp; periode aktif yang selalu benar tanpa harus mengelolanya sendiri</td>
+<td>Tidak bisa lagi menambah/mengubah periode sendiri sejak fitur ini dipindah (hanya baca)</td>
+<td>Laptop/web (Portal Sekolah)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Halaman tersendiri "Periode Tahun Ajaran" di bawah grup sidebar "Konfigurasi"</td>
+<td>Override Periode Tahun Ajaran per sekolah</td>
+</tr>
+<tr>
+<td>Tambah Periode Tahun Ajaran (Tahun Ajaran, Tanggal Mulai, Tanggal Selesai, opsional langsung jadikan aktif)</td>
+<td>Validasi otomatis "periode sudah terpakai data siswa/tagihan" lintas sekolah (lihat Batasan)</td>
+</tr>
+<tr>
+<td>Edit Periode Tahun Ajaran yang sudah ada</td>
+<td>Filter/riwayat perubahan periode (audit trail) di UI -- dicatat di audit log umum saja</td>
+</tr>
+<tr>
+<td>Hapus Periode Tahun Ajaran (minimal 1 periode harus tetap ada)</td>
+<td>Ekspor/impor daftar periode</td>
+</tr>
+<tr>
+<td>Jadikan Aktif (hanya 1 periode aktif pada satu waktu, dengan konfirmasi)</td>
+<td></td>
+</tr>
+<tr>
+<td>Pencarian periode berdasarkan Tahun Ajaran</td>
+<td></td>
+</tr>
+<tr>
+<td>Hak akses granular (RBAC) tersendiri, terpisah dari modul Konfigurasi Sistem</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Halaman tersendiri, Tambah/Edit/Hapus/Jadikan Aktif, pencarian, RBAC tersendiri.</li>
+<li><strong>Should have</strong> -- Konfirmasi sebelum Jadikan Aktif/Hapus (karena berdampak ke seluruh sekolah).</li>
+<li><strong>Could have</strong> -- Validasi lintas sekolah untuk mengunci periode yang sudah terpakai data siswa/tagihan (lihat Pertanyaan Terbuka No. 2).</li>
+<li><strong>Won't have (now)</strong> -- Override per sekolah, ekspor/impor, riwayat perubahan di UI.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Super Admin, saya ingin membuka menu "Periode Tahun Ajaran" sebagai halaman tersendiri di sidebar, supaya saya tidak perlu mencarinya di antara pengaturan lain yang tidak berhubungan.</td>
+<td>Must</td>
+<td>Given saya login sebagai Super Admin, When saya melihat sidebar grup "Konfigurasi", Then "Periode Tahun Ajaran" tampil sebagai menu tersendiri tepat di bawah "Konfigurasi Sistem", terpisah dari "Pengguna" dan "Role &amp; Hak Akses"</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Super Admin, saya ingin menambah periode tahun ajaran baru, supaya seluruh sekolah punya kalender tahun ajaran terbaru yang sama.</td>
+<td>Must</td>
+<td>Given saya menekan "+ Tambah Periode Tahun Ajaran" dan mengisi Tahun Ajaran, Tanggal Mulai, Tanggal Selesai lalu menekan "Simpan", Then periode baru tersimpan di tabel dan tersedia sebagai pilihan di seluruh Portal Sekolah</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Super Admin, saya ingin mengubah data periode yang sudah ada, supaya saya bisa memperbaiki kesalahan input tanggal tanpa harus menghapus dan membuat ulang.</td>
+<td>Must</td>
+<td>Given saya menekan "Edit" pada satu baris, When saya mengubah field dan menekan "Simpan", Then data periode tersebut diperbarui, dengan konfirmasi terlebih dahulu</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin menjadikan satu periode sebagai periode aktif, supaya periode tersebut otomatis jadi pilihan default saat sekolah mana pun membuat tagihan baru.</td>
+<td>Must</td>
+<td>Given ada lebih dari satu periode tahun ajaran, When saya menekan "Jadikan Aktif" pada salah satu baris dan mengonfirmasi, Then periode tersebut berstatus Aktif dan periode yang sebelumnya aktif berubah menjadi Nonaktif -- hanya satu periode aktif pada satu waktu</td>
+</tr>
+<tr>
+<td>US-05</td>
+<td>Sebagai Super Admin, saya ingin menghapus periode yang salah/tidak terpakai, dengan perlindungan agar tidak menghapus semua periode.</td>
+<td>Must</td>
+<td>Given saya menekan hapus pada satu baris dan mengonfirmasi, When periode tersebut bukan satu-satunya yang tersisa, Then periode terhapus; jika periode tersebut satu-satunya yang tersisa, penghapusan ditolak dengan pesan "Minimal harus ada 1 periode tahun ajaran"</td>
+</tr>
+<tr>
+<td>US-06</td>
+<td>Sebagai Admin Pusat, saya ingin mengatur siapa saja yang boleh mengelola Periode Tahun Ajaran secara terpisah dari modul Konfigurasi Sistem, supaya hak akses bisa lebih granular bila dibutuhkan di masa depan.</td>
+<td>Should</td>
+<td>Given saya membuka menu Role &amp; Hak Akses, When saya melihat daftar modul, Then "Periode Tahun Ajaran" tampil sebagai modul tersendiri dengan izin Create/Read/Update/Delete yang bisa diatur independen dari modul "Konfigurasi Sistem"</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Halaman &amp; Menu Tersendiri</td>
+<td>Sistem harus menyediakan halaman <code>periode-tahun-ajaran.html</code> dengan menu sidebar sendiri di grup "Konfigurasi", ditempatkan tepat di bawah "Konfigurasi Sistem"</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Tidak lagi berupa kartu di dalam halaman Konfigurasi Sistem (lihat Riwayat Revisi)</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Tambah/Ubah Periode Tahun Ajaran</td>
+<td>Sistem harus menyediakan tombol "+ Tambah Periode Tahun Ajaran" dan aksi "Edit" per baris yang membuka panel berisi field Tahun Ajaran, Tanggal Mulai, Tanggal Selesai, dan toggle "Jadikan periode aktif", dengan validasi: field wajib terisi, Tahun Ajaran tidak boleh duplikat, Tanggal Mulai tidak boleh setelah Tanggal Selesai</td>
+<td>US-02, US-03</td>
+<td>Must</td>
+<td>Mengaktifkan toggle "Jadikan periode aktif" saat simpan otomatis menonaktifkan periode aktif sebelumnya (hanya 1 aktif per waktu); perubahan pada periode yang sudah ada meminta konfirmasi</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Jadikan Periode Aktif</td>
+<td>Sistem harus menyediakan tombol "Jadikan Aktif" per baris periode yang belum aktif, dengan konfirmasi sebelum diterapkan</td>
+<td>US-04</td>
+<td>Must</td>
+<td>Konfirmasi menegaskan bahwa perubahan ini berlaku untuk seluruh sekolah, bukan hanya satu sekolah</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Hapus Periode Tahun Ajaran</td>
+<td>Sistem harus menyediakan tombol hapus per baris periode dengan konfirmasi; minimal harus tetap ada 1 periode tahun ajaran setelah dihapus; jika periode yang dihapus sedang aktif, periode pertama yang tersisa otomatis dijadikan aktif</td>
+<td>US-05</td>
+<td>Must</td>
+<td>Penghapusan tidak boleh menyisakan 0 periode -- tombol hapus pada baris terakhir ditolak dengan pesan "Minimal harus ada 1 periode tahun ajaran"</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Pencarian Periode</td>
+<td>Sistem harus menyediakan kotak pencarian yang memfilter tabel berdasarkan kecocokan substring pada Tahun Ajaran</td>
+<td>US-02--US-05</td>
+<td>Should</td>
+<td>Tidak case-sensitive</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>RBAC Tersendiri</td>
+<td>Sistem harus memperlakukan "Periode Tahun Ajaran" sebagai modul RBAC tersendiri (key <code>periode-tahun-ajaran</code>) di menu Role &amp; Hak Akses, terpisah dari key <code>konfigurasi</code></td>
+<td>US-06</td>
+<td>Should</td>
+<td>Secara default disetel sama dengan izin modul <code>konfigurasi</code> (hanya Super Admin) namun dapat diubah independen lewat Role &amp; Hak Akses</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat halaman Periode Tahun Ajaran</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Tambah/Ubah/Hapus/Jadikan Aktif Periode Tahun Ajaran</td>
+<td>Ya</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<p>_Catatan: default izin mengikuti pola modul <code>konfigurasi</code> (hanya Super Admin), namun disimpan sebagai key RBAC tersendiri (<code>periode-tahun-ajaran</code>) sehingga dapat diubah independen lewat menu Role &amp; Hak Akses tanpa memengaruhi akses ke Konfigurasi Sistem, atau sebaliknya. Di sisi Portal Sekolah, seluruh role (Kepala Sekolah/Bendahara/Admin) hanya bisa <strong>membaca</strong> daftar Periode Tahun Ajaran lewat dropdown/filter yang relevan -- tidak ada lagi role di Portal Sekolah yang bisa mengubahnya, sejak halaman <code>periode.html</code> dihapus dari Portal Sekolah._</p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Periode Tahun Ajaran disimpan</td>
+<td>Super Admin</td>
+<td>Toast UI</td>
+<td>"✓ Periode Tahun Ajaran berhasil disimpan"</td>
+</tr>
+<tr>
+<td>Periode Tahun Ajaran dihapus</td>
+<td>Super Admin</td>
+<td>Toast UI</td>
+<td>"✓ Periode \"...\" berhasil dihapus"</td>
+</tr>
+<tr>
+<td>Periode dijadikan aktif</td>
+<td>Super Admin</td>
+<td>Toast UI</td>
+<td>"✓ ... dijadikan periode aktif"</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Validasi</td>
+<td>Tahun Ajaran, Tanggal Mulai, Tanggal Selesai wajib terisi; Tahun Ajaran tidak boleh duplikat; Tanggal Mulai tidak boleh setelah Tanggal Selesai</td>
+<td>100% validasi sebelum simpan</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Konsistensi</td>
+<td>Hanya satu periode yang berstatus Aktif pada satu waktu</td>
+<td>100% invarian terjaga di setiap operasi simpan/hapus/jadikan aktif</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Performa</td>
+<td>Waktu simpan/hapus/jadikan aktif</td>
+<td>< 1 detik untuk kondisi data saat ini (≤ 20 periode)</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Konsistensi lintas sistem</td>
+<td>Perubahan pada daftar Periode Tahun Ajaran harus tercermin di seluruh Portal Sekolah tanpa perlu diisi ulang per sekolah</td>
+<td>100% sekolah membaca daftar periode yang sama</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Auditability</td>
+<td>Setiap perubahan (tambah/ubah/hapus/jadikan aktif) tercatat pelaku &amp; waktu</td>
+<td>100% tercatat di audit log</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → Sidebar grup "Konfigurasi" → "Periode Tahun Ajaran" → "+ Tambah Periode Tahun Ajaran" (atau "Edit" pada baris yang sudah ada) → isi Tahun Ajaran/Tanggal Mulai/Tanggal Selesai, opsional centang "Jadikan periode aktif" → "Simpan" → toast konfirmasi.</li>
+<li>Alur Jadikan Aktif: tabel Periode Tahun Ajaran → tombol "Jadikan Aktif" pada baris yang belum aktif → konfirmasi ("berlaku untuk seluruh sekolah") → toast konfirmasi.</li>
+<li>Alur Hapus: tombol hapus pada baris → konfirmasi (ditolak otomatis bila baris terakhir) → toast konfirmasi; bila periode yang dihapus sedang aktif, periode pertama yang tersisa otomatis dijadikan aktif.</li>
+<li>Wireframe: mengikuti struktur <code>periode-tahun-ajaran.html</code> -- satu kartu berisi filter pencarian + tombol tambah, tabel daftar periode, dan panel tambah/edit yang muncul di bawah tabel saat dibuka.</li>
+<li>Edge case yang wajib ditangani: menghapus periode tahun ajaran hingga tersisa 0 (ditolak sistem, lihat FR-04); menghapus/mengubah periode yang sedang aktif (periode pertama yang tersisa otomatis dijadikan aktif, lihat FR-04); menambah periode dengan Tahun Ajaran yang sudah ada (ditolak dengan pesan duplikat); Tanggal Mulai lebih besar dari Tanggal Selesai (ditolak dengan pesan validasi).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Portal Sekolah (menu Kelas, Master Data Tagihan, Manajemen Murid)</td>
+<td>Membaca daftar Periode Tahun Ajaran (read-only) untuk dropdown/filter &amp; nominal tagihan per periode -- sebelumnya dikelola sendiri lewat halaman <code>periode.html</code> yang kini dihapus</td>
+<td>Internal (shared data store), pada prototipe disalin manual ke <code>periodeTahunAjaranData</code> di <code>app.js</code> Portal Sekolah</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Laporan Pemasukan (Admin Pusat)</td>
+<td>Konsumen potensial periode aktif/daftar periode untuk pengelompokan laporan berbasis periode</td>
+<td>Internal (shared data store), belum diintegrasikan pada prototipe ini</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>PeriodeTahunAjaran</code> (nama, mulai, selesai, aktif) -- satu sumber data untuk seluruh sekolah.</li>
+<li>Migrasi data: datanya <strong>dipindahkan</strong> dari <code>periodeTahunAjaranData</code> di Portal Sekolah (bukan data baru) saat fitur ini dipindah ke Admin Pusat; tidak ada migrasi tambahan pada revisi pemisahan halaman ini (v0.1 dokumen ini).</li>
+<li>Retensi data: disimpan selama platform berjalan; perubahan harus tercatat di audit log (lihat NFR-05).</li>
+<li>Laporan yang dibutuhkan: riwayat perubahan periode aktif (untuk audit kapan tahun ajaran berganti).</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu kalender tahun ajaran nasional berlaku sama untuk seluruh sekolah di platform -- tidak ada sekolah dengan tanggal mulai/selesai tahun ajaran berbeda dari sekolah lain.</li>
+<li>Hak akses modul ini pada kondisi default (hanya Super Admin) memadai sampai ada kebutuhan eksplisit untuk peran lain mengelolanya sendiri.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Edit &amp; Hapus Periode Tahun Ajaran pada fase ini <strong>belum</strong> memvalidasi apakah periode tersebut sudah dipakai data siswa/tagihan di sekolah manapun (berbeda dari versi lama di Portal Sekolah yang mengunci periode terpakai dari Edit/Hapus menggunakan data lokal sekolah itu sendiri) -- karena Admin Pusat belum punya akses agregat ke data siswa/tagihan tiap sekolah pada prototipe ini. Lihat Pertanyaan Terbuka No. 2 dan Risiko terkait.</li>
+<li>Belum ada riwayat perubahan (audit trail) yang bisa dilihat langsung di UI halaman ini.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah pernah dibutuhkan pengecualian kalender tahun ajaran per sekolah (mis. sekolah di luar negeri/kalender khusus), atau satu kalender nasional ini memang berlaku mutlak untuk semua sekolah tanpa pengecualian?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sebelum go-live, bagaimana cara Admin Pusat mengetahui bahwa suatu Periode Tahun Ajaran sudah dipakai data siswa/tagihan di satu atau lebih sekolah (agar bisa dikunci dari Edit/Hapus)? Apakah lewat API agregasi real-time ke seluruh Portal Sekolah, atau laporan terjadwal?</td>
+<td>Solution Architect</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Apakah hak akses modul ini perlu dibuka ke peran lain (mis. Staff Keuangan Pusat) di luar Super Admin pada fase berikutnya?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin Pusat menghapus atau mengubah tanggal Periode Tahun Ajaran yang sudah dipakai data siswa/tagihan di satu atau lebih sekolah (tidak terdeteksi karena belum ada validasi lintas sekolah, lihat Batasan) -- berisiko merusak riwayat akademik/tagihan sekolah tersebut</td>
+<td>H</td>
+<td>M</td>
+<td>Implementasikan validasi lintas sekolah via API sebelum go-live produksi (lihat Pertanyaan Terbuka No. 2); sampai saat itu, terapkan SOP manual (konfirmasi ke seluruh sekolah sebelum ubah/hapus periode yang sudah berjalan)</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Satu kalender tahun ajaran nasional tidak cocok untuk sekolah dengan kebutuhan kalender berbeda (mis. hasil merger, sekolah baru onboarding di tengah tahun ajaran)</td>
+<td>M</td>
+<td>L</td>
+<td>Konfirmasi ke PO apakah pengecualian per sekolah pernah dibutuhkan (lihat Pertanyaan Terbuka No. 1) sebelum menutup opsi override per sekolah secara permanen</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup halaman tersendiri</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Implementasi penyimpanan &amp; RBAC tersendiri</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Periode Tahun Ajaran</td>
+<td>Rentang tanggal satu tahun ajaran (mis. "2026/2027", 01 Jul 2026 -- 30 Jun 2027) -- hanya satu yang berstatus Aktif pada satu waktu, menjadi pilihan default saat sekolah membuat tagihan baru</td>
+</tr>
+<tr>
+<td>Satu Sumber Data (Single Source of Truth)</td>
+<td>Prinsip bahwa suatu data (di sini: Periode Tahun Ajaran) hanya dikelola di satu tempat (Admin Pusat) dan dibaca read-only di tempat lain (Portal Sekolah), supaya tidak ada versi data yang berbeda-beda antar sekolah</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

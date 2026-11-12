@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeekGarden Admin -- Laporan Pindah Sekolah &amp; Tunggakan</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app-shell">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="brand">
+          <div class="logo"><span class="box">GG</span> GeekGarden Admin</div>
+          <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+        </div>
+
+        <a
+          href="dashboard-konsolidasi.html"
+          class="nav-item"
+          data-rbac="dashboard-konsolidasi"
+          ><span class="ic">📊</span> Dashboard Konsolidasi</a
+        >
+
+        <div class="nav-group-label">Onboarding</div>
+        <a href="pendaftaran.html" class="nav-item" data-rbac="pendaftaran"
+          ><span class="ic">＋</span> Pendaftaran Sekolah</a
+        >
+        <a href="manajemen.html" class="nav-item" data-rbac="manajemen"
+          ><span class="ic">🏫</span> Manajemen Sekolah</a
+        >
+
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item active"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
+        <div class="nav-group-label">Konfigurasi</div>
+        <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
+        >
+        <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
+          ><span class="ic">👤</span> Pengguna</a
+        >
+        <a href="rbac.html" class="nav-item" data-rbac="rbac"
+          ><span class="ic">🔐</span> Role &amp; Hak Akses</a
+        >
+
+        <div
+          style="
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 10px;
+          "
+        >
+          <a
+            href="#"
+            class="nav-item"
+            onclick="
+              logout();
+              return false;
+            "
+            ><span class="ic">🚪</span> Keluar</a
+          >
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">
+            <span id="crumb-role">Super Admin</span> /
+            <b id="crumb-current">Laporan Pindah Sekolah &amp; Tunggakan</b>
+          </div>
+          <div class="topbar-right">
+            <a
+              class="btn-prd"
+              href="docs/PRD-laporan-pindah-tunggakan.html"
+              target="_blank"
+              rel="noopener"
+              >📄 PRD</a
+            >
+            <div class="user-chip">
+              <div class="av" id="uc-avatar">SA</div>
+              <div class="info">
+                <div class="name" id="uc-name">Super Admin</div>
+                <div class="role" id="uc-role">Administrator -- GeekGarden</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- ===================== VIEW: LAPORAN PINDAH SEKOLAH & TUNGGAKAN ===================== -->
+          <div class="page-view active" id="view-laporan-pindah-tunggakan">
+            <div class="page-title">
+              <h1>Laporan Pindah Sekolah &amp; Tunggakan</h1>
+              <p>
+                Rekap siswa yang mengajukan pindah sekolah beserta tunggakan
+                yang masih harus dilunasi, per sekolah -- mengikuti alur
+                "Ajukan Pindah Sekolah" di aplikasi Wali Murid dan proses
+                Write-off (Hapus Buku) di Portal Sekolah.
+              </p>
+            </div>
+
+            <div class="note-box info" id="lpt-scope-note" style="margin-bottom: 16px"></div>
+
+            <div class="stat-row" id="lpt-stat-row"></div>
+
+            <div class="card">
+              <h3>Daftar Siswa Pindah Sekolah</h3>
+              <p class="card-desc">
+                Dikelompokkan per sekolah asal, dibatasi sesuai cakupan akun
+                Anda (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM). Tunggakan yang
+                sudah jatuh tempo tetap harus dilunasi walau siswa pindah
+                sekolah -- cicilan yang belum jatuh tempo dihapus buku
+                otomatis oleh sistem. Periode selalu difilter ke satu bulan
+                efektif pindah (default: periode terbaru) -- tidak ada opsi
+                "Semua Periode".
+              </p>
+              <div class="filter-bar">
+                <select id="lpt-filter-sekolah" onchange="onPindahFilterChange()">
+                  <option value="">Semua Sekolah</option>
+                </select>
+                <input
+                  type="text"
+                  class="search"
+                  id="lpt-filter-nama"
+                  placeholder="Cari nama siswa..."
+                  oninput="onPindahFilterChange()"
+                />
+                <select id="lpt-filter-status" onchange="onPindahFilterChange()">
+                  <option value="">Semua Status</option>
+                  <option value="pending_approval">Menunggu Persetujuan</option>
+                  <option value="approved">Disetujui</option>
+                </select>
+                <select id="lpt-filter-periode" onchange="onPindahFilterChange()"></select>
+                <button
+                  class="btn btn-ghost btn-sm"
+                  style="margin-left: auto"
+                  onclick="exportPindahToExcel()"
+                >
+                  ⬇ Export Excel
+                </button>
+              </div>
+              <table class="dtab">
+                <thead>
+                  <tr>
+                    <th style="width: 16%">Siswa</th>
+                    <th style="width: 16%">Sekolah Tujuan</th>
+                    <th style="width: 10%">Efektif Pindah</th>
+                    <th style="width: 14%">Total Tunggakan</th>
+                    <th style="width: 12%">Rencana Bayar</th>
+                    <th style="width: 14%">Status</th>
+                    <th style="width: 18%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="lpt-table-body"></tbody>
+              </table>
+            </div>
+
+            <div
+              class="card"
+              id="lpt-detail-panel"
+              style="display: none; border-style: dashed"
+            >
+              <h3 id="lpt-detail-title">Detail Tunggakan</h3>
+              <p class="card-desc" id="lpt-detail-sub"></p>
+              <table class="dtab">
+                <thead>
+                  <tr>
+                    <th style="width: 18%">No. Invoice</th>
+                    <th style="width: 30%">Keterangan</th>
+                    <th style="width: 14%">Jatuh Tempo</th>
+                    <th style="width: 14%">Telat</th>
+                    <th style="width: 24%">Nominal</th>
+                  </tr>
+                </thead>
+                <tbody id="lpt-detail-body"></tbody>
+              </table>
+              <div class="btn-row" style="margin-top: 14px">
+                <button class="btn btn-ghost" onclick="closePindahDetail()">
+                  Tutup Detail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
+
+    <script src="app.js"></script>
+    <script>
+      const u = requireLogin();
+      if (u) {
+        applyCurrentUserToUi();
+        if (enforcePageAccess("laporan-pindah-tunggakan")) {
+          applyRbacToSidebar();
+
+          // ---- data pindah sekolah & tunggakan per sekolah -- field & vocabulary selaras
+          // dengan aplikasi Wali Murid (pindahSekolahData: sekolahTujuan, tunggakanNominal,
+          // rencanaBayarTunggakan, status "diproses") dan proses Write-off (Hapus Buku) di
+          // Portal Sekolah (writeoffData: tglEfektifPindah, tunggakanList per invoice).
+          const schoolsPindahData = [
+            {
+              sekolah: "SD Muhammadiyah 4 Sidoarjo",
+              wilayah: "PWM Jawa Timur", daerah: "PDM Sidoarjo", cabang: "PCM Sidoarjo Kota",
+              kasus: [
+                {
+                  siswa: "Naufal Hidayat", nis: "2200876",
+                  alasan: "Siswa pindah sekolah ke luar kota per Juli 2026, tagihan SPP tertunggak diajukan hapus buku.",
+                  status: "pending_approval", tglEfektifPindah: "2026-08-20", sekolahTujuan: "SD Negeri 5 Sidoarjo", rencanaBayarTunggakan: "2026-08-30",
+                  tunggakanList: [],
+                },
+                {
+                  siswa: "Muhammad Rizky", nis: "2201003",
+                  alasan: "Siswa pindah sekolah per Juni 2026, tunggakan tidak bisa ditagih lagi.",
+                  status: "approved", tglEfektifPindah: "2026-06-30", sekolahTujuan: "SD Negeri 3 Sidoarjo", rencanaBayarTunggakan: "2026-07-15",
+                  tunggakanList: [
+                    { invoiceRef: "SPP 2026-05", keterangan: "SPP Mei 2026", nominal: 350000, jatuhTempo: "2026-05-10", telatHari: 71 },
+                  ],
+                },
+                {
+                  siswa: "Fatimah Azzahra", nis: "2201004",
+                  alasan: "Siswa pindah sekolah, orang tua sudah mengajukan lewat aplikasi Wali Murid.",
+                  status: "pending_approval", tglEfektifPindah: "2026-08-13", sekolahTujuan: "SDIT Al-Furqan Sidoarjo", rencanaBayarTunggakan: "2026-08-25",
+                  tunggakanList: [
+                    { invoiceRef: "SPP 2026-06", keterangan: "SPP Juni 2026", nominal: 350000, jatuhTempo: "2026-06-10", telatHari: 64 },
+                    { invoiceRef: "SPP 2026-07", keterangan: "SPP Juli 2026", nominal: 350000, jatuhTempo: "2026-07-10", telatHari: 34 },
+                    { invoiceRef: "DPP 2026-002", keterangan: "Dana Pengembangan Pendidikan (cicilan ke-2)", nominal: 500000, jatuhTempo: "2026-07-05", telatHari: 39 },
+                  ],
+                },
+              ],
+            },
+            {
+              sekolah: "SD Muhammadiyah 1 Surabaya",
+              wilayah: "PWM Jawa Timur", daerah: "PDM Surabaya", cabang: "PCM Wonokromo",
+              kasus: [],
+              catatan: "Tidak ada siswa yang mengajukan pindah sekolah periode ini.",
+            },
+            {
+              sekolah: "SMP Muhammadiyah 2 Malang",
+              wilayah: "PWM Jawa Timur", daerah: "PDM Malang", cabang: "PCM Klojen",
+              kasus: [
+                {
+                  siswa: "Taufik Hidayat", nis: "2200654",
+                  alasan: "Merger ke SMP Muhammadiyah 1 Malang -- seluruh siswa dipindahkan per 12 Agu 2026.",
+                  status: "approved", tglEfektifPindah: "2026-08-12", sekolahTujuan: "SMP Muhammadiyah 1 Malang", rencanaBayarTunggakan: "2026-09-01",
+                  tunggakanList: [
+                    { invoiceRef: "SPP 2026-07", keterangan: "SPP Juli 2026", nominal: 450000, jatuhTempo: "2026-07-10", telatHari: 33 },
+                  ],
+                },
+                {
+                  siswa: "Laila Nur Azizah", nis: "2200732",
+                  alasan: "Merger ke SMP Muhammadiyah 1 Malang -- seluruh siswa dipindahkan per 12 Agu 2026.",
+                  status: "approved", tglEfektifPindah: "2026-08-12", sekolahTujuan: "SMP Muhammadiyah 1 Malang", rencanaBayarTunggakan: "2026-09-01",
+                  tunggakanList: [
+                    { invoiceRef: "SPP 2026-06", keterangan: "SPP Juni 2026", nominal: 450000, jatuhTempo: "2026-06-10", telatHari: 63 },
+                    { invoiceRef: "SPP 2026-07", keterangan: "SPP Juli 2026", nominal: 450000, jatuhTempo: "2026-07-10", telatHari: 33 },
+                    { invoiceRef: "SPP 2026-08", keterangan: "SPP Agustus 2026", nominal: 450000, jatuhTempo: "2026-08-10", telatHari: 2 },
+                  ],
+                },
+              ],
+              catatan: "Seluruh kasus terkait proses merger sekolah -- lihat juga Manajemen Sekolah.",
+            },
+            {
+              sekolah: "SMK Muhammadiyah 1 Yogyakarta",
+              wilayah: "PWM DI Yogyakarta", daerah: "PDM Kota Yogyakarta", cabang: "PCM Danurejan",
+              kasus: [],
+              catatan: "Belum ada data siswa (sekolah masih berstatus Draft/onboarding).",
+            },
+          ];
+
+          function fmtRp(n) {
+            return "Rp" + n.toLocaleString("id-ID");
+          }
+          function tunggakanTotal(kasus) {
+            return (kasus.tunggakanList || []).reduce((s, t) => s + t.nominal, 0);
+          }
+          function pindahStatusBadge(status) {
+            return status === "approved"
+              ? '<span class="badge-status on"><span class="dot"></span> Disetujui</span>'
+              : '<span class="badge-status warn"><span class="dot"></span> Menunggu Persetujuan</span>';
+          }
+          // "Periode" = bulan efektif pindah (YYYY-MM), diambil dari tglEfektifPindah --
+          // selaras dengan pola periodeOf() di laporan-pemasukan.html.
+          function periodeOf(kasus) {
+            return kasus.tglEfektifPindah ? kasus.tglEfektifPindah.slice(0, 7) : null;
+          }
+
+          // ---- Cakupan akses (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM) -- selaras
+          // dengan struktur `cakupan` per pengguna di Pengguna & field wilayah/daerah/
+          // cabang per sekolah di Manajemen Sekolah. Pusat melihat seluruh sekolah;
+          // level lain dibatasi hanya ke sekolah dalam cakupannya.
+          function scopedPindahSchools() {
+            const c = (currentUser && currentUser.cakupan) || { level: "Pusat" };
+            return schoolsPindahData.filter((s) => {
+              if (c.level === "Wilayah") return s.wilayah === c.pwm;
+              if (c.level === "Daerah") return s.daerah === c.pdm;
+              if (c.level === "Cabang") return s.cabang === c.pcm;
+              return true; // Pusat
+            });
+          }
+          function cakupanScopeLabel() {
+            const c = (currentUser && currentUser.cakupan) || { level: "Pusat" };
+            if (c.level === "Wilayah") return `Wilayah (PWM) -- ${c.pwm}`;
+            if (c.level === "Daerah") return `Daerah (PDM) -- ${c.pdm}, ${c.pwm}`;
+            if (c.level === "Cabang") return `Cabang (PCM) -- ${c.pcm}, ${c.pdm}, ${c.pwm}`;
+            return "Pusat -- seluruh wilayah/daerah/cabang";
+          }
+          function renderScopeNote() {
+            const el = document.getElementById("lpt-scope-note");
+            if (!el) return;
+            el.innerHTML = `📍 Cakupan akun Anda: <b>${cakupanScopeLabel()}</b> -- laporan ini hanya menampilkan sekolah dalam cakupan tersebut.`;
+          }
+
+          function flatCases() {
+            const flat = [];
+            scopedPindahSchools().forEach((s) => {
+              s.kasus.forEach((k) => flat.push({ sekolah: s.sekolah, ...k }));
+            });
+            return flat;
+          }
+
+          function populateSchoolFilter() {
+            const sel = document.getElementById("lpt-filter-sekolah");
+            sel.innerHTML =
+              `<option value="">Semua Sekolah</option>` +
+              scopedPindahSchools()
+                .map((s) => `<option value="${s.sekolah}">${s.sekolah}</option>`)
+                .join("");
+          }
+
+          // Tidak ada opsi "Semua Periode" -- selalu scoped ke satu bulan efektif
+          // pindah agar statistik & tabel tetap ringkas. Default terpilih adalah
+          // periode terbaru/aktif (bulan efektif pindah paling akhir, dalam cakupan).
+          const BULAN_NAMA = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+          ];
+          function populatePeriodeFilter() {
+            const periodeSet = new Set();
+            scopedPindahSchools().forEach((s) =>
+              s.kasus.forEach((k) => {
+                const ym = periodeOf(k);
+                if (ym) periodeSet.add(ym);
+              }),
+            );
+            const periods = Array.from(periodeSet).sort();
+            const periodeAktif = periods[periods.length - 1];
+            const sel = document.getElementById("lpt-filter-periode");
+            sel.innerHTML = periods.length
+              ? periods
+                  .map((ym) => {
+                    const [y, m] = ym.split("-");
+                    const label = `${BULAN_NAMA[Number(m) - 1]} ${y}`;
+                    return `<option value="${ym}"${ym === periodeAktif ? " selected" : ""}>${label}</option>`;
+                  })
+                  .join("")
+              : `<option value="">Tidak ada data periode</option>`;
+          }
+          function currentPeriodeFilter() {
+            return document.getElementById("lpt-filter-periode").value;
+          }
+
+          // Satu titik filter dipakai bersama oleh statistik, tabel, dan export --
+          // menggabungkan cakupan akses (selalu aktif) dengan filter UI (sekolah,
+          // nama, status, periode). `kasusAll` dipertahankan agar pesan "tidak ada
+          // kasus yang cocok dengan filter" vs "tidak ada siswa pindah sekolah"
+          // tetap bisa dibedakan setelah kasus difilter.
+          function filteredPindahSchools() {
+            const statusF = document.getElementById("lpt-filter-status").value;
+            const namaF = document
+              .getElementById("lpt-filter-nama")
+              .value.trim()
+              .toLowerCase();
+            const sekolahF = document.getElementById("lpt-filter-sekolah").value;
+            const periodeF = currentPeriodeFilter();
+            return scopedPindahSchools()
+              .filter((s) => !sekolahF || s.sekolah === sekolahF)
+              .map((s) => ({
+                sekolah: s.sekolah,
+                catatan: s.catatan,
+                kasusAll: s.kasus,
+                kasus: s.kasus.filter(
+                  (k) =>
+                    (!statusF || k.status === statusF) &&
+                    (!namaF || k.siswa.toLowerCase().includes(namaF)) &&
+                    (!periodeF || periodeOf(k) === periodeF),
+                ),
+              }));
+          }
+
+          function onPindahFilterChange() {
+            renderPindahStats();
+            renderPindahTable();
+          }
+
+          function renderPindahStats() {
+            const flat = [];
+            filteredPindahSchools().forEach((s) => flat.push(...s.kasus));
+            const totalTunggakan = flat.reduce((a, k) => a + tunggakanTotal(k), 0);
+            const pending = flat.filter((k) => k.status === "pending_approval").length;
+            const approved = flat.filter((k) => k.status === "approved").length;
+            document.getElementById("lpt-stat-row").innerHTML = `
+              <div class="stat-card"><div class="lbl">Total Siswa Pindah</div><div class="val">${flat.length}</div><div class="sub">sesuai cakupan &amp; filter aktif</div></div>
+              <div class="stat-card"><div class="lbl">Total Tunggakan</div><div class="val">${fmtRp(totalTunggakan)}</div><div class="sub">tagihan jatuh tempo yang belum dilunasi</div></div>
+              <div class="stat-card"><div class="lbl">Menunggu Persetujuan</div><div class="val">${pending}</div><div class="sub">belum diputuskan Kepala Sekolah</div></div>
+              <div class="stat-card"><div class="lbl">Disetujui</div><div class="val">${approved}</div><div class="sub">hapus buku sudah diproses</div></div>
+            `;
+          }
+
+          function renderPindahTable() {
+            const rows = filteredPindahSchools();
+            const tbody = document.getElementById("lpt-table-body");
+            let html = "";
+            let anyRow = false;
+            if (!rows.length) {
+              tbody.innerHTML = `<tr><td colspan="7" class="empty-hint">Tidak ada sekolah yang cocok dengan filter.</td></tr>`;
+              return;
+            }
+            rows.forEach((s) => {
+              html += `<tr><td colspan="7" class="rbac-group-row">🏫 ${s.sekolah}${s.catatan ? ` -- ${s.catatan}` : ""}</td></tr>`;
+              if (!s.kasus.length) {
+                html += `<tr><td colspan="7" class="empty-hint">${s.kasusAll.length ? "Tidak ada kasus yang cocok dengan filter." : "Tidak ada siswa pindah sekolah."}</td></tr>`;
+                return;
+              }
+              s.kasus.forEach((k) => {
+                anyRow = true;
+                const total = tunggakanTotal(k);
+                const flatIdx = flatCases().findIndex(
+                  (f) => f.sekolah === s.sekolah && f.siswa === k.siswa,
+                );
+                html += `<tr>
+                  <td><b>${k.siswa}</b><br><span style="color:var(--muted);font-size:11px;">NIS ${k.nis}</span></td>
+                  <td>${k.sekolahTujuan}</td>
+                  <td>${k.tglEfektifPindah}</td>
+                  <td><b>${total ? fmtRp(total) : "Rp0"}</b></td>
+                  <td>${k.rencanaBayarTunggakan}</td>
+                  <td>${pindahStatusBadge(k.status)}</td>
+                  <td>${
+                    (k.tunggakanList || []).length
+                      ? `<button class="btn btn-ghost btn-sm" onclick="openPindahDetail(${flatIdx})">Lihat Detail (${k.tunggakanList.length} invoice)</button>`
+                      : `<span style="color:var(--muted);font-size:11.5px;">Tidak ada tunggakan</span>`
+                  }</td>
+                </tr>`;
+              });
+            });
+            tbody.innerHTML = anyRow
+              ? html
+              : html + `<tr><td colspan="7" class="empty-hint">Tidak ada kasus yang cocok dengan filter.</td></tr>`;
+          }
+
+          function openPindahDetail(flatIdx) {
+            const k = flatCases()[flatIdx];
+            if (!k) return;
+            const total = tunggakanTotal(k);
+            document.getElementById("lpt-detail-title").textContent =
+              `Detail Tunggakan -- ${k.siswa}`;
+            document.getElementById("lpt-detail-sub").innerHTML =
+              `${k.sekolah} -- NIS ${k.nis} -- ${(k.tunggakanList || []).length} invoice tunggakan, total <b>${fmtRp(total)}</b>.`;
+            document.getElementById("lpt-detail-body").innerHTML = (k.tunggakanList || [])
+              .map(
+                (t) => `<tr>
+                <td><b>${t.invoiceRef}</b></td>
+                <td>${t.keterangan || "--"}</td>
+                <td>${t.jatuhTempo || "--"}</td>
+                <td>${t.telatHari ? `<span class="telat-pill">${t.telatHari} hari</span>` : "--"}</td>
+                <td>${fmtRp(t.nominal)}</td>
+              </tr>`,
+              )
+              .join("");
+            const panel = document.getElementById("lpt-detail-panel");
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          function closePindahDetail() {
+            document.getElementById("lpt-detail-panel").style.display = "none";
+          }
+
+          function pindahStatusLabel(status) {
+            return status === "approved" ? "Disetujui" : "Menunggu Persetujuan";
+          }
+
+          // CSV asli (bukan trik HTML-table-disamarkan-jadi-.xls) -- dibuka Excel tanpa
+          // peringatan "format tidak cocok", dan tetap valid dibuka software spreadsheet lain.
+          // Helper disamakan dengan exportIncomeExcel() di laporan-pemasukan.html.
+          function csvEscape(v) {
+            const s = String(v ?? "");
+            return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+          }
+          function csvRow(arr) {
+            return arr.map(csvEscape).join(",");
+          }
+          function csvSection(title, header, dataRows) {
+            const lines = [csvEscape(title), csvRow(header)];
+            if (dataRows.length) dataRows.forEach((r) => lines.push(csvRow(r)));
+            else lines.push(csvEscape("Tidak ada data."));
+            return lines;
+          }
+
+          function exportPindahToExcel() {
+            const summaryHeader = [
+              "Sekolah Asal",
+              "Wilayah (PWM)",
+              "Daerah (PDM)",
+              "Cabang (PCM)",
+              "Siswa",
+              "NIS",
+              "Sekolah Tujuan",
+              "Tanggal Efektif Pindah",
+              "Total Tunggakan",
+              "Rencana Bayar",
+              "Status",
+            ];
+            const invoiceHeader = [
+              "Sekolah Asal",
+              "Siswa",
+              "No. Invoice",
+              "Keterangan",
+              "Jatuh Tempo",
+              "Telat (Hari)",
+              "Nominal",
+            ];
+            const summaryRows = [];
+            const invoiceRows = [];
+            filteredPindahSchools().forEach((s) => {
+              const sData = schoolsPindahData.find((x) => x.sekolah === s.sekolah);
+              s.kasus.forEach((k) => {
+                summaryRows.push([
+                  s.sekolah,
+                  sData.wilayah,
+                  sData.daerah,
+                  sData.cabang,
+                  k.siswa,
+                  k.nis,
+                  k.sekolahTujuan,
+                  k.tglEfektifPindah,
+                  tunggakanTotal(k),
+                  k.rencanaBayarTunggakan,
+                  pindahStatusLabel(k.status),
+                ]);
+                (k.tunggakanList || []).forEach((t) => {
+                  invoiceRows.push([
+                    s.sekolah,
+                    k.siswa,
+                    t.invoiceRef,
+                    t.keterangan,
+                    t.jatuhTempo,
+                    t.telatHari,
+                    t.nominal,
+                  ]);
+                });
+              });
+            });
+
+            if (!summaryRows.length) {
+              showToast("Tidak ada data untuk diexport");
+              return;
+            }
+
+            const lines = [
+              ...csvSection("Daftar Siswa Pindah Sekolah", summaryHeader, summaryRows),
+              "",
+              ...csvSection("Detail Tunggakan per Invoice", invoiceHeader, invoiceRows),
+            ];
+            const csv = lines.join("\r\n");
+
+            const blob = new Blob(["﻿" + csv], {
+              type: "text/csv;charset=utf-8",
+            });
+            const tanggal = new Date().toISOString().slice(0, 10);
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `laporan-pindah-sekolah-tunggakan-${tanggal}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            showToast("✓ Laporan diekspor ke Excel");
+          }
+
+          renderScopeNote();
+          populateSchoolFilter();
+          populatePeriodeFilter();
+          renderPindahStats();
+          renderPindahTable();
+
+          Object.assign(window, {
+            onPindahFilterChange,
+            renderPindahTable,
+            openPindahDetail,
+            closePindahDetail,
+            exportPindahToExcel,
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

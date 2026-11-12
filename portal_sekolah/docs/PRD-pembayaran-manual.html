@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Pembayaran Manual -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Pembayaran Manual <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Pembayaran Manual -- halaman <code>transaksi-manual.html</code>, nav-child kelima/terakhir di bawah menu Transaksi &amp; Invoice</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>09-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>transaksi-manual.html</code>, <code>app.js</code> (data <code>manualConfirmationData</code>, <code>manualConfSeq</code>, <code>paymentData</code>, <code>paymentSeq</code>; fungsi <code>findInvoiceForManualConf</code>, <code>renderManualConfirmationList</code>, <code>verifyManualConfirmation</code>, <code>rejectManualConfirmation</code>, <code>fillManualPaymentInvoiceSelect</code>, <code>syncManualPaymentNominal</code>, <code>recordManualPayment</code>, <code>renderManualPaymentHistory</code>, <code>updateManualConfBadge</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a> -- sumber invoice yang dibayar; <a class="xref" href="PRD-riwayat-pembayaran.html">PRD Riwayat Pembayaran</a> -- menampilkan gabungan transaksi yang ditulis dari halaman ini; dokumen fitur "Bayar &gt; Transfer" pada aplikasi Wali Murid (belum dibaca penuh) -- sumber pengajuan konfirmasi transfer manual yang diverifikasi di sini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>09-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan halaman Pembayaran Manual sebagai bagian dari pemetaan ulang dokumen PRD untuk seluruh nav-child Transaksi &amp; Invoice.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Pembayaran Manual</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini menangani dua jalur pembayaran yang <strong>tidak lewat Payment Gateway otomatis (QRIS/VA)</strong>: (1) <strong>Verifikasi konfirmasi transfer manual</strong> yang diunggah wali murid lewat aplikasi mobile (tabel <code>billing.manual_payment_confirmation</code>), dan (2) <strong>Pencatatan langsung</strong> oleh Bendahara untuk pembayaran yang diterima di luar aplikasi (mis. tunai di kantor). Kedua jalur berujung sama: invoice ditandai <code>paid</code> dan tercatat sebagai transaksi baru di <code>paymentData</code> dengan provider <code>"Bendahara (Manual)"</code>, yang juga tampil di <a class="xref" href="PRD-riwayat-pembayaran.html">Riwayat Pembayaran</a>. Fitur ini <strong>tidak</strong> menangani pembayaran QRIS/VA yang diproses otomatis oleh Payment Gateway.</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Konfirmasi Transfer Manual</td><td>Pengajuan dari wali murid lewat aplikasi mobile yang menyatakan sudah transfer di luar QRIS/VA, menyertakan bukti transfer, menunggu dicocokkan &amp; diverifikasi Bendahara</td></tr>
+              <tr><td>Pembayaran Manual (Baru)</td><td>Pencatatan pembayaran yang dilakukan Bendahara sendiri untuk dana yang sudah pasti diterima sekolah (tunai/transfer yang sudah dicek), tanpa melalui pengajuan konfirmasi wali murid</td></tr>
+              <tr><td>Mutasi Rekening</td><td>Catatan transaksi bank sekolah yang dicocokkan manual oleh Bendahara terhadap bukti transfer sebelum verifikasi</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child terakhir di bawah grup "Transaksi &amp; Invoice", dengan badge jumlah konfirmasi menunggu verifikasi (<code>#nav-manual-pending-count</code>) yang sama dengan badge di sidebar seluruh halaman portal. Terdiri dari tiga kartu berurutan: Konfirmasi dari Wali Murid (perlu tindakan), Catat Pembayaran Baru (form input), dan Riwayat Pembayaran Manual (gabungan read-only dari kedua jalur).</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan &amp; memverifikasi/menolak konfirmasi transfer manual dari wali murid.</li>
+          <li>Mencatat pembayaran manual baru (tunai/transfer yang sudah dicek) langsung dari Bendahara.</li>
+          <li>Menampilkan riwayat gabungan seluruh pembayaran manual yang pernah tercatat.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Memverifikasi/menolak konfirmasi wali murid &amp; mencatat pembayaran manual baru secara penuh (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- akses penuh (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default (modul <code>transaksi</code> tidak aktif untuk peran ini).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Invoice berstatus <code>draft</code> tidak bisa langsung dicatat lunas lewat "Catat Pembayaran Manual Baru" -- harus di-Publish dulu lewat <a class="xref" href="PRD-tagihan-invoice.html">Tagihan (Invoice)</a>.</li>
+          <li>Invoice yang sudah <code>paid</code>/<code>written_off</code>/<code>closed</code> tidak ditawarkan sebagai pilihan pada kedua jalur (sudah tidak relevan untuk dibayar lagi).</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Bukti transfer pada konfirmasi wali murid (<code>buktiFile</code>) diasumsikan sudah diunggah dari sisi aplikasi Wali Murid sebelum data muncul di sini -- halaman ini hanya menampilkan nama file &amp; tombol "Lihat" (lihat 8. Batasan), tidak menyediakan unggahan.</li>
+          <li>Pencocokan bukti transfer terhadap mutasi rekening sekolah dilakukan Bendahara secara manual di luar sistem, sebelum menekan "Verifikasi" -- tidak ada bantuan pencocokan otomatis.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Konfirmasi Wali Murid</td><td>Tabel menampilkan Siswa, Invoice, Tgl Transfer, Nominal, Bank Pengirim (+catatan bila ada), tombol "Lihat" bukti, Status, dan Aksi untuk setiap konfirmasi transfer manual yang diunggah wali murid</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Verifikasi Konfirmasi</td><td>Tombol "Verifikasi" (hanya tampil untuk status <code>menunggu_verifikasi</code>) mengubah status konfirmasi menjadi <code>terverifikasi</code>, menandai invoice terkait <code>paid</code>, dan menambah entri baru ke <code>paymentData</code> dengan provider "Bendahara (Manual)"</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Tolak Konfirmasi</td><td>Tombol "Tolak" (hanya tampil untuk status <code>menunggu_verifikasi</code>) mengubah status konfirmasi menjadi <code>ditolak</code>, tanpa mengubah status invoice maupun menambah riwayat pembayaran</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Catat Pembayaran Manual Baru</td><td>Form berisi dropdown Invoice (nominal otomatis tersinkron saat invoice dipilih), Tanggal Bayar, Metode (Tunai/Transfer Manual sudah dicek/Lainnya), Nominal Diterima, dan Catatan opsional</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Simpan Pembayaran Manual Baru</td><td>Tombol "Catat Pembayaran &amp; Tandai Lunas" menandai invoice terpilih <code>paid</code>, menambah entri ke <code>paymentData</code>, lalu mengosongkan Catatan</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Lihat Riwayat Pembayaran Manual</td><td>Tabel menampilkan gabungan transaksi dari FR-02 &amp; FR-05 (filter <code>paymentData</code> berdasarkan <code>provider === "Bendahara (Manual)"</code>): Siswa, Invoice, Metode, Nominal, Waktu, Kuitansi</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Badge Jumlah Menunggu</td><td>Badge pada menu sidebar "Pembayaran Manual" menampilkan jumlah konfirmasi berstatus <code>menunggu_verifikasi</code>, tersembunyi jika jumlahnya 0</td><td>Should</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Memverifikasi konfirmasi transfer manual yang valid</strong></p>
+        <ol>
+          <li>Bendahara mencocokkan Nominal &amp; Bank Pengirim pada baris konfirmasi dengan mutasi rekening sekolah di luar sistem.</li>
+          <li>Menekan "Lihat" untuk meninjau bukti transfer, lalu menekan "Verifikasi".</li>
+          <li>Sistem mengubah status jadi "Terverifikasi", invoice terkait langsung "Lunas", menambah riwayat pembayaran baru dengan kuitansi <code>RCPT-MANUAL-...</code>, menampilkan toast "&#10003; Pembayaran {siswa} terverifikasi -- tagihan ditandai Lunas".</li>
+        </ol>
+
+        <p><strong>UC-02 -- Menolak konfirmasi yang nominalnya tidak sesuai</strong></p>
+        <ol>
+          <li>Bendahara menemukan nominal pada konfirmasi tidak cocok dengan tagihan, menekan "Tolak".</li>
+          <li>Status berubah menjadi "Ditolak"; toast menginformasikan wali murid akan diminta mengunggah ulang bukti. Invoice &amp; riwayat pembayaran tidak berubah sama sekali.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mencatat pembayaran tunai langsung</strong></p>
+        <ol>
+          <li>Wali murid membayar tunai di kantor; Bendahara memilih invoice pada "Catat Pembayaran Manual Baru" (nominal otomatis terisi sesuai tagihan), memilih Metode "Tunai", menekan "Catat Pembayaran &amp; Tandai Lunas".</li>
+          <li>Invoice langsung "Lunas", riwayat pembayaran baru tercatat, toast menampilkan nominal &amp; nama siswa.</li>
+        </ol>
+
+        <p><strong>UC-04 -- Verifikasi konfirmasi yang invoice-nya tidak ditemukan (edge case)</strong></p>
+        <ol>
+          <li>Bendahara menekan "Verifikasi" pada konfirmasi yang <code>invoiceRef</code>-nya sudah tidak cocok dengan invoice manapun (mis. invoice sudah diubah/dihapus sebagai draft -- lihat <a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a> FR-07/FR-09).</li>
+          <li>Status konfirmasi tetap berubah menjadi "Terverifikasi", namun <strong>tidak ada</strong> invoice yang ditandai Lunas dan <strong>tidak ada</strong> entri baru di riwayat pembayaran -- toast menampilkan "...(invoice terkait tidak ditemukan, cek manual)" sebagai satu-satunya sinyal bahwa transaksi ini perlu ditindaklanjuti manual di luar sistem. Lihat BR-03 &amp; <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Pencocokan invoice untuk suatu konfirmasi (<code>findInvoiceForManualConf</code>) mengutamakan <code>invoiceId</code> bila ada; jika tidak ada, jatuh ke pencocokan string <code>siswa</code> + <code>"{jenis} {periode}"</code> -- pencocokan string berisiko tidak presisi bila ada dua siswa dengan nama identik</td></tr>
+              <tr><td>BR-02</td><td>Verifikasi (FR-02) tidak memvalidasi kesesuaian <code>nominal</code> konfirmasi terhadap <code>nominal</code> invoice -- invoice langsung ditandai <code>paid</code> penuh berapa pun nominal yang tercatat di konfirmasi, termasuk bila jauh lebih kecil dari nominal tagihan (lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 2</a>)</td></tr>
+              <tr><td>BR-03</td><td>Jika invoice terkait tidak ditemukan saat Verifikasi, status konfirmasi tetap berubah menjadi <code>terverifikasi</code> walau tidak ada efek pada <code>invoiceData</code>/<code>paymentData</code> -- lihat UC-04</td></tr>
+              <tr><td>BR-04</td><td>"Catat Pembayaran Manual Baru" (FR-04/05) menolak submit bila Invoice belum dipilih atau Nominal &le; 0, dengan toast masing-masing; selain itu tidak ada validasi lain (Tanggal Bayar punya nilai default, Metode selalu punya pilihan default)</td></tr>
+              <tr><td>BR-05</td><td>Nominal pada "Catat Pembayaran Manual Baru" otomatis tersinkron ke nominal invoice saat dipilih (<code>syncManualPaymentNominal</code>), namun tetap bisa diedit manual sebelum submit -- sama seperti BR-02, tidak ada validasi kecocokan nominal terhadap tagihan</td></tr>
+              <tr><td>BR-06</td><td>Nomor kuitansi untuk kedua jalur mengikuti format <code>RCPT-MANUAL-{paymentSeq dipadatkan 6 digit}</code>, berbagi counter <code>paymentSeq</code> yang sama dengan transaksi Payment Gateway di <a class="xref" href="PRD-riwayat-pembayaran.html">Riwayat Pembayaran</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Invoice</td><td><code>#mp-invoice</code></td><td><strong>Ya</strong></td><td>Harus memilih opsi dengan <code>value</code> yang cocok salah satu invoice eligible (lihat BR-04)</td></tr>
+              <tr><td>Nominal Diterima</td><td><code>#mp-nominal</code></td><td><strong>Ya</strong></td><td>Harus &gt; 0; tidak divalidasi terhadap nominal invoice (lihat BR-02, BR-05)</td></tr>
+              <tr><td>Tanggal Bayar</td><td><code>#mp-tanggal</code></td><td>Tidak (ada default)</td><td>Fallback <code>"2026-08-13"</code> bila kosong</td></tr>
+              <tr><td>Metode</td><td><code>#mp-metode</code></td><td>Tidak (selalu ada pilihan)</td><td>Tunai / Transfer Manual (sudah dicek mutasi) / Lainnya</td></tr>
+              <tr><td>Catatan</td><td><code>#mp-catatan</code></td><td>Tidak (opsional)</td><td>Tidak disimpan ke <code>paymentData</code> -- lihat 8. Batasan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>KonfirmasiTransferManual</code> (<code>manualConfirmationData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>integer</td><td>Auto-increment (<code>manualConfSeq</code>)</td></tr>
+              <tr><td><code>invoiceId</code></td><td>integer / null</td><td>Relasi langsung ke <code>Invoice.id</code> bila tersedia; <code>null</code> untuk data lama yang hanya punya <code>invoiceRef</code> (lihat BR-01)</td></tr>
+              <tr><td><code>siswa</code>, <code>invoiceRef</code></td><td>string</td><td>Dipakai sebagai fallback pencocokan bila <code>invoiceId</code> kosong</td></tr>
+              <tr><td><code>tanggalTransfer</code>, <code>nominal</code>, <code>bankPengirim</code>, <code>buktiFile</code>, <code>catatan</code></td><td>string/integer</td><td>Diisi dari sisi aplikasi Wali Murid, bersifat read-only di halaman ini</td></tr>
+              <tr><td><code>status</code></td><td>string enum (<code>menunggu_verifikasi</code>/<code>terverifikasi</code>/<code>ditolak</code>)</td><td>Hanya diubah oleh FR-02/FR-03</td></tr>
+              <tr><td><code>diajukan</code></td><td>string (tanggal+waktu)</td><td>Waktu pengajuan dari aplikasi Wali Murid</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Entitas: <code>Pembayaran</code> (<code>paymentData</code>) -- lihat juga <a class="xref" href="PRD-riwayat-pembayaran.html#sec-6">PRD Riwayat Pembayaran, bagian 6</a></strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Ditulis dari Halaman Ini?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>metode</code></td><td><strong>Ya</strong></td><td><code>"Transfer Manual"</code> tetap (FR-02) atau nilai dropdown Metode (FR-05)</td></tr>
+              <tr><td><code>provider</code></td><td>Tidak (selalu <code>"Bendahara (Manual)"</code>)</td><td>Pembeda terhadap transaksi Payment Gateway otomatis</td></tr>
+              <tr><td><code>waktu</code></td><td><strong>Ya</strong></td><td>Format <code>"{tanggal} (manual)"</code> -- bukan timestamp presisi waktu submit</td></tr>
+              <tr><td><code>kuitansi</code></td><td>Tidak (sistem)</td><td>Lihat BR-06</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Konsistensi lintas halaman</td><td>Transaksi yang ditulis dari sini langsung tampil di <a class="xref" href="PRD-riwayat-pembayaran.html">Riwayat Pembayaran</a> dan memperbarui status invoice di <a class="xref" href="PRD-tagihan-invoice.html">Tagihan (Invoice)</a> tanpa reload halaman</td><td>0% selisih data antar halaman dalam satu sesi</td></tr>
+              <tr><td>NFR-02</td><td>Feedback</td><td>Setiap aksi (verifikasi/tolak/catat) menampilkan toast konfirmasi yang jelas, termasuk kasus edge (UC-04)</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-03</td><td>Kehati-hatian operasional</td><td>Kotak peringatan menegaskan bahwa pembayaran manual langsung Lunas tanpa lapis konfirmasi otomatis, mendorong Bendahara memastikan dana benar-benar diterima sebelum mencatat</td><td>Kotak peringatan tampil permanen pada form "Catat Pembayaran Manual Baru"</td></tr>
+              <tr><td>NFR-04</td><td>Auditability</td><td>Setiap transaksi manual memiliki nomor kuitansi unik yang bisa ditelusuri (lihat BR-06)</td><td>100% transaksi manual yang berhasil tercatat memiliki kuitansi</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Verifikasi (FR-02) dan pencatatan manual (FR-05) <strong>tidak memvalidasi nominal</strong> terhadap jumlah tagihan -- invoice langsung ditandai <code>paid</code> penuh berapa pun nominal yang dicatat, tidak ada konsep pembayaran sebagian (<code>partially_paid</code>) yang benar-benar dihasilkan dari jalur manual ini (lihat BR-02, BR-05).</li>
+          <li>Field Catatan (<code>#mp-catatan</code>) pada "Catat Pembayaran Manual Baru" dikosongkan setelah submit namun <strong>tidak pernah disimpan</strong> ke <code>paymentData</code> -- isinya hilang begitu pembayaran tercatat.</li>
+          <li>Tombol "Lihat" bukti transfer hanya menampilkan toast nama file (<code>showToast('Membuka bukti transfer: ...')</code>) -- belum ada pratinjau gambar/dokumen bukti transfer yang sesungguhnya.</li>
+          <li>Kasus invoice tidak ditemukan saat Verifikasi (UC-04) tidak memberi jalan keluar/koreksi dari UI -- status konfirmasi sudah berubah menjadi <code>terverifikasi</code> (final) walau tidak ada tindak lanjut otomatis, mengandalkan Bendahara membaca pesan toast dan menindaklanjuti manual di luar sistem.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Karena pencocokan bukti transfer dengan mutasi rekening dilakukan manual di luar sistem sebelum menekan Verifikasi, risiko BR-02 (nominal tidak divalidasi sistem) diasumsikan sudah tertangani lewat ketelitian Bendahara, bukan lewat kontrol sistem.</li>
+          <li>Satu konfirmasi/pencatatan manual selalu terkait tepat satu invoice -- tidak ada pembayaran yang melunasi beberapa invoice sekaligus dalam satu transaksi.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Apa tindak lanjut yang seharusnya tersedia saat Verifikasi gagal mencocokkan invoice (UC-04) -- apakah perlu mencegah status berubah menjadi "Terverifikasi" sampai invoice berhasil dipilih manual, alih-alih hanya menampilkan toast peringatan?</td><td>Tech Lead / Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu validasi kecocokan nominal terhadap tagihan (dengan toleransi tertentu) sebelum invoice ditandai Lunas, mengingat BR-02/BR-05 saat ini menerima nominal berapa pun?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah dibutuhkan dukungan pembayaran sebagian (partial payment) lewat jalur manual, mengingat status <code>partially_paid</code> sudah terdaftar di sistem namun jalur manual ini selalu langsung menandai <code>paid</code> penuh?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>4</td><td>Apakah field Catatan pada "Catat Pembayaran Manual Baru" perlu disimpan sebagai bagian dari riwayat pembayaran, mengingat saat ini hilang setelah submit?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Konfirmasi Transfer Manual</td><td>Pengajuan wali murid lewat aplikasi mobile yang menyatakan sudah transfer manual, menunggu verifikasi Bendahara</td></tr>
+              <tr><td>Pembayaran Manual (Baru)</td><td>Pencatatan pembayaran langsung oleh Bendahara tanpa pengajuan konfirmasi dari wali murid</td></tr>
+              <tr><td>Bendahara (Manual)</td><td>Nilai <code>provider</code> pada <code>paymentData</code> yang menandai transaksi berasal dari halaman ini, bukan Payment Gateway otomatis</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

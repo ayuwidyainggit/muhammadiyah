@@ -5,6 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profil -- Portal Wali Murid</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(21, 42, 74, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+    font-family: inherit;
+  }
+  .fab-prd:hover { background: var(--navy-dark); }
+</style>
 </head>
 <body>
 
@@ -153,6 +175,8 @@
 
   <div class="toast" id="toast"></div>
 </div>
+
+<a class="fab-prd" href="docs/PRD-profil.html" target="_blank" rel="noopener" title="Lihat dokumen PRD">📄 PRD</a>
 
 <script src="app.js"></script>
 <script>

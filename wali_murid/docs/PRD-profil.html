@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Profil Wali Murid -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 Aplikasi Wali Murid -- Dokumen PRD</span>
+  <a href="../profil.html">&larr; Lihat Prototipe profil.html</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Profil Wali Murid</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+<tbody>
+<tr><td>Nama produk / fitur</td><td>Profil Wali Murid (Manajemen Profil, Preferensi Pengingat &amp; Pengajuan Pindah Sekolah)</td></tr>
+<tr><td>Klien / proyek</td><td>Aplikasi Wali Murid -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+<tr><td>Versi dokumen</td><td>v0.1</td></tr>
+<tr><td>Status</td><td>Draft</td></tr>
+<tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+<tr><td>Product Owner</td><td>[Nama PO Klien]</td></tr>
+<tr><td>Solution Architect</td><td>[Nama SA]</td></tr>
+<tr><td>Tanggal dibuat</td><td>08-11-2026</td></tr>
+<tr><td>Target rilis</td><td>[DD-MM-YYYY / Sprint X]</td></tr>
+<tr><td>Dokumen terkait</td><td><code>profil.html</code>, <code>app.js</code>, <code>index.html</code> (SSO), <code>bayar.html</code>, <code>riwayat.html</code>, PRD Laporan Pindah Sekolah &amp; Tunggakan (Admin Pusat), Portal Sekolah (Approval Write-off)</td></tr>
+</tbody></table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+<tbody>
+<tr><td>v0.1</td><td>08-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal berdasarkan prototipe <code>profil.html</code>, menu "Profil" pada bottom navigation aplikasi Wali Murid.</td></tr>
+</tbody></table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Halaman Profil adalah pusat pengelolaan data pribadi Wali Murid (orang tua/wali), preferensi pengingat tagihan tambahan, serta tempat melihat data akademik seluruh anak yang terdaftar pada akun tersebut. Dari halaman ini pula Wali Murid dapat mengajukan proses <strong>Pindah Sekolah</strong> untuk salah satu anaknya, yang memicu penghapusan buku (write-off) otomatis atas cicilan yang belum jatuh tempo, sementara tunggakan yang sudah jatuh tempo tetap wajib dilunasi sesuai rencana yang diisi.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Wali Murid</strong> mengalami <strong>kesulitan menjaga data kontak &amp; preferensi reminder-nya tetap akurat serta mengurus proses pindah sekolah anak</strong> saat <strong>satu-satunya cara memperbarui data atau mengajukan pindah sekolah adalah datang langsung ke Tata Usaha</strong>, yang menyebabkan <strong>data kontak usang (reminder tagihan tidak sampai), proses pindah sekolah lambat, dan risiko tunggakan tidak diketahui sebelum anak benar-benar pindah</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Perubahan data kontak, preferensi reminder, dan pengajuan pindah sekolah hanya bisa dilakukan dengan menghubungi/mendatangi Tata Usaha sekolah secara langsung. Wali Murid tidak punya visibilitas mandiri atas tunggakan yang masih harus dilunasi sebelum mengajukan pindah sekolah.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Wali Murid dapat login ke aplikasi, membuka menu "Profil", memperbarui data pribadi &amp; preferensi pengingat sendiri, melihat data seluruh anaknya, dan mengajukan pindah sekolah langsung dari aplikasi -- lengkap dengan informasi tunggakan yang wajib dilunasi, tanpa perlu datang ke Tata Usaha hanya untuk keperluan administratif ini.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan makin banyak Wali Murid yang mulai bertransaksi lewat aplikasi ini (lihat halaman Bayar &amp; Riwayat), data kontak yang akurat menjadi prasyarat agar reminder tagihan efektif, dan alur self-service pindah sekolah mengurangi beban administratif Tata Usaha di setiap sekolah.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memastikan data kontak Wali Murid (WA, email) selalu akurat untuk kebutuhan komunikasi tagihan &amp; reminder.</li>
+<li>Mengurangi beban administratif Tata Usaha dengan memindahkan proses pengajuan pindah sekolah ke self-service aplikasi.</li>
+<li>Mencegah tunggakan "hilang" tak tertagih akibat siswa pindah sekolah, dengan mewajibkan rencana pelunasan sebelum pengajuan diproses.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak mendukung pengeditan data akademik anak (NIS, kelas, nama, sekolah) dari halaman ini -- data tersebut hanya bisa diubah oleh sekolah/Tata Usaha.</li>
+<li>Tidak mencakup pengaturan preferensi notifikasi multi-kanal (WA/SMS/Email/Push) -- itu domain halaman <strong>Notifikasi</strong>.</li>
+<li>Tidak mencakup metode pembayaran tagihan atau riwayat transaksi -- itu domain halaman <strong>Bayar</strong> &amp; <strong>Riwayat</strong>.</li>
+<li>Tidak menyediakan langkah persetujuan (approve/reject) atas pengajuan pindah sekolah dari halaman ini -- halaman ini hanya titik pengajuan oleh Wali Murid (lihat catatan di 11. Asumsi &amp; Pertanyaan Terbuka terkait keterkaitan dengan proses Approval Write-off di Portal Sekolah).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Metrik</th><th>Baseline saat ini</th><th>Target</th><th>Cara ukur</th><th>Waktu evaluasi</th></tr></thead>
+<tbody>
+<tr><td>% akun Wali Murid dengan data WA &amp; email terisi valid</td><td>[ ]</td><td>95%</td><td>Audit kelengkapan field <code>wa</code>/<code>email</code> per akun aktif</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>Waktu rata-rata proses pengajuan pindah sekolah selesai diajukan (self-service)</td><td>[ ] (datang ke TU, tidak terukur)</td><td>&lt; 5 menit</td><td>Timestamp buka sheet "Ajukan Pindah Sekolah" s.d. submit berhasil</td><td>2 bulan setelah rilis</td></tr>
+<tr><td>% pengajuan pindah sekolah dengan tunggakan yang menyertakan rencana pelunasan valid</td><td>[ ]</td><td>100%</td><td>Validasi field <code>rencanaBayarTunggakan</code> tidak kosong saat ada tunggakan</td><td>2 bulan setelah rilis</td></tr>
+</tbody></table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Nama / Peran</th><th>Organisasi</th><th>RACI</th><th>Kepentingan</th></tr></thead>
+<tbody>
+<tr><td>Product Owner</td><td>Klien (Muhammadiyah Pusat/Sekolah)</td><td>A</td><td>Menyetujui kebijakan data profil &amp; aturan pindah sekolah</td></tr>
+<tr><td>Solution Architect</td><td>GeekGarden</td><td>R</td><td>Desain integrasi data dengan Portal Sekolah &amp; Bendahara</td></tr>
+<tr><td>Tech Lead</td><td>GeekGarden</td><td>R</td><td>Implementasi halaman Profil &amp; alur pindah sekolah</td></tr>
+<tr><td>QA Lead</td><td>GeekGarden</td><td>C</td><td>Strategi pengujian validasi &amp; konsistensi status anak</td></tr>
+<tr><td>Wali Murid (Orang Tua/Wali)</td><td>Klien (pengguna akhir)</td><td>R</td><td>Pengguna utama fitur ini</td></tr>
+<tr><td>Tata Usaha / Admin Sekolah</td><td>Klien</td><td>I</td><td>Pemilik data akademik anak, menerima dampak pengajuan pindah sekolah</td></tr>
+<tr><td>Bendahara</td><td>Klien</td><td>I</td><td>Memantau rencana pelunasan tunggakan yang tercatat dari pengajuan pindah sekolah</td></tr>
+<tr><td>Kepala Sekolah</td><td>Klien</td><td>I</td><td>Pihak yang (pada proses produksi) menyetujui write-off di Portal Sekolah</td></tr>
+</tbody></table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Persona</th><th>Deskripsi</th><th>Tujuan utama</th><th>Pain point</th><th>Perangkat / kanal</th></tr></thead>
+<tbody>
+<tr><td>Wali Murid (Ayah/Ibu/Wali)</td><td>Orang tua/wali dari satu atau lebih siswa aktif</td><td>Menjaga data kontak akurat, mendapat reminder tagihan tepat waktu, mengurus pindah sekolah tanpa datang ke sekolah</td><td>Harus datang ke TU untuk ubah data atau ajukan pindah sekolah; tidak tahu persis tunggakan yang harus dilunasi sebelum pindah</td><td>Smartphone (aplikasi mobile web)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>In Scope (fase ini)</th><th>Out of Scope (fase berikutnya / tidak dikerjakan)</th></tr></thead>
+<tbody>
+<tr><td>Lihat &amp; ubah data pribadi (nama, hubungan dengan siswa, pekerjaan, No. WhatsApp, No. HP alternatif, email)</td><td>Edit data akademik anak (NIS, kelas, nama, sekolah)</td></tr>
+<tr><td>Preferensi tanggal pengingat tagihan tambahan (1--28 setiap bulan)</td><td>Preferensi notifikasi multi-kanal (WA/SMS/Email/Push) -- domain halaman Notifikasi</td></tr>
+<tr><td>Lihat daftar seluruh anak pada akun (multi-anak) &amp; status (Aktif/Pindah Sekolah)</td><td>Metode pembayaran &amp; riwayat transaksi -- domain halaman Bayar &amp; Riwayat</td></tr>
+<tr><td>Beralih anak aktif lewat child-switch di header (berlaku ke seluruh aplikasi)</td><td>Approve/reject pengajuan pindah sekolah dari halaman ini</td></tr>
+<tr><td>Ajukan Pindah Sekolah per anak: info tunggakan wajib dilunasi, rencana pelunasan (wajib jika ada tunggakan), tanggal efektif pindah, sekolah tujuan &amp; catatan opsional</td><td>Pembatalan/penarikan kembali pengajuan pindah sekolah yang sudah terkirim</td></tr>
+<tr><td>Write-off otomatis cicilan yang belum jatuh tempo saat pengajuan pindah sekolah diproses</td><td>Penghitungan ulang/pengubahan nominal tunggakan</td></tr>
+<tr><td>Pencatatan rencana pelunasan tunggakan ke daftar Konfirmasi (dipantau Bendahara)</td><td>Notifikasi WA/email otomatis ke Tata Usaha saat ada pengajuan pindah sekolah baru</td></tr>
+<tr><td>Logout (keluar dari akun)</td><td>Ubah email/password akun (ganti kredensial login)</td></tr>
+</tbody></table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Data Pribadi (lihat &amp; ubah), daftar Data Anak (read-only), child-switch, Ajukan Pindah Sekolah dengan validasi tunggakan &amp; rencana pelunasan, write-off otomatis cicilan belum jatuh tempo, logout.</li>
+<li><strong>Should have</strong> -- Preferensi tanggal pengingat tagihan, pencatatan rencana pelunasan ke daftar Konfirmasi untuk Bendahara.</li>
+<li><strong>Could have</strong> -- Badge/indikator riwayat pengajuan pindah sekolah sebelumnya pada anak yang sama.</li>
+<li><strong>Won't have (now)</strong> -- Edit data akademik anak, approve/reject pengajuan, pembatalan pengajuan, ubah kredensial akun.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>User story</th><th>Prioritas</th><th>Acceptance criteria</th></tr></thead>
+<tbody>
+<tr><td>US-01</td><td>Sebagai Wali Murid, saya ingin melihat &amp; mengubah data pribadi saya (nama, hubungan dengan siswa, pekerjaan, kontak), supaya sekolah bisa menghubungi saya dengan benar terkait tagihan anak.</td><td>Must</td><td>Given saya membuka menu Profil, When saya mengubah field data pribadi dan menekan "Simpan Perubahan", Then data tersimpan dan nama pada header aplikasi ikut ter-update, serta toast konfirmasi "✓ Profil berhasil disimpan" muncul</td></tr>
+<tr><td>US-02</td><td>Sebagai Wali Murid, saya ingin memilih tanggal favorit pengingat tagihan bulanan, supaya saya menerima reminder tambahan selain reminder otomatis sekolah.</td><td>Should</td><td>Given saya memilih salah satu tanggal (1--28) pada "Ingatkan saya setiap tanggal", When saya menekan "Simpan Perubahan", Then preferensi tanggal tersimpan pada akun saya</td></tr>
+<tr><td>US-03</td><td>Sebagai Wali Murid dengan lebih dari satu anak, saya ingin melihat daftar semua anak saya &amp; bisa berpindah anak aktif dari header, supaya saya bisa mengelola tagihan tiap anak secara terpisah.</td><td>Must</td><td>Given akun saya memiliki &ge; 2 anak, When saya membuka chip nama anak di header, Then halaman (Profil, Bayar, Riwayat, badge notifikasi) memperbarui konteksnya mengikuti anak yang baru dipilih</td></tr>
+<tr><td>US-04</td><td>Sebagai Wali Murid, saya ingin mengajukan pindah sekolah untuk anak saya langsung dari halaman Profil, supaya saya tidak perlu datang ke Tata Usaha hanya untuk keperluan administratif ini.</td><td>Must</td><td>Given anak saya berstatus "Aktif", When saya menekan "Ajukan Pindah Sekolah" dan mengisi tanggal efektif pindah, Then pengajuan terkirim, status anak berubah menjadi "Pindah Sekolah", dan tombol "Ajukan Pindah Sekolah" untuk anak tersebut tidak lagi tersedia</td></tr>
+<tr><td>US-05</td><td>Sebagai Wali Murid yang mengajukan pindah sekolah, saya ingin diberi tahu dengan jelas tunggakan (tagihan jatuh tempo) anak saya yang masih harus dilunasi, supaya saya tidak terkejut saat anak sudah pindah namun tagihan tetap harus dibayar.</td><td>Must</td><td>Given anak saya memiliki tagihan berstatus jatuh tempo (escalated/overdue), When saya membuka sheet "Ajukan Pindah Sekolah", Then daftar tunggakan beserta totalnya ditampilkan dan field "Rencana Tanggal Pelunasan Tunggakan" wajib diisi sebelum saya bisa submit</td></tr>
+<tr><td>US-06</td><td>Sebagai Wali Murid yang anaknya tidak punya tunggakan, saya ingin proses pengajuan pindah sekolah tetap sederhana, supaya saya tidak diminta mengisi informasi yang tidak relevan.</td><td>Should</td><td>Given anak saya tidak memiliki tagihan jatuh tempo, When saya membuka sheet "Ajukan Pindah Sekolah", Then ditampilkan pesan "Tidak ada tunggakan yang harus dilunasi" dan field rencana pelunasan disembunyikan/tidak wajib diisi</td></tr>
+<tr><td>US-07</td><td>Sebagai Wali Murid, saya ingin keluar (logout) dari akun saya dengan mudah, supaya perangkat yang dipakai bersama tetap aman.</td><td>Must</td><td>Given saya menekan tombol "Keluar", When logout diproses, Then sesi saya dihapus dan saya diarahkan kembali ke halaman login</td></tr>
+</tbody></table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Modul</th><th>Deskripsi requirement</th><th>User story</th><th>Prioritas</th><th>Catatan / aturan bisnis</th></tr></thead>
+<tbody>
+<tr><td>FR-01</td><td>Data Pribadi</td><td>Sistem harus menampilkan &amp; mengizinkan Wali Murid mengubah field Nama Lengkap, Hubungan dengan Siswa (Ayah/Ibu/Wali), Pekerjaan (dropdown preset), No. WhatsApp, No. HP Alternatif (opsional), Email, lalu menyimpannya lewat tombol "Simpan Perubahan"</td><td>US-01</td><td>Must</td><td>Field Pekerjaan membantu sekolah menilai kondisi ekonomi keluarga saat meninjau pengajuan keringanan (lihat PRD terkait keringanan bila ada); <strong>catatan implementasi saat ini</strong>: <code>saveProfile()</code> di <code>app.js</code> hanya menyimpan field Nama, Pekerjaan, No. WA, Email, dan Tanggal Pengingat -- field Hubungan dengan Siswa dan No. HP Alternatif <strong>belum ikut tersimpan</strong> (lihat 11. Pertanyaan Terbuka No. 2)</td></tr>
+<tr><td>FR-02</td><td>Preferensi Pengingat Tagihan</td><td>Sistem harus menyediakan dropdown tanggal 1--28 untuk reminder tambahan bulanan, terpisah dari reminder otomatis sekolah</td><td>US-02</td><td>Should</td><td>Hanya 1 tanggal aktif per akun; tidak mendukung multi-tanggal pada fase ini</td></tr>
+<tr><td>FR-03</td><td>Header &amp; Child-Switch</td><td>Sistem harus menampilkan nama &amp; avatar inisial Wali Murid, badge jumlah notifikasi/konfirmasi tertunda, dan daftar chip anak yang bisa dipilih untuk mengganti anak aktif di seluruh halaman aplikasi</td><td>US-03</td><td>Must</td><td>Badge notifikasi dihitung dari jumlah pengajuan konfirmasi pembayaran berstatus "Menunggu Verifikasi" milik anak yang sedang aktif</td></tr>
+<tr><td>FR-04</td><td>Data Anak (Read-only)</td><td>Sistem harus menampilkan daftar seluruh anak pada akun (nama, NIS, kelas) beserta status (badge "Aktif" atau "Pindah Sekolah")</td><td>US-03, US-04</td><td>Must</td><td>Data akademik bersifat read-only; perubahan hanya bisa dilakukan oleh sekolah/Tata Usaha</td></tr>
+<tr><td>FR-05</td><td>Ajukan Pindah Sekolah -- Info Tunggakan</td><td>Sistem harus menghitung &amp; menampilkan seluruh tagihan berstatus jatuh tempo (escalated/overdue) milik anak yang diajukan pindah, beserta totalnya, saat sheet "Ajukan Pindah Sekolah" dibuka</td><td>US-05, US-06</td><td>Must</td><td>Jika tidak ada tunggakan, tampilkan pesan konfirmasi "Tidak ada tunggakan yang harus dilunasi" dan sembunyikan field rencana pelunasan</td></tr>
+<tr><td>FR-06</td><td>Ajukan Pindah Sekolah -- Validasi Wajib</td><td>Sistem harus mewajibkan Tanggal Efektif Pindah selalu terisi, dan mewajibkan Rencana Tanggal Pelunasan Tunggakan terisi apabila anak memiliki tunggakan, sebelum pengajuan bisa dikirim</td><td>US-04, US-05</td><td>Must</td><td>Sekolah Tujuan &amp; Catatan bersifat opsional</td></tr>
+<tr><td>FR-07</td><td>Write-off Otomatis Cicilan Belum Jatuh Tempo</td><td>Begitu pengajuan pindah sekolah dikirim, seluruh cicilan anak tersebut yang berstatus belum jatuh tempo (<code>sent</code>) otomatis diubah menjadi <code>writeoff</code> (dihapus buku)</td><td>US-04</td><td>Must</td><td>Cicilan yang sudah berstatus jatuh tempo (tunggakan) <strong>tidak</strong> ikut dihapus buku -- tetap wajib dilunasi sesuai rencana yang diisi pada FR-06</td></tr>
+<tr><td>FR-08</td><td>Pencatatan Rencana Pelunasan ke Konfirmasi</td><td>Setiap invoice tunggakan yang terkait pengajuan pindah sekolah otomatis membuat entri "Rencana Bayar" berstatus "Terjadwal" pada daftar Konfirmasi Pembayaran (tab Riwayat)</td><td>US-05</td><td>Should</td><td>Memungkinkan Bendahara memantau rencana pelunasan tunggakan siswa yang sudah pindah sekolah</td></tr>
+<tr><td>FR-09</td><td>Status Anak Berubah Setelah Pengajuan</td><td>Setelah pengajuan pindah sekolah berhasil dikirim, status anak pada daftar Data Anak berubah dari "Aktif" menjadi "Pindah Sekolah" dan tombol "Ajukan Pindah Sekolah" untuk anak tersebut tidak lagi ditampilkan</td><td>US-04</td><td>Must</td><td>Satu anak hanya bisa mengajukan pindah sekolah satu kali pada fase ini (tidak ada alur pembatalan)</td></tr>
+<tr><td>FR-10</td><td>Logout</td><td>Sistem harus menyediakan tombol "Keluar" yang menghapus sesi login dan mengarahkan Wali Murid kembali ke halaman login</td><td>US-07</td><td>Must</td><td>Sesi disimpan di <code>sessionStorage</code> sisi klien pada prototipe ini</td></tr>
+</tbody></table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Fitur</th><th>Wali Murid (akun aktif)</th><th>Wali Murid (menunggu approval / ditolak)</th></tr></thead>
+<tbody>
+<tr><td>Lihat &amp; ubah Data Pribadi</td><td>Ya</td><td>-- (tidak bisa masuk ke aplikasi)</td></tr>
+<tr><td>Lihat Data Anak</td><td>Ya</td><td>--</td></tr>
+<tr><td>Ajukan Pindah Sekolah</td><td>Ya</td><td>--</td></tr>
+<tr><td>Logout</td><td>Ya</td><td>--</td></tr>
+</tbody></table></div>
+<p><em>Catatan: akses ke seluruh halaman aplikasi (termasuk Profil) ditentukan oleh fungsi <code>requireLogin()</code> yang memeriksa sesi aktif; akun dengan status <code>menunggu_approval</code> atau <code>ditolak</code> diarahkan ke halaman <code>menunggu-approval.html</code>/<code>ditolak.html</code> saat login dan tidak pernah mencapai halaman Profil (lihat <code>routeWaliAccount()</code> di <code>app.js</code>).</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Pemicu</th><th>Penerima</th><th>Kanal</th><th>Isi singkat</th></tr></thead>
+<tbody>
+<tr><td>Profil berhasil disimpan</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>"✓ Profil berhasil disimpan"</td></tr>
+<tr><td>Pengajuan pindah sekolah terkirim</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>Konfirmasi pengajuan terkirim, jumlah cicilan yang dihapus buku, dan nominal tunggakan yang tetap harus dilunasi</td></tr>
+<tr><td>Pengajuan pindah sekolah baru</td><td>Tata Usaha / Bendahara (disarankan)</td><td>Email/Dashboard Portal Sekolah (belum diimplementasi)</td><td>Pemberitahuan ada pengajuan pindah sekolah baru yang perlu ditindaklanjuti</td></tr>
+</tbody></table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+<tbody>
+<tr><td>NFR-01</td><td>Validasi input</td><td>Pengajuan pindah sekolah tidak dapat dikirim tanpa Tanggal Efektif Pindah, dan tidak dapat dikirim tanpa Rencana Pelunasan Tunggakan apabila ada tunggakan</td><td>100% pengajuan tervalidasi sebelum tersimpan</td></tr>
+<tr><td>NFR-02</td><td>Konsistensi status</td><td>Status anak ("Aktif"/"Pindah Sekolah") harus konsisten di seluruh halaman yang menampilkannya (Profil, sheet Ajukan Pindah Sekolah)</td><td>100% konsisten antar tampilan</td></tr>
+<tr><td>NFR-03</td><td>Keamanan sesi</td><td>Halaman Profil hanya dapat diakses oleh Wali Murid dengan sesi login aktif</td><td>100% enforced via <code>requireLogin()</code> di setiap pemuatan halaman</td></tr>
+<tr><td>NFR-04</td><td>Performa</td><td>Waktu render daftar anak &amp; kalkulasi tunggakan saat sheet dibuka</td><td>&lt; 1 detik untuk &le; 10 anak per akun</td></tr>
+<tr><td>NFR-05</td><td>Auditability</td><td>Setiap pengajuan pindah sekolah tercatat dengan id unik, childId, tanggal, dan nominal tunggakan terkait</td><td>100% pengajuan tercatat lengkap di <code>pindahSekolahData</code></td></tr>
+</tbody></table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama (data pribadi): Login &rarr; (mendarat di halaman Bayar, lihat catatan) &rarr; buka menu "Profil" lewat bottom navigation &rarr; ubah field Data Pribadi dan/atau Preferensi Pengingat &rarr; "Simpan Perubahan" &rarr; toast konfirmasi.</li>
+<li>Alur pindah sekolah: menu Profil &rarr; bagian Data Anak &rarr; tekan "Ajukan Pindah Sekolah" pada anak berstatus Aktif &rarr; tinjau info tunggakan (jika ada) &rarr; isi Rencana Pelunasan Tunggakan (wajib jika ada tunggakan) &rarr; isi Tanggal Efektif Pindah (wajib) &rarr; isi Sekolah Tujuan/Catatan (opsional) &rarr; "Ajukan Pindah Sekolah" &rarr; toast konfirmasi berisi ringkasan cicilan yang dihapus buku &amp; tunggakan yang tetap harus dilunasi &rarr; status anak berubah menjadi "Pindah Sekolah" di daftar Data Anak.</li>
+<li>Catatan alur: pada routing SSO saat ini (<code>routeWaliAccount()</code>), akun berstatus aktif diarahkan langsung ke halaman <strong>Bayar</strong> setelah login, bukan ke Profil -- Wali Murid harus membuka menu "Profil" secara manual lewat bottom navigation.</li>
+<li>Wireframe: mengikuti struktur <code>profil.html</code> -- header dengan child-switch, kartu ringkasan identitas Wali Murid, kartu Data Pribadi, kartu Preferensi Pengingat, kartu Data Anak, tombol Simpan &amp; Keluar, serta bottom sheet "Ajukan Pindah Sekolah" yang muncul dari bawah.</li>
+<li>Edge case yang wajib ditangani: anak tanpa tunggakan (field rencana pelunasan disembunyikan), anak dengan beberapa invoice tunggakan sekaligus (daftar &amp; total ditampilkan lengkap), anak yang sudah berstatus "Pindah Sekolah" (tombol pengajuan tidak tampil lagi), akun dengan No. HP Alternatif kosong (field opsional, tidak divalidasi wajib).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Sistem eksternal</th><th>Fungsi</th><th>Metode</th><th>PIC</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Portal Sekolah (modul Approval Write-off)</td><td>Penerima data pengajuan pindah sekolah &amp; (pada proses produksi) pihak yang memproses persetujuan write-off</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Halaman Bayar &amp; Riwayat (aplikasi ini)</td><td>Konsumen status anak (Aktif/Pindah Sekolah) &amp; status invoice (<code>sent</code>/<code>writeoff</code>/<code>escalated</code>) yang diubah dari alur pindah sekolah</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Daftar Konfirmasi Pembayaran (tab Riwayat)</td><td>Penerima entri "Rencana Bayar" otomatis dari pengajuan pindah sekolah, dipantau Bendahara</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Laporan Pindah Sekolah &amp; Tunggakan (Admin Pusat)</td><td>Konsumen agregat data pengajuan pindah sekolah lintas sekolah untuk kebutuhan laporan pusat</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>Guardian</code> (nama, inisial, relasi, wa, hpAlt, email, pekerjaan, tanggalPengingat, status, metode), <code>Child</code> (id, nama, nis, kelas, sekolah, status), <code>Invoice</code> (id, childId, jenis, periode, nominal, jatuhTempo, status), <code>PengajuanPindahSekolah</code> (id, childId, tanggal, sekolahTujuan, catatan, tunggakanNominal, rencanaBayarTunggakan, status).</li>
+<li>Tidak ada migrasi khusus -- struktur data mengikuti objek <code>guardian</code>, <code>children</code>, <code>invoices</code>, dan <code>pindahSekolahData</code> di <code>app.js</code> pada prototipe ini.</li>
+<li>Retensi data: data pengajuan pindah sekolah &amp; tunggakan terkait disimpan selama histori keuangan sekolah masih relevan untuk audit (rekomendasi minimal 5 tahun, perlu konfirmasi kebijakan retensi klien).</li>
+<li>Data saat ini bersifat snapshot dalam memori JavaScript (bukan database/API produksi) -- hilang saat sesi browser berakhir.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu anak hanya memiliki maksimal satu pengajuan pindah sekolah aktif (tidak ada alur pembatalan/pengajuan ulang pada fase ini).</li>
+<li>Field Pekerjaan digunakan sebagai konteks tambahan bagi sekolah saat meninjau pengajuan keringanan biaya, bukan untuk kebutuhan lain.</li>
+<li>Status anak "Pindah Sekolah" bersifat final pada prototipe ini (tidak ada jalur untuk mengembalikan anak menjadi "Aktif" kembali).</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Data bersifat snapshot read-only dalam memori JavaScript, belum terhubung ke API/database produksi.</li>
+<li>Belum ada halaman riwayat/status pengajuan pindah sekolah bagi Wali Murid untuk memantau tindak lanjutnya di Portal Sekolah.</li>
+<li>Perubahan data pribadi tidak memiliki riwayat/log perubahan (tidak ada audit trail siapa mengubah apa &amp; kapan).</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Batas jawab</th><th>Jawaban</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Pada prototipe ini, pengajuan pindah sekolah langsung memicu write-off otomatis tanpa approval terpisah. Apakah di produksi proses ini tetap perlu persetujuan Kepala Sekolah (sesuai status "Menunggu Persetujuan"/"Disetujui" di Portal Sekolah, lihat PRD Laporan Pindah Sekolah &amp; Tunggakan)? Jika perlu, bagaimana status pengajuan ditampilkan ke Wali Murid selama menunggu?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>2</td><td>Field "Hubungan dengan Siswa" dan "No. HP Alternatif" saat ini tidak ikut tersimpan saat menekan "Simpan Perubahan" (lihat FR-01) -- apakah ini disengaja (field tersebut memang read-only) atau perlu diperbaiki agar tersimpan?</td><td>PO klien / Tech Lead</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>3</td><td>Apakah Wali Murid perlu mendapat notifikasi tertulis (WA/email) setelah pengajuan pindah sekolah terkirim, di luar toast dalam aplikasi?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>4</td><td>Apakah diperlukan alur pembatalan/penarikan kembali pengajuan pindah sekolah yang sudah terkirim, sebelum diproses sekolah?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Risiko</th><th>Dampak (H/M/L)</th><th>Kemungkinan (H/M/L)</th><th>Mitigasi</th><th>PIC</th></tr></thead>
+<tbody>
+<tr><td>Pengajuan pindah sekolah memicu write-off otomatis tanpa approval sekolah, berisiko disalahgunakan atau salah input oleh Wali Murid</td><td>H</td><td>M</td><td>Tambahkan langkah persetujuan Kepala Sekolah/Tata Usaha di Portal Sekolah sebelum write-off final diterapkan pada invoice produksi (lihat Pertanyaan Terbuka No. 1)</td><td>[ ]</td></tr>
+<tr><td>Field Hubungan dengan Siswa &amp; No. HP Alternatif tidak tersimpan membuat Wali Murid mengira data sudah diperbarui padahal belum</td><td>M</td><td>H</td><td>Perbaiki binding <code>saveProfile()</code> agar seluruh field pada form Data Pribadi ikut tersimpan, atau jadikan field tersebut read-only secara eksplisit di UI</td><td>[ ]</td></tr>
+<tr><td>Tidak ada alur pembatalan pengajuan pindah sekolah -- kesalahan input tanggal/sekolah tujuan tidak bisa dikoreksi sendiri oleh Wali Murid</td><td>M</td><td>M</td><td>Sediakan kanal bantuan (hubungi Tata Usaha) yang jelas di halaman konfirmasi, atau tambahkan alur edit/batal pada iterasi berikutnya</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Milestone</th><th>Deliverable</th><th>Target tanggal</th><th>Kriteria selesai</th></tr></thead>
+<tbody>
+<tr><td>PRD approved</td><td>Dokumen ini v1.0</td><td>[ ]</td><td>Ditandatangani PO</td></tr>
+<tr><td>Desain selesai</td><td>Mockup &amp; struktur data final</td><td>[ ]</td><td>Review SA &amp; klien</td></tr>
+<tr><td>Development</td><td>Data Pribadi, Preferensi Pengingat, Data Anak, Ajukan Pindah Sekolah</td><td>[ ]</td><td>Lolos code review</td></tr>
+<tr><td>UAT</td><td>Build staging</td><td>[ ]</td><td>0 bug critical, sign-off UAT</td></tr>
+<tr><td>Go-live</td><td>Production</td><td>[ ]</td><td>Monitoring 2 minggu stabil</td></tr>
+</tbody></table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+<tbody>
+<tr><td>Write-off / Hapus Buku</td><td>Penghapusan tagihan yang tidak bisa ditagih lagi, umumnya karena siswa pindah sekolah</td></tr>
+<tr><td>Tunggakan</td><td>Tagihan yang sudah jatuh tempo (<code>escalated</code>/<code>overdue</code>) namun belum dibayar</td></tr>
+<tr><td>Rencana Pelunasan Tunggakan</td><td>Tanggal yang dijanjikan Wali Murid untuk melunasi tunggakan meski anak sudah pindah sekolah</td></tr>
+<tr><td>Child-switch</td><td>Komponen pada header aplikasi untuk berpindah konteks anak aktif pada akun dengan lebih dari satu anak</td></tr>
+<tr><td>Status Pindah Sekolah</td><td>Status anak setelah pengajuan pindah sekolah berhasil dikirim; cicilan belum jatuh tempo otomatis dihapus buku, cicilan jatuh tempo tetap wajib dilunasi</td></tr>
+</tbody></table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Peran</th><th>Nama</th><th>Tanda tangan</th><th>Tanggal</th></tr></thead>
+<tbody>
+<tr><td>Product Owner (klien)</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Project Manager</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Solution Architect</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Tech Lead</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="../profil.html" title="Lihat prototipe profil.html">📄 Prototipe</a>
+
+</body>
+</html>

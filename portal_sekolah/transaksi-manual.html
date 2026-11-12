@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Pembayaran Manual -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" href="sekolah.html">Profil Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kategori.html">Kategori Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kelas.html">Kelas</a>
+      <a class="nav-item nav-child" href="sekolah-pengguna.html">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-rbac.html">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="transaksi" data-nav-group="transaksi" href="transaksi-tagihan.html"><span class="ic">💳</span> Transaksi &amp; Invoice<span class="chev" onclick="toggleNavGroup(event,'transaksi')">▸</span></a>
+    <div class="nav-children" data-nav-children="transaksi">
+      <a class="nav-item nav-child" href="transaksi-master-tagihan.html">Master Data Tagihan</a>
+      <a class="nav-item nav-child" href="transaksi-tagihan.html">Tagihan (Invoice)</a>
+      <a class="nav-item nav-child" href="transaksi-riwayat.html">Riwayat Pembayaran</a>
+      <a class="nav-item nav-child" href="transaksi-writeoff.html">Write-off (Hapus Buku)</a>
+      <a class="nav-item nav-child active" href="transaksi-manual.html" id="nav-self">Pembayaran Manual <span class="count-pill" id="nav-manual-pending-count">0</span></a>
+    </div>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / Transaksi &amp; Invoice / <b id="crumb-current">Pembayaran Manual</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-transaksi-manual">
+        <div class="page-title">
+          <h1>Pembayaran Manual</h1>
+          <p>Verifikasi konfirmasi transfer manual dari wali murid, dan catat pembayaran yang diterima langsung oleh sekolah.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card"><div class="lbl">Total Tagihan Aktif</div><div class="val" id="stat-total-invoice">--</div><div class="sub">bulan berjalan</div></div>
+          <div class="stat-card"><div class="lbl">Sudah Lunas</div><div class="val" id="stat-paid">--</div><div class="sub">status: paid</div></div>
+          <div class="stat-card"><div class="lbl">Menunggak</div><div class="val" id="stat-overdue">--</div><div class="sub">overdue / escalated</div></div>
+          <div class="stat-card"><div class="lbl">Pengajuan Hapus Buku</div><div class="val" id="stat-writeoff">--</div><div class="sub">menunggu approval</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Konfirmasi Transfer Manual dari Wali Murid <span class="tag-pill" style="background:var(--amber-light);color:var(--amber);">PERLU VERIFIKASI</span></h3>
+          <p class="card-desc">Wali murid yang transfer manual di luar QRIS/VA mengunggah bukti lewat aplikasi (tabel <code>billing.manual_payment_confirmation</code>). Cocokkan bukti dengan mutasi rekening sekolah sebelum <b>Verifikasi</b> -- begitu diverifikasi, tagihan terkait otomatis ditandai Lunas. <b>Tolak</b> jika bukti tidak cocok/tidak valid; wali murid akan diminta mengunggah ulang.</p>
+          <table class="dtab">
+            <thead>
+              <tr><th style="width:16%">Siswa</th><th style="width:14%">Invoice</th><th style="width:11%">Tgl Transfer</th><th style="width:12%">Nominal</th><th style="width:17%">Bank Pengirim</th><th style="width:10%">Bukti</th><th style="width:12%">Status</th><th style="width:18%">Aksi</th></tr>
+            </thead>
+            <tbody id="manualconf-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Catat Pembayaran Manual Baru</h3>
+          <p class="card-desc">Untuk pembayaran yang diterima langsung oleh sekolah -- mis. tunai di kantor Admin/Bendahara, atau transfer yang sudah dicek &amp; dicocokkan sendiri lewat mutasi rekening di luar aplikasi (bukan dari pengajuan wali murid di atas). Tagihan langsung ditandai Lunas begitu dicatat, tanpa melalui Payment Gateway.</p>
+          <div class="grid3">
+            <div class="field">
+              <label>Invoice</label>
+              <select id="mp-invoice" onchange="syncManualPaymentNominal()"></select>
+            </div>
+            <div class="field">
+              <label>Tanggal Bayar</label>
+              <input type="date" id="mp-tanggal" value="2026-08-13">
+            </div>
+            <div class="field">
+              <label>Metode</label>
+              <select id="mp-metode">
+                <option>Tunai</option>
+                <option>Transfer Manual (sudah dicek mutasi)</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Nominal Diterima (Rp)</label>
+              <input type="number" id="mp-nominal" placeholder="350000">
+            </div>
+            <div class="field">
+              <label>Catatan (opsional)</label>
+              <input type="text" id="mp-catatan" placeholder="mis. dibayar oleh kakek/nenek, dsb.">
+            </div>
+          </div>
+          <div class="note-box warn">Pembayaran manual ditandai Lunas seketika, tanpa lewat Payment Gateway atau lapis konfirmasi otomatis -- pastikan dana benar-benar sudah diterima sekolah sebelum mencatat.</div>
+          <div class="btn-row" style="justify-content:flex-end;">
+            <button class="btn btn-primary" onclick="recordManualPayment()">Catat Pembayaran &amp; Tandai Lunas</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Riwayat Pembayaran Manual</h3>
+          <p class="card-desc">Gabungan dari konfirmasi wali murid yang terverifikasi &amp; pencatatan langsung oleh Bendahara -- juga tampil di tab Riwayat Pembayaran dengan provider "Bendahara (Manual)".</p>
+          <table class="dtab">
+            <thead>
+              <tr><th style="width:20%">Siswa</th><th style="width:16%">Invoice</th><th style="width:16%">Metode</th><th style="width:14%">Nominal</th><th style="width:16%">Waktu</th><th style="width:18%">Kuitansi</th></tr>
+            </thead>
+            <tbody id="manualpayhist-table-body"></tbody>
+          </table>
+        </div>
+
+        <a class="fab-prd" href="docs/PRD-pembayaran-manual.html" target="_blank" title="Lihat dokumen PRD Pembayaran Manual">📄 Lihat PRD</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    refreshKelasDropdowns();
+    renderMasterTagihan();
+    refreshPeriodeDropdowns();
+    refreshJenisTagihanDropdowns();
+    renderInvoiceList();
+    fillWriteoffInvoiceSelect();
+    renderWriteoffList();
+    renderPaymentList();
+    renderManualConfirmationList();
+    fillManualPaymentInvoiceSelect();
+    renderManualPaymentHistory();
+    updateStats();
+  }
+</script>
+</body>
+</html>

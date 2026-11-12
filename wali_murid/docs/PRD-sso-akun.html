@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: SSO & Status Akun Wali Murid -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+  .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+  .doc-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 36px 40px; box-shadow: 0 1px 3px rgba(20,36,63,0.06); }
+  h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+  h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code { background: #eef1f6; color: #b71c1c; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .fab-prd {
+    position: fixed; bottom: 26px; right: 26px;
+    background: var(--navy); color: #fff; border: none; border-radius: 999px;
+    padding: 13px 20px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35); cursor: pointer;
+    display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 Aplikasi Wali Murid -- Dokumen PRD</span>
+  <a href="../index.html">&larr; Lihat Prototipe (Login/Daftar)</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: SSO &amp; Status Akun Wali Murid (Login, Pendaftaran Mandiri, Menunggu Approval, Ditolak)</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+<tbody>
+<tr><td>Nama produk / fitur</td><td>SSO &amp; Status Akun Wali Murid (Login, Pendaftaran Mandiri, Menunggu Approval, Ditolak)</td></tr>
+<tr><td>Klien / proyek</td><td>Aplikasi Wali Murid -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+<tr><td>Versi dokumen</td><td>v0.1</td></tr>
+<tr><td>Status</td><td>Draft</td></tr>
+<tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+<tr><td>Product Owner</td><td>[Nama PO Klien]</td></tr>
+<tr><td>Solution Architect</td><td>[Nama SA]</td></tr>
+<tr><td>Tanggal dibuat</td><td>08-11-2026</td></tr>
+<tr><td>Target rilis</td><td>[DD-MM-YYYY / Sprint X]</td></tr>
+<tr><td>Dokumen terkait</td><td><code>index.html</code>, <code>daftar.html</code>, <code>menunggu-approval.html</code>, <code>ditolak.html</code>, <code>app.js</code>, PRD Profil Wali Murid, Portal Sekolah (Approval Akun Wali Murid)</td></tr>
+</tbody></table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+<tbody>
+<tr><td>v0.1</td><td>08-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal berdasarkan 4 prototipe halaman (<code>index.html</code>, <code>daftar.html</code>, <code>menunggu-approval.html</code>, <code>ditolak.html</code>) yang bersama-sama membentuk satu alur SSO &amp; status akun Wali Murid.</td></tr>
+</tbody></table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Kelompok halaman ini menangani seluruh siklus masuk (login) dan pendaftaran mandiri (self-register) akun Wali Murid sebelum bisa menggunakan aplikasi. Satu akun (SSO) yang sama dipakai sekolah untuk memverifikasi identitas Wali Murid; akun bisa dibuat langsung oleh Admin/Tata Usaha (langsung aktif) atau didaftarkan sendiri oleh Wali Murid (menunggu persetujuan Kepala Sekolah terlebih dahulu). Status akun menentukan halaman mana yang ditampilkan: login berhasil (<code>index.html</code> &rarr; <code>bayar.html</code>), menunggu persetujuan (<code>menunggu-approval.html</code>), atau ditolak (<code>ditolak.html</code>).</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Wali Murid yang belum memiliki akun</strong> mengalami <strong>tidak adanya kanal mandiri untuk mendaftar &amp; memverifikasi dirinya sebagai orang tua/wali siswa aktif</strong>, sementara <strong>sekolah</strong> membutuhkan <strong>jaminan bahwa hanya orang tua/wali siswa yang sah yang bisa mengakses data tagihan anak</strong>, yang menyebabkan <strong>wali murid baru harus menunggu dibuatkan akun secara manual oleh Tata Usaha sebelum bisa memakai aplikasi</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Akun SSO Wali Murid hanya dibuat manual oleh Admin/Tata Usaha sekolah. Wali Murid yang ingin mendaftar sendiri tidak memiliki kanal self-service, sehingga Tata Usaha menjadi satu-satunya titik pembuatan akun.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Wali Murid dapat login dengan akun yang sudah didaftarkan Admin, atau mendaftar sendiri lewat <code>daftar.html</code> dengan mengisi data pribadi &amp; data anak. Pendaftaran mandiri tidak langsung aktif -- harus disetujui Kepala Sekolah terlebih dahulu (dicocokkan dengan data siswa resmi sekolah). Selama menunggu atau bila ditolak, Wali Murid mendapat halaman status yang jelas tanpa perlu menghubungi sekolah untuk bertanya.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan makin banyak sekolah onboarding ke platform dan makin banyak Wali Murid yang perlu akses mandiri, kanal pendaftaran self-service mengurangi beban administratif Tata Usaha sekaligus tetap menjaga kontrol verifikasi identitas oleh Kepala Sekolah.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Menyediakan kanal self-service pendaftaran akun Wali Murid tanpa mengurangi kontrol verifikasi identitas oleh sekolah.</li>
+<li>Mencegah akses tak sah ke data tagihan siswa oleh pihak yang bukan wali murid sah.</li>
+<li>Memberi kejelasan status (menunggu/ditolak) secara mandiri agar Wali Murid tidak perlu bertanya ke sekolah soal progres pendaftarannya.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan fitur lupa password/reset password mandiri dari halaman ini.</li>
+<li>Tidak menyediakan verifikasi tambahan (OTP/2FA) pada fase ini.</li>
+<li>Tidak menyediakan aksi approve/reject itu sendiri dari aplikasi ini -- keputusan tetap diambil Kepala Sekolah di Portal Sekolah; aplikasi ini hanya menampilkan hasil status yang sudah diputuskan.</li>
+<li>Fitur "🧪 Demo -- Pilih Akun" pada <code>index.html</code> adalah alat bantu demo prototipe untuk mempercepat pengujian, bukan fitur yang dimaksudkan tampil di produksi (lihat 11. Pertanyaan Terbuka No. 1).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Metrik</th><th>Baseline saat ini</th><th>Target</th><th>Cara ukur</th><th>Waktu evaluasi</th></tr></thead>
+<tbody>
+<tr><td>% pendaftaran mandiri yang diputuskan (disetujui/ditolak) dalam 1x24 jam kerja</td><td>[ ]</td><td>&ge; 90%</td><td>Selisih waktu submit pendaftaran vs waktu keputusan Kepala Sekolah</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>% percobaan login yang berhasil tanpa eskalasi bantuan ke Admin/Tata Usaha</td><td>[ ]</td><td>&ge; 95%</td><td>Rasio login berhasil vs jumlah tiket bantuan terkait akun</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>% pendaftaran mandiri yang ditolak karena data tidak cocok dengan data siswa resmi</td><td>[ ]</td><td>&lt; 10%</td><td>Rasio status <code>ditolak</code> terhadap total pendaftaran mandiri</td><td>2 bulan setelah rilis</td></tr>
+</tbody></table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Nama / Peran</th><th>Organisasi</th><th>RACI</th><th>Kepentingan</th></tr></thead>
+<tbody>
+<tr><td>Product Owner</td><td>Klien (Muhammadiyah Pusat/Sekolah)</td><td>A</td><td>Menyetujui kebijakan verifikasi identitas &amp; kriteria tolak</td></tr>
+<tr><td>Solution Architect</td><td>GeekGarden</td><td>R</td><td>Desain alur SSO &amp; integrasi status dengan Portal Sekolah</td></tr>
+<tr><td>Tech Lead</td><td>GeekGarden</td><td>R</td><td>Implementasi halaman login, registrasi, &amp; routing status</td></tr>
+<tr><td>QA Lead</td><td>GeekGarden</td><td>C</td><td>Strategi pengujian seluruh kombinasi status akun</td></tr>
+<tr><td>Wali Murid (Orang Tua/Wali)</td><td>Klien (pengguna akhir)</td><td>R</td><td>Pengguna utama fitur ini</td></tr>
+<tr><td>Tata Usaha / Admin Sekolah</td><td>Klien</td><td>R</td><td>Membuat akun secara langsung (metode <code>didaftarkan_admin</code>)</td></tr>
+<tr><td>Kepala Sekolah</td><td>Klien</td><td>R</td><td>Menyetujui/menolak pendaftaran mandiri di Portal Sekolah</td></tr>
+</tbody></table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Persona</th><th>Deskripsi</th><th>Tujuan utama</th><th>Pain point</th><th>Perangkat / kanal</th></tr></thead>
+<tbody>
+<tr><td>Wali Murid Baru (self-register)</td><td>Orang tua/wali yang belum punya akun &amp; ingin mendaftar sendiri</td><td>Mendapatkan akses aplikasi tanpa harus datang ke sekolah</td><td>Tidak tahu status pendaftarannya tanpa bertanya ke sekolah</td><td>Smartphone (aplikasi mobile web)</td></tr>
+<tr><td>Wali Murid Terdaftar (didaftarkan admin)</td><td>Sudah memiliki akun dari Tata Usaha</td><td>Login &amp; langsung memakai aplikasi</td><td>--</td><td>Smartphone (aplikasi mobile web)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>In Scope (fase ini)</th><th>Out of Scope (fase berikutnya / tidak dikerjakan)</th></tr></thead>
+<tbody>
+<tr><td>Form login (email + password) dengan pesan error generik</td><td>Lupa password / reset password mandiri</td></tr>
+<tr><td>Redirect otomatis ke halaman utama bila sesi sudah aktif</td><td>Verifikasi tambahan (OTP/2FA)</td></tr>
+<tr><td>Form pendaftaran mandiri multi-anak (tambah/hapus baris anak)</td><td>Approve/reject pendaftaran dari aplikasi ini (tetap di Portal Sekolah)</td></tr>
+<tr><td>Validasi field wajib &amp; deteksi email yang sudah terdaftar saat mendaftar</td><td>Edit data pendaftaran yang sudah terkirim sebelum diputuskan</td></tr>
+<tr><td>Halaman status Menunggu Approval (info anak yang didaftarkan &amp; estimasi SLA)</td><td>Pemberitahuan push/WA otomatis saat status berubah</td></tr>
+<tr><td>Halaman status Ditolak (alasan penolakan &amp; opsi daftar ulang)</td><td>Riwayat/log seluruh percobaan pendaftaran sebelumnya</td></tr>
+</tbody></table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Form login &amp; validasi, routing status akun (aktif/menunggu/ditolak), form pendaftaran mandiri multi-anak, halaman Menunggu Approval &amp; Ditolak.</li>
+<li><strong>Should have</strong> -- Redirect otomatis saat sesi aktif, pesan alasan tolak yang informatif.</li>
+<li><strong>Could have</strong> -- Validasi kompleksitas password di sisi klien.</li>
+<li><strong>Won't have (now)</strong> -- Lupa password, OTP/2FA, approve/reject dari aplikasi ini, edit pendaftaran yang sudah terkirim.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>User story</th><th>Prioritas</th><th>Acceptance criteria</th></tr></thead>
+<tbody>
+<tr><td>US-01</td><td>Sebagai Wali Murid dengan akun aktif, saya ingin login dengan email &amp; password, supaya saya bisa langsung memakai aplikasi.</td><td>Must</td><td>Given saya mengisi email &amp; password akun aktif yang benar, When saya menekan "Masuk", Then saya diarahkan ke halaman Bayar</td></tr>
+<tr><td>US-02</td><td>Sebagai Wali Murid, saya ingin mendapat pesan error yang jelas namun tidak membocorkan info akun saat salah login, supaya saya tahu harus mencoba lagi tanpa risiko keamanan data akun lain.</td><td>Must</td><td>Given saya memasukkan email/password yang tidak cocok, When saya menekan "Masuk", Then pesan generik "Email/password tidak dikenali" ditampilkan tanpa menyebut apakah email terdaftar atau tidak</td></tr>
+<tr><td>US-03</td><td>Sebagai Wali Murid baru, saya ingin mendaftar akun sendiri dengan data saya &amp; data anak saya (bisa lebih dari satu), supaya saya tidak perlu datang ke sekolah hanya untuk membuat akun.</td><td>Must</td><td>Given saya mengisi Nama, No. WA, Email, Password, dan minimal 1 data anak (Nama, NISN, Kelas), When saya menekan "Daftarkan Akun", Then akun baru tersimpan berstatus "Menunggu Approval" dan saya diarahkan ke halaman Menunggu Approval</td></tr>
+<tr><td>US-04</td><td>Sebagai Wali Murid dengan lebih dari satu anak, saya ingin menambah atau menghapus baris data anak saat mendaftar, supaya saya bisa mendaftarkan semua anak saya dalam satu akun.</td><td>Should</td><td>Given saya menekan "+ Tambah Anak Lain", When baris baru ditambahkan, Then saya bisa mengisi data anak tambahan; And saya tidak bisa menghapus baris terakhir (minimal 1 anak wajib ada)</td></tr>
+<tr><td>US-05</td><td>Sebagai Wali Murid yang akunnya masih menunggu persetujuan, saya ingin melihat halaman status yang jelas saat mencoba login, supaya saya tahu progres pendaftaran saya tanpa bertanya ke sekolah.</td><td>Must</td><td>Given status akun saya "menunggu_approval", When saya login, Then saya diarahkan ke halaman Menunggu Approval yang menampilkan nama anak yang didaftarkan &amp; estimasi waktu proses</td></tr>
+<tr><td>US-06</td><td>Sebagai Wali Murid yang pendaftarannya ditolak, saya ingin tahu alasan penolakan &amp; cara mendaftar ulang, supaya saya bisa memperbaiki data dan mencoba lagi.</td><td>Must</td><td>Given status akun saya "ditolak", When saya login, Then saya diarahkan ke halaman Ditolak yang menampilkan alasan penolakan dan tombol "Daftar Ulang"</td></tr>
+<tr><td>US-07</td><td>Sebagai Wali Murid yang sudah login sebelumnya, saya ingin otomatis masuk ke aplikasi saat membuka halaman login lagi, supaya saya tidak perlu login berulang kali dalam satu sesi.</td><td>Should</td><td>Given sesi saya masih aktif, When saya membuka <code>index.html</code>, Then saya langsung diarahkan ke halaman Bayar tanpa perlu mengisi form login</td></tr>
+</tbody></table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Modul</th><th>Deskripsi requirement</th><th>User story</th><th>Prioritas</th><th>Catatan / aturan bisnis</th></tr></thead>
+<tbody>
+<tr><td>FR-01</td><td>Form Login</td><td>Sistem harus menyediakan field Email &amp; Password dengan tombol "Masuk" yang mencocokkan kredensial terhadap akun terdaftar</td><td>US-01, US-02</td><td>Must</td><td>Pencocokan dilakukan terhadap <code>guardian</code> &amp; <code>otherWaliAccounts</code>; pesan error selalu generik ("Email/password tidak dikenali") baik email tidak ditemukan maupun password salah</td></tr>
+<tr><td>FR-02</td><td>Redirect Sesi Aktif</td><td>Sistem harus memeriksa sesi aktif saat <code>index.html</code> dimuat dan langsung mengarahkan ke halaman Bayar bila sesi masih berlaku</td><td>US-07</td><td>Should</td><td>Menggunakan <code>getSession()</code>; tidak menampilkan form login sama sekali bila sesi ditemukan</td></tr>
+<tr><td>FR-03</td><td>Routing Berdasarkan Status Akun</td><td>Sistem harus mengarahkan hasil login/registrasi sesuai status akun: <code>aktif</code> &rarr; halaman Bayar, <code>menunggu_approval</code> &rarr; halaman Menunggu Approval, <code>ditolak</code> &rarr; halaman Ditolak</td><td>US-01, US-05, US-06</td><td>Must</td><td>Logika terpusat di <code>routeWaliAccount()</code>; data konteks (nama anak/alasan tolak) dibawa lewat <code>sessionStorage</code> sementara ke halaman tujuan</td></tr>
+<tr><td>FR-04</td><td>Form Pendaftaran Mandiri -- Data Wali</td><td>Sistem harus menyediakan field Nama Lengkap, No. WhatsApp, Email, dan Password pada form pendaftaran, seluruhnya wajib diisi</td><td>US-03</td><td>Must</td><td>Sistem harus menolak pendaftaran dengan email yang sudah terdaftar pada akun manapun</td></tr>
+<tr><td>FR-05</td><td>Form Pendaftaran Mandiri -- Data Anak (Multi)</td><td>Sistem harus menyediakan minimal 1 baris data anak (Nama, NISN, Kelas) dengan kemampuan menambah baris baru dan menghapus baris (kecuali baris terakhir)</td><td>US-03, US-04</td><td>Must</td><td>Minimal 1 data anak dengan Nama terisi wajib ada sebelum pendaftaran bisa dikirim</td></tr>
+<tr><td>FR-06</td><td>Penyimpanan Pendaftaran &amp; Status Awal</td><td>Pendaftaran yang berhasil divalidasi harus disimpan dengan status <code>menunggu_approval</code> dan metode <code>self_register</code>, lalu mengarahkan Wali Murid ke halaman Menunggu Approval</td><td>US-03</td><td>Must</td><td>Tanggal pendaftaran dicatat (<code>tanggalDaftar</code>) untuk keperluan SLA persetujuan</td></tr>
+<tr><td>FR-07</td><td>Halaman Menunggu Approval</td><td>Sistem harus menampilkan nama anak yang didaftarkan, penjelasan proses verifikasi Kepala Sekolah, estimasi SLA (1x24 jam kerja), dan tombol kembali ke login</td><td>US-05</td><td>Must</td><td>Nama anak diambil dari data pendaftaran yang baru dikirim (relay via <code>sessionStorage</code>)</td></tr>
+<tr><td>FR-08</td><td>Halaman Ditolak</td><td>Sistem harus menampilkan alasan penolakan (atau teks default bila tidak tercatat), tombol "Daftar Ulang" (ke form pendaftaran), dan tombol "Kembali ke Login"</td><td>US-06</td><td>Must</td><td>Alasan penolakan diambil dari field <code>alasanTolak</code> pada akun terkait</td></tr>
+</tbody></table></div>
+<h3>6.1 Hak Akses per Status Akun</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Fitur</th><th>Status: Aktif</th><th>Status: Menunggu Approval</th><th>Status: Ditolak</th></tr></thead>
+<tbody>
+<tr><td>Login &amp; masuk ke aplikasi (Bayar/Profil/dst.)</td><td>Ya</td><td>-- (diarahkan ke halaman status)</td><td>-- (diarahkan ke halaman status)</td></tr>
+<tr><td>Lihat halaman Menunggu Approval</td><td>--</td><td>Ya</td><td>--</td></tr>
+<tr><td>Lihat halaman Ditolak &amp; daftar ulang</td><td>--</td><td>--</td><td>Ya</td></tr>
+</tbody></table></div>
+<p><em>Catatan: status akun (<code>aktif</code>/<code>menunggu_approval</code>/<code>ditolak</code>) diputuskan oleh Kepala Sekolah di Portal Sekolah untuk akun <code>self_register</code>, atau langsung <code>aktif</code> untuk akun yang dibuat Admin/Tata Usaha (<code>didaftarkan_admin</code>). Aplikasi ini tidak memiliki kewenangan mengubah status tersebut.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Pemicu</th><th>Penerima</th><th>Kanal</th><th>Isi singkat</th></tr></thead>
+<tbody>
+<tr><td>Pendaftaran mandiri berhasil dikirim</td><td>Kepala Sekolah/Tata Usaha (disarankan)</td><td>Dashboard Portal Sekolah (belum diimplementasi)</td><td>Pemberitahuan ada pendaftaran akun baru yang perlu diverifikasi</td></tr>
+<tr><td>Status akun disetujui/ditolak</td><td>Wali Murid (pendaftar)</td><td>WA/Email (disebutkan di UI, belum diimplementasi)</td><td>Pemberitahuan hasil keputusan atas pendaftaran akun</td></tr>
+</tbody></table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+<tbody>
+<tr><td>NFR-01</td><td>Keamanan autentikasi</td><td>Kredensial login tidak boleh membocorkan informasi apakah email terdaftar atau tidak lewat pesan error</td><td>100% pesan error generik untuk seluruh kegagalan login</td></tr>
+<tr><td>NFR-02</td><td>Validasi input</td><td>Pendaftaran mandiri tidak dapat dikirim tanpa seluruh field wajib (Nama, WA, Email, Password, minimal 1 data anak)</td><td>100% pendaftaran tervalidasi sebelum tersimpan</td></tr>
+<tr><td>NFR-03</td><td>Keamanan sesi</td><td>Sesi login disimpan sisi klien dan dihapus saat logout; halaman aplikasi utama tidak dapat diakses tanpa sesi aktif</td><td>100% enforced via <code>requireLogin()</code>/<code>getSession()</code></td></tr>
+<tr><td>NFR-04</td><td>Performa</td><td>Waktu respons form login &amp; pendaftaran (validasi hingga redirect)</td><td>&lt; 1 detik pada data demo</td></tr>
+<tr><td>NFR-05</td><td>Auditability</td><td>Setiap pendaftaran mandiri tercatat dengan tanggal daftar &amp; metode, agar bisa ditelusuri saat diverifikasi Kepala Sekolah</td><td>100% pendaftaran tercatat lengkap di <code>otherWaliAccounts</code></td></tr>
+</tbody></table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur login: buka <code>index.html</code> &rarr; (jika sesi aktif, otomatis ke Bayar) &rarr; isi Email &amp; Password &rarr; "Masuk" &rarr; sesuai status akun: aktif &rarr; Bayar, menunggu approval &rarr; halaman Menunggu Approval, ditolak &rarr; halaman Ditolak.</li>
+<li>Alur pendaftaran mandiri: <code>index.html</code> &rarr; "Daftar Akun Baru" &rarr; <code>daftar.html</code> &rarr; isi Data Wali Murid &rarr; isi Data Anak (tambah baris bila perlu) &rarr; "Daftarkan Akun" &rarr; validasi &rarr; halaman Menunggu Approval.</li>
+<li>Alur daftar ulang: halaman Ditolak &rarr; "Daftar Ulang" &rarr; kembali ke <code>daftar.html</code> untuk mengisi ulang data.</li>
+<li>Wireframe: mengikuti struktur masing-masing prototipe -- <code>index.html</code> (kartu login + kartu daftar + kartu demo akun), <code>daftar.html</code> (kartu data wali + kartu data anak berulang), <code>menunggu-approval.html</code>/<code>ditolak.html</code> (empty-state besar + kartu info + tombol aksi).</li>
+<li>Edge case yang wajib ditangani: email yang sudah terdaftar saat mendaftar (ditolak dengan pesan jelas), penghapusan baris anak hingga tersisa 1 (tidak boleh dihapus lagi), akun ditolak tanpa alasan tercatat (tampilkan teks default), sesi yang sudah habis saat mencoba mengakses halaman aplikasi utama (diarahkan kembali ke login).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Sistem eksternal</th><th>Fungsi</th><th>Metode</th><th>PIC</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Portal Sekolah (Approval Akun Wali Murid)</td><td>Penerima pendaftaran mandiri &amp; pihak yang memutuskan status disetujui/ditolak</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Modul Akun Wali Murid Admin/Tata Usaha</td><td>Sumber akun yang dibuat langsung (metode <code>didaftarkan_admin</code>, status langsung <code>aktif</code>)</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Data Siswa Resmi Sekolah</td><td>Rujukan pencocokan Nama/NISN saat Kepala Sekolah memverifikasi pendaftaran mandiri</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>WaliAccount</code> (nama, email, password, wa, status, metode, tanggalDaftar, siswaList, alasanTolak).</li>
+<li>Tidak ada migrasi khusus -- struktur data mengikuti objek <code>guardian</code> dan <code>otherWaliAccounts</code> di <code>app.js</code> pada prototipe ini.</li>
+<li>Data sesi (<code>sessionStorage</code>): <code>wali_murid_session</code> (akun yang login), <code>wali_pending_info</code>/<code>wali_rejected_info</code> (relay info sementara antar halaman status).</li>
+<li>Data saat ini bersifat snapshot dalam memori JavaScript (bukan database/API produksi) -- password tersimpan plaintext pada prototipe ini, tidak mencerminkan desain keamanan produksi.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu email hanya terkait satu akun Wali Murid (tidak ada akun ganda dengan email yang sama).</li>
+<li>Verifikasi kecocokan data anak (Nama/NISN) dengan data resmi sekolah dilakukan di luar aplikasi ini, oleh Kepala Sekolah di Portal Sekolah.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Data bersifat snapshot read-only dalam memori JavaScript, belum terhubung ke API/database/auth produksi.</li>
+<li>Password belum divalidasi kompleksitas/panjang minimum di sisi klien, meski UI menuliskan placeholder "Minimal 8 karakter".</li>
+<li>Tidak ada fitur lupa password pada fase ini.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Batas jawab</th><th>Jawaban</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Fitur "🧪 Demo -- Pilih Akun" pada <code>index.html</code> harus dihapus total sebelum go-live produksi, atau cukup disembunyikan di balik flag environment khusus untuk kebutuhan QA?</td><td>PO klien / Tech Lead</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>2</td><td>Apakah dibutuhkan fitur lupa password/reset password mandiri untuk Wali Murid?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>3</td><td>SLA "1x24 jam kerja" yang dijanjikan di halaman Menunggu Approval -- apakah ini SLA resmi yang disepakati, atau hanya perkiraan dalam prototipe?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>4</td><td>Apakah password perlu kebijakan kompleksitas (panjang minimum, kombinasi karakter) yang divalidasi sistem, bukan hanya ditulis sebagai placeholder?</td><td>PO klien / Tech Lead</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Risiko</th><th>Dampak (H/M/L)</th><th>Kemungkinan (H/M/L)</th><th>Mitigasi</th><th>PIC</th></tr></thead>
+<tbody>
+<tr><td>Password tersimpan plaintext pada data klien -- tidak merepresentasikan praktik keamanan produksi</td><td>H</td><td>H (pada prototipe)</td><td>Pastikan implementasi produksi memakai backend auth dengan password ter-hash &amp; transport aman (HTTPS) sebelum go-live</td><td>[ ]</td></tr>
+<tr><td>Fitur demo quick-login tidak dihapus sebelum produksi, berisiko disalahgunakan untuk bypass otentikasi</td><td>H</td><td>M</td><td>Hapus/nonaktifkan fitur demo secara eksplisit pada build produksi (lihat Pertanyaan Terbuka No. 1)</td><td>[ ]</td></tr>
+<tr><td>Pesan error login generik bisa menyulitkan Wali Murid yang benar-benar lupa email terdaftar, tanpa jalur bantuan mandiri</td><td>M</td><td>M</td><td>Pertimbangkan kanal bantuan (hubungi Tata Usaha) yang jelas di halaman login</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Milestone</th><th>Deliverable</th><th>Target tanggal</th><th>Kriteria selesai</th></tr></thead>
+<tbody>
+<tr><td>PRD approved</td><td>Dokumen ini v1.0</td><td>[ ]</td><td>Ditandatangani PO</td></tr>
+<tr><td>Desain selesai</td><td>Mockup &amp; struktur data final</td><td>[ ]</td><td>Review SA &amp; klien</td></tr>
+<tr><td>Development</td><td>Login, pendaftaran mandiri, halaman status Menunggu Approval &amp; Ditolak</td><td>[ ]</td><td>Lolos code review</td></tr>
+<tr><td>UAT</td><td>Build staging</td><td>[ ]</td><td>0 bug critical, sign-off UAT</td></tr>
+<tr><td>Go-live</td><td>Production</td><td>[ ]</td><td>Monitoring 2 minggu stabil</td></tr>
+</tbody></table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+<tbody>
+<tr><td>SSO</td><td>Satu akun yang dipakai untuk login &amp; diverifikasi sebagai identitas Wali Murid oleh sekolah</td></tr>
+<tr><td>Self-register</td><td>Metode pendaftaran akun secara mandiri oleh Wali Murid, menunggu persetujuan Kepala Sekolah</td></tr>
+<tr><td>Didaftarkan Admin</td><td>Metode pembuatan akun secara langsung oleh Admin/Tata Usaha, berstatus aktif tanpa menunggu persetujuan</td></tr>
+<tr><td>Menunggu Approval</td><td>Status akun pendaftaran mandiri yang belum diputuskan Kepala Sekolah</td></tr>
+<tr><td>Ditolak</td><td>Status akun pendaftaran mandiri yang datanya tidak cocok/tidak disetujui Kepala Sekolah</td></tr>
+</tbody></table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Peran</th><th>Nama</th><th>Tanda tangan</th><th>Tanggal</th></tr></thead>
+<tbody>
+<tr><td>Product Owner (klien)</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Project Manager</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Solution Architect</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Tech Lead</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="../index.html" title="Lihat prototipe Login/Daftar">📄 Prototipe</a>
+
+</body>
+</html>

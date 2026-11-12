@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kategori Sekolah -- Portal Sekolah | SD Muhammadiyah 4 Sidoarjo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app-shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="logo"><span class="box">GG</span> Portal Sekolah</div>
+      <div class="sub">Platform Invoicing &amp; Payment SPP</div>
+    </div>
+
+    <div class="school-chip">
+      <div class="nm">SD Muhammadiyah 4 Sidoarjo</div>
+      <div class="meta">NPSN 20501234 -- PCM Sidoarjo Kota</div>
+      <span class="badge-status on"><span class="dot"></span> Aktif</span>
+    </div>
+
+    <div class="nav-group-label">Menu Utama</div>
+    <a class="nav-item" data-rbac="dashboard" href="dashboard.html"><span class="ic">🏠</span> Dashboard</a>
+    <a class="nav-item" data-rbac="approval" href="approval.html"><span class="ic">✅</span> Approval Write-off <span class="count-pill" id="nav-pending-count">0</span></a>
+    <a class="nav-item nav-parent" data-rbac="konfigurasi" data-nav-group="konfigurasi" href="konfigurasi.html"><span class="ic">⚙</span> Konfigurasi<span class="chev" onclick="toggleNavGroup(event,'konfigurasi')">▸</span></a>
+    <div class="nav-children" data-nav-children="konfigurasi">
+      <a class="nav-item nav-child" data-nav-tab="rekening" href="konfigurasi.html?tab=rekening">Rekening Penampung</a>
+      <a class="nav-item nav-child" data-nav-tab="reminder" href="konfigurasi.html?tab=reminder">Aturan Reminder</a>
+      <a class="nav-item nav-child" data-nav-tab="template" href="konfigurasi.html?tab=template">Template Pesan</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="sekolah" data-nav-group="sekolah" href="sekolah.html"><span class="ic">🏫</span> Manajemen Sekolah<span class="chev" onclick="toggleNavGroup(event,'sekolah')">▸</span></a>
+    <div class="nav-children" data-nav-children="sekolah">
+      <a class="nav-item nav-child" href="sekolah.html">Profil Sekolah</a>
+      <a class="nav-item nav-child active" href="sekolah-kategori.html" id="nav-self">Kategori Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-kelas.html">Kelas</a>
+      <a class="nav-item nav-child" href="sekolah-pengguna.html">Pengguna &amp; Akun Sekolah</a>
+      <a class="nav-item nav-child" href="sekolah-rbac.html">Role &amp; Hak Akses</a>
+      <a class="nav-item nav-child" data-rbac="wali" href="wali.html">Akun Wali Murid <span class="count-pill" id="nav-wali-pending-count">0</span></a>
+      <a class="nav-item nav-child" data-rbac="murid" href="murid.html">Manajemen Murid</a>
+    </div>
+    <a class="nav-item nav-parent" data-rbac="transaksi" data-nav-group="transaksi" href="transaksi-tagihan.html"><span class="ic">💳</span> Transaksi &amp; Invoice<span class="chev" onclick="toggleNavGroup(event,'transaksi')">▸</span></a>
+    <div class="nav-children" data-nav-children="transaksi">
+      <a class="nav-item nav-child" href="transaksi-master-tagihan.html">Master Data Tagihan</a>
+      <a class="nav-item nav-child" href="transaksi-tagihan.html">Tagihan (Invoice)</a>
+      <a class="nav-item nav-child" href="transaksi-riwayat.html">Riwayat Pembayaran</a>
+      <a class="nav-item nav-child" href="transaksi-writeoff.html">Write-off (Hapus Buku)</a>
+      <a class="nav-item nav-child" href="transaksi-manual.html">Pembayaran Manual <span class="count-pill" id="nav-manual-pending-count">0</span></a>
+    </div>
+    <a class="nav-item" data-rbac="blast" href="blast.html"><span class="ic">📣</span> Blast Notifikasi</a>
+
+    <div class="sidebar-foot">
+      <div class="logout-link" onclick="logout()"><span>↩</span> Keluar</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">Portal Sekolah / <b id="crumb-current">Kategori Sekolah</b></div>
+      <div class="user-chip">
+        <div class="av" id="uc-avatar">--</div>
+        <div class="info">
+          <div class="name" id="uc-name">--</div>
+          <div class="role" id="uc-role">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-view active" id="view-sekolah-kategori">
+        <div class="page-title">
+          <h1>Kategori Sekolah</h1>
+          <p>Kategori kelas sekolah ini, dipakai untuk membedakan nominal SPP &amp; tagihan lain per kategori.</p>
+        </div>
+
+        <div class="card">
+          <h3>Kategori Sekolah <span class="tag-pill pg">MEMPENGARUHI HARGA SPP</span></h3>
+          <p class="card-desc">Sekolah ini bisa punya lebih dari satu kategori kelas (mis. Reguler, Umum, atau kategori lain sesuai kebutuhan) -- tiap kategori bisa punya nominal SPP &amp; tagihan lain yang berbeda (diatur di <b>Master Data Tagihan</b>, halaman Transaksi &amp; Invoice). Tiap kelas di halaman <b>Kelas</b> di-assign ke salah satu kategori di bawah ini.</p>
+          <div class="filter-bar">
+            <input type="text" class="search" id="kat-search" placeholder="Cari nama kategori..." oninput="renderKategoriKelasTable()">
+            <button class="btn btn-primary btn-sm" onclick="openKategoriPanel()">+ Tambah Kategori</button>
+          </div>
+          <table class="dtab" id="master-kategori-kelas-table">
+            <thead><tr><th>Nama Kategori</th><th style="width:18%">Jumlah Kelas</th><th style="width:20%">Aksi</th></tr></thead>
+            <tbody id="master-kategori-kelas-body"></tbody>
+          </table>
+
+          <div class="card" id="kategori-panel" style="display:none;background:var(--light);border-style:dashed;margin-top:16px;margin-bottom:0;">
+            <h3 id="kategori-panel-title">Tambah Kategori Sekolah</h3>
+            <div class="field"><label>Nama Kategori</label><input type="text" id="kat-nama" placeholder="mis. Reguler"></div>
+            <div class="btn-row">
+              <button class="btn btn-ghost" onclick="closeKategoriPanel()">Batal</button>
+              <button class="btn btn-success" onclick="saveKategoriKelas()">Simpan</button>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:10px;">Menghapus kategori yang masih dipakai kelas akan otomatis memindahkan kelas tersebut ke kategori pertama yang tersisa. Minimal harus ada 1 kategori. Nama kategori wajib diisi &amp; tidak boleh sama dengan kategori lain.</div>
+        </div>
+
+        <a class="fab-prd" href="docs/PRD-sekolah-kategori.html" target="_blank" title="Lihat dokumen PRD Kategori Sekolah">📄 Lihat PRD</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Berhasil disimpan</div>
+
+<script src="app.js"></script>
+<script>
+  restoreSession();
+  if (currentUser) {
+    renderKategoriKelasTable();
+  }
+</script>
+</body>
+</html>

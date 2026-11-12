@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Tagihan (Invoice) -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Tagihan (Invoice) <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Tagihan (Invoice) -- halaman <code>transaksi-tagihan.html</code>, nav-child kedua di bawah menu Transaksi &amp; Invoice</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>09-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>transaksi-tagihan.html</code>, <code>app.js</code> (data <code>invoiceData</code>, <code>invoiceSeq</code>, <code>importRows</code>; fungsi <code>setInvoiceMode</code>, <code>addIndividualInvoiceRow</code>, <code>onIndRowKategoriChange</code>/<code>onIndRowKelasChange</code>/<code>onIndRowPeriodeChange</code>, <code>syncIndividualNominal</code>, <code>renderMassalKelasChips</code>, <code>renderMassalNominalFields</code>, <code>createInvoice</code>, <code>publishInvoice</code>, <code>downloadImportTemplate</code>, <code>onImportFileSelected</code>, <code>parseImportCsv</code>, <code>validateImportRow</code>, <code>processImportRows</code>, <code>renderImportPreview</code>, <code>confirmImportTagihan</code>, <code>renderInvoiceList</code>, <code>fillInvoiceFilterPeriode</code>, <code>openInvoiceEditPanel</code>, <code>saveInvoiceEdit</code>, <code>deleteInvoiceRow</code>, <code>toggleBuatTagihanPanel</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-master-data-tagihan.html">PRD Master Data Tagihan</a> -- sumber kategori &amp; nominal yang dipakai saat membuat tagihan; <a class="xref" href="PRD-riwayat-pembayaran.html">PRD Riwayat Pembayaran</a>, <a class="xref" href="PRD-writeoff-hapus-buku.html">PRD Write-off</a>, <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a> -- seluruhnya membaca/menulis <code>invoiceData</code> yang sama</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>09-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan hasil pemisahan Master Data Tagihan menjadi halaman tersendiri (lihat <a class="xref" href="PRD-master-data-tagihan.html">PRD Master Data Tagihan</a>), penambahan filter Periode pada Daftar Tagihan, penyembunyian form "Buat Tagihan Baru" di balik tombol "+ Tambah Tagihan" (sebelumnya selalu tampil), serta penambahan Edit &amp; Hapus per baris untuk tagihan berstatus <code>draft</code>.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Tagihan (Invoice)</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini menyediakan tiga cara membuat tagihan baru untuk siswa -- <strong>Individual</strong> (per siswa, bisa beda jenis/nominal/periode per baris), <strong>Massal</strong> (satu konfigurasi untuk satu/lebih kelas sekaligus), dan <strong>Import dari File</strong> (CSV/Excel) -- serta menampilkan &amp; mengelola <strong>Daftar Tagihan</strong> seluruh siswa dengan filter Periode/Kelas/Status. Tagihan yang baru dibuat selalu berstatus <code>draft</code> dan harus di-<strong>Publish</strong> agar berstatus <code>sent</code> (dikirim ke wali murid). Fitur ini <strong>tidak</strong> mendefinisikan kategori/nominal tagihan (lihat <a class="xref" href="PRD-master-data-tagihan.html">PRD Master Data Tagihan</a>) dan <strong>tidak</strong> memproses pembayaran (lihat <a class="xref" href="PRD-riwayat-pembayaran.html">PRD Riwayat Pembayaran</a>, <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a>).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Draft</td><td>Tagihan yang sudah dibuat sistem namun belum dikirim ke wali murid -- satu-satunya status yang bisa diubah/dihapus dari halaman ini</td></tr>
+              <tr><td>Publish</td><td>Aksi mengubah status tagihan dari <code>draft</code> menjadi <code>sent</code>, menandakan tagihan sudah "diterbitkan" ke wali murid</td></tr>
+              <tr><td>Mode Individual</td><td>Membuat tagihan baris per baris, masing-masing bisa punya siswa/jenis/nominal/periode/jatuh tempo sendiri</td></tr>
+              <tr><td>Mode Massal</td><td>Membuat tagihan dengan satu konfigurasi (jenis, nominal per Kategori Kelas, periode, jatuh tempo) untuk satu/lebih kelas sekaligus, berlaku ke seluruh siswa aktif di kelas terpilih</td></tr>
+              <tr><td>Import dari File</td><td>Mengunggah CSV/Excel rekap tagihan untuk dibuat sebagai draft massal, dengan pratinjau &amp; validasi per baris sebelum dikonfirmasi</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child kedua di bawah grup "Transaksi &amp; Invoice", setelah Master Data Tagihan. Sebelum pemisahan (lihat Riwayat Revisi), halaman ini juga memuat kartu "Master Data Tagihan" di bagian atas; kartu tersebut sekarang berada di halaman tersendiri. Form "Buat Tagihan Baru" sekarang disembunyikan secara default dan dibuka lewat tombol "+ Tambah Tagihan" pada toolbar Daftar Tagihan, supaya halaman langsung menampilkan daftar tagihan yang sudah ada tanpa form besar yang selalu terbuka.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Membuat tagihan baru per siswa (Individual), per kelas (Massal), atau lewat file CSV/Excel (Import).</li>
+          <li>Menampilkan Daftar Tagihan dengan filter Periode, Kelas, dan Status.</li>
+          <li>Mengubah (Edit) tagihan berstatus <code>draft</code>: Jenis Tagihan, Nominal, Periode, Jatuh Tempo.</li>
+          <li>Menghapus tagihan berstatus <code>draft</code>.</li>
+          <li>Menerbitkan (Publish) tagihan <code>draft</code> menjadi <code>sent</code>.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Membuat, mengubah, menghapus, dan menerbitkan tagihan secara penuh (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- akses penuh (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default (modul <code>transaksi</code> tidak aktif untuk peran ini).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Hanya tagihan berstatus <code>draft</code> yang bisa diubah atau dihapus dari halaman ini -- tagihan yang sudah di-Publish (atau berstatus lanjutan lain: <code>sent</code>, <code>paid</code>, <code>overdue</code>, dst.) adalah dokumen keuangan yang sudah berjalan dan tidak disediakan aksi ubah/hapusnya di sini.</li>
+          <li>Mode Import hanya memparsing CSV secara native di browser; untuk file <code>.xlsx</code>, pratinjau yang ditampilkan adalah data simulasi tetap (lihat 8. Batasan), bukan hasil parsing file yang sesungguhnya diunggah.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Daftar Kelas &amp; Kategori Kelas (<code>masterKelasData</code>, <code>kategoriKelasData</code>) dikelola di menu Manajemen Sekolah; halaman ini hanya membaca untuk membangun pilihan kelas pada ketiga mode pembuatan tagihan.</li>
+          <li>Daftar Periode Tahun Ajaran (<code>periodeTahunAjaranData</code>) dikelola terpusat oleh Admin Pusat (lihat <a class="xref" href="PRD-master-data-tagihan.html">PRD Master Data Tagihan</a>, bagian 3.5) -- dropdown Periode pada mode Massal &amp; Individual membaca data read-only ini.</li>
+          <li>Jenis Tagihan yang tersedia pada ketiga mode mengikuti kategori <strong>aktif</strong> pada Periode Tahun Ajaran yang relevan di <a class="xref" href="PRD-master-data-tagihan.html">Master Data Tagihan</a>.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Buka/Tutup Form Buat Tagihan</td><td>Tombol "+ Tambah Tagihan" pada Daftar Tagihan membuka kartu "Buat Tagihan Baru" (default tersembunyi) dan men-<em>scroll</em> ke kartu tersebut; tombol "&#10005; Tutup" pada kartu menyembunyikannya kembali</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Buat Tagihan -- Mode Individual</td><td>Tiap baris memilih Jenis Kelas (Kategori Kelas) &rarr; Kelas &rarr; Nama siswa secara bertingkat, lalu Periode (Tahun Ajaran), Jenis Tagihan (nominal otomatis terisi, bisa diedit manual), dan Jatuh Tempo -- baris bisa ditambah berkali-kali lewat "+ Tambah Baris Siswa"</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Buat Tagihan -- Mode Massal</td><td>Pilih Kategori Kelas (mempersempit daftar kelas), centang satu/lebih Target Kelas, pilih Jenis Tagihan (nominal otomatis per Kategori Kelas dari kelas terpilih, bisa diedit manual per kategori), Periode, dan Jatuh Tempo -- berlaku untuk seluruh siswa aktif di kelas yang dicentang</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Buat Tagihan -- Import dari File</td><td>Unduh template CSV, unggah file (CSV diparsing penuh; Excel menampilkan pratinjau simulasi -- lihat 8. Batasan), tinjau tabel pratinjau dengan status Valid/Perlu Dicek/Error per baris, lalu "Import Tagihan yang Valid" untuk membuat draft dari baris yang levelnya bukan <code>error</code></td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Simpan Draft Tagihan</td><td>Tombol "+ Buat Draft Tagihan" membuat tagihan <code>draft</code> dari baris Individual yang lengkap (kelas &amp; nama siswa terisi) atau dari seluruh siswa aktif di kelas Massal yang dicentang; form di-reset &amp; kartu "Buat Tagihan Baru" ditutup otomatis setelah berhasil</td><td>Must</td></tr>
+              <tr><td>FR-06</td><td>Lihat &amp; Filter Daftar Tagihan</td><td>Tabel menampilkan Siswa, Kelas, Jenis, Periode, Nominal, Jatuh Tempo, Status, Aksi; difilter lewat dropdown Periode (opsi diisi otomatis dari nilai <code>periode</code> yang benar-benar ada di data, bukan daftar tetap), Kelas, dan Status -- ketiganya berlaku sebagai AND</td><td>Must</td></tr>
+              <tr><td>FR-07</td><td>Edit Tagihan Draft</td><td>Tombol edit (&#9998;) hanya tampil untuk status <code>draft</code>; membuka panel berisi konteks siswa (read-only) serta field Jenis Tagihan, Nominal, Periode, dan Jatuh Tempo yang bisa diubah</td><td>Must</td></tr>
+              <tr><td>FR-08</td><td>Simpan Perubahan Tagihan</td><td>Saat "Simpan" ditekan pada panel edit, sistem menampilkan dialog konfirmasi sebelum benar-benar menyimpan perubahan ke tagihan terkait</td><td>Must</td></tr>
+              <tr><td>FR-09</td><td>Hapus Tagihan Draft</td><td>Tombol hapus (&#10005;) hanya tampil untuk status <code>draft</code>; menampilkan dialog konfirmasi sebelum menghapus tagihan dari <code>invoiceData</code></td><td>Must</td></tr>
+              <tr><td>FR-10</td><td>Publish Tagihan</td><td>Tombol "Publish" hanya tampil untuk status <code>draft</code>; mengubah status menjadi <code>sent</code> tanpa dialog konfirmasi tambahan</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Membuat tagihan massal untuk satu kelas</strong></p>
+        <ol>
+          <li>Bendahara menekan "+ Tambah Tagihan", memilih mode "Massal".</li>
+          <li>Memilih Kategori Kelas "Reguler", mencentang kelas "5A", memilih Jenis Tagihan "SPP" (nominal otomatis terisi sesuai kategori), memastikan Periode &amp; Jatuh Tempo, lalu menekan "+ Buat Draft Tagihan".</li>
+          <li>Sistem membuat satu baris <code>draft</code> untuk setiap siswa aktif di kelas 5A, menampilkan toast "&#10003; N draft tagihan berhasil dibuat", mengosongkan form, dan menutup kartu "Buat Tagihan Baru".</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mengubah nominal tagihan draft yang salah input</strong></p>
+        <ol>
+          <li>Bendahara menyadari nominal SPP salah pada satu baris draft, menekan edit (&#9998;) pada baris tersebut di Daftar Tagihan.</li>
+          <li>Panel terbuka menampilkan konteks siswa, mengubah Nominal, menekan "Simpan".</li>
+          <li>Sistem menampilkan dialog konfirmasi; setelah dikonfirmasi, nominal tersimpan dan tabel diperbarui.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Mengimpor tagihan dari file CSV dengan sebagian baris error</strong></p>
+        <ol>
+          <li>Bendahara mengunduh template, mengisi data lama dari luar sistem, mengunggah file CSV.</li>
+          <li>Sistem memparsing &amp; memvalidasi setiap baris; baris dengan NIS tidak ditemukan ditandai <code>Error</code>, baris dengan Jenis Tagihan yang tidak ada di Master Data Tagihan ditandai <code>Perlu Dicek</code>, sisanya <code>Valid</code>.</li>
+          <li>Bendahara menekan "Import Tagihan yang Valid" -- hanya baris non-<code>error</code> yang diimpor sebagai <code>draft</code>; toast menampilkan jumlah berhasil &amp; jumlah yang dilewati.</li>
+        </ol>
+
+        <p><strong>UC-04 -- Mencoba edit/hapus tagihan yang sudah dipublish (tidak tersedia)</strong></p>
+        <ol>
+          <li>Bendahara melihat tagihan berstatus <code>sent</code> di Daftar Tagihan -- kolom Aksi menampilkan "--" tanpa tombol apa pun selain yang sudah ada sebelumnya (Publish juga tidak tampil karena hanya untuk <code>draft</code>).</li>
+          <li>Karena tombol tidak tersedia di UI, perubahan terhadap tagihan ini hanya mungkin lewat fitur lain (pembayaran, write-off) yang memang dirancang untuk memproses status lanjutan -- bukan lewat halaman ini.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Mode Individual: baris tanpa Kelas dan/atau Nama siswa terisi diabaikan (tidak membuat tagihan), bukan ditolak sebagai error -- jika tidak ada satu pun baris valid, sistem menolak dengan toast "Belum ada baris siswa yang lengkap..."</td></tr>
+              <tr><td>BR-02</td><td>Mode Massal: minimal satu kelas wajib dicentang, dan harus ada minimal satu siswa aktif di kelas tersebut -- selain itu sistem menolak dengan toast terkait</td></tr>
+              <tr><td>BR-03</td><td>Tagihan baru selalu berstatus <code>draft</code>, baik dari mode Individual, Massal, maupun Import</td></tr>
+              <tr><td>BR-04</td><td>Mode Import: baris dengan level <code>error</code> (NIS tidak ditemukan/siswa tidak aktif, nominal tidak valid, format periode/jatuh tempo salah) tidak ikut diimpor; baris <code>error</code> namun Jenis Tagihan tidak dikenal Master Data Tagihan tetap diimpor dengan level <code>warning</code> ("Perlu Dicek"), bukan ditolak</td></tr>
+              <tr><td>BR-05</td><td>Edit &amp; Hapus (FR-07/FR-09) hanya tersedia untuk tagihan berstatus <code>draft</code> -- diterapkan dengan menyembunyikan tombol pada status lain, bukan guard tambahan di lapisan fungsi (lihat 8. Batasan)</td></tr>
+              <tr><td>BR-06</td><td>Panel Edit tetap menampilkan Jenis Tagihan tagihan yang sedang diedit sebagai opsi terpilih meski Jenis tersebut sudah tidak aktif/tidak ada di Periode Tahun Ajaran yang sedang berjalan (lewat <code>jenisTagihanOptionsSafe</code>), supaya "Simpan" tanpa mengubah pilihan tidak diam-diam mengganti Jenis Tagihan</td></tr>
+              <tr><td>BR-07</td><td>Filter Periode pada Daftar Tagihan diisi dari nilai <code>periode</code> yang benar-benar ada pada <code>invoiceData</code> saat ini (bukan daftar Periode Tahun Ajaran) -- lihat 8. Batasan terkait dua makna "periode" yang berbeda</td></tr>
+              <tr><td>BR-08</td><td>Publish (FR-10) tidak memerlukan dialog konfirmasi -- berbeda dari Edit yang memerlukan konfirmasi</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field (Panel Edit)</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Jenis Tagihan</td><td><code>#inv-edit-jenis</code></td><td>Ya (selalu ada pilihan)</td><td>Dropdown dari kategori aktif pada Periode Tahun Ajaran aktif, ditambah opsi "(periode lain)" bila nilai tersimpan tidak termasuk (lihat BR-06)</td></tr>
+              <tr><td>Nominal</td><td><code>#inv-edit-nominal</code></td><td>Tidak divalidasi</td><td>Angka; nilai kosong/non-angka dianggap 0 tanpa penolakan</td></tr>
+              <tr><td>Periode</td><td><code>#inv-edit-periode</code></td><td><strong>Ya</strong></td><td>Teks bebas (bukan dropdown) -- tidak boleh kosong setelah di-<em>trim</em></td></tr>
+              <tr><td>Jatuh Tempo</td><td><code>#inv-edit-jatuhtempo</code></td><td><strong>Ya</strong></td><td>Format tanggal (<code>&lt;input type="date"&gt;</code>); tidak boleh kosong</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>Invoice</code> (<code>invoiceData</code>)</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Wajib Diisi Pengguna?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>integer</td><td>Tidak (dibuat sistem)</td><td>Pengenal unik, auto-increment (<code>invoiceSeq</code>) -- dipakai Edit/Hapus/Publish</td></tr>
+              <tr><td><code>siswa</code></td><td>string (nama)</td><td><strong>Ya</strong></td><td>Tidak bisa diubah setelah dibuat (bukan field pada panel Edit) -- identitas tagihan terikat ke siswa sejak awal</td></tr>
+              <tr><td><code>kelas</code></td><td>string (kode kelas)</td><td><strong>Ya</strong></td><td>Diturunkan otomatis dari data siswa saat tagihan dibuat; tidak bisa diubah lewat Edit</td></tr>
+              <tr><td><code>jenis</code></td><td>string</td><td><strong>Ya</strong></td><td>Merujuk <code>nama</code> pada <a class="xref" href="PRD-master-data-tagihan.html">Master Data Tagihan</a>, namun disimpan sebagai teks bebas (tidak ada relasi/FK) -- lihat BR-06</td></tr>
+              <tr><td><code>periode</code></td><td>string (format bebas)</td><td><strong>Ya</strong></td><td>Mode Individual/Massal mengisi dengan nama Periode Tahun Ajaran (mis. <code>"2026/2027"</code>) lewat dropdown; data impor/seed/Edit menggunakan format bulan penagihan (mis. <code>"2026-07"</code>) sebagai teks bebas -- lihat 8. Batasan, dua makna berbeda tercampur pada field yang sama</td></tr>
+              <tr><td><code>nominal</code></td><td>integer (Rupiah)</td><td><strong>Ya</strong></td><td>Otomatis terisi dari Master Data Tagihan saat dibuat, bisa dioverride manual</td></tr>
+              <tr><td><code>jatuhTempo</code></td><td>string (tanggal ISO <code>YYYY-MM-DD</code>)</td><td><strong>Ya</strong></td><td>&nbsp;</td></tr>
+              <tr><td><code>status</code></td><td>string enum</td><td>Tidak (dikelola sistem)</td><td><code>draft</code> &rarr; <code>sent</code> (via Publish) &rarr; status lanjutan lain (<code>paid</code>, <code>overdue</code>, dst.) diset oleh fitur lain (Pembayaran, Write-off) -- lihat <a class="xref" href="#sec-9">9. Pertanyaan Terbuka No. 1</a> untuk status <code>written_off</code> yang terdaftar di UI namun tidak pernah diset kode manapun</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Validasi</td><td>Seluruh mode pembuatan tagihan &amp; panel Edit divalidasi sebelum data tersimpan (lihat <a class="xref" href="#sec-5">bagian 5</a>)</td><td>100% percobaan simpan tidak valid ditolak/diabaikan sesuai aturan</td></tr>
+              <tr><td>NFR-02</td><td>Feedback</td><td>Setiap aksi (buat/edit/hapus/publish/import) menampilkan toast konfirmasi atau pesan kesalahan yang jelas, termasuk ringkasan jumlah baris pada mode Massal/Import</td><td>100% aksi memberi feedback visual</td></tr>
+              <tr><td>NFR-03</td><td>Konsistensi lintas halaman</td><td>Perubahan <code>invoiceData</code> (buat/edit/hapus/publish) langsung memperbarui <code>updateStats()</code> (4 kartu statistik yang sama di seluruh halaman Transaksi &amp; Invoice) dan dropdown invoice terkait di halaman Write-off &amp; Pembayaran Manual</td><td>0% halaman lain menampilkan data tagihan basi setelah perubahan</td></tr>
+              <tr><td>NFR-04</td><td>Batas unggahan</td><td>Mode Import membatasi ukuran file sesuai keterangan UI</td><td>Maks. 2MB per file (<code>.csv</code>/<code>.xlsx</code>)</td></tr>
+              <tr><td>NFR-05</td><td>Performa</td><td>Render ulang Daftar Tagihan saat filter/aksi berubah</td><td>&lt; 300ms untuk &le; 500 baris tagihan (operasi lokal pada prototipe)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Field <code>periode</code> menampung dua konsep berbeda tanpa pemisahan skema: nama Periode Tahun Ajaran (dari mode Individual/Massal) dan nomor bulan penagihan (dari data impor/seed/Edit) -- filter Periode pada Daftar Tagihan (BR-07) tetap berfungsi karena hanya mencocokkan string apa adanya, namun nilai yang muncul di dropdown bisa tercampur dua format ini.</li>
+          <li>Parsing file <code>.xlsx</code>/<code>.xls</code> pada mode Import <strong>belum diimplementasikan secara nyata</strong> -- pratinjau yang tampil adalah 4 baris data simulasi tetap, terlepas dari isi file yang sesungguhnya diunggah pengguna; parser Excel penuh direncanakan berjalan di backend saat integrasi produksi.</li>
+          <li>Guard "hanya <code>draft</code> yang bisa Edit/Hapus" (BR-05) hanya diterapkan dengan menyembunyikan tombol di UI, <strong>tidak ada</strong> pengecekan ulang di lapisan fungsi <code>openInvoiceEditPanel</code>/<code>saveInvoiceEdit</code>/<code>deleteInvoiceRow</code> -- berbeda dari pola "pertahanan lapis kedua" yang dipakai Periode Tahun Ajaran untuk guard "Terpakai"-nya.</li>
+          <li>Status <code>written_off</code> terdaftar di <code>STATUS_BADGE</code>/opsi filter dan dirujuk sebagai pengecualian di beberapa fungsi (<code>fillWriteoffInvoiceSelect</code>, <code>fillManualPaymentInvoiceSelect</code>), namun <strong>tidak ada kode yang pernah benar-benar mengubah</strong> <code>invoiceData[].status</code> menjadi <code>written_off</code> -- lihat <a class="xref" href="PRD-writeoff-hapus-buku.html">PRD Write-off</a> bagian 8 &amp; <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Satu tagihan selalu terkait tepat satu siswa dan satu Jenis Tagihan -- tidak ada tagihan gabungan beberapa jenis dalam satu baris.</li>
+          <li>Nominal yang terisi otomatis dari Master Data Tagihan dianggap benar secara default; override manual oleh Bendahara/Admin dianggap sengaja (mis. keringanan per siswa) dan tidak memerlukan alasan tertulis.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Status <code>written_off</code> tidak pernah diset oleh kode manapun saat ini, termasuk setelah Kepala Sekolah menyetujui pengajuan write-off (lihat <a class="xref" href="PRD-writeoff-hapus-buku.html">PRD Write-off</a>) -- apakah ini memang disengaja ditunda ke iterasi berikutnya, atau merupakan gap implementasi yang perlu segera ditutup sebelum go-live?</td><td>Tech Lead / Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah field <code>periode</code> perlu dipecah menjadi dua field terpisah (Periode Tahun Ajaran vs Bulan Penagihan) agar tidak lagi tercampur, mengingat kedua konsep ini dipakai berbarengan di seluruh modul Transaksi &amp; Invoice?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah guard "hanya draft yang bisa Edit/Hapus" perlu dipindahkan juga ke lapisan fungsi (bukan hanya menyembunyikan tombol), mengikuti pola pertahanan lapis kedua yang sudah dipakai Periode Tahun Ajaran?</td><td>Tech Lead</td><td>[ ]</td></tr>
+              <tr><td>4</td><td>Kapan target implementasi parser <code>.xlsx</code>/<code>.xls</code> yang sesungguhnya (bukan pratinjau simulasi) untuk mode Import?</td><td>Solution Architect</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Draft</td><td>Tagihan yang sudah tercatat sistem namun belum dikirim ke wali murid; satu-satunya status yang bisa diubah/dihapus dari halaman ini</td></tr>
+              <tr><td>Publish</td><td>Aksi menerbitkan tagihan <code>draft</code> menjadi <code>sent</code></td></tr>
+              <tr><td>Mode Individual / Massal / Import</td><td>Tiga cara membuat tagihan baru -- lihat 2.3 Definisi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

@@ -29,9 +29,29 @@
           ><span class="ic">🏫</span> Manajemen Sekolah</a
         >
 
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
         <div class="nav-group-label">Konfigurasi</div>
         <a href="konfigurasi.html" class="nav-item" data-rbac="konfigurasi"
-          ><span class="ic">⚙</span> Konfigurasi Sistem</a
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
         >
         <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
           ><span class="ic">👤</span> Pengguna</a
@@ -98,6 +118,9 @@
                 </p>
               </div>
               <div class="card">
+                <div class="note-box info" id="ms-scope-note">
+                  Memuat informasi cakupan akses...
+                </div>
                 <div class="filter-bar">
                   <input
                     type="text"
@@ -108,9 +131,21 @@
                   />
                   <select
                     id="ms-list-filter-wilayah"
-                    onchange="renderSchoolList()"
+                    onchange="onMsFilterWilayahChange()"
                   >
                     <option value="">Semua Wilayah (PWM)</option>
+                  </select>
+                  <select
+                    id="ms-list-filter-daerah"
+                    onchange="onMsFilterDaerahChange()"
+                  >
+                    <option value="">Semua Daerah (PDM)</option>
+                  </select>
+                  <select
+                    id="ms-list-filter-cabang"
+                    onchange="onMsFilterCabangChange()"
+                  >
+                    <option value="">Semua Cabang (PCM)</option>
                   </select>
                   <select
                     id="ms-list-filter-status"
@@ -773,6 +808,48 @@
       </div>
     </div>
 
+    <!-- ===================== MODAL: AKSES DITOLAK (filter di luar cakupan) ===================== -->
+    <div
+      class="modal-overlay"
+      id="scope-denied-modal-overlay"
+      onclick="if (event.target === this) closeScopeDeniedModal();"
+    >
+      <div class="modal-box" style="max-width: 480px">
+        <div class="modal-head">
+          <div>
+            <h3>⛔ Tidak Dapat Mengakses</h3>
+            <div class="modal-sub">Filter berada di luar cakupan akun Anda</div>
+          </div>
+          <span class="modal-close" onclick="closeScopeDeniedModal()">✕</span>
+        </div>
+        <div class="modal-body">
+          <div class="note-box danger">
+            Anda mencoba memfilter <b id="scope-denied-target">--</b>, namun
+            akun Anda hanya memiliki cakupan akses
+            <b id="scope-denied-cakupan">--</b>. Pilihan filter dikembalikan ke
+            nilai sebelumnya.
+          </div>
+          <p
+            style="
+              font-size: 12px;
+              color: var(--muted);
+              margin-top: 10px;
+              margin-bottom: 0;
+            "
+          >
+            Hubungi Super Admin bila Anda memang perlu mengakses cakupan lain
+            di luar Wilayah (PWM) / Daerah (PDM) / Cabang (PCM) yang terdaftar
+            pada akun Anda.
+          </p>
+        </div>
+        <div class="btn-row" style="justify-content: flex-end">
+          <button class="btn btn-primary" onclick="closeScopeDeniedModal()">
+            Mengerti
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast" id="toast">✓ Konfigurasi berhasil disimpan</div>
 
     <script src="app.js"></script>
@@ -976,13 +1053,87 @@
             return "Rp" + n.toLocaleString("id-ID");
           }
 
+          // ---- Cakupan akses (Pusat/Wilayah/Daerah/Cabang) -- lihat field `cakupan`
+          // per pengguna di usersData (app.js). Pusat selalu bisa akses semua sekolah;
+          // level lain dibatasi sesuai PWM/PDM/PCM yang tercatat pada akunnya.
+          function getUserCakupan() {
+            return (currentUser && currentUser.cakupan) || { level: "Pusat" };
+          }
+          function cakupanLabel(c) {
+            if (c.level === "Wilayah") return `Wilayah -- ${c.pwm}`;
+            if (c.level === "Daerah")
+              return `Daerah -- ${c.pdm} (${c.pwm})`;
+            if (c.level === "Cabang")
+              return `Cabang -- ${c.pcm} (${c.pdm}, ${c.pwm})`;
+            return "Pusat (seluruh sekolah)";
+          }
+          // Apakah SEKOLAH s boleh ditampilkan untuk pengguna yang sedang login --
+          // ini penegakan mutlak, terlepas dari apapun nilai filter yang dipilih.
+          function schoolInUserScope(s) {
+            const c = getUserCakupan();
+            if (c.level === "Pusat") return true;
+            if (s.wilayah !== c.pwm) return false;
+            if (c.level === "Wilayah") return true;
+            if (s.daerah !== c.pdm) return false;
+            if (c.level === "Daerah") return true;
+            return s.cabang === c.pcm;
+          }
+          // Apakah kombinasi FILTER (wilayah/daerah/cabang) yang baru dipilih masih
+          // berada di dalam cakupan pengguna -- dipakai untuk memvalidasi perubahan
+          // dropdown filter (bukan untuk memfilter baris tabel, lihat schoolInUserScope).
+          function isScopeAllowed(wilayah, daerah, cabang) {
+            const c = getUserCakupan();
+            if (c.level === "Pusat") return true;
+            if (wilayah && wilayah !== c.pwm) return false;
+            if (
+              daerah &&
+              (c.level === "Daerah" || c.level === "Cabang") &&
+              daerah !== c.pdm
+            )
+              return false;
+            if (cabang && c.level === "Cabang" && cabang !== c.pcm)
+              return false;
+            return true;
+          }
+          function scopeTargetLabel(wilayah, daerah, cabang) {
+            if (cabang) return `Cabang -- ${cabang}`;
+            if (daerah) return `Daerah -- ${daerah}`;
+            if (wilayah) return `Wilayah -- ${wilayah}`;
+            return "(tidak diketahui)";
+          }
+          function openScopeDeniedModal(wilayah, daerah, cabang) {
+            document.getElementById("scope-denied-target").textContent =
+              scopeTargetLabel(wilayah, daerah, cabang);
+            document.getElementById("scope-denied-cakupan").textContent =
+              cakupanLabel(getUserCakupan());
+            document
+              .getElementById("scope-denied-modal-overlay")
+              .classList.add("active");
+          }
+          function closeScopeDeniedModal() {
+            document
+              .getElementById("scope-denied-modal-overlay")
+              .classList.remove("active");
+          }
+          function renderMsScopeNote() {
+            const el = document.getElementById("ms-scope-note");
+            if (!el) return;
+            const c = getUserCakupan();
+            el.textContent =
+              c.level === "Pusat"
+                ? "ℹ️ Akun Anda memiliki cakupan Pusat -- dapat mengakses & memfilter seluruh sekolah di semua Wilayah (PWM), Daerah (PDM), dan Cabang (PCM)."
+                : `ℹ️ Akun Anda memiliki cakupan ${cakupanLabel(c)} -- daftar sekolah di bawah otomatis dibatasi sesuai cakupan ini, dan filter Wilayah/Daerah/Cabang hanya dapat diarahkan ke dalam cakupan Anda.`;
+          }
+
+          // filter Wilayah (PWM) -> Daerah (PDM) -> Cabang (PCM) di daftar sekolah --
+          // cascading mengikuti ORG_TREE_MS yang sama dengan form Info Sekolah, supaya
+          // opsi yang tampil konsisten dengan seluruh struktur organisasi platform
+          // (bukan hanya sekolah yang sudah terdaftar di schoolsData).
           function fillMsListWilayahFilter() {
             const sel = document.getElementById("ms-list-filter-wilayah");
             if (!sel) return;
             const cur = sel.value;
-            const options = [
-              ...new Set(schoolsData.map((s) => s.wilayah)),
-            ].sort();
+            const options = Object.keys(ORG_TREE_MS).sort();
             sel.innerHTML =
               '<option value="">Semua Wilayah (PWM)</option>' +
               options
@@ -992,8 +1143,104 @@
                 )
                 .join("");
           }
+          function fillMsListDaerahFilter() {
+            const selW = document.getElementById("ms-list-filter-wilayah");
+            const selD = document.getElementById("ms-list-filter-daerah");
+            if (!selW || !selD) return;
+            const cur = selD.value;
+            const pdms = selW.value
+              ? Object.keys(ORG_TREE_MS[selW.value] || {}).sort()
+              : [];
+            selD.disabled = !selW.value;
+            selD.innerHTML =
+              '<option value="">Semua Daerah (PDM)</option>' +
+              pdms
+                .map(
+                  (d) =>
+                    `<option value="${d}" ${d === cur ? "selected" : ""}>${d}</option>`,
+                )
+                .join("");
+          }
+          function fillMsListCabangFilter() {
+            const selW = document.getElementById("ms-list-filter-wilayah");
+            const selD = document.getElementById("ms-list-filter-daerah");
+            const selC = document.getElementById("ms-list-filter-cabang");
+            if (!selW || !selD || !selC) return;
+            const cur = selC.value;
+            const pcms =
+              selW.value && selD.value
+                ? ((ORG_TREE_MS[selW.value] || {})[selD.value] || [])
+                    .slice()
+                    .sort()
+                : [];
+            selC.disabled = !(selW.value && selD.value);
+            selC.innerHTML =
+              '<option value="">Semua Cabang (PCM)</option>' +
+              pcms
+                .map(
+                  (c) =>
+                    `<option value="${c}" ${c === cur ? "selected" : ""}>${c}</option>`,
+                )
+                .join("");
+          }
+          // menyimpan nilai filter TERAKHIR YANG SAH, supaya saat pengguna memilih
+          // kombinasi di luar cakupannya, dropdown bisa dikembalikan ke nilai semula.
+          let msFilterState = { wilayah: "", daerah: "", cabang: "" };
+          function onMsFilterWilayahChange() {
+            const sel = document.getElementById("ms-list-filter-wilayah");
+            const newVal = sel.value;
+            if (!isScopeAllowed(newVal, "", "")) {
+              sel.value = msFilterState.wilayah;
+              openScopeDeniedModal(newVal, "", "");
+              return;
+            }
+            msFilterState.wilayah = newVal;
+            msFilterState.daerah = "";
+            msFilterState.cabang = "";
+            fillMsListDaerahFilter();
+            fillMsListCabangFilter();
+            document.getElementById("ms-list-filter-daerah").value = "";
+            document.getElementById("ms-list-filter-cabang").value = "";
+            renderSchoolList();
+          }
+          function onMsFilterDaerahChange() {
+            const sel = document.getElementById("ms-list-filter-daerah");
+            const wilayah = document.getElementById(
+              "ms-list-filter-wilayah",
+            ).value;
+            const newVal = sel.value;
+            if (!isScopeAllowed(wilayah, newVal, "")) {
+              sel.value = msFilterState.daerah;
+              openScopeDeniedModal(wilayah, newVal, "");
+              return;
+            }
+            msFilterState.daerah = newVal;
+            msFilterState.cabang = "";
+            fillMsListCabangFilter();
+            document.getElementById("ms-list-filter-cabang").value = "";
+            renderSchoolList();
+          }
+          function onMsFilterCabangChange() {
+            const sel = document.getElementById("ms-list-filter-cabang");
+            const wilayah = document.getElementById(
+              "ms-list-filter-wilayah",
+            ).value;
+            const daerah = document.getElementById(
+              "ms-list-filter-daerah",
+            ).value;
+            const newVal = sel.value;
+            if (!isScopeAllowed(wilayah, daerah, newVal)) {
+              sel.value = msFilterState.cabang;
+              openScopeDeniedModal(wilayah, daerah, newVal);
+              return;
+            }
+            msFilterState.cabang = newVal;
+            renderSchoolList();
+          }
           function renderSchoolList() {
             fillMsListWilayahFilter();
+            fillMsListDaerahFilter();
+            fillMsListCabangFilter();
             const tbody = document.getElementById("ms-table-body");
             const q = (document.getElementById("ms-list-search").value || "")
               .trim()
@@ -1001,16 +1248,25 @@
             const wilayahQ = document.getElementById(
               "ms-list-filter-wilayah",
             ).value;
+            const daerahQ = document.getElementById(
+              "ms-list-filter-daerah",
+            ).value;
+            const cabangQ = document.getElementById(
+              "ms-list-filter-cabang",
+            ).value;
             const statusQ = document.getElementById(
               "ms-list-filter-status",
             ).value;
             const rows = schoolsData
               .map((s, i) => ({ s, i }))
+              .filter(({ s }) => schoolInUserScope(s))
               .filter(
                 ({ s }) =>
                   !q || s.nama.toLowerCase().includes(q) || s.npsn.includes(q),
               )
               .filter(({ s }) => !wilayahQ || s.wilayah === wilayahQ)
+              .filter(({ s }) => !daerahQ || s.daerah === daerahQ)
+              .filter(({ s }) => !cabangQ || s.cabang === cabangQ)
               .filter(({ s }) => !statusQ || s.status === statusQ);
             tbody.innerHTML = rows.length
               ? rows
@@ -1547,6 +1803,7 @@
             showToast(`✓ ${s.nama} berhasil diaktifkan kembali.`);
           }
 
+          renderMsScopeNote();
           renderSchoolList();
 
           // expose to inline onclick="" handlers in the markup above
@@ -1572,6 +1829,10 @@
             setMsRekeningUtama,
             msStepNav,
             saveMsPerubahan,
+            onMsFilterWilayahChange,
+            onMsFilterDaerahChange,
+            onMsFilterCabangChange,
+            closeScopeDeniedModal,
           });
         }
       }

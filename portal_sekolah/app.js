@@ -98,7 +98,6 @@
     { key: 'sekolah', label: 'Manajemen Sekolah', icon: '🏫' },
     { key: 'wali', label: 'Akun Wali Murid', icon: '📱' },
     { key: 'murid', label: 'Manajemen Murid', icon: '🧑‍🎓' },
-    { key: 'periode', label: 'Periode Tahun Ajaran', icon: '🗓️' },
     { key: 'transaksi', label: 'Transaksi & Invoice', icon: '💳' },
     { key: 'blast', label: 'Blast Notifikasi', icon: '📣' },
   ];
@@ -111,31 +110,30 @@
     "Bendahara": "Mengelola tagihan, transaksi, notifikasi & konfigurasi sekolah -- tidak bisa menyetujui write-off maupun mengatur akun/RBAC.",
     "Admin": "Mengelola RBAC, akun staf sekolah, dan pendaftaran akun Wali Murid -- tidak ikut menyetujui write-off (segregation of duties). Izin Admin selalu penuh & tidak bisa diubah.",
   };
-  // "periode" (Periode Tahun Ajaran) mengikuti akses "transaksi" yang sudah ada sebelumnya --
-  // dulu master data ini ada di tab Tagihan milik Transaksi & Invoice, jadi Bendahara & Admin
-  // (dua role yang sebelumnya bisa akses transaksi) tetap bisa kelola periode setelah dipindah
-  // jadi halaman tersendiri (periode.html).
   const rbacPerms = {
     "Kepala Sekolah": {
       dashboard: cruFull(true), approval: cruFull(true), konfigurasi: cruFull(false), sekolah: cruFull(false),
-      wali: cruFull(true), murid: cruFull(false), periode: cruFull(false), transaksi: cruFull(false), blast: cruFull(false),
+      wali: cruFull(true), murid: cruFull(false), transaksi: cruFull(false), blast: cruFull(false),
     },
     "Bendahara": {
       dashboard: cruFull(true), approval: cruFull(false), konfigurasi: cruFull(true), sekolah: cruFull(false),
-      wali: cruFull(false), murid: cruFull(true), periode: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
+      wali: cruFull(false), murid: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
     },
     "Admin": {
       dashboard: cruFull(true), approval: cruFull(false), konfigurasi: cruFull(true), sekolah: cruFull(true),
-      wali: cruFull(true), murid: cruFull(true), periode: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
+      wali: cruFull(true), murid: cruFull(true), transaksi: cruFull(true), blast: cruFull(true),
     },
   };
 
-  // Master Periode Tahun Ajaran -- hanya 1 yang boleh aktif di satu waktu.
-  // Periode aktif jadi default pilihan saat Bendahara membuat tagihan baru.
-  let periodeSeq = 1;
+  // Master Periode Tahun Ajaran -- sekarang dikelola terpusat oleh Admin Pusat (menu Konfigurasi
+  // Sistem di admin_muhammadiyah), supaya seluruh sekolah memakai satu sumber data tahun ajaran
+  // yang sama (bukan masing-masing sekolah menentukan tanggalnya sendiri). Array ini hanya salinan
+  // baca (read-only) untuk kebutuhan dropdown/filter di Portal Sekolah -- di produksi diisi lewat
+  // API dari Admin Pusat; pada prototipe ini disalin manual & tidak ada lagi UI Tambah/Edit/Hapus
+  // di Portal Sekolah (lihat PRD Konfigurasi Sistem -- Admin Pusat, bagian Periode Tahun Ajaran).
   const periodeTahunAjaranData = [
-    { id: periodeSeq++, nama: "2025/2026", mulai: "2025-07-01", selesai: "2026-06-30", aktif: false },
-    { id: periodeSeq++, nama: "2026/2027", mulai: "2026-07-01", selesai: "2027-06-30", aktif: true },
+    { nama: "2025/2026", mulai: "2025-07-01", selesai: "2026-06-30", aktif: false },
+    { nama: "2026/2027", mulai: "2026-07-01", selesai: "2027-06-30", aktif: true },
   ];
 
   // Master Kategori Kelas -- dinamis, sekolah bisa punya lebih dari 2 kategori (mis. Reguler, Umum,
@@ -184,16 +182,16 @@
 
   const PERIODE_LABEL = { sekali: 'Sekali Bayar', bulanan: 'Bulanan', per3bulan: 'Per 3 Bulan', per6bulan: 'Per 6 Bulan', tahunan: 'Tahunan' };
   const masterTagihanData = [
-    { nama: "SPP", periode: "bulanan", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 350000, 2: 375000 }, aktif: true },
-    { nama: "Uang Gedung", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 2500000, 2: 2500000 }, aktif: true },
-    { nama: "Uang Pangkal", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 1500000, 2: 1500000 }, aktif: true },
-    { nama: "Uang Pendaftaran", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 500000, 2: 500000 }, aktif: true },
-    { nama: "Kegiatan Semester", periode: "per6bulan", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 300000, 2: 300000 }, aktif: true },
-    { nama: "SPP", periode: "bulanan", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 320000, 2: 340000 }, aktif: true },
-    { nama: "Uang Gedung", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 2300000, 2: 2300000 }, aktif: true },
-    { nama: "Uang Pangkal", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 1400000, 2: 1400000 }, aktif: true },
-    { nama: "Uang Pendaftaran", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 450000, 2: 450000 }, aktif: true },
-    { nama: "Kegiatan Semester", periode: "per6bulan", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 275000, 2: 275000 }, aktif: true },
+    { kode: "SPP", nama: "SPP", periode: "bulanan", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 350000, 2: 375000 }, aktif: true },
+    { kode: "UGD", nama: "Uang Gedung", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 2500000, 2: 2500000 }, aktif: true },
+    { kode: "UPK", nama: "Uang Pangkal", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 1500000, 2: 1500000 }, aktif: true },
+    { kode: "UPD", nama: "Uang Pendaftaran", periode: "sekali", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 500000, 2: 500000 }, aktif: true },
+    { kode: "KGS", nama: "Kegiatan Semester", periode: "per6bulan", periodeTahunAjaran: "2026/2027", nominalByKategori: { 1: 300000, 2: 300000 }, aktif: true },
+    { kode: "SPP", nama: "SPP", periode: "bulanan", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 320000, 2: 340000 }, aktif: true },
+    { kode: "UGD", nama: "Uang Gedung", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 2300000, 2: 2300000 }, aktif: true },
+    { kode: "UPK", nama: "Uang Pangkal", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 1400000, 2: 1400000 }, aktif: true },
+    { kode: "UPD", nama: "Uang Pendaftaran", periode: "sekali", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 450000, 2: 450000 }, aktif: true },
+    { kode: "KGS", nama: "Kegiatan Semester", periode: "per6bulan", periodeTahunAjaran: "2025/2026", nominalByKategori: { 1: 275000, 2: 275000 }, aktif: true },
   ];
 
   let invoiceSeq = 1;
@@ -669,8 +667,8 @@
   function getSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); } catch (e) { return null; } }
   function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
 
-  const NAV_ORDER = ['dashboard', 'approval', 'konfigurasi', 'sekolah', 'wali', 'murid', 'periode', 'transaksi', 'blast'];
-  const PAGE_FOR_KEY = { dashboard: 'dashboard.html', approval: 'approval.html', konfigurasi: 'konfigurasi.html', sekolah: 'sekolah.html', wali: 'wali.html', murid: 'murid.html', periode: 'periode.html', transaksi: 'transaksi.html', blast: 'blast.html' };
+  const NAV_ORDER = ['dashboard', 'approval', 'konfigurasi', 'sekolah', 'wali', 'murid', 'transaksi', 'blast'];
+  const PAGE_FOR_KEY = { dashboard: 'dashboard.html', approval: 'approval.html', konfigurasi: 'konfigurasi.html', sekolah: 'sekolah.html', wali: 'wali.html', murid: 'murid.html', transaksi: 'transaksi-tagihan.html', blast: 'blast.html' };
   function defaultPageFor(peran) {
     const perms = rbacPerms[peran] || {};
     const key = NAV_ORDER.find(k => perms[k] && perms[k].r);
@@ -697,6 +695,9 @@
     const pendingWali = waliAccounts.filter(w => w.status === 'menunggu_approval').length;
     const waliPill = document.getElementById('nav-wali-pending-count');
     if (waliPill) { waliPill.textContent = pendingWali; waliPill.style.display = pendingWali ? 'inline-block' : 'none'; }
+    const pendingManual = manualConfirmationData.filter(m => m.status === 'menunggu_verifikasi').length;
+    const manualPill = document.getElementById('nav-manual-pending-count');
+    if (manualPill) { manualPill.textContent = pendingManual; manualPill.style.display = pendingManual ? 'inline-block' : 'none'; }
   }
 
 
@@ -809,9 +810,16 @@
     parent.classList.toggle('expanded', open);
   }
 
-  // jump from a Dashboard KPI/CTA straight into a specific tab under Transaksi & Invoice
+  // jump from a Dashboard KPI/CTA straight into the right standalone page under Transaksi & Invoice
+  // (tiap tab sekarang file sendiri -- lihat sidebar grup "transaksi")
+  const TRANSAKSI_PAGE_FOR_TAB = {
+    tagihan: 'transaksi-tagihan.html',
+    pembayaran: 'transaksi-riwayat.html',
+    writeoff: 'transaksi-writeoff.html',
+    manual: 'transaksi-manual.html',
+  };
   function goToInvoiceTab(tab) {
-    location.href = 'transaksi.html?tab=' + encodeURIComponent(tab);
+    location.href = TRANSAKSI_PAGE_FOR_TAB[tab] || 'transaksi-tagihan.html';
   }
 
   // =========================================================================
@@ -1383,6 +1391,7 @@
   function initSekolahProfil() {
     if (!document.getElementById('sk-alamat')) return;
     document.getElementById('sk-alamat').value = sekolahProfilData.alamat;
+    document.getElementById('sk-jumlah-siswa').value = studentsData.filter(s => s.status === 'aktif').length + ' siswa';
   }
   function saveAlamatSekolah() {
     if (!document.getElementById('sk-alamat')) return;
@@ -1416,7 +1425,7 @@
     return editBtn + `<button class="btn btn-outline-red btn-sm" style="width:100%;" onclick="toggleStaffStatus(${idx})">Nonaktifkan</button>`;
   }
   function renderStaffTable() {
-    if (!document.getElementById('sk-jumlah-siswa')) return;
+    if (!document.getElementById('staff-table')) return;
     const searchEl = document.getElementById('sk-staff-search');
     const peranEl = document.getElementById('sk-staff-filter-peran');
     const statusEl = document.getElementById('sk-staff-filter-status');
@@ -1438,7 +1447,6 @@
         <td>${statusAkunBadge(s)}</td>
         <td>${staffAksiHtml(s, idx)}</td>
       </tr>`).join('') : `<tr><td colspan="6" class="empty-hint">Tidak ada pengguna yang cocok dengan filter.</td></tr>`;
-    document.getElementById('sk-jumlah-siswa').value = studentsData.filter(s => s.status === 'aktif').length + ' siswa';
   }
   function initials(name) { return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase(); }
 
@@ -2077,132 +2085,9 @@
     return `<span class="badge-status ${cls}"><span class="dot"></span> ${label}</span>`;
   }
 
-  // ---- Master Periode Tahun Ajaran (halaman tersendiri: periode.html) ----
-  // CRUD dipisah seperti master data lain: Read = tabel ringkas, Create/Update lewat panel
-  // dengan validasi sendiri-sendiri, Delete langsung per baris (dengan guard minimal 1 periode).
-  // Periode yang sudah dipakai data lain (siswa di studentsData, atau nominal tagihan di
-  // masterTagihanData) dikunci dari Edit & Hapus -- supaya riwayat akademik/tagihan yang sudah
-  // tercatat untuk periode itu tidak bisa berubah/hilang begitu saja. "Jadikan Aktif" & menambah
-  // periode baru tetap boleh kapan saja, karena tidak mengubah data historis apa pun.
-  let periodeEditIdx = null;
-  function isPeriodeReferenced(nama) {
-    return studentsData.some(s => s.periode === nama) || masterTagihanData.some(m => m.periodeTahunAjaran === nama);
-  }
-  function renderMasterPeriodeTable() {
-    if (!document.getElementById('master-periode-body')) return;
-    const q = (document.getElementById('periode-search')?.value || '').trim().toLowerCase();
-    const tbody = document.getElementById('master-periode-body');
-    const rows = periodeTahunAjaranData
-      .map((p, i) => ({ p, i }))
-      .filter(({ p }) => !q || p.nama.toLowerCase().includes(q));
-    tbody.innerHTML = rows.length ? rows.map(({ p, i }) => {
-      const locked = isPeriodeReferenced(p.nama);
-      return `
-      <tr>
-        <td>${p.nama}</td>
-        <td>${p.mulai}</td>
-        <td>${p.selesai}</td>
-        <td>${p.aktif ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
-        <td>
-          ${locked
-            ? `<span class="hint" title="Periode ini sudah dipakai data siswa dan/atau master data tagihan -- tidak bisa diubah atau dihapus">🔒 Terpakai</span>`
-            : `<div class="row-actions">
-                 <button class="icon-btn" onclick="openPeriodePanel(${i})" title="Edit">✎</button>
-                 <button class="icon-btn icon-btn-red" onclick="removePeriodeRow(${i})" title="Hapus">✕</button>
-               </div>`}
-          ${!p.aktif ? `<button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="setPeriodeAktif(${i})">Jadikan Aktif</button>` : ''}
-        </td>
-      </tr>`;
-    }).join('') : `<tr><td colspan="5" class="empty-hint">Tidak ada periode yang cocok dengan pencarian.</td></tr>`;
-  }
-  function openPeriodePanel(idx) {
-    if (idx !== undefined && isPeriodeReferenced(periodeTahunAjaranData[idx].nama)) {
-      showToast('Periode ini sudah dipakai data siswa/tagihan -- tidak bisa diubah');
-      return;
-    }
-    periodeEditIdx = (idx === undefined) ? null : idx;
-    const panel = document.getElementById('periode-panel');
-    if (periodeEditIdx !== null) {
-      const p = periodeTahunAjaranData[periodeEditIdx];
-      document.getElementById('periode-panel-title').textContent = 'Edit Periode Tahun Ajaran';
-      document.getElementById('prd-nama').value = p.nama;
-      document.getElementById('prd-mulai').value = p.mulai;
-      document.getElementById('prd-selesai').value = p.selesai;
-      document.getElementById('prd-aktif').checked = p.aktif;
-    } else {
-      document.getElementById('periode-panel-title').textContent = 'Tambah Periode Tahun Ajaran';
-      document.getElementById('prd-nama').value = '';
-      document.getElementById('prd-mulai').value = '';
-      document.getElementById('prd-selesai').value = '';
-      document.getElementById('prd-aktif').checked = false;
-    }
-    panel.style.display = 'block';
-    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-  function closePeriodePanel() {
-    document.getElementById('periode-panel').style.display = 'none';
-    periodeEditIdx = null;
-  }
-  function savePeriodeTahunAjaran() {
-    const nama = document.getElementById('prd-nama').value.trim();
-    const mulai = document.getElementById('prd-mulai').value;
-    const selesai = document.getElementById('prd-selesai').value;
-    const aktif = document.getElementById('prd-aktif').checked;
-
-    if (!nama) { showToast('Tahun Ajaran wajib diisi'); return; }
-    if (!mulai || !selesai) { showToast('Tanggal Mulai & Tanggal Selesai wajib diisi'); return; }
-    if (mulai > selesai) { showToast('Tanggal Mulai tidak boleh setelah Tanggal Selesai'); return; }
-    const dup = periodeTahunAjaranData.some((p, i) => i !== periodeEditIdx && p.nama.toLowerCase() === nama.toLowerCase());
-    if (dup) { showToast(`Periode "${nama}" sudah terdaftar`); return; }
-    if (periodeEditIdx !== null && isPeriodeReferenced(periodeTahunAjaranData[periodeEditIdx].nama)) {
-      showToast('Periode ini sudah dipakai data siswa/tagihan -- tidak bisa diubah');
-      return;
-    }
-
-    const commitSavePeriode = () => {
-      if (aktif) periodeTahunAjaranData.forEach(p => p.aktif = false);
-      const payload = { nama, mulai, selesai, aktif };
-      if (periodeEditIdx !== null) {
-        const existing = periodeTahunAjaranData[periodeEditIdx];
-        periodeTahunAjaranData[periodeEditIdx] = { ...existing, ...payload };
-      } else {
-        if (!periodeTahunAjaranData.length) payload.aktif = true;
-        periodeTahunAjaranData.push({ id: periodeSeq++, ...payload });
-      }
-      if (!periodeTahunAjaranData.some(p => p.aktif) && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
-      closePeriodePanel();
-      renderMasterPeriodeTable();
-      refreshPeriodeDropdowns();
-      showToast('✓ Periode Tahun Ajaran berhasil disimpan');
-    };
-    if (periodeEditIdx !== null) {
-      confirmAction({ title: 'Simpan Perubahan Periode', message: `Simpan perubahan periode "${nama}"?`, confirmLabel: 'Ya, Simpan' }, commitSavePeriode);
-    } else {
-      commitSavePeriode();
-    }
-  }
-  function setPeriodeAktif(idx) {
-    periodeTahunAjaranData.forEach((p, i) => p.aktif = (i === idx));
-    renderMasterPeriodeTable();
-    refreshPeriodeDropdowns();
-    showToast(`✓ ${periodeTahunAjaranData[idx].nama} dijadikan periode aktif`);
-  }
-  function removePeriodeRow(idx) {
-    if (periodeTahunAjaranData.length <= 1) { showToast('Minimal harus ada 1 periode tahun ajaran'); return; }
-    const p = periodeTahunAjaranData[idx];
-    if (isPeriodeReferenced(p.nama)) {
-      showToast(`Periode "${p.nama}" sudah dipakai data siswa/tagihan -- tidak bisa dihapus`);
-      return;
-    }
-    confirmAction({ title: 'Hapus Periode Tahun Ajaran', message: `Hapus periode "${p.nama}"?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
-      const wasActive = p.aktif;
-      periodeTahunAjaranData.splice(idx, 1);
-      if (wasActive && periodeTahunAjaranData.length) periodeTahunAjaranData[0].aktif = true;
-      renderMasterPeriodeTable();
-      refreshPeriodeDropdowns();
-      showToast(`✓ Periode "${p.nama}" berhasil dihapus`);
-    });
-  }
+  // ---- Master Periode Tahun Ajaran -- read-only di Portal Sekolah (lihat komentar di
+  // definisi periodeTahunAjaranData); Tambah/Edit/Hapus/Jadikan Aktif sekarang dilakukan Admin
+  // Pusat di admin_muhammadiyah/konfigurasi.html, bukan lagi dari sini.
   function getActivePeriodeNama() {
     const active = periodeTahunAjaranData.find(p => p.aktif);
     return active ? active.nama : (periodeTahunAjaranData[0] ? periodeTahunAjaranData[0].nama : '');
@@ -2455,7 +2340,7 @@
         masterKelasData.map(m => `<option ${m.kelas === curInvFilter ? 'selected' : ''}>${m.kelas}</option>`).join('');
     }
 
-    if (muridSel) renderStudentList();
+    renderStudentList();
   }
 
   // ---- Master Data Tagihan ----
@@ -2478,73 +2363,138 @@
     sel.innerHTML = '<option value="">Semua Periode</option>' + periodeOptions();
     sel.value = cur;
   }
+  // Master Data Tagihan kini halaman CRUD tersendiri (transaksi-master-tagihan.html):
+  // Read = tabel ringkas read-only, Create/Update lewat panel (openMasterTagihanPanel),
+  // Delete langsung per baris -- pola yang sama dengan Periode Tahun Ajaran & Kategori Sekolah.
   function renderMasterTagihan() {
     if (!document.getElementById('master-tagihan-body')) return;
     fillMasterTagihanFilter();
     const filterPeriode = document.getElementById('mt-filter-periode').value;
+    const cari = (document.getElementById('mt-filter-cari')?.value || '').trim().toLowerCase();
     const tbody = document.getElementById('master-tagihan-body');
     const rows = masterTagihanData
       .map((m, i) => ({ m, i }))
-      .filter(({ m }) => !filterPeriode || m.periodeTahunAjaran === filterPeriode);
+      .filter(({ m }) => !filterPeriode || m.periodeTahunAjaran === filterPeriode)
+      .filter(({ m }) => !cari || (m.kode || '').toLowerCase().includes(cari) || m.nama.toLowerCase().includes(cari));
     tbody.innerHTML = rows.length ? rows.map(({ m, i }) => `
-      <tr data-idx="${i}">
-        <td><input type="text" value="${m.nama}"></td>
-        <td><select class="mt-periode-tahun">${periodeOptions(m.periodeTahunAjaran)}</select></td>
-        <td><select>
-          <option value="sekali" ${m.periode==='sekali'?'selected':''}>Sekali Bayar</option>
-          <option value="bulanan" ${m.periode==='bulanan'?'selected':''}>Bulanan</option>
-          <option value="per3bulan" ${m.periode==='per3bulan'?'selected':''}>Per 3 Bulan</option>
-          <option value="per6bulan" ${m.periode==='per6bulan'?'selected':''}>Per 6 Bulan</option>
-          <option value="tahunan" ${m.periode==='tahunan'?'selected':''}>Tahunan</option>
-        </select></td>
+      <tr>
+        <td><code>${m.kode || '--'}</code></td>
+        <td>${m.nama}</td>
+        <td>${m.periodeTahunAjaran}</td>
+        <td>${PERIODE_LABEL[m.periode]}</td>
+        <td><button class="btn btn-ghost btn-sm" onclick="openNominalKategoriModal(${i})">💰 Lihat Nominal (${kategoriKelasData.length} kategori)</button></td>
+        <td>${m.aktif ? '<span class="badge-status on"><span class="dot"></span> Aktif</span>' : '<span class="badge-status off"><span class="dot"></span> Nonaktif</span>'}</td>
         <td>
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            ${kategoriKelasData.map(k => `
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="width:66px;flex-shrink:0;font-size:11px;color:var(--muted);">${k.nama}</span>
-                <input type="number" class="mt-nominal-kat" data-kat-id="${k.id}" value="${m.nominalByKategori[k.id] ?? 0}">
-              </div>`).join('')}
+          <div class="row-actions">
+            <button class="icon-btn" onclick="openMasterTagihanPanel(${i})" title="Edit">✎</button>
+            <button class="icon-btn icon-btn-red" onclick="removeMasterTagihanRow(${i})" title="Hapus">✕</button>
           </div>
         </td>
-        <td><label class="toggle"><input type="checkbox" ${m.aktif?'checked':''}><span class="slider"></span></label></td>
-        <td><button class="btn-remove-row" onclick="removeMasterTagihanRow(${i})">✕</button></td>
-      </tr>`).join('') : `<tr><td colspan="6" class="empty-hint">Belum ada kategori tagihan untuk periode ini.</td></tr>`;
+      </tr>`).join('') : `<tr><td colspan="7" class="empty-hint">Tidak ada kategori tagihan yang cocok dengan filter.</td></tr>`;
   }
-  function addMasterTagihanRow() {
-    const nominalByKategori = {};
-    kategoriKelasData.forEach(k => nominalByKategori[k.id] = 0);
+  // Nominal per Kategori Kelas ditampilkan lewat modal detail (bukan digabung inline di sel
+  // tabel) supaya tetap rapi berapa pun jumlah kategori kelas yang dibuat sekolah (bisa lebih
+  // dari 2) -- daftar kategori di modal selalu memanjang ke bawah, tidak melebar ke kanan.
+  function openNominalKategoriModal(idx) {
+    const m = masterTagihanData[idx];
+    if (!m) return;
+    document.getElementById('nk-modal-title').textContent = `Detail Nominal -- ${m.nama}`;
+    document.getElementById('nk-modal-sub').textContent = `${m.periodeTahunAjaran} -- ${PERIODE_LABEL[m.periode]}`;
+    document.getElementById('nk-modal-body').innerHTML = kategoriKelasData.map(k => `
+      <tr>
+        <td>${k.nama}</td>
+        <td style="text-align:right;">${fmtRp(m.nominalByKategori[k.id] ?? 0)}</td>
+      </tr>`).join('');
+    document.getElementById('nominal-kategori-modal-overlay').classList.add('active');
+  }
+  function closeNominalKategoriModal() {
+    document.getElementById('nominal-kategori-modal-overlay').classList.remove('active');
+  }
+
+  let masterTagihanEditIdx = null;
+  function renderMtNominalFields(nominalByKategori) {
+    const wrap = document.getElementById('mt-nominal-wrap');
+    if (!wrap) return;
+    wrap.innerHTML = kategoriKelasData.map(k => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="width:76px;flex-shrink:0;font-size:11.5px;color:var(--muted);">${k.nama}</span>
+        <input type="number" class="mt-nominal-kat" data-kat-id="${k.id}" value="${nominalByKategori[k.id] ?? 0}">
+      </div>`).join('');
+  }
+  function openMasterTagihanPanel(idx) {
+    masterTagihanEditIdx = (idx === undefined) ? null : idx;
+    const panel = document.getElementById('master-tagihan-panel');
     const filterPeriode = document.getElementById('mt-filter-periode')?.value;
-    masterTagihanData.push({ nama: "Kategori Baru", periode: "sekali", periodeTahunAjaran: filterPeriode || getActivePeriodeNama(), nominalByKategori, aktif: true });
-    renderMasterTagihan();
+    if (masterTagihanEditIdx !== null) {
+      const m = masterTagihanData[masterTagihanEditIdx];
+      document.getElementById('master-tagihan-panel-title').textContent = 'Edit Kategori Tagihan';
+      document.getElementById('mt-kode').value = m.kode || '';
+      document.getElementById('mt-nama').value = m.nama;
+      document.getElementById('mt-periode-tahun').innerHTML = periodeOptions(m.periodeTahunAjaran);
+      document.getElementById('mt-periode-tagihan').value = m.periode;
+      document.getElementById('mt-aktif').checked = m.aktif;
+      renderMtNominalFields(m.nominalByKategori);
+    } else {
+      document.getElementById('master-tagihan-panel-title').textContent = 'Tambah Kategori Tagihan';
+      document.getElementById('mt-kode').value = '';
+      document.getElementById('mt-nama').value = '';
+      document.getElementById('mt-periode-tahun').innerHTML = periodeOptions(filterPeriode || undefined);
+      document.getElementById('mt-periode-tagihan').value = 'sekali';
+      document.getElementById('mt-aktif').checked = true;
+      renderMtNominalFields({});
+    }
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function closeMasterTagihanPanel() {
+    document.getElementById('master-tagihan-panel').style.display = 'none';
+    masterTagihanEditIdx = null;
   }
   function removeMasterTagihanRow(idx) {
     const m = masterTagihanData[idx];
     confirmAction({ title: 'Hapus Kategori Tagihan', message: `Hapus kategori tagihan "${m.nama}"?`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
       masterTagihanData.splice(idx, 1);
       renderMasterTagihan();
+      refreshJenisTagihanDropdowns();
       showToast(`✓ Kategori tagihan "${m.nama}" berhasil dihapus`);
     });
   }
-  function saveMasterTagihan() {
-    if (!document.getElementById('master-tagihan-body')) return;
-    confirmAction({ title: 'Simpan Master Data Tagihan', message: 'Simpan perubahan pada master data tagihan ini?', confirmLabel: 'Ya, Simpan' }, () => {
-      const rows = document.querySelectorAll('#master-tagihan-body tr[data-idx]');
-      rows.forEach(tr => {
-        const idx = parseInt(tr.dataset.idx, 10);
-        const nama = tr.querySelector('td:nth-child(1) input').value || 'Tanpa Nama';
-        const periodeTahunAjaran = tr.querySelector('.mt-periode-tahun').value;
-        const periode = tr.querySelector('td:nth-child(3) select').value;
-        const nominalByKategori = {};
-        tr.querySelectorAll('.mt-nominal-kat').forEach(inp => {
-          nominalByKategori[inp.dataset.katId] = parseInt(inp.value, 10) || 0;
-        });
-        const aktif = tr.querySelector('td:nth-child(5) input[type=checkbox]').checked;
-        masterTagihanData[idx] = { nama, periode, periodeTahunAjaran, nominalByKategori, aktif };
-      });
+  function saveMasterTagihanPanel() {
+    const kode = document.getElementById('mt-kode').value.trim().toUpperCase();
+    const nama = document.getElementById('mt-nama').value.trim();
+    const periodeTahunAjaran = document.getElementById('mt-periode-tahun').value;
+    const periode = document.getElementById('mt-periode-tagihan').value;
+    const aktif = document.getElementById('mt-aktif').checked;
+    const nominalByKategori = {};
+    document.querySelectorAll('#mt-nominal-wrap .mt-nominal-kat').forEach(inp => {
+      nominalByKategori[inp.dataset.katId] = parseInt(inp.value, 10) || 0;
+    });
+
+    if (!kode) { showToast('Kode Kategori wajib diisi'); return; }
+    if (!nama) { showToast('Nama Kategori wajib diisi'); return; }
+    if (!periodeTahunAjaran) { showToast('Periode Tahun Ajaran wajib dipilih'); return; }
+    const dupNama = masterTagihanData.some((m, i) => i !== masterTagihanEditIdx && m.nama.toLowerCase() === nama.toLowerCase() && m.periodeTahunAjaran === periodeTahunAjaran);
+    if (dupNama) { showToast(`Kategori "${nama}" sudah ada untuk periode ${periodeTahunAjaran}`); return; }
+    const dupKode = masterTagihanData.some((m, i) => i !== masterTagihanEditIdx && (m.kode || '').toLowerCase() === kode.toLowerCase() && m.periodeTahunAjaran === periodeTahunAjaran);
+    if (dupKode) { showToast(`Kode "${kode}" sudah dipakai kategori lain untuk periode ${periodeTahunAjaran}`); return; }
+
+    const commitSaveMasterTagihan = () => {
+      const payload = { kode, nama, periode, periodeTahunAjaran, nominalByKategori, aktif };
+      if (masterTagihanEditIdx !== null) {
+        masterTagihanData[masterTagihanEditIdx] = payload;
+      } else {
+        masterTagihanData.push(payload);
+      }
+      closeMasterTagihanPanel();
       renderMasterTagihan();
       refreshJenisTagihanDropdowns();
       showToast('✓ Master data tagihan berhasil disimpan');
-    });
+    };
+    if (masterTagihanEditIdx !== null) {
+      confirmAction({ title: 'Simpan Perubahan Kategori Tagihan', message: `Simpan perubahan kategori tagihan "${nama}"?`, confirmLabel: 'Ya, Simpan' }, commitSaveMasterTagihan);
+    } else {
+      commitSaveMasterTagihan();
+    }
   }
   function refreshJenisTagihanDropdowns() {
     if (!document.getElementById('inv-massal-jenis')) return;
@@ -2744,6 +2694,7 @@
     document.getElementById('inv-individual-hint').style.display = 'block';
     document.querySelectorAll('.inv-massal-kelas-chk').forEach(c => c.checked = false);
     renderMassalNominalFields();
+    toggleBuatTagihanPanel(false);
   }
   function publishInvoice(id) {
     const inv = invoiceData.find(i => i.id === id);
@@ -2894,13 +2845,27 @@
     showToast(`✓ ${count} tagihan berhasil diimpor sebagai draft${skipped ? ` (${skipped} baris dilewati karena error)` : ''}`);
     cancelImport();
     setInvoiceMode('individual');
+    toggleBuatTagihanPanel(false);
+  }
+  // Filter Periode di Daftar Tagihan diisi dari nilai `periode` yang benar-benar dipakai
+  // invoiceData (format bebas -- mis. "2026-07" untuk tagihan bulanan), bukan dari
+  // Periode Tahun Ajaran (itu dipakai Master Data Tagihan, konteksnya berbeda).
+  function fillInvoiceFilterPeriode() {
+    const sel = document.getElementById('inv-filter-periode');
+    if (!sel) return;
+    const cur = sel.value;
+    const periodes = [...new Set(invoiceData.map(i => i.periode))].sort();
+    sel.innerHTML = '<option value="">Semua Periode</option>' +
+      periodes.map(p => `<option value="${p}" ${p === cur ? 'selected' : ''}>${p}</option>`).join('');
   }
   function renderInvoiceList() {
     if (!document.getElementById('inv-filter-status')) return;
+    fillInvoiceFilterPeriode();
     const statusF = document.getElementById('inv-filter-status').value;
     const kelasF = document.getElementById('inv-filter-kelas').value;
+    const periodeF = document.getElementById('inv-filter-periode').value;
     const tbody = document.getElementById('invoice-table-body');
-    const rows = invoiceData.filter(i => (!statusF || i.status === statusF) && (!kelasF || i.kelas === kelasF));
+    const rows = invoiceData.filter(i => (!statusF || i.status === statusF) && (!kelasF || i.kelas === kelasF) && (!periodeF || i.periode === periodeF));
     if (!rows.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty-hint">Tidak ada tagihan yang cocok dengan filter.</td></tr>`; return; }
     tbody.innerHTML = rows.map(i => `
       <tr>
@@ -2911,8 +2876,85 @@
         <td>${fmtRp(i.nominal)}</td>
         <td>${i.jatuhTempo}</td>
         <td>${statusBadge(i.status)}</td>
-        <td>${i.status === 'draft' ? `<button class="btn btn-outline btn-sm" onclick="publishInvoice(${i.id})">Publish</button>` : '--'}</td>
+        <td>${i.status === 'draft'
+          ? `<div class="row-actions">
+               <button class="icon-btn" onclick="openInvoiceEditPanel(${i.id})" title="Edit">✎</button>
+               <button class="icon-btn icon-btn-red" onclick="deleteInvoiceRow(${i.id})" title="Hapus">✕</button>
+             </div>
+             <button class="btn btn-outline btn-sm" style="width:100%;margin-top:6px;" onclick="publishInvoice(${i.id})">Publish</button>`
+          : '--'}</td>
       </tr>`).join('');
+  }
+  // Edit/Hapus tagihan hanya tersedia untuk status draft -- tagihan yang sudah diterbitkan
+  // (sent/paid/overdue/dst.) adalah dokumen keuangan yang sudah berjalan, sama seperti aturan
+  // tombol "Publish" yang juga hanya tampil untuk draft.
+  let invoiceEditId = null;
+  // Jaga-jaga: jenis tagihan pada invoice draft lama bisa jadi dibuat di Periode Tahun Ajaran
+  // yang berbeda dari yang sedang aktif sekarang -- kalau begitu, tetap tampilkan nilainya
+  // sebagai opsi terpilih supaya Simpan tidak diam-diam mengganti Jenis Tagihan invoice ini.
+  function jenisTagihanOptionsSafe(selectedNama, kelasCode, periodeNama) {
+    let html = jenisTagihanOptions(selectedNama, kelasCode, periodeNama);
+    const periode = periodeNama || getActivePeriodeNama();
+    const found = masterTagihanData.some(m => m.aktif && m.periodeTahunAjaran === periode && m.nama === selectedNama);
+    if (selectedNama && !found) {
+      html = `<option value="${selectedNama}" selected>${selectedNama} (periode lain)</option>` + html;
+    }
+    return html;
+  }
+  function openInvoiceEditPanel(id) {
+    const inv = invoiceData.find(i => i.id === id);
+    if (!inv) return;
+    invoiceEditId = id;
+    document.getElementById('inv-edit-context').textContent = `${inv.siswa} -- Kelas ${inv.kelas}`;
+    document.getElementById('inv-edit-jenis').innerHTML = jenisTagihanOptionsSafe(inv.jenis, inv.kelas);
+    document.getElementById('inv-edit-periode').value = inv.periode;
+    document.getElementById('inv-edit-nominal').value = inv.nominal;
+    document.getElementById('inv-edit-jatuhtempo').value = inv.jatuhTempo;
+    const panel = document.getElementById('invoice-edit-panel');
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function closeInvoiceEditPanel() {
+    document.getElementById('invoice-edit-panel').style.display = 'none';
+    invoiceEditId = null;
+  }
+  function saveInvoiceEdit() {
+    const inv = invoiceData.find(i => i.id === invoiceEditId);
+    if (!inv) return;
+    const jenis = document.getElementById('inv-edit-jenis').value;
+    const periode = document.getElementById('inv-edit-periode').value.trim();
+    const nominal = parseInt(document.getElementById('inv-edit-nominal').value, 10) || 0;
+    const jatuhTempo = document.getElementById('inv-edit-jatuhtempo').value;
+    if (!periode) { showToast('Periode wajib diisi'); return; }
+    if (!jatuhTempo) { showToast('Jatuh Tempo wajib diisi'); return; }
+    confirmAction({ title: 'Simpan Perubahan Tagihan', message: `Simpan perubahan tagihan ${jenis} ${periode} untuk ${inv.siswa}?`, confirmLabel: 'Ya, Simpan' }, () => {
+      inv.jenis = jenis; inv.periode = periode; inv.nominal = nominal; inv.jatuhTempo = jatuhTempo;
+      closeInvoiceEditPanel();
+      renderInvoiceList();
+      updateStats();
+      showToast('✓ Tagihan berhasil diperbarui');
+    });
+  }
+  function deleteInvoiceRow(id) {
+    const inv = invoiceData.find(i => i.id === id);
+    if (!inv) return;
+    confirmAction({ title: 'Hapus Draft Tagihan', message: `Hapus draft tagihan ${inv.jenis} ${inv.periode} untuk ${inv.siswa}? Tindakan ini tidak bisa dibatalkan.`, confirmLabel: 'Ya, Hapus', danger: true }, () => {
+      const idx = invoiceData.findIndex(i => i.id === id);
+      if (idx > -1) invoiceData.splice(idx, 1);
+      renderInvoiceList();
+      updateStats();
+      showToast(`✓ Draft tagihan ${inv.jenis} ${inv.periode} untuk ${inv.siswa} berhasil dihapus`);
+    });
+  }
+  // Toggle panel "Buat Tagihan Baru" -- disembunyikan default, dibuka lewat tombol
+  // "+ Tambah Tagihan" di Daftar Tagihan supaya alurnya List -> Add, konsisten dengan
+  // halaman master data lain (Periode Tahun Ajaran, Kategori Sekolah, dst.).
+  function toggleBuatTagihanPanel(forceOpen) {
+    const card = document.getElementById('buat-tagihan-card');
+    if (!card) return;
+    const show = forceOpen !== undefined ? forceOpen : card.style.display === 'none';
+    card.style.display = show ? 'block' : 'none';
+    if (show) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function fillWriteoffInvoiceSelect() {

@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Laporan Pindah Sekolah &amp; Tunggakan -- GeekGarden Admin</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a {
+    color: #cfe0ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand {
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .doc-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    box-shadow: 0 1px 3px rgba(20,36,63,0.06);
+  }
+  h1 {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 18px;
+    border-bottom: 3px solid var(--navy);
+    padding-bottom: 12px;
+  }
+  h2 {
+    color: var(--navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 36px 0 12px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 {
+    color: var(--navy-soft);
+    font-size: 15.5px;
+    font-weight: 700;
+    margin: 22px 0 10px;
+  }
+  h4 {
+    color: var(--navy-soft);
+    font-size: 13.5px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: #eef1f6;
+    color: #b71c1c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll {
+    overflow-x: auto;
+    margin: 10px 0 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.8px;
+    min-width: 560px;
+  }
+  th, td {
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .fab-prd {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 GeekGarden Admin -- Dokumen PRD</span>
+  <a href="index.html">&larr; Kembali ke Daftar Dokumen PRD</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Laporan Pindah Sekolah &amp; Tunggakan</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Atribut</th>
+<th>Isi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nama produk / fitur</td>
+<td>Laporan Pindah Sekolah &amp; Tunggakan (Laporan Konsolidasi Admin Pusat)</td>
+</tr>
+<tr>
+<td>Klien / proyek</td>
+<td>Admin Pusat Muhammadiyah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td>
+</tr>
+<tr>
+<td>Versi dokumen</td>
+<td>v0.4</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Penulis</td>
+<td>Tim Produk GeekGarden</td>
+</tr>
+<tr>
+<td>Product Owner</td>
+<td>[Nama PO Klien]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[Nama SA]</td>
+</tr>
+<tr>
+<td>Tanggal dibuat</td>
+<td>08-11-2026</td>
+</tr>
+<tr>
+<td>Target rilis</td>
+<td>[DD-MM-YYYY / Sprint X]</td>
+</tr>
+<tr>
+<td>Dokumen terkait</td>
+<td><code>laporan-pindah-tunggakan.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, Portal Sekolah (Approval Write-off), Aplikasi Wali Murid (Ajukan Pindah Sekolah)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Versi</th>
+<th>Tanggal</th>
+<th>Penulis</th>
+<th>Perubahan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>08-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Draft awal berdasarkan prototipe <code>laporan-pindah-tunggakan.html</code>, bagian dari sidebar baru "Laporan" di Admin Pusat.</td>
+</tr>
+<tr>
+<td>v0.2</td>
+<td>08-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>Menambahkan fitur Export Laporan (tombol "Export Excel" menghasilkan file <strong>CSV asli</strong>, bukan trik HTML-disamarkan-jadi-<code>.xls</code>) berisi dua bagian: ringkasan Daftar Siswa Pindah Sekolah dan Detail Tunggakan per Invoice, menghormati filter status yang aktif. Fitur ini sebelumnya tercatat sebagai Out of Scope/Could-have di v0.1, kini pindah ke In Scope/Must-have.</td>
+</tr>
+<tr>
+<td>v0.3</td>
+<td>08-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>(1) Menambahkan filter pencarian nama siswa (menyatu dengan filter status pada tabel maupun export); (2) kolom identitas Siswa pada tabel, panel "Lihat Detail", dan export diubah dari Nama+Kelas menjadi <strong>Nama+NIS</strong>, supaya identitas siswa konsisten dengan NIS yang dipakai Portal Sekolah &amp; Aplikasi Wali Murid.</td>
+</tr>
+<tr>
+<td>v0.4</td>
+<td>08-11-2026</td>
+<td>Tim Produk GeekGarden</td>
+<td>(1) Menambahkan <strong>filter Sekolah</strong> dan <strong>filter Periode</strong> (bulan efektif pindah) pada tabel, statistik, dan export -- periode selalu wajib terisi satu bulan (default periode terbaru), <strong>tidak ada opsi "Semua Periode"</strong>, selaras dengan pola filter periode di Laporan Pemasukan. (2) Menambahkan <strong>pembatasan data berdasarkan cakupan akses pengguna</strong> (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM) memakai field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> per sekolah (selaras Manajemen Sekolah) dan field <code>cakupan</code> per pengguna (selaras menu Pengguna) -- pengguna non-Pusat hanya melihat sekolah dalam cakupannya di statistik, tabel, filter, panel detail, maupun export; ditampilkan lewat banner cakupan di atas halaman. (3) Statistik ringkasan yang sebelumnya statis (tidak ikut berubah saat filter status/nama diterapkan) kini ikut diperbarui otomatis setiap filter (Sekolah/Nama/Status/Periode) berubah.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Fitur Laporan Pindah Sekolah &amp; Tunggakan menyediakan rekap konsolidasi bagi Admin Pusat atas seluruh siswa yang mengajukan pindah sekolah di semua sekolah dalam platform, beserta tunggakan SPP/tagihan lain yang masih harus dilunasi walau siswa sudah pindah. Data ini diturunkan dari alur "Ajukan Pindah Sekolah" di aplikasi Wali Murid dan proses persetujuan Write-off (Hapus Buku) oleh Kepala Sekolah di Portal Sekolah.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Staff Keuangan Pusat / Super Admin</strong> mengalami <strong>kesulitan memantau status pindah sekolah dan tunggakan terkait secara nasional</strong> saat <strong>data tersebut hanya tersedia tersebar di masing-masing Portal Sekolah</strong>, yang menyebabkan <strong>keterlambatan deteksi tunggakan yang berisiko tidak tertagih dan kurangnya visibilitas lintas sekolah untuk kebutuhan rekonsiliasi keuangan pusat</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Setiap sekolah mencatat dan menyetujui pengajuan pindah sekolah/write-off secara independen di Portal Sekolah masing-masing (menu Approval Write-off). Admin Pusat tidak memiliki rekap gabungan dan harus menghubungi tiap sekolah satu per satu untuk mengetahui status &amp; nilai tunggakan terkait siswa yang pindah sekolah.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Super Admin/Staff Keuangan Pusat dapat membuka menu "Laporan Pindah Sekolah &amp; Tunggakan" dan langsung melihat seluruh kasus pindah sekolah dikelompokkan per sekolah asal, lengkap dengan status persetujuan, sekolah tujuan, tanggal efektif pindah, rencana pelunasan, dan rincian tunggakan per invoice -- tanpa perlu menghubungi sekolah satu per satu.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Dengan makin banyak sekolah yang onboarding ke platform (lihat PRD Manajemen Sekolah) dan proses pindah sekolah/write-off yang sudah berjalan di level Portal Sekolah &amp; aplikasi Wali Murid, dibutuhkan satu titik konsolidasi di Admin Pusat untuk audit keuangan dan pemantauan risiko tunggakan secara nasional.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Memberi visibilitas terpusat atas seluruh pengajuan pindah sekolah dan nilai tunggakannya di seluruh sekolah.</li>
+<li>Mempercepat deteksi tunggakan yang berisiko tidak tertagih akibat siswa pindah sekolah, untuk keperluan tindak lanjut/penagihan.</li>
+<li>Mendukung audit dan rekonsiliasi keuangan pusat atas keputusan hapus buku (write-off) yang diambil tiap sekolah.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan aksi approve/reject write-off dari halaman ini -- tetap menjadi kewenangan Kepala Sekolah di Portal Sekolah (segregation of duties).</li>
+<li>Tidak mendukung ekspor laporan ke PDF pada fase ini (ekspor CSV/Excel sudah tersedia -- lihat FR-07).</li>
+<li>Tidak menghitung ulang atau mengubah nominal tunggakan -- hanya menampilkan data yang sudah tercatat di Portal Sekolah.</li>
+</ul>
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Nama / Peran</th>
+<th>Organisasi</th>
+<th>RACI</th>
+<th>Kepentingan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Klien (Muhammadiyah Pusat)</td>
+<td>A</td>
+<td>Menyetujui kebutuhan laporan &amp; kebijakan tunggakan</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Desain integrasi data dengan Portal Sekolah &amp; Wali Murid</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>GeekGarden</td>
+<td>R</td>
+<td>Implementasi agregasi &amp; tampilan laporan</td>
+</tr>
+<tr>
+<td>QA Lead</td>
+<td>GeekGarden</td>
+<td>C</td>
+<td>Strategi pengujian konsistensi data lintas sekolah</td>
+</tr>
+<tr>
+<td>Super Admin</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pengguna utama fitur ini</td>
+</tr>
+<tr>
+<td>Staff Keuangan Pusat</td>
+<td>Klien</td>
+<td>R</td>
+<td>Pemantau tunggakan &amp; rekonsiliasi dana</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Deskripsi</th>
+<th>Tujuan utama</th>
+<th>Pain point</th>
+<th>Perangkat / kanal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin (cakupan Pusat)</td>
+<td>Mengawasi seluruh operasional platform</td>
+<td>Memantau kasus pindah sekolah &amp; tunggakan di semua sekolah</td>
+<td>Harus menghubungi tiap sekolah satu per satu untuk info ini</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Staff Keuangan Pusat (cakupan Pusat)</td>
+<td>Fokus pada tunggakan &amp; rekonsiliasi dana</td>
+<td>Mendeteksi tunggakan berisiko tidak tertagih sedini mungkin</td>
+<td>Tidak ada rekap nasional, data tersebar per Portal Sekolah</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Wilayah (cakupan PWM)</td>
+<td>Memantau sekolah di wilayahnya (satu PWM)</td>
+<td>Mengetahui kasus pindah sekolah &amp; tunggakan di sekolah wilayahnya saja</td>
+<td>Visibilitas terbatas tanpa laporan terpusat; khawatir melihat/dilihat memegang data wilayah lain di luar wewenangnya</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Daerah (cakupan PDM)</td>
+<td>Memantau sekolah di daerahnya (satu PDM, bagian dari satu PWM)</td>
+<td>Mengetahui kasus pindah sekolah &amp; tunggakan di sekolah daerahnya saja</td>
+<td>Sama seperti Admin Wilayah, namun pada cakupan lebih sempit (level kabupaten/kota)</td>
+<td>Laptop/web</td>
+</tr>
+<tr>
+<td>Admin Cabang (cakupan PCM)</td>
+<td>Memantau sekolah di cabangnya (satu PCM, bagian dari satu PDM)</td>
+<td>Mengetahui kasus pindah sekolah &amp; tunggakan di sekolah cabangnya saja</td>
+<td>Sama seperti Admin Wilayah/Daerah, namun pada cakupan paling sempit (level kecamatan)</td>
+<td>Laptop/web</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>In Scope (fase ini)</th>
+<th>Out of Scope (fase berikutnya / tidak dikerjakan)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daftar siswa pindah sekolah dikelompokkan per sekolah asal</td>
+<td>Approve/reject write-off dari laporan ini</td>
+</tr>
+<tr>
+<td>Filter berdasarkan status persetujuan (Menunggu Persetujuan/Disetujui)</td>
+<td>Filter manual eksplisit per Wilayah(PWM)/Daerah(PDM)/Cabang(PCM) sebagai dropdown bebas pilih -- cakupan saat ini otomatis mengikuti akun login, bukan pilihan bebas</td>
+</tr>
+<tr>
+<td>Statistik ringkasan (Total Siswa Pindah, Total Tunggakan, Menunggu, Disetujui), bereaksi otomatis terhadap seluruh filter aktif</td>
+<td>Ekspor laporan ke PDF</td>
+</tr>
+<tr>
+<td>Detail tunggakan per invoice (No. Invoice, Keterangan, Jatuh Tempo, Telat, Nominal)</td>
+<td>Notifikasi otomatis ke sekolah/wali murid dari halaman ini</td>
+</tr>
+<tr>
+<td>Kelengkapan wajib Sekolah Tujuan, Efektif Pindah, dan Rencana Bayar per kasus</td>
+<td>Perhitungan otomatis "Telat Hari" berbasis tanggal sistem berjalan</td>
+</tr>
+<tr>
+<td>Export laporan ke CSV/Excel (ringkasan + detail tunggakan per invoice), menghormati seluruh filter aktif (Sekolah/Nama/Status/Periode) &amp; cakupan akses</td>
+<td>Filter rentang multi-periode (laporan hanya menampilkan satu bulan efektif pindah per waktu)</td>
+</tr>
+<tr>
+<td>Filter pencarian nama siswa (digabung dengan filter lain, berlaku juga saat export)</td>
+<td></td>
+</tr>
+<tr>
+<td>Identitas siswa ditampilkan sebagai Nama + NIS (bukan Nama + Kelas)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Filter Sekolah</strong> (dropdown, opsi dibatasi hanya sekolah dalam cakupan akses pengguna)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Filter Periode</strong> (bulan efektif pindah, wajib terisi satu bulan, default periode terbaru, tanpa opsi "Semua Periode")</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Pembatasan data otomatis berdasarkan cakupan akses pengguna</strong> (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM), berlaku ke statistik, tabel, filter Sekolah/Periode, panel detail, dan export</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Daftar kasus pindah sekolah per sekolah, filter status, filter pencarian nama siswa, filter Sekolah, filter Periode (tanpa opsi "Semua"), pembatasan data berdasarkan cakupan akses (Pusat/PWM/PDM/PCM), statistik ringkasan reaktif terhadap seluruh filter, detail tunggakan per invoice, kelengkapan data wajib (Sekolah Tujuan/Efektif Pindah/Rencana Bayar), export laporan ke CSV/Excel.</li>
+<li><strong>Should have</strong> -- Badge status yang jelas (warna beda untuk Menunggu Persetujuan vs Disetujui), banner yang menjelaskan cakupan akses akun yang sedang login.</li>
+<li><strong>Could have</strong> -- Filter eksplisit tambahan per Wilayah/Daerah/Cabang (independen dari cakupan akun login, mis. untuk Pusat yang ingin melihat satu wilayah tertentu tanpa login sebagai akun wilayah tersebut), ekspor laporan ke PDF.</li>
+<li><strong>Won't have (now)</strong> -- Approve/reject write-off dari laporan ini, notifikasi otomatis, integrasi API real-time ke Portal Sekolah, filter rentang multi-periode.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Acceptance criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-01</td>
+<td>Sebagai Staff Keuangan Pusat, saya ingin melihat daftar siswa pindah sekolah dikelompokkan per sekolah asal, supaya saya tahu sekolah mana yang punya kasus aktif.</td>
+<td>Must</td>
+<td>Given saya membuka menu Laporan Pindah Sekolah &amp; Tunggakan, When halaman dimuat, Then tabel menampilkan baris per siswa dikelompokkan dengan header nama sekolah asal, termasuk sekolah tanpa kasus</td>
+</tr>
+<tr>
+<td>US-02</td>
+<td>Sebagai Super Admin, saya ingin memfilter daftar berdasarkan status persetujuan, supaya saya bisa fokus pada kasus yang masih menunggu keputusan Kepala Sekolah.</td>
+<td>Must</td>
+<td>Given saya memilih "Menunggu Persetujuan" pada filter Status, When filter diterapkan, Then hanya baris berstatus tersebut yang ditampilkan per sekolah, header sekolah tetap tampil</td>
+</tr>
+<tr>
+<td>US-03</td>
+<td>Sebagai Staff Keuangan Pusat, saya ingin melihat rincian tunggakan per invoice untuk satu kasus, supaya saya tahu persis tagihan mana yang masih harus ditagih.</td>
+<td>Must</td>
+<td>Given saya menekan "Lihat Detail (n invoice)" pada satu baris, When panel detail terbuka, Then ditampilkan tabel invoice dengan No. Invoice, Keterangan, Jatuh Tempo, Telat (hari), Nominal, dan totalnya</td>
+</tr>
+<tr>
+<td>US-04</td>
+<td>Sebagai Super Admin, saya ingin memastikan setiap kasus pindah sekolah selalu punya info sekolah tujuan, tanggal efektif pindah, dan rencana bayar tunggakan, supaya tidak ada kasus dengan data tidak lengkap.</td>
+<td>Must</td>
+<td>Given data kasus pindah sekolah ditampilkan, When baris dirender, Then kolom Sekolah Tujuan, Efektif Pindah, dan Rencana Bayar selalu berisi nilai (tidak pernah kosong/placeholder "belum diisi")</td>
+</tr>
+<tr>
+<td>US-05</td>
+<td>Sebagai Staff Keuangan Pusat, saya ingin mengekspor laporan ini ke file CSV/Excel sesuai filter yang sedang aktif, supaya saya bisa menganalisis atau membagikan data tunggakan secara offline/ke rapat keuangan pusat.</td>
+<td>Must</td>
+<td>Given saya menekan tombol "Export Excel" dengan filter status tertentu aktif, When file diunduh, Then isinya berupa CSV asli (bukan HTML yang diberi ekstensi <code>.xls</code>) berisi ringkasan kasus yang cocok dengan filter beserta rincian tunggakan per invoice, dan terbuka tanpa peringatan format di Microsoft Excel</td>
+</tr>
+<tr>
+<td>US-06</td>
+<td>Sebagai Staff Keuangan Pusat, saya ingin mencari kasus berdasarkan nama siswa, supaya saya bisa langsung menemukan satu siswa tertentu tanpa menyusuri seluruh daftar per sekolah.</td>
+<td>Must</td>
+<td>Given saya mengetik sebagian nama siswa di kotak pencarian, When hasil pencarian diterapkan, Then tabel hanya menampilkan kasus yang nama siswanya cocok (tidak case-sensitive), digabung dengan filter status yang aktif, dan hasil export juga ikut mengikuti pencarian ini</td>
+</tr>
+<tr>
+<td>US-07</td>
+<td>Sebagai Admin Wilayah/Daerah/Cabang, saya ingin laporan ini otomatis membatasi data hanya untuk sekolah dalam cakupan akun saya, supaya saya tidak melihat atau tidak terlihat memegang data sekolah di luar tanggung jawab saya.</td>
+<td>Must</td>
+<td>Given saya login dengan akun yang cakupannya Wilayah (PWM)/Daerah (PDM)/Cabang (PCM) tertentu, When saya membuka Laporan Pindah Sekolah &amp; Tunggakan, Then hanya sekolah yang berada dalam cakupan saya yang muncul di banner cakupan, statistik, tabel, pilihan filter Sekolah, pilihan filter Periode, panel detail, dan hasil export -- sekolah di luar cakupan tidak muncul sama sekali</td>
+</tr>
+<tr>
+<td>US-08</td>
+<td>Sebagai Staff Keuangan Pusat, saya ingin memfilter laporan berdasarkan satu sekolah tertentu, supaya saya bisa fokus pada sekolah tersebut tanpa menyaring manual dari daftar panjang semua sekolah.</td>
+<td>Must</td>
+<td>Given saya memilih satu sekolah pada filter Sekolah (pilihan hanya berisi sekolah dalam cakupan saya), When filter diterapkan, Then hanya baris kasus dari sekolah tersebut yang tampil di tabel, statistik ringkasan, dan hasil export</td>
+</tr>
+<tr>
+<td>US-09</td>
+<td>Sebagai Super Admin, saya ingin laporan ini selalu terfokus ke satu periode (bulan efektif pindah) tertentu, supaya saya tidak perlu memproses seluruh histori kasus sekaligus saat jumlah kasus sudah banyak.</td>
+<td>Must</td>
+<td>Given saya membuka laporan ini, When halaman dimuat, Then filter Periode otomatis terisi periode (bulan efektif pindah) terbaru dalam cakupan saya tanpa opsi "Semua Periode", dan saya tetap dapat memilih bulan lain yang tersedia dalam cakupan saya</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Modul</th>
+<th>Deskripsi requirement</th>
+<th>User story</th>
+<th>Prioritas</th>
+<th>Catatan / aturan bisnis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>Daftar Pindah Sekolah per Sekolah</td>
+<td>Sistem harus menampilkan tabel dikelompokkan per sekolah asal (header baris khusus), dengan kolom Siswa (Nama+NIS), Sekolah Tujuan, Efektif Pindah, Total Tunggakan, Rencana Bayar, Status, Aksi</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Sekolah tanpa kasus ditampilkan dengan pesan "Tidak ada siswa pindah sekolah" di bawah header sekolahnya; NIS dipakai sebagai identitas kedua pengganti Kelas agar konsisten dengan Portal Sekolah &amp; Aplikasi Wali Murid</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>Filter Status</td>
+<td>Sistem harus menyediakan dropdown filter Semua Status / Menunggu Persetujuan / Disetujui yang memfilter baris kasus tanpa menyembunyikan header sekolah</td>
+<td>US-02</td>
+<td>Must</td>
+<td>Filter diterapkan ke seluruh sekolah sekaligus, bukan per sekolah</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>Statistik Ringkasan</td>
+<td>Sistem harus menampilkan 4 kartu statistik: Total Siswa Pindah, Total Tunggakan, Menunggu Persetujuan, Disetujui, dihitung dari kasus yang cocok dengan cakupan akses &amp; seluruh filter aktif (Sekolah/Nama/Status/Periode)</td>
+<td>US-01</td>
+<td>Must</td>
+<td>Nilai dihitung ulang setiap filter berubah (pada v0.1--v0.3 statistik bersifat statis &amp; tidak ikut berubah saat filter status/nama diterapkan -- diperbaiki di v0.4)</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>Detail Tunggakan per Invoice</td>
+<td>Sistem harus menyediakan tombol "Lihat Detail (n invoice)" yang membuka panel berisi tabel invoiceRef, keterangan, jatuh tempo, telat (hari), nominal, dan total</td>
+<td>US-03</td>
+<td>Must</td>
+<td>Tombol hanya tampil jika kasus memiliki tunggakanList; jika tidak ada tunggakan, tampil teks "Tidak ada tunggakan"</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>Kelengkapan Data Wajib</td>
+<td>Sekolah Tujuan, Efektif Pindah, dan Rencana Bayar wajib terisi untuk setiap kasus yang ditampilkan di laporan ini</td>
+<td>US-04</td>
+<td>Must</td>
+<td>Data bersumber dari Portal Sekolah (write-off) &amp; aplikasi Wali Murid (pengajuan pindah); sekolah wajib melengkapi ketiga field ini sebelum kasus dianggap valid untuk tampil di laporan pusat</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>Badge Status</td>
+<td>Status <code>pending_approval</code> ditampilkan sebagai "Menunggu Persetujuan" (warna amber), <code>approved</code> ditampilkan sebagai "Disetujui" (warna hijau)</td>
+<td>US-02</td>
+<td>Should</td>
+<td>Konsisten dengan badge status yang dipakai di Portal Sekolah (menu Approval Write-off)</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>Export Laporan ke CSV/Excel</td>
+<td>Sistem harus menyediakan tombol "Export Excel" yang mengunduh file berisi dua bagian: ringkasan Daftar Siswa Pindah Sekolah dan Detail Tunggakan per Invoice, hanya untuk kasus yang cocok dengan filter status aktif</td>
+<td>US-05</td>
+<td>Must</td>
+<td>File yang diunduh harus berformat CSV asli (<code>.csv</code>, dengan BOM UTF-8) -- bukan file HTML yang diberi ekstensi <code>.xls</code>, supaya Microsoft Excel tidak menampilkan peringatan "format dan ekstensi file tidak cocok" saat dibuka</td>
+</tr>
+<tr>
+<td>FR-08</td>
+<td>Filter Pencarian Nama Siswa</td>
+<td>Sistem harus menyediakan kotak pencarian nama siswa yang memfilter baris kasus berdasarkan kecocokan substring (tidak case-sensitive), digabung (AND) dengan filter lain yang aktif (Sekolah/Status/Periode)</td>
+<td>US-06</td>
+<td>Must</td>
+<td>Filter nama ikut diterapkan pada tombol "Export Excel" (FR-07), supaya isi file export selalu konsisten dengan tabel yang sedang ditampilkan</td>
+</tr>
+<tr>
+<td>FR-09</td>
+<td>Cakupan Akses Data (Pusat/Wilayah-PWM/Daerah-PDM/Cabang-PCM)</td>
+<td>Sistem harus membatasi seluruh sekolah yang ditampilkan (statistik, tabel, pilihan filter Sekolah, pilihan filter Periode, panel detail, dan export) hanya untuk sekolah yang berada dalam cakupan akun yang sedang login: Pusat = seluruh sekolah; Wilayah = sekolah dengan <code>wilayah</code> sama dengan <code>cakupan.pwm</code> milik pengguna; Daerah = sekolah dengan <code>daerah</code> sama dengan <code>cakupan.pdm</code>; Cabang = sekolah dengan <code>cabang</code> sama dengan <code>cakupan.pcm</code></td>
+<td>US-07</td>
+<td>Must</td>
+<td>Field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> per sekolah harus selaras (sama persis) dengan field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> di Manajemen Sekolah; field <code>cakupan</code> per pengguna bersumber dari menu Pengguna. Cakupan ditampilkan ke pengguna lewat banner info di atas halaman (lihat 8. Alur Pengguna &amp; Desain)</td>
+</tr>
+<tr>
+<td>FR-10</td>
+<td>Filter Sekolah</td>
+<td>Sistem harus menyediakan dropdown filter "Semua Sekolah" + daftar nama sekolah, dengan pilihan dibatasi hanya sekolah yang berada dalam cakupan akses pengguna (FR-09)</td>
+<td>US-08</td>
+<td>Must</td>
+<td>Digabung (AND) dengan filter Nama/Status/Periode yang aktif; ikut diterapkan pada export (FR-07)</td>
+</tr>
+<tr>
+<td>FR-11</td>
+<td>Filter Periode</td>
+<td>Sistem harus menyediakan dropdown filter periode (bulan efektif pindah, format <code>YYYY-MM</code>) berisi hanya bulan-bulan yang benar-benar punya kasus dalam cakupan pengguna, <strong>tanpa opsi "Semua Periode"</strong>, dengan periode terbaru terpilih secara default saat halaman dimuat</td>
+<td>US-09</td>
+<td>Must</td>
+<td>Periode dihitung dari field <code>tglEfektifPindah</code> tiap kasus; jika cakupan pengguna/sekolah terpilih tidak memiliki kasus sama sekali, dropdown menampilkan "Tidak ada data periode" dan filter periode diabaikan (tidak memfilter apa pun)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Fitur</th>
+<th>Super Admin</th>
+<th>Admin Wilayah/Daerah/Cabang</th>
+<th>Staff Keuangan Pusat</th>
+<th>Viewer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lihat Laporan Pindah Sekolah &amp; Tunggakan</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Filter status</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Filter pencarian nama siswa</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Filter Sekolah</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Filter Periode</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Export laporan ke CSV/Excel</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>Ya</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Approve/reject write-off</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+</tbody>
+</table></div>
+<p>_Catatan: approve/reject write-off tidak tersedia di modul ini pada peran apa pun -- tetap dilakukan Kepala Sekolah di Portal Sekolah (segregation of duties). Hak akses baca/aksi modul ini (kolom di atas) diatur lewat menu Role &amp; Hak Akses (key <code>laporan-pindah-tunggakan</code>) dan berlaku sama untuk semua level cakupan -- <strong>cakupan tidak menambah/mengurangi aksi apa yang boleh dilakukan, hanya membatasi sekolah mana yang datanya terlihat</strong> (lihat 6.1.1)._</p>
+<h4>6.1.1 Cakupan Data per Level Akun (Pusat/PWM/PDM/PCM)</h4>
+<p>Terlepas dari peran (Super Admin/Admin/Staff Keuangan), setiap pengguna punya field <code>cakupan</code> (diatur di menu Pengguna) yang menentukan sekolah mana saja yang datanya terlihat di laporan ini:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Level Cakupan</th>
+<th>Contoh akun</th>
+<th>Sekolah yang terlihat di laporan ini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pusat</td>
+<td>Super Admin, Staff Keuangan Pusat</td>
+<td>Seluruh sekolah, di seluruh Wilayah (PWM)/Daerah (PDM)/Cabang (PCM)</td>
+</tr>
+<tr>
+<td>Wilayah (PWM)</td>
+<td>Admin Wilayah (mis. cakupan PWM Jawa Timur)</td>
+<td>Hanya sekolah yang <code>wilayah</code>-nya sama dengan PWM pada cakupan akun</td>
+</tr>
+<tr>
+<td>Daerah (PDM)</td>
+<td>Admin Daerah (mis. cakupan PDM Sidoarjo)</td>
+<td>Hanya sekolah yang <code>daerah</code>-nya sama dengan PDM pada cakupan akun</td>
+</tr>
+<tr>
+<td>Cabang (PCM)</td>
+<td>Admin Cabang (mis. cakupan PCM Wonokromo)</td>
+<td>Hanya sekolah yang <code>cabang</code>-nya sama dengan PCM pada cakupan akun</td>
+</tr>
+</tbody>
+</table></div>
+<p>_Catatan: pembatasan ini berlaku otomatis mengikuti field <code>cakupan</code> akun yang sedang login -- bukan pilihan bebas yang bisa diubah pengguna sendiri dari halaman laporan ini. Untuk mengubah cakupan seorang pengguna, ubah lewat menu Pengguna (lihat juga Pertanyaan Terbuka No. 4 terkait kebutuhan filter Wilayah/Daerah/Cabang eksplisit bagi Pusat)._</p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Pemicu</th>
+<th>Penerima</th>
+<th>Kanal</th>
+<th>Isi singkat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kasus write-off baru disetujui/ditolak</td>
+<td>Super Admin/Staff Keuangan Pusat (disarankan)</td>
+<td>Email/Dashboard (belum diimplementasi)</td>
+<td>Pemberitahuan ada kasus pindah sekolah baru yang berubah status</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Kategori</th>
+<th>Requirement</th>
+<th>Target terukur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-01</td>
+<td>Konsistensi data</td>
+<td>Nilai Total Tunggakan pada tabel ringkasan dan panel detail harus selalu identik untuk kasus yang sama</td>
+<td>100% konsisten antar tampilan</td>
+</tr>
+<tr>
+<td>NFR-02</td>
+<td>Performa</td>
+<td>Waktu render tabel &amp; penerapan filter</td>
+<td>< 1 detik untuk ≤ 100 sekolah/≤ 1.000 kasus</td>
+</tr>
+<tr>
+<td>NFR-03</td>
+<td>Auditability</td>
+<td>Histori perubahan status write-off (approve/reject) tercatat pelaku &amp; waktu di sumber data Portal Sekolah</td>
+<td>100% tercatat di audit log Portal Sekolah</td>
+</tr>
+<tr>
+<td>NFR-04</td>
+<td>Kelengkapan data</td>
+<td>Field Sekolah Tujuan, Efektif Pindah, dan Rencana Bayar tidak boleh null/kosong saat ditampilkan</td>
+<td>100% validasi sebelum kasus tampil di laporan pusat</td>
+</tr>
+<tr>
+<td>NFR-05</td>
+<td>Kompatibilitas file export</td>
+<td>File hasil ekspor harus berupa CSV asli yang terbuka tanpa peringatan format di Microsoft Excel/Google Sheets, bukan HTML yang diberi ekstensi <code>.xls</code></td>
+<td>0 peringatan "format tidak cocok" saat dibuka di Excel versi umum</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur utama: Login → Menu "Laporan" → "Laporan Pindah Sekolah &amp; Tunggakan" → sistem menentukan cakupan akses dari akun yang login &amp; menampilkan banner cakupan ("📍 Cakupan akun Anda: ...") di atas halaman → filter Sekolah &amp; filter Periode otomatis terisi (opsi dibatasi sesuai cakupan; Periode default ke bulan efektif pindah terbaru) → lihat statistik ringkasan &amp; tabel per sekolah → cari nama siswa dan/atau filter Sekolah/Status/Periode (opsional, saling melengkapi -- AND) → klik "Lihat Detail (n invoice)" pada satu kasus → tinjau rincian tunggakan → "Tutup Detail". Opsional: klik "Export Excel" kapan saja untuk mengunduh data yang cocok dengan cakupan akses &amp; seluruh filter aktif sebagai file CSV.</li>
+<li>Wireframe: mengikuti struktur <code>laporan-pindah-tunggakan.html</code> (banner cakupan, 4 kartu statistik, filter bar berisi dropdown Sekolah - kotak cari Nama - dropdown Status - dropdown Periode - tombol Export, tabel dikelompokkan per sekolah dengan baris header abu-abu per sekolah, panel detail tunggakan muncul di bawah tabel saat dibuka).</li>
+<li>Edge case yang wajib ditangani: sekolah tanpa kasus pindah sekolah periode ini, sekolah berstatus Nonaktif/Draft (tetap ditampilkan dengan catatan konteks, misal proses merger sekolah), kasus tanpa tunggakan (tombol detail disembunyikan, tampil teks "Tidak ada tunggakan"), filter status/sekolah/periode yang tidak menyisakan kasus pada satu/seluruh sekolah, akun dengan cakupan (Wilayah/Daerah/Cabang) yang tidak memiliki sekolah sama sekali dalam cakupannya (filter Sekolah &amp; Periode kosong, tabel menampilkan "Tidak ada sekolah yang cocok dengan filter"), sekolah dalam cakupan namun tidak punya kasus pada periode manapun (dropdown Periode menampilkan "Tidak ada data periode").</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Sistem eksternal</th>
+<th>Fungsi</th>
+<th>Metode</th>
+<th>PIC</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Portal Sekolah (modul Approval Write-off)</td>
+<td>Sumber data kasus pindah sekolah/hapus buku per sekolah</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Aplikasi Wali Murid (fitur Ajukan Pindah Sekolah)</td>
+<td>Sumber pengajuan awal pindah sekolah dari orang tua/wali murid</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Manajemen Sekolah</td>
+<td>Konteks status sekolah (Aktif/Nonaktif/Draft) yang memengaruhi narasi kasus (misal merger); sumber field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> per sekolah yang dipakai untuk pembatasan cakupan akses (FR-09)</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Modul Pengguna (field Cakupan)</td>
+<td>Sumber level cakupan akses (Pusat/Wilayah/Daerah/Cabang) &amp; nilai PWM/PDM/PCM per pengguna yang menentukan sekolah mana saja yang terlihat di laporan ini (FR-09)</td>
+<td>Internal (shared data store)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>Sekolah</code> (nama, wilayah [PWM], daerah [PDM], cabang [PCM]), <code>KasusPindahSekolah</code> (sekolah, siswa, nis, alasan, status, tglEfektifPindah, sekolahTujuan, rencanaBayarTunggakan), <code>TunggakanInvoice</code> (invoiceRef, keterangan, nominal, jatuhTempo, telatHari), <code>CakupanPengguna</code> (level [Pusat/Wilayah/Daerah/Cabang], pwm, pdm, pcm -- bersumber dari entitas Pengguna).</li>
+<li>Periode laporan ini = bulan efektif pindah (<code>tglEfektifPindah.slice(0,7)</code>, format <code>YYYY-MM</code>), bukan bulan transaksi pembayaran seperti pada Laporan Pemasukan.</li>
+<li>Migrasi data: tidak ada migrasi khusus -- struktur data mengikuti <code>writeoffData</code> yang sudah berjalan di Portal Sekolah.</li>
+<li>Retensi data: data pindah sekolah &amp; tunggakan disimpan selama histori keuangan sekolah terkait masih relevan untuk audit (rekomendasi minimal 5 tahun, perlu konfirmasi kebijakan retensi klien).</li>
+<li>Laporan yang dibutuhkan: rekap tunggakan akibat pindah sekolah per periode, daftar sekolah dengan kasus pindah sekolah terbanyak.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu kasus pindah sekolah hanya terkait satu siswa (tidak ada kasus gabungan kakak-adik dalam satu baris).</li>
+<li>Data yang ditampilkan adalah snapshot read-only dari data Portal Sekolah, belum real-time via API pada fase prototipe ini.</li>
+<li>Field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> per sekolah (sumber: Manajemen Sekolah) dan field <code>cakupan.pwm</code>/<code>cakupan.pdm</code>/<code>cakupan.pcm</code> per pengguna (sumber: menu Pengguna) selalu ditulis dengan string yang identik (mis. selalu "PWM Jawa Timur", tidak pernah "Jawa Timur" saja) -- pencocokan cakupan akses bersifat exact-match, bukan pencarian sebagian.</li>
+<li>Satu akun hanya memiliki satu level cakupan aktif pada satu waktu (tidak ada akun dengan multi-cakupan, mis. menangani dua PWM berbeda sekaligus).</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Filter Sekolah &amp; Periode (bulan efektif pindah) sudah tersedia (lihat FR-10, FR-11); filter eksplisit tambahan per Wilayah/Daerah/Cabang yang independen dari cakupan akun (mis. Pusat ingin melihat satu wilayah tertentu tanpa login sebagai akun wilayah tersebut) belum didukung -- lihat Pertanyaan Terbuka No. 4.</li>
+<li>Filter Periode hanya mendukung satu bulan per waktu, belum mendukung rentang multi-bulan.</li>
+<li>Perhitungan "Telat Hari" bersifat statis pada data demo, belum dihitung otomatis dari tanggal sistem berjalan.</li>
+<li>Pembatasan cakupan akses (FR-09) baru diterapkan di laporan ini -- Laporan Pemasukan dan modul lain belum menerapkan pembatasan serupa (lihat Pertanyaan Terbuka No. 5).</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>No</th>
+<th>Pertanyaan</th>
+<th>Ditujukan ke</th>
+<th>Batas jawab</th>
+<th>Jawaban</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apakah dibutuhkan ekspor laporan ke PDF juga untuk keperluan rapat keuangan pusat (CSV/Excel sudah tersedia -- lihat FR-07)?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Berapa lama kasus pindah sekolah yang sudah "Disetujui" perlu tetap muncul di laporan ini (ada batas periode)?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Apakah filter Periode perlu mendukung rentang multi-bulan (mis. "Juni--Agustus 2026") untuk kebutuhan rekap triwulanan/semesteran pusat?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Selain pembatasan otomatis berdasarkan cakupan akun login, apakah Pusat/PWM perlu dropdown filter eksplisit per Wilayah/Daerah/Cabang untuk melihat subset tertentu tanpa harus login sebagai akun di level tersebut?</td>
+<td>PO klien</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Apakah pembatasan cakupan akses (Pusat/PWM/PDM/PCM) yang diterapkan di laporan ini juga perlu diterapkan secara konsisten ke Laporan Pemasukan dan modul lain (Manajemen Sekolah, Dashboard Konsolidasi)?</td>
+<td>PO klien / Solution Architect</td>
+<td>[DD-MM-YYYY]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Risiko</th>
+<th>Dampak (H/M/L)</th>
+<th>Kemungkinan (H/M/L)</th>
+<th>Mitigasi</th>
+<th>PIC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data tunggakan di laporan pusat tidak sinkron dengan perubahan terbaru di Portal Sekolah (snapshot statis)</td>
+<td>H</td>
+<td>M</td>
+<td>Integrasikan dengan API/shared database real-time sebelum go-live produksi</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Field Sekolah Tujuan/Efektif Pindah/Rencana Bayar yang wajib diisi hanya sekadar "melengkapi" tanpa data valid</td>
+<td>M</td>
+<td>M</td>
+<td>Tambahkan validasi format tanggal &amp; nama sekolah tujuan di level input Portal Sekolah, bukan hanya di laporan ini</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Field cakupan pengguna (<code>pwm</code>/<code>pdm</code>/<code>pcm</code>) salah ketik atau tidak persis sama dengan field <code>wilayah</code>/<code>daerah</code>/<code>cabang</code> di Manajemen Sekolah, sehingga pengguna non-Pusat tidak melihat data apa pun tanpa pesan error yang jelas</td>
+<td>M</td>
+<td>M</td>
+<td>Isi field cakupan lewat dropdown cascading yang sudah ada di menu Pengguna (bukan input teks bebas), bukan ketik manual; pertimbangkan pesan khusus "cakupan Anda tidak memiliki sekolah terdaftar" saat hasil scoping kosong</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Pembatasan cakupan hanya diterapkan di laporan ini, sementara Laporan Pemasukan &amp; modul lain belum -- berisiko inkonsistensi ekspektasi akses data antar modul bagi pengguna non-Pusat</td>
+<td>M</td>
+<td>M</td>
+<td>Selaraskan penerapan cakupan akses ke seluruh laporan/modul terkait sekolah pada iterasi berikutnya (lihat Pertanyaan Terbuka No. 5)</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Target tanggal</th>
+<th>Kriteria selesai</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRD approved</td>
+<td>Dokumen ini v1.0</td>
+<td>[ ]</td>
+<td>Ditandatangani PO</td>
+</tr>
+<tr>
+<td>Desain selesai</td>
+<td>Mockup &amp; struktur data final</td>
+<td>[ ]</td>
+<td>Review SA &amp; klien</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Laporan Pindah Sekolah &amp; Tunggakan</td>
+<td>[ ]</td>
+<td>Lolos code review</td>
+</tr>
+<tr>
+<td>UAT</td>
+<td>Build staging</td>
+<td>[ ]</td>
+<td>0 bug critical, sign-off UAT</td>
+</tr>
+<tr>
+<td>Go-live</td>
+<td>Production</td>
+<td>[ ]</td>
+<td>Monitoring 2 minggu stabil</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Istilah</th>
+<th>Arti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Write-off/Hapus Buku</td>
+<td>Penghapusan tagihan yang tidak bisa ditagih lagi, umumnya karena siswa pindah sekolah</td>
+</tr>
+<tr>
+<td>Tunggakan</td>
+<td>Tagihan yang sudah jatuh tempo namun belum dibayar</td>
+</tr>
+<tr>
+<td>Telat Hari</td>
+<td>Jumlah hari keterlambatan pembayaran, dihitung dari tanggal jatuh tempo invoice sampai hari ini</td>
+</tr>
+<tr>
+<td>Rencana Bayar</td>
+<td>Tanggal yang dijanjikan wali murid/sekolah untuk melunasi tunggakan meski siswa sudah pindah sekolah</td>
+</tr>
+<tr>
+<td>PWM</td>
+<td>Pimpinan Wilayah Muhammadiyah -- struktur organisasi setingkat provinsi, menaungi beberapa PDM</td>
+</tr>
+<tr>
+<td>PDM</td>
+<td>Pimpinan Daerah Muhammadiyah -- struktur organisasi setingkat kabupaten/kota, menaungi beberapa PCM</td>
+</tr>
+<tr>
+<td>PCM</td>
+<td>Pimpinan Cabang Muhammadiyah -- struktur organisasi setingkat kecamatan, menaungi sekolah-sekolah di wilayahnya</td>
+</tr>
+<tr>
+<td>Cakupan (akun)</td>
+<td>Batas data sekolah yang bisa dilihat satu akun -- Pusat (seluruh sekolah), Wilayah (satu PWM), Daerah (satu PDM), atau Cabang (satu PCM); diatur lewat menu Pengguna</td>
+</tr>
+<tr>
+<td>Periode (laporan ini)</td>
+<td>Bulan efektif pindah (<code>tglEfektifPindah</code>, format <code>YYYY-MM</code>) yang jadi dasar filter Periode -- berbeda dari "periode" di Laporan Pemasukan yang berbasis bulan transaksi pembayaran</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Peran</th>
+<th>Nama</th>
+<th>Tanda tangan</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner (klien)</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Project Manager</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Solution Architect</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Tech Lead</td>
+<td>[ ]</td>
+<td>[ ]</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul class="checklist">
+<li><input type="checkbox" checked disabled /> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled /> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled /> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled /> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled /> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled /> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled /> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled /> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="index.html" title="Daftar semua dokumen PRD">📄 PRD</a>
+
+</body>
+</html>

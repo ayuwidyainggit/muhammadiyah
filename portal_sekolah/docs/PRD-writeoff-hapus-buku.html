@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Write-off (Hapus Buku) -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Write-off (Hapus Buku) <span class="badge prd">Portal Sekolah</span></h1>
+
+        <div class="note-flag"><strong>Catatan lingkup:</strong> dokumen ini berfokus pada halaman <strong>pengajuan</strong> (<code>transaksi-writeoff.html</code>, sisi Bendahara). Persetujuan write-off dilakukan di halaman terpisah <code>approval.html</code> (sisi Kepala Sekolah) yang belum memiliki PRD tersendiri -- bagian 3.1, 4.1, dan 8 pada dokumen ini menjelaskan alur persetujuan tersebut sejauh diperlukan untuk memahami status siklus hidup pengajuan, bukan sebagai spesifikasi lengkap halaman <code>approval.html</code>.</div>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Write-off (Hapus Buku) -- halaman <code>transaksi-writeoff.html</code>, nav-child keempat di bawah menu Transaksi &amp; Invoice</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>09-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>transaksi-writeoff.html</code>, <code>app.js</code> (data <code>writeoffData</code>, <code>writeoffSeq</code>; fungsi <code>fillWriteoffInvoiceSelect</code>, <code>submitWriteoff</code>, <code>renderWriteoffList</code>, <code>refreshWriteoffDependents</code>); sisi persetujuan di <code>approval.html</code> (fungsi <code>renderWriteoffTable</code>, <code>openDecisionPanel</code>, <code>confirmDecision</code>, <code>openTunggakanModal</code>, <code>writeoffTunggakanTotal</code>, <code>updateWriteoffStats</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a> -- sumber invoice yang diajukan hapus buku; PRD Manajemen Murid (belum dibaca penuh dalam penyusunan dokumen ini) -- status siswa <code>pindah</code> adalah prasyarat kemunculan invoice di dropdown pengajuan; PRD Profil Wali Murid (aplikasi Wali Murid) -- jalur pengajuan alternatif "Ajukan Pindah Sekolah" yang juga menulis ke <code>writeoffData</code> yang sama (lihat 8. Batasan)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>09-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan halaman pengajuan Write-off sebagai bagian dari pemetaan ulang dokumen PRD untuk seluruh nav-child Transaksi &amp; Invoice.</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>pengajuan Write-off (Hapus Buku)</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini memungkinkan Bendahara/Admin <strong>mengajukan</strong> penghapusan tagihan (hapus buku) untuk siswa yang sudah berstatus <strong>pindah</strong> di Manajemen Murid, beserta riwayat seluruh pengajuan yang pernah dikirim dan status keputusannya. Fitur ini <strong>tidak</strong> menyediakan aksi approve/reject -- keputusan hanya bisa diambil Kepala Sekolah di halaman <code>approval.html</code> (segregation of duties), dan <strong>tidak</strong> mengubah status siswa menjadi <code>pindah</code> (itu dilakukan di Manajemen Murid).</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Write-off / Hapus Buku</td><td>Penghapusan tagihan dari pembukuan karena dianggap tidak akan pernah tertagih, umumnya karena siswa pindah sekolah</td></tr>
+              <tr><td>Segregation of Duties</td><td>Pemisahan kewenangan -- pihak yang mengajukan (Bendahara) tidak boleh menjadi pihak yang menyetujui (Kepala Sekolah)</td></tr>
+              <tr><td>Menunggu Approval</td><td>Status pengajuan (<code>pending_approval</code>) yang belum diputuskan Kepala Sekolah</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child keempat di bawah grup "Transaksi &amp; Invoice". Pengajuan yang dikirim dari sini masuk ke array <code>writeoffData</code> yang sama dengan yang dibaca &amp; diputuskan Kepala Sekolah di menu "Approval Write-off" (item sidebar level-atas, terpisah dari grup Transaksi &amp; Invoice, dengan badge jumlah pengajuan menunggu). <code>refreshWriteoffDependents()</code> memastikan kedua sisi (daftar pengajuan Bendahara &amp; tabel approval Kepala Sekolah, beserta statistik &amp; Dashboard Kepala Sekolah) selalu konsisten setiap ada pengajuan baru atau keputusan baru, walau yang sedang login hanya salah satu peran.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan dropdown invoice siswa berstatus <code>pindah</code> yang masih bisa diajukan hapus buku.</li>
+          <li>Mengajukan hapus buku atas satu invoice terpilih, dengan alasan tertulis.</li>
+          <li>Menampilkan riwayat seluruh pengajuan write-off beserta status keputusannya.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Mengajukan write-off &amp; memantau riwayat pengajuannya sendiri maupun pengajuan lain di sekolah yang sama (modul <code>transaksi</code>). Tidak bisa menyetujui/menolak.</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- bisa mengajukan (modul <code>transaksi</code>), tidak bisa menyetujui/menolak.</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman <strong>pengajuan</strong> ini (modul <code>transaksi</code> tidak aktif untuk peran ini) -- hanya berinteraksi lewat halaman <code>approval.html</code> (modul <code>approval</code>) untuk menyetujui/menolak.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Hanya invoice milik siswa berstatus <code>pindah</code> yang muncul sebagai pilihan -- status siswa harus diubah terlebih dahulu di Manajemen Murid.</li>
+          <li>Invoice yang sudah <code>paid</code>, <code>written_off</code>, atau <code>closed</code> tidak ditawarkan sebagai pilihan (dianggap tidak relevan untuk hapus buku).</li>
+          <li>Tidak ada batas jumlah pengajuan per invoice -- lihat <a class="xref" href="#sec-8">8. Batasan</a> &amp; BR-04.</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Status siswa <code>pindah</code> (dikelola di Manajemen Murid, di luar lingkup dokumen ini) adalah satu-satunya sinyal yang dipakai untuk menentukan kelayakan write-off -- tidak ada pengecekan tambahan terhadap alasan pindah.</li>
+          <li>Keputusan akhir (approve/reject) sepenuhnya berada di <code>approval.html</code>, di luar lingkup dokumen ini; dokumen ini hanya menjelaskan status yang relevan agar Bendahara memahami siklus hidup pengajuannya (lihat 4.1 UC-03).</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Pilih Invoice Siswa Pindah</td><td>Dropdown "Invoice (Siswa Berstatus Pindah)" hanya berisi invoice milik siswa berstatus <code>pindah</code> yang statusnya belum <code>paid</code>/<code>written_off</code>/<code>closed</code>; menampilkan pesan placeholder jika tidak ada yang eligible</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Ajukan Hapus Buku</td><td>Tombol "Ajukan Hapus Buku" mengirim pengajuan baru berstatus <code>pending_approval</code> untuk invoice terpilih, beserta Alasan (teks bebas, default "(tanpa alasan tertulis)" bila kosong)</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Lihat Riwayat Pengajuan</td><td>Tabel menampilkan Invoice (siswa + referensi), Tipe, Alasan, Status, dan Tanggal Diajukan untuk seluruh pengajuan write-off sekolah ini, terbaru di atas</td><td>Must</td></tr>
+              <tr><td>FR-04</td><td>Pemberitahuan Segregation of Duties</td><td>Kotak peringatan menegaskan Bendahara hanya bisa mengajukan, persetujuan hanya oleh Kepala Sekolah -- tidak ada tombol approve di halaman ini</td><td>Must</td></tr>
+              <tr><td>FR-05</td><td>Sinkronisasi Lintas Peran</td><td>Setelah pengajuan baru dikirim, dropdown invoice (FR-01), tabel approval Kepala Sekolah, statistik, dan Dashboard Kepala Sekolah diperbarui lewat <code>refreshWriteoffDependents()</code></td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Mengajukan hapus buku untuk siswa pindah</strong></p>
+        <ol>
+          <li>Bendahara memastikan status siswa sudah <code>pindah</code> di Manajemen Murid.</li>
+          <li>Membuka halaman ini, memilih invoice siswa tersebut pada dropdown, mengisi Alasan, menekan "Ajukan Hapus Buku".</li>
+          <li>Sistem menambahkan pengajuan baru berstatus "Menunggu Approval", mengosongkan field Alasan, menampilkan toast "&#10003; Pengajuan hapus buku terkirim, menunggu approval Kepala Sekolah".</li>
+        </ol>
+
+        <p><strong>UC-02 -- Tidak ada invoice yang eligible</strong></p>
+        <ol>
+          <li>Bendahara membuka halaman ini sebelum ada siswa berstatus <code>pindah</code>.</li>
+          <li>Dropdown menampilkan "Tidak ada tagihan siswa pindah yang perlu dihapus buku"; menekan "Ajukan Hapus Buku" tanpa pilihan valid menampilkan toast "Tidak ada tagihan siswa pindah yang bisa diajukan hapus buku" tanpa menambah data apa pun.</li>
+        </ol>
+
+        <p><strong>UC-03 -- Memantau hasil keputusan Kepala Sekolah (referensi, di luar halaman ini)</strong></p>
+        <ol>
+          <li>Setelah pengajuan dikirim (UC-01), Kepala Sekolah membuka <code>approval.html</code>, meninjau detail (termasuk, bila berasal dari pengajuan aplikasi Wali Murid: tanggal efektif pindah, sekolah tujuan, rencana bayar tunggakan -- lihat 8. Batasan), lalu menekan "Setujui" atau "Tolak" (wajib isi alasan bila Tolak).</li>
+          <li>Status pengajuan berubah menjadi <code>approved</code>/<code>rejected</code>, tercatat tanggal keputusan &amp; catatan; Bendahara melihat status terbaru ini di tabel Riwayat Pengajuan halaman ini (FR-03) tanpa perlu diberi tahu secara aktif (tidak ada notifikasi push/email pada prototipe ini).</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td>Kelayakan invoice (FR-01) ditentukan gabungan dua kondisi: (a) nama siswa pemilik invoice ada di himpunan siswa berstatus <code>pindah</code>, dan (b) status invoice bukan <code>paid</code>/<code>written_off</code>/<code>closed</code></td></tr>
+              <tr><td>BR-02</td><td>Tidak memilih invoice (dropdown kosong/placeholder) saat menekan "Ajukan Hapus Buku" ditolak dengan toast, tanpa menambah data</td></tr>
+              <tr><td>BR-03</td><td>Alasan bersifat opsional pada validasi form -- bila dikosongkan, sistem tetap mengirim pengajuan dengan nilai default <code>"(tanpa alasan tertulis)"</code></td></tr>
+              <tr><td>BR-04</td><td><strong>Tidak ada guard</strong> yang mencegah invoice yang sama diajukan hapus buku lebih dari sekali -- BR-01 hanya mengecualikan status <code>paid</code>/<code>written_off</code>/<code>closed</code>, bukan status pengajuan write-off yang sudah <code>pending_approval</code> sebelumnya. Lihat <a class="xref" href="#sec-9">9. Pertanyaan Terbuka No. 1</a>.</td></tr>
+              <tr><td>BR-05</td><td>Pengajuan baru selalu tercatat dengan <code>tipe: 'Hapus Buku'</code> dan field detail pindah (<code>tglEfektifPindah</code>, <code>sekolahTujuan</code>, <code>rencanaBayarTunggakan</code>, <code>tunggakanList</code>) kosong/null -- berbeda dari pengajuan yang berasal dari aplikasi Wali Murid yang mengisi keempat field tersebut (lihat 8. Batasan)</td></tr>
+              <tr><td>BR-06</td><td>Tanggal pengajuan (<code>tanggalDiajukan</code>) diisi nilai tetap <code>"2026-08-20"</code> pada prototipe ini, bukan tanggal sistem berjalan -- konsisten dengan pola tanggal statis yang dipakai di beberapa fitur prototipe lain pada aplikasi ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Elemen</th><th>Wajib?</th><th>Catatan Validasi</th></tr></thead>
+            <tbody>
+              <tr><td>Invoice</td><td><code>#wo-invoice</code></td><td><strong>Ya</strong></td><td>Harus memilih opsi dengan <code>value</code> yang cocok dengan salah satu <code>Invoice.id</code> eligible (lihat BR-01, BR-02)</td></tr>
+              <tr><td>Alasan</td><td><code>#wo-alasan</code></td><td>Tidak (opsional)</td><td>Teks bebas; default <code>"(tanpa alasan tertulis)"</code> bila kosong (lihat BR-03)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>PengajuanWriteoff</code> (<code>writeoffData</code>) -- dibaca &amp; ditulis bersama <code>approval.html</code></strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Diisi dari Halaman Ini?</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>integer</td><td>Tidak (sistem)</td><td>Auto-increment (<code>writeoffSeq</code>)</td></tr>
+              <tr><td><code>siswa</code>, <code>kelas</code></td><td>string</td><td>Tidak (diturunkan)</td><td>Diambil dari invoice terpilih, bukan input manual</td></tr>
+              <tr><td><code>invoiceRef</code></td><td>string</td><td>Tidak (diturunkan)</td><td>Format <code>"{jenis} {periode}"</code> dari invoice terpilih</td></tr>
+              <tr><td><code>tipe</code></td><td>string</td><td>Tidak (selalu <code>"Hapus Buku"</code>)</td><td>Satu-satunya tipe yang didukung saat ini (lihat 2.2)</td></tr>
+              <tr><td><code>alasan</code></td><td>string</td><td><strong>Ya</strong> (opsional, ada default)</td><td>Lihat BR-03</td></tr>
+              <tr><td><code>diajukanOleh</code></td><td>string</td><td>Tidak (dari sesi login)</td><td>Format <code>"{nama} ({peran})"</code> dari <code>currentUser</code>, fallback <code>"Bendahara"</code> jika tidak ada sesi</td></tr>
+              <tr><td><code>tanggalDiajukan</code></td><td>string (tanggal)</td><td>Tidak (statis)</td><td>Lihat BR-06</td></tr>
+              <tr><td><code>status</code></td><td>string enum (<code>pending_approval</code>/<code>approved</code>/<code>rejected</code>)</td><td>Tidak (awal selalu <code>pending_approval</code>)</td><td>Diubah hanya oleh <code>confirmDecision()</code> di <code>approval.html</code></td></tr>
+              <tr><td><code>tanggalKeputusan</code>, <code>catatan</code></td><td>string</td><td>Tidak</td><td>Diisi <code>approval.html</code> saat keputusan diambil; kosong selama <code>pending_approval</code></td></tr>
+              <tr><td><code>tglEfektifPindah</code>, <code>sekolahTujuan</code>, <code>rencanaBayarTunggakan</code>, <code>tunggakanList</code></td><td>null / string / array</td><td>Tidak -- selalu <code>null</code>/kosong dari halaman ini</td><td>Hanya terisi untuk pengajuan yang berasal dari fitur "Ajukan Pindah Sekolah" di aplikasi Wali Murid (lihat 8. Batasan); <code>approval.html</code> menampilkan "-- belum diisi --" untuk pengajuan dari halaman ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Segregation of Duties</td><td>Halaman ini tidak menyediakan kontrol UI apa pun untuk approve/reject -- keputusan hanya mungkin dari <code>approval.html</code> yang diakses modul <code>approval</code> (hanya Kepala Sekolah)</td><td>100% tidak ada jalur approve/reject dari modul <code>transaksi</code></td></tr>
+              <tr><td>NFR-02</td><td>Konsistensi lintas peran</td><td>Pengajuan baru &amp; keputusan baru selalu memperbarui kedua sisi (Bendahara &amp; Kepala Sekolah) serta statistik terkait lewat <code>refreshWriteoffDependents()</code></td><td>0% selisih data antar tampilan dalam satu sesi</td></tr>
+              <tr><td>NFR-03</td><td>Feedback</td><td>Setiap pengajuan menampilkan toast konfirmasi atau pesan kesalahan yang jelas</td><td>100% aksi memberi feedback visual</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li><strong>Status invoice tidak berubah setelah pengajuan disetujui.</strong> <code>confirmDecision()</code> di <code>approval.html</code> hanya mengubah <code>writeoffData[].status</code> menjadi <code>approved</code>/<code>rejected</code> -- tidak ada kode yang mengubah <code>Invoice.status</code> terkait menjadi <code>written_off</code> (lihat <a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a>, bagian 8). Akibatnya, invoice yang pengajuan write-off-nya sudah "Disetujui" tetap muncul dengan status aslinya (mis. <code>sent</code>/<code>overdue</code>) di Daftar Tagihan, berpotensi membingungkan Bendahara/Admin yang melihatnya di luar konteks halaman Write-off.</li>
+          <li>Ada dua jalur berbeda yang menulis ke <code>writeoffData</code> dengan kelengkapan data berbeda: halaman ini (field detail pindah selalu kosong, lihat BR-05) dan fitur "Ajukan Pindah Sekolah" di aplikasi Wali Murid (field detail pindah lengkap). <code>approval.html</code> menampilkan kedua jenis pengajuan dalam satu tabel yang sama tanpa membedakan sumbernya secara eksplisit kepada Kepala Sekolah.</li>
+          <li>Tidak ada guard mencegah invoice yang sama diajukan berulang kali (BR-04) -- bisa menghasilkan beberapa pengajuan <code>pending_approval</code> untuk invoice yang sama secara bersamaan.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Penerapan efektif write-off ke status invoice (bila nanti diimplementasikan) diasumsikan akan menjadi langkah terpisah setelah <code>approved</code> -- lihat status <code>applied</code> yang sudah terdaftar di <code>STATUS_BADGE</code>/<code>updateWriteoffStats</code> namun belum pernah diset kode manapun.</li>
+          <li>Segregation of duties (NFR-01) diasumsikan cukup ditegakkan lewat pembagian modul RBAC (<code>transaksi</code> vs <code>approval</code>) di sisi client; belum ada indikasi penegakan ulang di lapisan API/backend pada prototipe ini.</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Setelah Kepala Sekolah menyetujui pengajuan write-off, langkah apa yang seharusnya mengubah <code>Invoice.status</code> menjadi <code>written_off</code> -- otomatis saat <code>confirmDecision()</code>, atau lewat aksi "Terapkan" terpisah (mengingat status <code>applied</code> sudah terdaftar namun belum dipakai)? Lihat <a class="xref" href="PRD-tagihan-invoice.html#sec-9">PRD Tagihan (Invoice), Pertanyaan Terbuka No. 1</a>.</td><td>Tech Lead / Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah perlu guard yang mencegah invoice yang sama diajukan write-off lebih dari sekali selagi masih ada pengajuan <code>pending_approval</code> untuknya (BR-04)?</td><td>Solution Architect</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah halaman <code>approval.html</code> (Approval Write-off, sisi Kepala Sekolah) perlu PRD tersendiri, mengingat saat ini hanya didokumentasikan sebagai konteks pendukung di dalam dokumen ini?</td><td>Tim Produk GeekGarden</td><td>[ ]</td></tr>
+              <tr><td>4</td><td>Apakah Bendahara perlu diberi notifikasi aktif (bukan hanya melihat status terbaru saat membuka ulang halaman ini) ketika Kepala Sekolah mengambil keputusan atas pengajuannya?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Write-off / Hapus Buku</td><td>Penghapusan tagihan dari pembukuan karena dianggap tidak akan pernah tertagih</td></tr>
+              <tr><td>Pending Approval</td><td>Status pengajuan yang belum diputuskan Kepala Sekolah</td></tr>
+              <tr><td>Approved / Rejected</td><td>Hasil keputusan Kepala Sekolah -- lihat Batasan terkait status ini belum berdampak ke <code>Invoice.status</code></td></tr>
+              <tr><td>Applied</td><td>Status lanjutan yang terdaftar di sistem untuk menandai write-off sudah "diterapkan" ke invoice, namun belum pernah diset oleh kode manapun pada prototipe ini</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>

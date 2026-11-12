@@ -185,7 +185,7 @@
 </tr>
 <tr>
 <td>Versi dokumen</td>
-<td>v0.4</td>
+<td>v0.3</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -213,7 +213,7 @@
 </tr>
 <tr>
 <td>Dokumen terkait</td>
-<td><code>konfigurasi.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, PRD Dashboard Konsolidasi</td>
+<td><code>konfigurasi.html</code>, <code>app.js</code>, PRD Manajemen Sekolah, PRD Dashboard Konsolidasi, PRD Periode Tahun Ajaran</td>
 </tr>
 </tbody>
 </table></div>
@@ -236,21 +236,15 @@
 </tr>
 <tr>
 <td>v0.2</td>
-<td>27-10-2026</td>
+<td>09-11-2026</td>
 <td>Tim Produk GeekGarden</td>
-<td>Menyesuaikan dengan kondisi prototipe terbaru: tombol "Simpan Template Default" kini benar-benar menyimpan isi 9 textarea (3 kanal x 3 level) ke <code>localStorage</code> browser dan memuat ulang nilainya saat halaman dibuka kembali (lihat FR-07). Tombol "Simpan Konfigurasi" global pada kartu lain masih berupa mock UI (toast saja, belum ada penyimpanan nyata) -- lihat Batasan.</td>
+<td>(Superseded oleh v0.3) Sempat menambahkan kartu kelima <strong>Periode Tahun Ajaran</strong> di halaman ini, dipindahkan dari Portal Sekolah supaya satu sumber data.</td>
 </tr>
 <tr>
 <td>v0.3</td>
-<td>02-11-2026</td>
+<td>09-11-2026</td>
 <td>Tim Produk GeekGarden</td>
-<td>Sinkronisasi dengan prototipe terkini <code>konfigurasi.html</code>: kanal Aturan Reminder &amp; Template Pesan diperbarui dari WA/SMS/Email menjadi 4 kanal -- WA, Email, Push Notif, Notif Aplikasi (SMS tidak lagi tersedia). Kartu Template Pesan Default kini berisi 12 textarea (4 kanal x 3 level). Ditambahkan catatan bahwa template Push Notif sengaja tidak memuat placeholder <code>{link_bayar}</code> karena dibuat ringkas untuk notifikasi singkat di perangkat (lihat FR-06 &amp; NFR-02).</td>
-</tr>
-<tr>
-<td>v0.4</td>
-<td>03-11-2026</td>
-<td>Tim Produk GeekGarden</td>
-<td>Membersihkan sisa referensi SMS yang masih tertinggal di beberapa bagian dokumen setelah migrasi ke 4 kanal pada v0.3: FR-05 (channel per baris Aturan Reminder), FR-06 (tab kanal Template Pesan), bagian 8 (wireframe), dan bagian 10 (model data <code>AturanReminder.channels</code>) kini konsisten menyebut WA/Email/Push Notif/Notif Aplikasi. NFR-02 diperjelas agar tidak mewajibkan placeholder <code>{link_bayar}</code> pada kanal Push Notif (by design, lihat FR-06). Menambahkan istilah "Push Notif" &amp; "Notif Aplikasi" ke Glosarium.</td>
+<td><strong>Periode Tahun Ajaran dipisah lagi</strong> menjadi fitur &amp; halaman tersendiri (<code>periode-tahun-ajaran.html</code>, menu sidebar sendiri di bawah grup "Konfigurasi") -- lihat PRD Periode Tahun Ajaran yang baru. Halaman Konfigurasi Sistem kembali fokus ke 4 kartu semula (Rekening, Notifikasi, Aturan Reminder, Template Pesan); tidak ada lagi kartu Periode Tahun Ajaran di halaman ini.</td>
 </tr>
 </tbody>
 </table></div>
@@ -258,6 +252,7 @@
 <h2>2. Ringkasan &amp; Latar Belakang</h2>
 <h3>2.1 Ringkasan</h3>
 <p>Fitur Konfigurasi Sistem memungkinkan Super Admin mengatur baseline global yang berlaku untuk seluruh sekolah di platform: rekening bank penampung pusat beserta Virtual Account (VA) pembayaran, nomor WhatsApp Business resmi terpusat, aturan reminder &amp; eskalasi tagihan default, dan template pesan default. Pengaturan ini menjadi acuan awal bagi sekolah baru saat onboarding dan sebagian dapat di-override di level sekolah masing-masing lewat menu Manajemen Sekolah.</p>
+<p style="background:#eef2f8;border-left:3px solid var(--navy);padding:10px 14px;border-radius:4px;">Sejak v0.3, <strong>Periode Tahun Ajaran</strong> bukan lagi bagian dari halaman ini -- fitur tersebut punya halaman &amp; PRD tersendiri (lihat PRD Periode Tahun Ajaran), ditempatkan sebagai menu sidebar sendiri tepat di bawah "Konfigurasi Sistem".</p>
 <h3>2.2 Problem Statement</h3>
 <p><strong>Super Admin</strong> mengalami <strong>kesulitan menjaga konsistensi rekening penampung, identitas pengirim notifikasi, dan aturan penagihan di seluruh sekolah</strong> saat <strong>tiap pengaturan tersebut harus diisi atau disamakan secara manual per sekolah</strong>, yang menyebabkan <strong>risiko salah kirim dana, identitas pengirim pesan yang tidak konsisten, dan pengalaman wali murid yang berbeda-beda antar sekolah</strong>.</p>
 <h3>2.3 Kondisi Saat Ini (As-Is)</h3>
@@ -349,7 +344,7 @@
 <td>Penerima notifikasi tagihan</td>
 <td>Membayar ke rekening/VA yang benar dan mengenali pengirim pesan</td>
 <td>Bingung bila nomor pengirim/rekening berubah-ubah antar sekolah</td>
-<td>WhatsApp/Email/Push Notif/Notif Aplikasi</td>
+<td>WhatsApp/SMS/Email</td>
 </tr>
 </tbody>
 </table></div>
@@ -373,16 +368,20 @@
 <td>Integrasi Bank Host-to-Host (callback URL, client secret, timeout, retry)</td>
 </tr>
 <tr>
-<td>Aturan Reminder &amp; Eskalasi default platform (tambah/hapus baris, channel WA/Email/Push Notif/Notif Aplikasi per baris, aktif/nonaktif)</td>
+<td>Aturan Reminder &amp; Eskalasi default platform (tambah/hapus baris, channel per baris, aktif/nonaktif)</td>
 <td>Skema Bagi Hasil (Revenue Share) SPP</td>
 </tr>
 <tr>
-<td>Template Pesan Default Platform per kanal (WhatsApp/Email/Push Notif/Notif Aplikasi) x level (1/2/3)</td>
+<td>Template Pesan Default Platform per kanal (WhatsApp/SMS/Email) x level (1/2/3)</td>
 <td>Biaya Layanan Notifikasi per kanal</td>
 </tr>
 <tr>
 <td>Simpan konfigurasi (global dan per kartu Aturan Reminder / Template Pesan)</td>
 <td>Keamanan &amp; Kepatuhan (session timeout, retensi audit log, kewajiban 2FA)</td>
+</tr>
+<tr>
+<td></td>
+<td>Periode Tahun Ajaran -- dipindahkan ke halaman &amp; PRD tersendiri sejak v0.3</td>
 </tr>
 </tbody>
 </table></div>
@@ -426,7 +425,7 @@
 <td>US-04</td>
 <td>Sebagai Super Admin, saya ingin mengubah teks template pesan default per kanal dan level, supaya komunikasi ke wali murid konsisten sejak sekolah baru aktif.</td>
 <td>Must</td>
-<td>Given saya membuka tab WhatsApp/Email/Push Notif/Notif Aplikasi pada kartu Template Pesan, When saya mengubah isi textarea pada level tertentu dan menekan "Simpan Template Default", Then teks tersimpan sebagai default platform</td>
+<td>Given saya membuka tab WhatsApp/SMS/Email pada kartu Template Pesan, When saya mengubah isi textarea pada level tertentu dan menekan "Simpan Template Default", Then teks tersimpan sebagai default platform</td>
 </tr>
 <tr>
 <td>US-05</td>
@@ -485,7 +484,7 @@
 <tr>
 <td>FR-05</td>
 <td>Konfigurasi Channel &amp; Level per Aturan</td>
-<td>Setiap baris aturan reminder harus memiliki pilihan Level Penanganan (Level 1 -- Pengingat, Level 2 -- Peringatan, Level 3 -- Eskalasi), channel (WA/Email/Push Notif/Notif Aplikasi), dan toggle Aktif/Nonaktif</td>
+<td>Setiap baris aturan reminder harus memiliki pilihan Level Penanganan (Level 1 -- Pengingat, Level 2 -- Peringatan, Level 3 -- Eskalasi), channel (WA/SMS/Email), dan toggle Aktif/Nonaktif</td>
 <td>US-03</td>
 <td>Must</td>
 <td>Level 3 memicu event <code>escalation.triggered</code> ke EscalationCase (lihat Skenario 6 pada dokumen sistem terkait)</td>
@@ -493,10 +492,10 @@
 <tr>
 <td>FR-06</td>
 <td>Template Pesan per Kanal &amp; Level</td>
-<td>Sistem harus menyediakan tab kanal (WhatsApp, Email, Push Notif, Notif Aplikasi) yang masing-masing menampilkan 3 kartu template (Level 1, 2, 3) berisi textarea teks pesan dengan placeholder <code>{nama_siswa}</code>, <code>{nama_sekolah}</code>, <code>{nominal}</code>, <code>{tanggal_jatuh_tempo}</code>, <code>{hari_terlambat}</code>, <code>{link_bayar}</code></td>
+<td>Sistem harus menyediakan tab kanal (WhatsApp, SMS, Email) yang masing-masing menampilkan 3 kartu template (Level 1, 2, 3) berisi textarea teks pesan dengan placeholder <code>{nama_siswa}</code>, <code>{nama_sekolah}</code>, <code>{nominal}</code>, <code>{tanggal_jatuh_tempo}</code>, <code>{hari_terlambat}</code>, <code>{link_bayar}</code></td>
 <td>US-04</td>
 <td>Must</td>
-<td>Template ini adalah default platform, otomatis disalin ke sekolah baru saat onboarding; bukan editor milik sekolah tertentu. Khusus kanal <strong>Push Notif</strong>, placeholder <code>{link_bayar}</code> sengaja tidak dipakai karena teksnya dibuat ringkas untuk notifikasi singkat di perangkat (lock screen) -- lihat NFR-02</td>
+<td>Template ini adalah default platform, otomatis disalin ke sekolah baru saat onboarding; bukan editor milik sekolah tertentu</td>
 </tr>
 <tr>
 <td>FR-07</td>
@@ -504,7 +503,7 @@
 <td>Sistem harus menyediakan tombol simpan khusus pada kartu Aturan Reminder (implisit lewat Simpan Konfigurasi) dan kartu Template Pesan ("Simpan Template Default")</td>
 <td>US-03, US-04</td>
 <td>Must</td>
-<td>Simpan Template Default hanya menyimpan perubahan pada kartu Template Pesan, ke <code>localStorage</code> browser pada sesi Super Admin yang bersangkutan; nilai dimuat ulang otomatis saat halaman dibuka kembali di browser/device yang sama</td>
+<td>Simpan Template Default hanya menyimpan perubahan pada kartu Template Pesan</td>
 </tr>
 <tr>
 <td>FR-08</td>
@@ -558,7 +557,7 @@
 </tr>
 </tbody>
 </table></div>
-<p><em>Catatan: pada konfigurasi default, hanya role dengan permission <code>konfigurasi</code> (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role &amp; Hak Akses.</em></p>
+<p>_Catatan: pada konfigurasi default, hanya role dengan permission <code>konfigurasi</code> (saat ini: Super Admin) yang dapat mengakses menu ini; dapat diubah lewat menu Role &amp; Hak Akses. Hak akses Periode Tahun Ajaran diatur terpisah lewat key RBAC <code>periode-tahun-ajaran</code> -- lihat PRD Periode Tahun Ajaran._</p>
 <h3>6.2 Notifikasi</h3>
 <div class="table-scroll"><table>
 <thead>
@@ -605,14 +604,14 @@
 <tr>
 <td>NFR-02</td>
 <td>Validasi</td>
-<td>Template pesan harus mempertahankan placeholder minimum <code>{nama_siswa}</code> saat disimpan; untuk kanal WhatsApp/Email/Notif Aplikasi, placeholder <code>{link_bayar}</code> juga wajib dipertahankan -- <strong>kecuali kanal Push Notif</strong> yang memang didesain tanpa <code>{link_bayar}</code></td>
-<td>100% template WA/Email/Notif Aplikasi tervalidasi memiliki placeholder minimum; 100% template Push Notif tervalidasi memiliki <code>{nama_siswa}</code></td>
+<td>Template pesan harus mempertahankan placeholder minimum (<code>{nama_siswa}</code>, <code>{link_bayar}</code>) saat disimpan</td>
+<td>100% template tervalidasi memiliki placeholder minimum</td>
 </tr>
 <tr>
 <td>NFR-03</td>
 <td>Performa</td>
 <td>Waktu simpan konfigurasi (seluruh kartu)</td>
-<td>&lt; 1 detik untuk kondisi data saat ini (≤ 20 baris aturan)</td>
+<td>< 1 detik untuk kondisi data saat ini (≤ 20 baris aturan)</td>
 </tr>
 <tr>
 <td>NFR-04</td>
@@ -632,7 +631,7 @@
 <h2>8. Alur Pengguna &amp; Desain</h2>
 <ul>
 <li>Alur utama: Login → Menu "Konfigurasi Sistem" → ubah field pada kartu Rekening Bank Penampung Pusat &amp; VA / Notifikasi Nomor Resmi Terpusat / Aturan Reminder &amp; Eskalasi / Template Pesan → simpan per kartu (Template Pesan) atau "Simpan Konfigurasi" di bawah halaman → toast konfirmasi.</li>
-<li>Wireframe: mengikuti struktur <code>konfigurasi.html</code> -- empat kartu berurutan (Rekening Bank, Notifikasi, Aturan Reminder dengan tabel baris dinamis, Template Pesan dengan tab kanal WA/Email/Push Notif/Notif Aplikasi), diakhiri tombol simpan di kanan bawah.</li>
+<li>Wireframe: mengikuti struktur <code>konfigurasi.html</code> -- empat kartu berurutan (Rekening Bank, Notifikasi, Aturan Reminder dengan tabel baris dinamis, Template Pesan dengan tab kanal WA/SMS/Email), diakhiri tombol simpan di kanan bawah.</li>
 <li>Edge case yang wajib ditangani: menghapus seluruh baris Aturan Reminder sehingga sekolah baru tidak memiliki reminder default sama sekali (lihat Risiko); mengubah/menghapus placeholder penting pada Template Pesan sehingga pesan terkirim tanpa data krusial (mis. tanpa <code>{link_bayar}</code>).</li>
 </ul>
 <hr />
@@ -674,14 +673,11 @@
 <hr />
 <h2>10. Kebutuhan Data</h2>
 <ul>
-<li>Entitas utama:
-  <ul>
-    <li><code>RekeningPenampungPusat</code> (namaBank, nomorRekening, namaPemilikRekening).</li>
-    <li><code>NomorResmiTerpusat</code> (nomorWA, businessAccountId) -- read-only dari panel ini.</li>
-    <li><code>AturanReminder</code> (offsetHari, namaAturan, levelPenanganan, channels[WA/Email/PushNotif/NotifAplikasi], aktif).</li>
-    <li><code>TemplatePesanDefault</code> (kanal, level, teks).</li>
-  </ul>
-</li>
+<li>Entitas utama:</li>
+<li><code>RekeningPenampungPusat</code> (namaBank, nomorRekening, namaPemilikRekening).</li>
+<li><code>NomorResmiTerpusat</code> (nomorWA, businessAccountId) -- read-only dari panel ini.</li>
+<li><code>AturanReminder</code> (offsetHari, namaAturan, levelPenanganan, channels[WA/SMS/Email], aktif).</li>
+<li><code>TemplatePesanDefault</code> (kanal, level, teks).</li>
 <li>Migrasi data: tidak ada migrasi dari sistem lama pada fase ini; data merupakan baseline baru platform.</li>
 <li>Retensi data: seluruh entitas di atas disimpan selama platform berjalan; perubahan harus tercatat di audit log (lihat NFR-05).</li>
 <li>Laporan yang dibutuhkan: riwayat perubahan Rekening Penampung Pusat &amp; VA (untuk kebutuhan audit keuangan), daftar Aturan Reminder aktif saat ini.</li>
@@ -696,7 +692,6 @@
 <p><strong>Batasan:</strong></p>
 <ul>
 <li>Pengaturan Umum platform, integrasi Host-to-Host, skema bagi hasil, biaya layanan notifikasi, dan kebijakan keamanan &amp; kepatuhan tidak lagi dikelola dari halaman ini pada versi saat ini.</li>
-<li>Pada versi prototipe saat ini, Template Pesan Default hanya tersimpan di <code>localStorage</code> browser lokal Super Admin (per browser/device), belum ke backend/database bersama -- berbeda dengan kartu Rekening Bank, Notifikasi, dan Aturan Reminder yang tombol simpannya masih mock UI (toast tanpa penyimpanan nyata). Keduanya harus disatukan ke penyimpanan backend sebelum go-live agar memenuhi NFR-04 dan NFR-05.</li>
 </ul>
 <p><strong>Pertanyaan terbuka:</strong></p>
 <div class="table-scroll"><table>
@@ -765,13 +760,6 @@
 <td>M</td>
 <td>M</td>
 <td>Validasi placeholder minimum sebelum simpan (lihat NFR-02)</td>
-<td>[ ]</td>
-</tr>
-<tr>
-<td>Template Pesan Default yang tersimpan di <code>localStorage</code> browser hilang (cache dibersihkan) atau tidak konsisten antar device/browser Super Admin, karena belum ada penyimpanan backend terpusat</td>
-<td>M</td>
-<td>M</td>
-<td>Migrasikan penyimpanan Template Pesan Default (dan kartu lain) dari <code>localStorage</code> ke backend/database bersama sebelum go-live</td>
 <td>[ ]</td>
 </tr>
 </tbody>
@@ -845,14 +833,6 @@
 <tr>
 <td>Level Penanganan</td>
 <td>Tingkat eskalasi pesan reminder: Level 1 (Pengingat), Level 2 (Peringatan), Level 3 (Eskalasi)</td>
-</tr>
-<tr>
-<td>Push Notif</td>
-<td>Notifikasi singkat yang tampil di perangkat wali murid (mis. lock screen); teks dibuat ringkas dan sengaja tidak memuat placeholder <code>{link_bayar}</code></td>
-</tr>
-<tr>
-<td>Notif Aplikasi</td>
-<td>Notifikasi yang tampil di halaman Notifikasi pada App Wali Murid, tidak terikat batas panjang pesan seperti Push Notif</td>
 </tr>
 </tbody>
 </table></div>

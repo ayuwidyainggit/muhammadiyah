@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>GeekGarden Admin -- Konfigurasi Sistem</title>
+    <title>GeekGarden Admin -- Notifikasi &amp; Reminder</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -29,12 +29,32 @@
           ><span class="ic">🏫</span> Manajemen Sekolah</a
         >
 
+        <div class="nav-group-label">Laporan</div>
+        <a
+          href="laporan-pemasukan.html"
+          class="nav-item"
+          data-rbac="laporan-pemasukan"
+          ><span class="ic">💰</span> Laporan Pemasukan</a
+        >
+        <a
+          href="laporan-pindah-tunggakan.html"
+          class="nav-item"
+          data-rbac="laporan-pindah-tunggakan"
+          ><span class="ic">📦</span> Laporan Pindah Sekolah &amp; Tunggakan</a
+        >
+
         <div class="nav-group-label">Konfigurasi</div>
         <a
           href="konfigurasi.html"
           class="nav-item active"
           data-rbac="konfigurasi"
-          ><span class="ic">⚙</span> Konfigurasi Sistem</a
+          ><span class="ic">⚙</span> Notifikasi &amp; Reminder</a
+        >
+        <a
+          href="periode-tahun-ajaran.html"
+          class="nav-item"
+          data-rbac="periode-tahun-ajaran"
+          ><span class="ic">🗓️</span> Periode Tahun Ajaran</a
         >
         <a href="pengguna.html" class="nav-item" data-rbac="pengguna"
           ><span class="ic">👤</span> Pengguna</a
@@ -67,7 +87,7 @@
         <div class="topbar">
           <div class="crumb">
             <span id="crumb-role">Super Admin</span> /
-            <b id="crumb-current">Konfigurasi Sistem</b>
+            <b id="crumb-current">Notifikasi &amp; Reminder</b>
           </div>
           <div class="topbar-right">
             <a
@@ -91,7 +111,7 @@
           <!-- ===================== VIEW: KONFIGURASI SISTEM ===================== -->
           <div class="page-view active" id="view-konfigurasi">
             <div class="page-title">
-              <h1>Konfigurasi Sistem</h1>
+              <h1>Notifikasi &amp; Reminder</h1>
               <p>
                 Pengaturan platform tingkat global -- berlaku untuk seluruh
                 sekolah kecuali di-override di level sekolah masing-masing.
@@ -106,7 +126,7 @@
               <div class="grid3">
                 <div class="field">
                   <label>Nama Bank</label>
-                  <select>
+                  <select disabled style="background: #f5f6f8">
                     <option>BCA</option>
                     <option>Mandiri</option>
                     <option>BNI</option>
@@ -117,13 +137,20 @@
                 </div>
                 <div class="field">
                   <label>Nomor Rekening Penampung Pusat</label>
-                  <input type="text" value="8800112233" />
+                  <input
+                    type="text"
+                    value="8800112233"
+                    readonly
+                    style="background: #f5f6f8"
+                  />
                 </div>
                 <div class="field">
                   <label>Nama Pemilik Rekening</label>
                   <input
                     type="text"
                     value="PP Muhammadiyah -- GeekGarden (Penampung)"
+                    readonly
+                    style="background: #f5f6f8"
                   />
                 </div>
               </div>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD: Pembayaran Tagihan -- GeekGarden</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #14243f;
+    --navy-soft: #2c4a7c;
+    --accent: #2e7d32;
+    --accent-light: #e8f5e9;
+    --red: #b71c1c;
+    --red-light: #fdecea;
+    --muted: #5b6674;
+    --border: #e3e7ee;
+    --bg: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #1b1f27;
+  }
+  .doc-topbar {
+    background: var(--navy-dark);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .doc-topbar a:hover { text-decoration: underline; }
+  .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+  .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+  .doc-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 36px 40px; box-shadow: 0 1px 3px rgba(20,36,63,0.06); }
+  h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+  h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; }
+  p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+  ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: var(--navy); font-weight: 700; }
+  code { background: #eef1f6; color: #b71c1c; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+  th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+  tr:nth-child(even) td { background: #fafbfd; }
+  tr:last-child td { border-bottom: none; }
+  input[type="checkbox"] { transform: translateY(1px); }
+  .fab-prd {
+    position: fixed; bottom: 26px; right: 26px;
+    background: var(--navy); color: #fff; border: none; border-radius: 999px;
+    padding: 13px 20px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,36,63,0.35); cursor: pointer;
+    display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+  }
+  .fab-prd:hover { background: var(--navy-soft); }
+  @media print {
+    .doc-topbar, .fab-prd { display: none; }
+    .doc-card { box-shadow: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-topbar">
+  <span class="brand">📄 Aplikasi Wali Murid -- Dokumen PRD</span>
+  <a href="../bayar.html">&larr; Lihat Prototipe bayar.html</a>
+</div>
+
+<div class="doc-wrap">
+  <div class="doc-card">
+<h1>PRD: Pembayaran Tagihan (Wali Murid)</h1>
+<h2>1. Informasi Dokumen</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+<tbody>
+<tr><td>Nama produk / fitur</td><td>Pembayaran Tagihan (QRIS, Virtual Account, Transfer Manual &amp; Konfirmasi Rencana Bayar)</td></tr>
+<tr><td>Klien / proyek</td><td>Aplikasi Wali Murid -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+<tr><td>Versi dokumen</td><td>v0.1</td></tr>
+<tr><td>Status</td><td>Draft</td></tr>
+<tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+<tr><td>Product Owner</td><td>[Nama PO Klien]</td></tr>
+<tr><td>Solution Architect</td><td>[Nama SA]</td></tr>
+<tr><td>Tanggal dibuat</td><td>08-11-2026</td></tr>
+<tr><td>Target rilis</td><td>[DD-MM-YYYY / Sprint X]</td></tr>
+<tr><td>Dokumen terkait</td><td><code>bayar.html</code>, <code>app.js</code>, <code>riwayat.html</code>, <code>profil.html</code>, PRD Riwayat Pembayaran &amp; Konfirmasi, PRD Laporan Pemasukan (Admin Pusat), Portal Sekolah (Bendahara)</td></tr>
+</tbody></table></div>
+<h3>Riwayat Revisi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+<tbody>
+<tr><td>v0.1</td><td>08-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal berdasarkan prototipe <code>bayar.html</code>, menu "Bayar" pada bottom navigation aplikasi Wali Murid.</td></tr>
+</tbody></table></div>
+<hr />
+<h2>2. Ringkasan &amp; Latar Belakang</h2>
+<h3>2.1 Ringkasan</h3>
+<p>Halaman Bayar adalah fitur inti aplikasi Wali Murid: menampilkan ringkasan total tunggakan anak yang sedang aktif, daftar tagihan yang perlu dibayar, dan tiga cara pembayaran -- QRIS, Virtual Account (multi-bank), dan Transfer Manual yang diverifikasi Bendahara. Halaman ini juga menyediakan jalur "Konfirmasi" bagi Wali Murid yang belum bisa membayar sekarang namun ingin memberi tahu Bendahara rencana tanggal pembayarannya.</p>
+<h3>2.2 Problem Statement</h3>
+<p><strong>Wali Murid</strong> mengalami <strong>kesulitan membayar tagihan SPP dengan cara yang fleksibel dan melaporkan status pembayarannya</strong> saat <strong>pembayaran hanya bisa dilakukan secara tunai/transfer manual tanpa verifikasi otomatis, dan tidak ada cara memberi tahu sekolah bila belum bisa membayar tepat waktu</strong>, yang menyebabkan <strong>proses pembayaran lambat, rawan selisih pencatatan, dan Bendahara kesulitan membedakan tagihan yang benar-benar diabaikan dari yang sudah ada rencana pelunasan</strong>.</p>
+<h3>2.3 Kondisi Saat Ini (As-Is)</h3>
+<p>Pembayaran SPP dilakukan secara tunai ke sekolah atau transfer manual yang dicocokkan belakangan oleh Bendahara secara manual lewat mutasi rekening, tanpa metode elektronik otomatis (QRIS/VA) dan tanpa cara sistematis bagi Wali Murid memberi tahu rencana pembayaran yang tertunda.</p>
+<h3>2.4 Kondisi yang Diharapkan (To-Be)</h3>
+<p>Wali Murid dapat membuka menu "Bayar", melihat seluruh tagihan yang perlu dibayar untuk anak aktif, membayar lewat QRIS atau Virtual Account yang terverifikasi otomatis, atau mengirim konfirmasi transfer manual dengan bukti transfer untuk diverifikasi Bendahara, serta mengirim rencana tanggal pembayaran bila belum bisa membayar sekarang.</p>
+<h3>2.5 Kenapa Sekarang?</h3>
+<p>Sebagai fitur paling sering dipakai Wali Murid, pembayaran elektronik otomatis (QRIS/VA) mengurangi keterlambatan pencatatan pelunasan, sementara jalur Konfirmasi &amp; Transfer Manual menjaga fleksibilitas bagi Wali Murid yang terbiasa membayar lewat teller/rekening bukan atas nama sendiri.</p>
+<hr />
+<h2>3. Tujuan &amp; Metrik Keberhasilan</h2>
+<h3>3.1 Tujuan Bisnis</h3>
+<ol>
+<li>Mempercepat pelunasan tagihan SPP dengan menyediakan metode pembayaran elektronik otomatis (QRIS, Virtual Account).</li>
+<li>Mengurangi beban rekonsiliasi manual Bendahara dengan menyediakan jalur konfirmasi transfer manual yang terstruktur (bukti, nominal, bank pengirim).</li>
+<li>Menurunkan tunggakan yang "hilang tanpa kabar" dengan menyediakan jalur Konfirmasi rencana tanggal pembayaran.</li>
+</ol>
+<h3>3.2 Non-Tujuan (Out of Goal)</h3>
+<ul>
+<li>Tidak menyediakan verifikasi otomatis atas transfer manual -- tetap diverifikasi manual oleh Bendahara di Portal Sekolah.</li>
+<li>Tidak mendukung pembayaran sebagian (partial payment) dari satu tagihan dalam satu transaksi pada fase ini.</li>
+<li>Tidak menyediakan metode pembayaran lain (kartu kredit/debit, e-wallet langsung tanpa QRIS, dsb.) di luar QRIS, Virtual Account, dan Transfer Manual.</li>
+<li>Tidak menangani penagihan/eskalasi tagihan yang lewat jatuh tempo dari halaman ini (lihat status "Jatuh Tempo Terlewat" -- tindak lanjutnya di luar scope).</li>
+</ul>
+<h3>3.3 Metrik Keberhasilan (KPI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Metrik</th><th>Baseline saat ini</th><th>Target</th><th>Cara ukur</th><th>Waktu evaluasi</th></tr></thead>
+<tbody>
+<tr><td>% pembayaran yang dilakukan lewat QRIS/VA (elektronik otomatis) dibanding transfer manual</td><td>[ ]</td><td>&ge; 60%</td><td>Rasio <code>metode</code> pada <code>paymentHistory</code></td><td>2 bulan setelah rilis</td></tr>
+<tr><td>Waktu rata-rata dari tagihan terbit hingga lunas</td><td>[ ] (manual, tidak terukur)</td><td>Turun &ge; 30%</td><td>Selisih tanggal terbit vs tanggal lunas pada data pembayaran</td><td>2 bulan setelah rilis</td></tr>
+<tr><td>% konfirmasi transfer manual yang diverifikasi Bendahara dalam 1x24 jam</td><td>[ ]</td><td>&ge; 90%</td><td>Selisih waktu kirim konfirmasi vs waktu verifikasi</td><td>1 bulan setelah rilis</td></tr>
+<tr><td>% tagihan dengan rencana pembayaran yang benar-benar dilunasi sesuai tanggal yang dijanjikan</td><td>[ ]</td><td>&ge; 70%</td><td>Perbandingan tanggal rencana bayar vs tanggal lunas riil</td><td>3 bulan setelah rilis</td></tr>
+</tbody></table></div>
+<hr />
+<h2>4. Stakeholder &amp; Persona Pengguna</h2>
+<h3>4.1 Stakeholder (RACI)</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Nama / Peran</th><th>Organisasi</th><th>RACI</th><th>Kepentingan</th></tr></thead>
+<tbody>
+<tr><td>Product Owner</td><td>Klien (Muhammadiyah Pusat/Sekolah)</td><td>A</td><td>Menyetujui metode pembayaran &amp; kebijakan verifikasi manual</td></tr>
+<tr><td>Solution Architect</td><td>GeekGarden</td><td>R</td><td>Desain integrasi payment gateway (QRIS/VA) &amp; verifikasi Bendahara</td></tr>
+<tr><td>Tech Lead</td><td>GeekGarden</td><td>R</td><td>Implementasi halaman Bayar &amp; alur ketiga metode pembayaran</td></tr>
+<tr><td>QA Lead</td><td>GeekGarden</td><td>C</td><td>Strategi pengujian seluruh kombinasi metode &amp; status tagihan</td></tr>
+<tr><td>Wali Murid (Orang Tua/Wali)</td><td>Klien (pengguna akhir)</td><td>R</td><td>Pengguna utama fitur ini</td></tr>
+<tr><td>Bendahara</td><td>Klien</td><td>R</td><td>Memverifikasi konfirmasi transfer manual &amp; memantau rencana bayar</td></tr>
+<tr><td>Provider H2H Bank (BSI)</td><td>Pihak ketiga</td><td>R</td><td>Penyedia layanan QRIS &amp; Virtual Account otomatis</td></tr>
+</tbody></table></div>
+<h3>4.2 Persona Pengguna</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Persona</th><th>Deskripsi</th><th>Tujuan utama</th><th>Pain point</th><th>Perangkat / kanal</th></tr></thead>
+<tbody>
+<tr><td>Wali Murid (Ayah/Ibu/Wali)</td><td>Orang tua/wali yang perlu membayar tagihan SPP anaknya</td><td>Membayar tagihan dengan cara yang paling mudah sesuai kebiasaan (QRIS/VA/transfer manual)</td><td>Tidak tahu cara melapor bila belum bisa bayar tepat waktu; transfer manual rawan tidak terdeteksi sekolah</td><td>Smartphone (aplikasi mobile web)</td></tr>
+<tr><td>Bendahara (konsumen tidak langsung)</td><td>Memverifikasi konfirmasi transfer manual &amp; memantau rencana pembayaran</td><td>Memastikan seluruh pelunasan tercatat akurat</td><td>Rekonsiliasi manual lambat tanpa data terstruktur dari Wali Murid</td><td>Portal Sekolah (di luar scope aplikasi ini)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>5. Ruang Lingkup &amp; User Stories</h2>
+<h3>5.1 Ruang Lingkup</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>In Scope (fase ini)</th><th>Out of Scope (fase berikutnya / tidak dikerjakan)</th></tr></thead>
+<tbody>
+<tr><td>Ringkasan Total Tunggakan anak aktif &amp; catatan status (lunas/jumlah tagihan/ada yang lewat jatuh tempo)</td><td>Pembayaran sebagian (partial payment) dari satu tagihan</td></tr>
+<tr><td>Daftar tagihan yang perlu dibayar dengan badge status (Belum Dibayar/Jatuh Tempo Terlewat/Dihapus Buku)</td><td>Metode pembayaran lain (kartu kredit/debit, e-wallet langsung)</td></tr>
+<tr><td>Pembayaran via QRIS (kode QR simulasi, countdown kedaluwarsa, simulasi "Saya Sudah Bayar")</td><td>Verifikasi otomatis atas transfer manual</td></tr>
+<tr><td>Pembayaran via Virtual Account multi-bank (BCA/BSI/Mandiri/BNI/BRI) dengan instruksi m-Banking/ATM/Internet Banking</td><td>Penagihan/eskalasi otomatis untuk tagihan jatuh tempo terlewat</td></tr>
+<tr><td>Transfer Manual ke rekening Bendahara + form konfirmasi (tanggal, nominal, bank pengirim, bukti transfer, catatan)</td><td>Integrasi real-time dengan payment gateway produksi (saat ini simulasi)</td></tr>
+<tr><td>Konfirmasi Rencana Bayar (tanggal rencana pembayaran + catatan) tanpa transfer sekarang</td><td></td></tr>
+<tr><td>Invoice berstatus "Dihapus Buku" (writeoff) ditampilkan informatif tanpa aksi bayar</td><td></td></tr>
+</tbody></table></div>
+<h3>5.2 Prioritas (MoSCoW)</h3>
+<ul>
+<li><strong>Must have</strong> -- Ringkasan tunggakan, daftar tagihan dengan badge status, pembayaran QRIS, pembayaran Virtual Account, Transfer Manual + konfirmasi dengan bukti, Konfirmasi Rencana Bayar.</li>
+<li><strong>Should have</strong> -- Instruksi pembayaran VA per metode (m-Banking/ATM/Internet Banking), salin nomor VA/rekening ke clipboard.</li>
+<li><strong>Could have</strong> -- Pembayaran sebagian (partial payment).</li>
+<li><strong>Won't have (now)</strong> -- Metode pembayaran lain di luar QRIS/VA/Transfer Manual, penagihan otomatis dari halaman ini.</li>
+</ul>
+<h3>5.3 User Stories</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>User story</th><th>Prioritas</th><th>Acceptance criteria</th></tr></thead>
+<tbody>
+<tr><td>US-01</td><td>Sebagai Wali Murid, saya ingin melihat total tunggakan &amp; daftar tagihan anak yang sedang aktif, supaya saya tahu apa saja yang harus saya bayar.</td><td>Must</td><td>Given saya membuka menu Bayar, When halaman dimuat, Then kartu ringkasan menampilkan Total Tunggakan dan daftar tagihan (kecuali yang sudah lunas/draft) ditampilkan dengan status masing-masing</td></tr>
+<tr><td>US-02</td><td>Sebagai Wali Murid, saya ingin membayar tagihan lewat QRIS, supaya saya bisa membayar cepat lewat aplikasi m-Banking/e-wallet apa pun.</td><td>Must</td><td>Given saya menekan "Bayar" pada satu tagihan dan memilih tab QRIS, When saya menekan "Saya Sudah Bayar", Then tagihan berubah status menjadi Lunas dan tercatat di Riwayat Pembayaran dengan metode QRIS</td></tr>
+<tr><td>US-03</td><td>Sebagai Wali Murid, saya ingin membayar tagihan lewat Virtual Account bank pilihan saya, supaya saya bisa bayar lewat m-Banking/ATM/Internet Banking bank yang saya pakai.</td><td>Must</td><td>Given saya memilih tab Virtual Account dan salah satu bank, When saya menekan "Cek Status Pembayaran" setelah membayar, Then tagihan berubah status menjadi Lunas dan tercatat di Riwayat Pembayaran dengan metode VA bank terpilih</td></tr>
+<tr><td>US-04</td><td>Sebagai Wali Murid yang sudah transfer manual, saya ingin mengirim konfirmasi berisi bukti transfer, supaya Bendahara bisa memverifikasi &amp; menandai tagihan lunas.</td><td>Must</td><td>Given saya mengisi tanggal transfer, nominal, bank pengirim, dan mengunggah bukti transfer pada tab Transfer, When saya menekan "Kirim Konfirmasi ke Bendahara", Then konfirmasi tersimpan berstatus "Menunggu Verifikasi" dan muncul di Riwayat Konfirmasi Pembayaran Saya</td></tr>
+<tr><td>US-05</td><td>Sebagai Wali Murid yang belum bisa membayar sekarang, saya ingin memberi tahu Bendahara rencana tanggal pembayaran saya, supaya tagihan saya tidak dianggap diabaikan.</td><td>Must</td><td>Given saya menekan "Konfirmasi" pada satu tagihan dan mengisi rencana tanggal pembayaran, When saya menekan "Kirim ke Bendahara", Then rencana tersimpan berstatus "Terjadwal" dan muncul di Riwayat Konfirmasi Pembayaran Saya</td></tr>
+<tr><td>US-06</td><td>Sebagai Wali Murid dengan anak yang sudah pindah sekolah, saya ingin tagihan yang sudah dihapus buku ditampilkan jelas tanpa opsi bayar, supaya saya tidak bingung apakah masih harus membayar.</td><td>Should</td><td>Given tagihan anak berstatus <code>writeoff</code>, When ditampilkan di daftar tagihan, Then tidak ada tombol "Bayar"/"Konfirmasi", hanya catatan bahwa tagihan sudah dihapus buku otomatis</td></tr>
+<tr><td>US-07</td><td>Sebagai Wali Murid, saya ingin menyalin nomor Virtual Account atau rekening Bendahara dengan satu ketukan, supaya saya tidak perlu mengetik ulang nomor yang panjang.</td><td>Should</td><td>Given saya menekan tombol "📋 Salin Nomor VA"/"📋 Salin Nomor Rekening", When penyalinan berhasil, Then nomor tersalin ke clipboard dan toast konfirmasi muncul</td></tr>
+</tbody></table></div>
+<hr />
+<h2>6. Kebutuhan Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Modul</th><th>Deskripsi requirement</th><th>User story</th><th>Prioritas</th><th>Catatan / aturan bisnis</th></tr></thead>
+<tbody>
+<tr><td>FR-01</td><td>Ringkasan Total Tunggakan</td><td>Sistem harus menghitung &amp; menampilkan Total Tunggakan (jumlah nominal tagihan belum lunas, tidak termasuk <code>writeoff</code>) untuk anak aktif, beserta catatan status (lunas/jumlah tertunggak/ada yang jatuh tempo terlewat)</td><td>US-01</td><td>Must</td><td>Tagihan berstatus <code>paid</code> dan <code>draft</code> tidak dihitung/ditampilkan di daftar; <code>escalated</code>/<code>overdue</code> memicu catatan peringatan</td></tr>
+<tr><td>FR-02</td><td>Daftar Tagihan</td><td>Sistem harus menampilkan setiap tagihan relevan dengan jenis &amp; periode, nama &amp; kelas anak, nominal, tanggal jatuh tempo, dan badge status (Belum Dibayar/Dibayar Sebagian/Jatuh Tempo Terlewat/Dihapus Buku)</td><td>US-01, US-06</td><td>Must</td><td>Tidak ada tagihan relevan menampilkan empty state "🎉 Tidak ada tagihan aktif"</td></tr>
+<tr><td>FR-03</td><td>Pembayaran QRIS</td><td>Sistem harus menampilkan kode QR (simulasi), total pembayaran, countdown kedaluwarsa, dan tombol "Saya Sudah Bayar" yang menandai tagihan lunas</td><td>US-02</td><td>Must</td><td>Countdown dimulai dari 14:59; simulasi tidak memverifikasi pembayaran riil pada prototipe ini (lihat 11. Pertanyaan Terbuka No. 1)</td></tr>
+<tr><td>FR-04</td><td>Pembayaran Virtual Account</td><td>Sistem harus menghasilkan nomor VA sesuai bank yang dipilih (BCA/BSI/Mandiri/BNI/BRI), menampilkan total pembayaran, countdown kedaluwarsa, instruksi pembayaran sesuai metode (m-Banking/ATM/Internet Banking), dan tombol "Cek Status Pembayaran" yang menandai tagihan lunas</td><td>US-03</td><td>Must</td><td>Countdown dimulai dari 23:59:00; nomor VA dibentuk dari kode bank + ID tagihan, bukan hasil integrasi H2H sungguhan pada prototipe ini</td></tr>
+<tr><td>FR-05</td><td>Transfer Manual &amp; Konfirmasi</td><td>Sistem harus menampilkan rekening tujuan Bendahara dan form konfirmasi (tanggal transfer, nominal, bank pengirim, unggah bukti transfer wajib, catatan opsional) yang mengirim pengajuan berstatus "Menunggu Verifikasi"</td><td>US-04</td><td>Must</td><td>Pengajuan tidak dapat dikirim tanpa tanggal, nominal, bank pengirim, dan bukti transfer terunggah</td></tr>
+<tr><td>FR-06</td><td>Konfirmasi Rencana Bayar</td><td>Sistem harus menyediakan sheet terpisah "Konfirmasi" per tagihan yang meminta rencana tanggal pembayaran (wajib) &amp; catatan (opsional), menghasilkan pengajuan berstatus "Terjadwal"</td><td>US-05</td><td>Must</td><td>Berbeda dari form Transfer Manual -- jalur ini dipakai saat Wali Murid belum melakukan transfer apa pun, hanya menjanjikan tanggal</td></tr>
+<tr><td>FR-07</td><td>Tagihan Dihapus Buku (Writeoff)</td><td>Tagihan berstatus <code>writeoff</code> harus ditampilkan dengan catatan informatif ("Dihapus buku otomatis -- siswa pindah sekolah") tanpa tombol aksi apa pun</td><td>US-06</td><td>Must</td><td>Konsisten dengan alur Ajukan Pindah Sekolah di halaman Profil</td></tr>
+<tr><td>FR-08</td><td>Salin ke Clipboard</td><td>Sistem harus menyediakan tombol salin untuk nomor Virtual Account dan nomor rekening Bendahara</td><td>US-07</td><td>Should</td><td>Fallback menampilkan nomor dalam toast bila Clipboard API tidak tersedia di perangkat</td></tr>
+<tr><td>FR-09</td><td>Reaktivitas terhadap Child-Switch</td><td>Daftar tagihan &amp; ringkasan tunggakan harus otomatis dimuat ulang saat anak aktif berganti lewat header</td><td>--</td><td>Must</td><td>Dipicu oleh <code>selectChild()</code> yang memanggil <code>renderBayarView()</code></td></tr>
+</tbody></table></div>
+<h3>6.1 Hak Akses per Peran</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Fitur</th><th>Wali Murid (akun aktif)</th><th>Wali Murid (menunggu approval / ditolak)</th></tr></thead>
+<tbody>
+<tr><td>Lihat daftar tagihan &amp; total tunggakan</td><td>Ya</td><td>-- (tidak bisa masuk ke aplikasi)</td></tr>
+<tr><td>Bayar via QRIS/Virtual Account</td><td>Ya</td><td>--</td></tr>
+<tr><td>Kirim konfirmasi transfer manual</td><td>Ya</td><td>--</td></tr>
+<tr><td>Kirim rencana pembayaran</td><td>Ya</td><td>--</td></tr>
+<tr><td>Verifikasi konfirmasi transfer manual</td><td>-- (kewenangan Bendahara di Portal Sekolah)</td><td>--</td></tr>
+</tbody></table></div>
+<p><em>Catatan: akses ke halaman ini ditentukan oleh <code>requireLogin()</code>, sama seperti seluruh halaman lain pada aplikasi ini. Verifikasi konfirmasi transfer manual tidak tersedia di aplikasi ini pada peran apa pun.</em></p>
+<h3>6.2 Notifikasi</h3>
+<div class="table-scroll"><table>
+<thead><tr><th>Pemicu</th><th>Penerima</th><th>Kanal</th><th>Isi singkat</th></tr></thead>
+<tbody>
+<tr><td>Pembayaran QRIS/VA berhasil disimulasikan</td><td>Wali Murid (pembayar)</td><td>In-app toast</td><td>"✓ Pembayaran [nama anak] berhasil dikonfirmasi"</td></tr>
+<tr><td>Konfirmasi transfer manual terkirim</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>"✓ Konfirmasi transfer terkirim, menunggu verifikasi Bendahara"</td></tr>
+<tr><td>Rencana pembayaran terkirim</td><td>Wali Murid (pengirim)</td><td>In-app toast</td><td>"✓ Rencana pembayaran Anda dikirim ke Bendahara"</td></tr>
+<tr><td>Konfirmasi transfer manual baru masuk</td><td>Bendahara (disarankan)</td><td>Dashboard Portal Sekolah (belum diimplementasi)</td><td>Pemberitahuan ada konfirmasi transfer manual yang perlu diverifikasi</td></tr>
+</tbody></table></div>
+<hr />
+<h2>7. Kebutuhan Non-Fungsional</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+<tbody>
+<tr><td>NFR-01</td><td>Validasi input</td><td>Konfirmasi transfer manual tidak dapat dikirim tanpa tanggal, nominal, bank pengirim, dan bukti transfer; rencana bayar tidak dapat dikirim tanpa tanggal rencana</td><td>100% pengajuan tervalidasi sebelum tersimpan</td></tr>
+<tr><td>NFR-02</td><td>Konsistensi data</td><td>Status tagihan &amp; riwayat pembayaran harus konsisten antara halaman Bayar dan halaman Riwayat untuk anak yang sama</td><td>100% konsisten antar tampilan</td></tr>
+<tr><td>NFR-03</td><td>Keamanan sesi</td><td>Halaman Bayar hanya dapat diakses oleh Wali Murid dengan sesi login aktif</td><td>100% enforced via <code>requireLogin()</code></td></tr>
+<tr><td>NFR-04</td><td>Performa</td><td>Waktu render daftar tagihan &amp; pembukaan sheet pembayaran</td><td>&lt; 1 detik untuk &le; 50 tagihan per anak</td></tr>
+<tr><td>NFR-05</td><td>Ukuran unggahan bukti transfer</td><td>Sistem harus membatasi format (JPG/PNG/PDF) dan ukuran file bukti transfer</td><td>Maks. 5MB per file, sesuai keterangan UI</td></tr>
+</tbody></table></div>
+<hr />
+<h2>8. Alur Pengguna &amp; Desain</h2>
+<ul>
+<li>Alur pembayaran elektronik: Login &rarr; menu "Bayar" &rarr; tekan "Bayar" pada tagihan &rarr; pilih tab QRIS atau Virtual Account &rarr; selesaikan pembayaran di aplikasi bank &rarr; tekan "Saya Sudah Bayar"/"Cek Status Pembayaran" &rarr; tagihan berubah Lunas &rarr; toast konfirmasi.</li>
+<li>Alur transfer manual: menu "Bayar" &rarr; tekan "Bayar" pada tagihan &rarr; pilih tab Transfer &rarr; salin rekening Bendahara &amp; lakukan transfer di luar aplikasi &rarr; isi form konfirmasi (tanggal, nominal, bank, bukti) &rarr; "Kirim Konfirmasi ke Bendahara" &rarr; status "Menunggu Verifikasi".</li>
+<li>Alur rencana bayar: menu "Bayar" &rarr; tekan "Konfirmasi" pada tagihan &rarr; isi rencana tanggal &amp; catatan &rarr; "Kirim ke Bendahara" &rarr; status "Terjadwal".</li>
+<li>Wireframe: mengikuti struktur <code>bayar.html</code> -- kartu ringkasan tunggakan di atas, daftar kartu tagihan dengan tombol "Bayar"/"Konfirmasi", sheet Pembayaran dengan 3 tab (QRIS/VA/Transfer), dan sheet Konfirmasi Rencana Bayar terpisah.</li>
+<li>Edge case yang wajib ditangani: anak tanpa tagihan aktif (empty state 🎉), tagihan <code>writeoff</code> (tanpa tombol aksi), QRIS/VA yang kedaluwarsa sebelum dibayar (countdown mencapai 0, belum ada alur perpanjangan otomatis pada prototipe), konfirmasi transfer manual tanpa bukti terunggah (ditolak dengan toast peringatan), rencana bayar tanpa tanggal terisi (ditolak dengan toast peringatan).</li>
+</ul>
+<hr />
+<h2>9. Integrasi &amp; Dependensi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Sistem eksternal</th><th>Fungsi</th><th>Metode</th><th>PIC</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Provider H2H BSI (QRIS &amp; Virtual Account)</td><td>Penyedia kanal pembayaran elektronik otomatis</td><td>Integrasi Host-to-Host (belum diimplementasi, saat ini simulasi)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Portal Sekolah (Bendahara -- verifikasi transfer manual)</td><td>Pihak yang memverifikasi konfirmasi transfer manual &amp; memantau rencana bayar</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Halaman Riwayat (aplikasi ini)</td><td>Konsumen hasil pembayaran (<code>paymentHistory</code>) &amp; konfirmasi (<code>pengajuanData</code>) yang dibuat dari halaman ini</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Laporan Pemasukan (Admin Pusat)</td><td>Konsumen agregat data pembayaran lintas sekolah untuk kebutuhan laporan pusat</td><td>Internal (shared data store)</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>10. Kebutuhan Data</h2>
+<ul>
+<li>Entitas utama: <code>Invoice</code> (id, childId, jenis, periode, nominal, jatuhTempo, status), <code>PaymentHistory</code> (id, childId, invoiceRef, tanggal, metode, provider, nominal, status, kuitansi), <code>PengajuanKonfirmasi</code> (id, childId, metode, invoiceRef, nominal, bank, fileName, catatan, status, tanggal), <code>SchoolBankAccount</code> (bank, nomor, atasNama).</li>
+<li>Tidak ada migrasi khusus -- struktur data mengikuti objek <code>invoices</code>, <code>paymentHistory</code>, <code>pengajuanData</code>, dan <code>schoolBankAccount</code> di <code>app.js</code> pada prototipe ini.</li>
+<li>Retensi data: riwayat pembayaran &amp; konfirmasi disimpan selama histori keuangan siswa terkait masih relevan untuk audit (rekomendasi minimal 5 tahun, perlu konfirmasi kebijakan retensi klien).</li>
+<li>Data saat ini bersifat snapshot dalam memori JavaScript (bukan database/API/payment gateway produksi) -- hilang saat sesi browser berakhir.</li>
+</ul>
+<hr />
+<h2>11. Asumsi, Batasan &amp; Pertanyaan Terbuka</h2>
+<p><strong>Asumsi:</strong></p>
+<ul>
+<li>Satu tagihan hanya bisa dilunasi dalam satu transaksi penuh (tidak ada pembayaran sebagian pada fase ini).</li>
+<li>Nomor Virtual Account yang dihasilkan bersifat unik per kombinasi bank &amp; tagihan, cukup untuk kebutuhan simulasi.</li>
+</ul>
+<p><strong>Batasan:</strong></p>
+<ul>
+<li>Pembayaran QRIS/VA pada prototipe ini disimulasikan lewat tombol "Saya Sudah Bayar"/"Cek Status Pembayaran" -- belum terhubung ke payment gateway/callback bank sungguhan.</li>
+<li>Data bersifat snapshot read-only dalam memori JavaScript, belum terhubung ke API/database produksi.</li>
+<li>Belum ada alur perpanjangan otomatis saat kode QRIS/VA kedaluwarsa sebelum dibayar.</li>
+</ul>
+<p><strong>Pertanyaan terbuka:</strong></p>
+<div class="table-scroll"><table>
+<thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Batas jawab</th><th>Jawaban</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Provider H2H mana yang akan digunakan di produksi untuk QRIS &amp; Virtual Account (saat ini disebut "BSI H2H" sebagai contoh), dan bagaimana mekanisme callback status pembayaran yang sesungguhnya?</td><td>PO klien / SA</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>2</td><td>Apakah diperlukan dukungan pembayaran sebagian (partial payment) untuk tagihan nominal besar?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>3</td><td>Berapa lama SLA riil verifikasi Bendahara atas konfirmasi transfer manual yang disepakati secara resmi?</td><td>PO klien</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+<tr><td>4</td><td>Apa yang terjadi bila kode QRIS/nomor VA kedaluwarsa sebelum Wali Murid membayar -- apakah perlu alur generate ulang otomatis?</td><td>PO klien / Tech Lead</td><td>[DD-MM-YYYY]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>12. Risiko &amp; Mitigasi</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Risiko</th><th>Dampak (H/M/L)</th><th>Kemungkinan (H/M/L)</th><th>Mitigasi</th><th>PIC</th></tr></thead>
+<tbody>
+<tr><td>Pembayaran QRIS/VA hanya simulasi tombol tanpa verifikasi bank sungguhan -- berisiko disalahgunakan untuk menandai lunas tanpa membayar bila dibawa ke produksi tanpa integrasi nyata</td><td>H</td><td>H (pada prototipe)</td><td>Integrasikan dengan payment gateway/H2H sungguhan dengan callback status sebelum go-live produksi (lihat Pertanyaan Terbuka No. 1)</td><td>[ ]</td></tr>
+<tr><td>Konfirmasi transfer manual palsu/bukti tidak valid tidak terdeteksi otomatis, sepenuhnya bergantung ketelitian Bendahara</td><td>M</td><td>M</td><td>Pertimbangkan validasi tambahan (misal pencocokan nominal otomatis dengan mutasi rekening) pada iterasi berikutnya</td><td>[ ]</td></tr>
+<tr><td>Rencana pembayaran yang dijanjikan tidak ditagih ulang secara otomatis bila tanggal terlewat</td><td>M</td><td>M</td><td>Tambahkan mekanisme pengingat/eskalasi otomatis saat rencana bayar terlewat tanpa pelunasan</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h2>13. Rencana Rilis &amp; Milestone</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Milestone</th><th>Deliverable</th><th>Target tanggal</th><th>Kriteria selesai</th></tr></thead>
+<tbody>
+<tr><td>PRD approved</td><td>Dokumen ini v1.0</td><td>[ ]</td><td>Ditandatangani PO</td></tr>
+<tr><td>Desain selesai</td><td>Mockup &amp; struktur data final</td><td>[ ]</td><td>Review SA &amp; klien</td></tr>
+<tr><td>Development</td><td>Ringkasan tunggakan, daftar tagihan, sheet QRIS/VA/Transfer, sheet Konfirmasi Rencana Bayar</td><td>[ ]</td><td>Lolos code review</td></tr>
+<tr><td>UAT</td><td>Build staging</td><td>[ ]</td><td>0 bug critical, sign-off UAT</td></tr>
+<tr><td>Go-live</td><td>Production</td><td>[ ]</td><td>Monitoring 2 minggu stabil</td></tr>
+</tbody></table></div>
+<hr />
+<h2>14. Glosarium</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+<tbody>
+<tr><td>QRIS</td><td>QR Code Indonesian Standard -- kode QR pembayaran yang didukung semua bank/e-wallet berlogo QRIS</td></tr>
+<tr><td>Virtual Account (VA)</td><td>Nomor rekening sementara unik per transaksi yang dibuat bank untuk menerima pembayaran otomatis</td></tr>
+<tr><td>H2H (Host-to-Host)</td><td>Integrasi sistem langsung antara platform dan sistem bank untuk pembayaran &amp; callback status otomatis</td></tr>
+<tr><td>Transfer Manual</td><td>Pembayaran lewat teller/rekening di luar QRIS/VA otomatis, diverifikasi manual oleh Bendahara</td></tr>
+<tr><td>Konfirmasi Rencana Bayar</td><td>Pemberitahuan tanggal rencana pembayaran yang dijanjikan Wali Murid saat belum bisa membayar sekarang</td></tr>
+<tr><td>Writeoff / Dihapus Buku</td><td>Status tagihan yang dihapuskan karena siswa pindah sekolah (lihat PRD Profil Wali Murid)</td></tr>
+</tbody></table></div>
+<hr />
+<h2>15. Persetujuan</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Peran</th><th>Nama</th><th>Tanda tangan</th><th>Tanggal</th></tr></thead>
+<tbody>
+<tr><td>Product Owner (klien)</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Project Manager</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Solution Architect</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+<tr><td>Tech Lead</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>
+</tbody></table></div>
+<hr />
+<h3>Checklist Kualitas PRD</h3>
+<ul>
+<li><input type="checkbox" checked disabled> Problem statement didukung konteks penggunaan (perlu divalidasi dengan data riil klien)</li>
+<li><input type="checkbox" checked disabled> Setiap tujuan punya KPI dengan baseline dan target</li>
+<li><input type="checkbox" checked disabled> Out of scope ditulis eksplisit</li>
+<li><input type="checkbox" checked disabled> Setiap user story punya acceptance criteria Given-When-Then</li>
+<li><input type="checkbox" checked disabled> NFR ditulis dengan angka terukur</li>
+<li><input type="checkbox" disabled> Semua integrasi punya PIC dan status (menunggu konfirmasi PIC)</li>
+<li><input type="checkbox" disabled> Pertanyaan terbuka punya batas waktu jawab (menunggu tanggal dari PO)</li>
+<li><input type="checkbox" checked disabled> PRD tidak membahas detail teknis implementasi</li>
+</ul>
+  </div>
+</div>
+
+<a class="fab-prd" href="../bayar.html" title="Lihat prototipe bayar.html">📄 Prototipe</a>
+
+</body>
+</html>

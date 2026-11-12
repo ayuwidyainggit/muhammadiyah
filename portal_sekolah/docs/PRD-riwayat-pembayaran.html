@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD: Riwayat Pembayaran -- Portal Sekolah</title>
+    <style>
+      :root {
+        --navy: #1f3864; --navy-dark: #14243f; --navy-soft: #2c4a7c;
+        --accent: #2e7d32; --accent-light: #e8f5e9;
+        --red: #b71c1c; --red-light: #fdecea;
+        --muted: #5b6674; --border: #e3e7ee; --bg: #f5f6f8;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg); color: #1b1f27;
+      }
+      .doc-topbar {
+        background: var(--navy-dark); color: #fff; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top: 0; z-index: 10;
+      }
+      .doc-topbar a { color: #cfe0ff; text-decoration: none; font-size: 13px; font-weight: 600; }
+      .doc-topbar a:hover { text-decoration: underline; }
+      .doc-topbar .brand { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2px; }
+      .doc-wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+      .doc-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 10px;
+        padding: 36px 40px; box-shadow: 0 1px 3px rgba(20, 36, 63, 0.06);
+      }
+      h1 { color: var(--navy); font-size: 26px; font-weight: 800; margin: 0 0 18px; border-bottom: 3px solid var(--navy); padding-bottom: 12px; }
+      h2 { color: var(--navy); font-size: 19px; font-weight: 800; margin: 36px 0 12px; padding-top: 18px; border-top: 1px solid var(--border); scroll-margin-top: 72px; }
+      h2:first-of-type { border-top: none; padding-top: 0; }
+      h3 { color: var(--navy-soft); font-size: 15.5px; font-weight: 700; margin: 22px 0 10px; scroll-margin-top: 72px; }
+      p { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 12px; }
+      ul, ol { font-size: 13.8px; line-height: 1.65; color: #2a2f3a; margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 4px; }
+      strong { color: var(--navy); font-weight: 700; }
+      code { background: #eef1f6; color: var(--red); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+      .table-scroll { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+      table { border-collapse: collapse; width: 100%; font-size: 12.8px; min-width: 560px; }
+      th, td { border-bottom: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+      th { background: var(--navy); color: #fff; font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+      tr:nth-child(even) td { background: #fafbfd; }
+      tr:last-child td { border-bottom: none; }
+      .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+      .badge.prd { background: var(--accent-light); color: var(--accent); }
+      a.xref { color: var(--navy-soft); font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); }
+      a.xref:hover { color: var(--navy); text-decoration-color: var(--navy-soft); }
+      .note-flag { background: var(--red-light); border: 1px solid #f3c6c2; border-radius: 8px; padding: 12px 16px; margin: 12px 0 20px; font-size: 13px; color: #7a1414; }
+      .note-flag strong { color: var(--red); }
+      .fab-prd {
+        position: fixed; bottom: 26px; right: 26px; background: var(--navy); color: #fff;
+        border: none; border-radius: 999px; padding: 13px 20px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 18px rgba(20, 36, 63, 0.35); cursor: pointer;
+        display: flex; align-items: center; gap: 8px; text-decoration: none; z-index: 999;
+      }
+      .fab-prd:hover { background: var(--navy-soft); }
+      @media print { .doc-topbar, .fab-prd { display: none; } .doc-card { box-shadow: none; border: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="doc-topbar">
+      <span class="brand">📄 GeekGarden Portal Sekolah -- Dokumen PRD</span>
+      <a href="index.html">&larr; Kembali ke Daftar Dokumen</a>
+    </div>
+
+    <div class="doc-wrap">
+      <div class="doc-card">
+        <h1>PRD: Riwayat Pembayaran <span class="badge prd">Portal Sekolah</span></h1>
+
+        <h2 id="sec-1">1. Informasi Dokumen</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Atribut</th><th>Isi</th></tr></thead>
+            <tbody>
+              <tr><td>Nama produk / fitur</td><td>Riwayat Pembayaran -- halaman <code>transaksi-riwayat.html</code>, nav-child ketiga di bawah menu Transaksi &amp; Invoice</td></tr>
+              <tr><td>Aplikasi</td><td>Portal Sekolah -- Platform Invoicing &amp; Payment SPP (GeekGarden)</td></tr>
+              <tr><td>Lingkup pengguna</td><td>Satu sekolah, tidak memengaruhi sekolah lain</td></tr>
+              <tr><td>Versi dokumen</td><td>v1.0</td></tr>
+              <tr><td>Status</td><td>Draft</td></tr>
+              <tr><td>Penulis</td><td>Tim Produk GeekGarden</td></tr>
+              <tr><td>Tanggal dibuat</td><td>09-11-2026</td></tr>
+              <tr><td>Dokumen sumber kode</td><td><code>transaksi-riwayat.html</code>, <code>app.js</code> (data <code>paymentData</code>, <code>paymentSeq</code>; fungsi <code>renderPaymentList</code>, <code>statusBadge</code>)</td></tr>
+              <tr><td>Dokumen terkait</td><td><a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a> -- sumber <code>invoiceRef</code> yang muncul di tiap baris riwayat; <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a> -- turut menulis ke <code>paymentData</code> yang sama (provider "Bendahara (Manual)")</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Riwayat Revisi</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Versi</th><th>Tanggal</th><th>Penulis</th><th>Perubahan</th></tr></thead>
+            <tbody><tr><td>v1.0</td><td>09-11-2026</td><td>Tim Produk GeekGarden</td><td>Draft awal -- mendokumentasikan halaman Riwayat Pembayaran sebagai bagian dari pemetaan ulang dokumen PRD untuk seluruh nav-child Transaksi &amp; Invoice (Master Data Tagihan, Tagihan (Invoice), Riwayat Pembayaran, Write-off, Pembayaran Manual).</td></tr></tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-2">2. Pendahuluan</h2>
+        <h3>2.1 Tujuan Dokumen</h3>
+        <p>Dokumen ini menetapkan kebutuhan fungsional dan non-fungsional untuk fitur <strong>Riwayat Pembayaran</strong> pada Portal Sekolah, sebagai acuan bagi tim Desain, Developer, dan QA.</p>
+
+        <h3>2.2 Lingkup Produk</h3>
+        <p>Fitur ini menampilkan <strong>daftar transaksi pembayaran read-only</strong> yang tercatat lewat Payment Gateway (QRIS/VA, disimulasikan dari aplikasi Wali Murid) maupun pembayaran manual (lihat <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a>), lengkap dengan status, kuitansi, dan filter Status. Fitur ini <strong>tidak</strong> memproses pembayaran apa pun -- murni rekap/audit atas transaksi yang sudah terjadi di fitur lain.</p>
+
+        <h3>2.3 Definisi, Akronim, Singkatan</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Provider</td><td>Penyedia jalur pembayaran -- "BSI H2H" untuk QRIS/VA otomatis, "Bendahara (Manual)" untuk pembayaran yang dicatat manual</td></tr>
+              <tr><td>Kuitansi</td><td>Nomor bukti pembayaran (<code>RCPT-...</code>) yang hanya terbit untuk transaksi berstatus <code>success</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2.4 Ikhtisar Dokumen</h3>
+        <p><a class="xref" href="#sec-3">Bagian 3</a> deskripsi umum, <a class="xref" href="#sec-4">bagian 4</a> kebutuhan fungsional, <a class="xref" href="#sec-5">bagian 5</a> aturan bisnis &amp; validasi, <a class="xref" href="#sec-6">bagian 6</a> model data, <a class="xref" href="#sec-7">bagian 7</a> kebutuhan non-fungsional, <a class="xref" href="#sec-8">bagian 8</a> batasan &amp; asumsi, <a class="xref" href="#sec-9">bagian 9</a> pertanyaan terbuka, <a class="xref" href="#sec-10">bagian 10</a> glosarium.</p>
+        <hr />
+
+        <h2 id="sec-3">3. Deskripsi Umum</h2>
+        <h3>3.1 Perspektif Produk</h3>
+        <p>Halaman ini tampil sebagai nav-child ketiga di bawah grup "Transaksi &amp; Invoice", di antara Tagihan (Invoice) dan Write-off. Berbeda dari ketiga nav-child lain di grup ini, halaman ini <strong>tidak memiliki aksi tulis apa pun</strong> (tidak ada tombol Tambah/Edit/Hapus) -- murni tampilan baca atas data yang sudah ditulis oleh fitur Tagihan, Write-off, dan Pembayaran Manual.</p>
+
+        <h3>3.2 Fungsi Produk (Ringkasan)</h3>
+        <ol>
+          <li>Menampilkan seluruh riwayat transaksi pembayaran (Siswa, Invoice, Metode, Provider, Nominal, Status, Waktu Bayar, Kuitansi).</li>
+          <li>Memfilter riwayat berdasarkan Status transaksi.</li>
+          <li>Menyediakan akses "Lihat" kuitansi untuk transaksi yang sudah memiliki nomor kuitansi.</li>
+        </ol>
+
+        <h3>3.3 Karakteristik Pengguna</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Peran (RBAC)</th><th>Interaksi dengan fitur ini</th></tr></thead>
+            <tbody>
+              <tr><td>Bendahara</td><td>Memantau riwayat pembayaran untuk kebutuhan rekonsiliasi (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Admin</td><td>Sama seperti Bendahara -- akses penuh lihat riwayat (modul <code>transaksi</code>).</td></tr>
+              <tr><td>Kepala Sekolah</td><td>Tidak punya akses ke halaman ini secara default (modul <code>transaksi</code> tidak aktif untuk peran ini) -- ringkasan performa pembayaran sekolah tetap tersedia lewat Dashboard.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3.4 Batasan Umum</h3>
+        <ul>
+          <li>Halaman ini tidak menyediakan aksi apa pun selain Filter &amp; "Lihat" -- seluruh koreksi data transaksi (jika diperlukan) harus dilakukan dari fitur sumbernya (Tagihan, Write-off, Pembayaran Manual).</li>
+        </ul>
+
+        <h3>3.5 Asumsi &amp; Dependensi</h3>
+        <ul>
+          <li>Setiap entri di <code>paymentData</code> diasumsikan sudah final (tidak ada status transisi tambahan) pada saat ditampilkan di halaman ini.</li>
+          <li>Transaksi QRIS/VA pada prototipe ini adalah data seed statis -- belum ada integrasi nyata dengan callback Payment Gateway (lihat 8. Batasan).</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-4">4. Kebutuhan Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Nama Fungsi</th><th>Deskripsi</th><th>Prioritas</th></tr></thead>
+            <tbody>
+              <tr><td>FR-01</td><td>Lihat Daftar Riwayat Pembayaran</td><td>Sistem menampilkan tabel berisi Siswa, Invoice, Metode, Provider, Nominal, Status, Waktu Bayar, dan Kuitansi, terbaru di atas</td><td>Must</td></tr>
+              <tr><td>FR-02</td><td>Filter Status</td><td>Dropdown Status (Semua/success/pending/failed/expired/refunded) langsung memperbarui tabel saat diubah</td><td>Must</td></tr>
+              <tr><td>FR-03</td><td>Filter Rentang Waktu (UI tersedia, logika belum diterapkan)</td><td>Dropdown "Semua Waktu / 7 Hari Terakhir / 30 Hari Terakhir" ditampilkan pada toolbar, memanggil <code>renderPaymentList()</code> saat diubah -- namun lihat BR-01 &amp; 8. Batasan</td><td>Should</td></tr>
+              <tr><td>FR-04</td><td>Lihat Kuitansi</td><td>Tombol "Lihat" pada baris dengan nomor kuitansi menampilkan referensi kuitansi (saat ini berupa toast informatif pada prototipe, bukan pratinjau dokumen nyata); baris tanpa kuitansi menampilkan "--"</td><td>Should</td></tr>
+              <tr><td>FR-05</td><td>Status Kosong</td><td>Jika tidak ada transaksi yang cocok dengan filter, tabel menampilkan pesan "Tidak ada transaksi yang cocok dengan filter." sebagai satu baris, bukan tabel kosong tanpa penjelasan</td><td>Must</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.1 Skenario Penggunaan Utama (Use Case)</h3>
+        <p><strong>UC-01 -- Memeriksa transaksi yang gagal/kedaluwarsa</strong></p>
+        <ol>
+          <li>Bendahara memilih filter Status "failed".</li>
+          <li>Tabel hanya menampilkan transaksi berstatus Gagal; Bendahara menindaklanjuti ke wali murid terkait di luar sistem (mis. meminta transfer ulang).</li>
+        </ol>
+
+        <p><strong>UC-02 -- Mencoba memfilter 7 hari terakhir (tidak berefek)</strong></p>
+        <ol>
+          <li>Bendahara memilih "7 Hari Terakhir" pada dropdown rentang waktu, mengharapkan tabel hanya menampilkan transaksi dalam 7 hari terakhir.</li>
+          <li>Tabel tetap menampilkan seluruh transaksi (hanya terfilter oleh Status jika ada) -- lihat BR-01 &amp; <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>, karena <code>renderPaymentList()</code> tidak membaca nilai dropdown ini.</li>
+        </ol>
+        <hr />
+
+        <h2 id="sec-5">5. Aturan Bisnis &amp; Validasi</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Aturan</th></tr></thead>
+            <tbody>
+              <tr><td>BR-01</td><td><strong>Ditemukan saat penyusunan dokumen ini:</strong> filter rentang waktu (<code>#pay-filter-range</code>) memanggil <code>renderPaymentList()</code> lewat <code>onchange</code>, namun fungsi tersebut hanya membaca <code>#pay-filter-status</code> -- nilai rentang waktu tidak pernah dipakai untuk memfilter baris. Secara fungsional, filter ini saat ini tidak memiliki efek apa pun pada tabel. Lihat <a class="xref" href="#sec-9">Pertanyaan Terbuka No. 1</a>.</td></tr>
+              <tr><td>BR-02</td><td>Filter Status bersifat pencocokan persis (exact match) terhadap nilai <code>status</code> transaksi -- opsi kosong ("Semua Status") tidak menerapkan filter apa pun</td></tr>
+              <tr><td>BR-03</td><td>Urutan baris selalu "terbaru di atas", mengikuti urutan <code>paymentData</code> yang di-<code>unshift</code> oleh fitur penulis (Pembayaran Manual, simulasi QRIS/VA) -- halaman ini tidak melakukan pengurutan ulang sendiri</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sec-5-1">5.1 Rekomendasi Validasi per Field</h3>
+        <p>Halaman ini tidak memiliki form input -- seluruh kontrol bersifat filter baca (lihat <a class="xref" href="#sec-4">bagian 4</a>). Tidak ada validasi input yang relevan untuk didokumentasikan pada bagian ini.</p>
+        <hr />
+
+        <h2 id="sec-6">6. Kebutuhan Data (Model Entitas)</h2>
+        <p><strong>Entitas: <code>Pembayaran</code> (<code>paymentData</code>) -- read-only dari perspektif halaman ini</strong></p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Field</th><th>Tipe Data</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>siswa</code></td><td>string</td><td>Nama siswa yang membayar</td></tr>
+              <tr><td><code>invoiceRef</code></td><td>string</td><td>Referensi tagihan, format <code>"{jenis} {periode}"</code> (mis. <code>"SPP 2026-07"</code>) -- bukan relasi langsung ke <code>Invoice.id</code></td></tr>
+              <tr><td><code>metode</code></td><td>string</td><td>QRIS, VA BSI, Transfer Manual, Tunai, dsb. -- tergantung sumber pencatatan</td></tr>
+              <tr><td><code>provider</code></td><td>string</td><td>"BSI H2H" untuk Payment Gateway otomatis, "Bendahara (Manual)" untuk pencatatan manual (lihat <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a>)</td></tr>
+              <tr><td><code>nominal</code></td><td>integer (Rupiah)</td><td>&nbsp;</td></tr>
+              <tr><td><code>status</code></td><td>string enum (<code>success</code>/<code>pending</code>/<code>failed</code>/<code>expired</code>/<code>refunded</code>)</td><td>Hanya <code>success</code> yang memiliki <code>kuitansi</code> terisi pada data saat ini</td></tr>
+              <tr><td><code>waktu</code></td><td>string</td><td>Format bebas (mis. <code>"2026-07-08 09:12"</code> atau <code>"2026-08-04 (manual)"</code>) -- bukan tipe tanggal terstruktur</td></tr>
+              <tr><td><code>kuitansi</code></td><td>string</td><td>Format <code>RCPT-YYYY-NNNNNN</code> (Payment Gateway) atau <code>RCPT-MANUAL-NNNNNN</code> (manual); string kosong jika belum/tidak ada kuitansi</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-7">7. Kebutuhan Non-Fungsional</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>Kategori</th><th>Requirement</th><th>Target terukur</th></tr></thead>
+            <tbody>
+              <tr><td>NFR-01</td><td>Konsistensi lintas halaman</td><td>Transaksi yang ditulis dari Pembayaran Manual (lihat <a class="xref" href="PRD-pembayaran-manual.html">PRD Pembayaran Manual</a>) harus langsung tampil di sini tanpa perlu reload manual, karena berbagi array <code>paymentData</code> yang sama</td><td>0% selisih data antar halaman dalam satu sesi</td></tr>
+              <tr><td>NFR-02</td><td>Performa</td><td>Render ulang tabel saat filter Status berubah</td><td>&lt; 300ms untuk &le; 1.000 transaksi (operasi lokal pada prototipe)</td></tr>
+              <tr><td>NFR-03</td><td>Keterbacaan</td><td>Baris tanpa kuitansi (status bukan <code>success</code>) menampilkan "--", bukan tombol "Lihat" yang tidak berfungsi</td><td>100% baris non-success tidak menampilkan tombol Lihat</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-8">8. Batasan &amp; Asumsi</h2>
+        <p><strong>Batasan:</strong></p>
+        <ul>
+          <li>Filter Rentang Waktu (7/30 Hari Terakhir) <strong>belum berfungsi</strong> -- lihat BR-01. Field <code>waktu</code> yang berformat bebas (bukan tanggal terstruktur) juga akan menyulitkan implementasi filter ini di masa depan tanpa normalisasi format terlebih dahulu.</li>
+          <li>Tombol "Lihat" kuitansi hanya menampilkan toast informatif (<code>showToast('Membuka kuitansi ...')</code>) -- belum ada pratinjau/unduh dokumen kuitansi yang sesungguhnya.</li>
+          <li><code>invoiceRef</code> bersifat teks bebas, bukan relasi terstruktur ke <code>Invoice.id</code> -- jika suatu tagihan diubah jenis/periodenya setelah pembayaran tercatat (lihat <a class="xref" href="PRD-tagihan-invoice.html">PRD Tagihan (Invoice)</a>, FR-07/FR-08), riwayat pembayaran lama tidak ikut berubah dan bisa tidak lagi cocok persis dengan data tagihan terbaru.</li>
+        </ul>
+        <p><strong>Asumsi:</strong></p>
+        <ul>
+          <li>Karena halaman ini murni read-only, tidak ada risiko korupsi data dari sisi UI -- integritas data sepenuhnya bergantung pada fitur penulis (Tagihan, Write-off, Pembayaran Manual, simulasi Payment Gateway).</li>
+        </ul>
+        <hr />
+
+        <h2 id="sec-9">9. Pertanyaan Terbuka</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>No</th><th>Pertanyaan</th><th>Ditujukan ke</th><th>Jawaban</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Filter Rentang Waktu (BR-01) saat ini tidak memiliki efek -- apakah perlu segera diimplementasikan (butuh field <code>waktu</code> terstruktur sebagai tanggal), atau dihapus dari UI sampai siap diimplementasikan supaya tidak menyesatkan pengguna?</td><td>Tech Lead / Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>2</td><td>Apakah tombol "Lihat" kuitansi perlu menampilkan pratinjau/unduh dokumen PDF kuitansi yang sesungguhnya pada fase berikutnya?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+              <tr><td>3</td><td>Apakah diperlukan ekspor (CSV/Excel) atas riwayat pembayaran yang sedang difilter, untuk kebutuhan rekonsiliasi offline Bendahara?</td><td>Product Owner klien</td><td>[ ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <h2 id="sec-10">10. Glosarium</h2>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Istilah</th><th>Arti</th></tr></thead>
+            <tbody>
+              <tr><td>Provider</td><td>Penyedia jalur pembayaran -- "BSI H2H" (otomatis) atau "Bendahara (Manual)"</td></tr>
+              <tr><td>Kuitansi</td><td>Nomor bukti pembayaran yang terbit untuk transaksi berstatus <code>success</code></td></tr>
+              <tr><td>Refunded</td><td>Status transaksi yang nominalnya dikembalikan setelah sempat berhasil -- tersedia sebagai opsi filter, belum ada fitur yang secara aktif men-set status ini pada prototipe</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <a class="fab-prd" href="index.html" title="Daftar semua dokumen">📄 Dokumen</a>
+  </body>
+</html>
